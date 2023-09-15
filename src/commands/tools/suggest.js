@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 
@@ -29,14 +30,42 @@ module.exports = {
           .setTimestamp()
           .setDescription(suggestion)
           .addFields(
-            { name: '\u200B', value: `**Status: ${status}**\nReact with 🔺 to upvote.\nReact with 🔻 to downvote.\n*Only admins can react with ✔️ for approval.*\n` },
+            { name: '\u200B', value: `**Status: ${status}**\n**Click on 🔺 to upvote.**\nTotal upvotes: 0\n\nClick on 🔻 to downvote.\nTotal downvotes: 0\n\n*Only admins can click on ✔️ or ❌.*\n` },
           );
     
-        const message = await suggestionChannel.send({ embeds: [suggestionEmbed] });
-        await localFunctions.updateSuggestion(message.id, int.user.id, status, suggestionEmbed);
-        message.react('🔺')
-          .then(() => message.react('🔻'))
-          .then(() => message.react('✔️'));
+        const message = await suggestionChannel.send({
+          embeds: [suggestionEmbed],
+          components: [
+            new ActionRowBuilder().addComponents(
+              new ButtonBuilder()
+                .setCustomId('suggestion-upvote')
+                .setLabel('🔺')
+                .setStyle('Secondary'),
+              new ButtonBuilder()
+                .setCustomId('suggestion-downvote')
+                .setLabel('🔻')
+                .setStyle('Secondary'),
+              new ButtonBuilder()
+                .setCustomId('suggestion-approve')
+                .setLabel('✔️')
+                .setStyle('Secondary'),
+              new ButtonBuilder()
+                .setCustomId('suggestion-deny')
+                .setLabel('❌')
+                .setStyle('Secondary'),
+              new ButtonBuilder()
+                .setCustomId('suggestion-thread')
+                .setLabel('📁 Create Thread')
+                .setStyle('Secondary')    
+            ),
+          ],
+          ephemeral: true,
+        });
+
+        let voters = [];
+        voters.push(int.user.id);
+
+        await localFunctions.updateSuggestion(message.id, int.user.id, status, suggestionEmbed, 0, 0, voters);
     
         //send suggestion to db
     

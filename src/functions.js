@@ -206,14 +206,34 @@ module.exports = {
         }
     },
 
-    updateSuggestion: async function (messageId, user, status, embed) {
+    updateSuggestion: async function (messageId, user, status, embed, upvotes, downvotes, voters) {
+        if (!voters) {
+            let suggestion = await getSuggestion(messageId);
+            voters = suggestion.voters;
+        }
         const { collectionSpecial, client: mongoClient } = await connectToMongoDBSpecial();
         try {
 
-            await collectionSpecial.updateOne({ _id: messageId }, { $set: { user, status, embed } }, { upsert: true });
+            await collectionSpecial.updateOne({ _id: messageId }, { $set: { user, status, embed, upvotes, downvotes, voters } }, { upsert: true });
 
         } catch (error) {
             console.error('Error creating suggestion:', error);
+            return null;
+        } finally {
+            if (mongoClient) {
+                mongoClient.close();
+            }
+        }
+    },
+
+    liquidateSuggestion: async function (messageId) {
+        const { collectionSpecial, client: mongoClient } = await connectToMongoDBSpecial();
+        try {
+
+            await collectionSpecial.deleteOne({ _id: messageId });
+
+        } catch (error) {
+            console.error('Error liquidating suggestion:', error);
             return null;
         } finally {
             if (mongoClient) {
@@ -372,4 +392,16 @@ function scheduleDailyDecay() {
         await handleDailyDecay();
         scheduleDailyDecay();
     }, delay);
+}
+
+async function getSuggestion (messageId) {
+    const { collectionSpecial, client: mongoClient } = await connectToMongoDBSpecial();
+    try {
+        const messageEmbed = await collectionSpecial.findOne({ _id: messageId });
+        return messageEmbed ? messageEmbed || [] : [];
+    } finally {
+        if (mongoClient) {
+            mongoClient.close();
+        }
+    }
 }
