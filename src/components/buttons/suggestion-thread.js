@@ -1,4 +1,4 @@
-const { GuildTextThreadManager } = require('discord.js');
+const { PermissionsBitField } = require('discord.js');
 const localFunctions = require('../../functions');
 
 module.exports = {
@@ -8,12 +8,20 @@ module.exports = {
     async execute (int, client) {
         await int.deferReply({ ephemeral: true });
         const suggestion = await localFunctions.getSuggestion(int.message.id);
-        try {
+        const permissions = [
+            {
+              id: int.guild.id, 
+              allow: [PermissionsBitField.Flags.SendMessagesInThreads], 
+              deny: [], 
+            },
+          ];
+        try {           
             const thread = await int.message.startThread({
-                name: `${suggestion.user}'s suggestion thread`,
+                name: `${suggestion.user.tag}'s suggestion thread`,
                 autoArchiveDuration: 60,
             })
             thread.members.add(int.user.id);
+            await thread.setThreadPermissions(permissions);
             int.editReply({content: 'Thread created.', ephemeral: true});
         } catch (error) {
             int.editReply({content: 'A thread already has been created.', ephemeral: true});
