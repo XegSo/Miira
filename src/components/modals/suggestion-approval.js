@@ -11,7 +11,7 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const reward = Math.max(parseInt(int.fields.getTextInputValue("reward")),5000);
         if (!Number.isInteger(reward)) {
-            int.reply({content: 'Invalid amount of tokens.', ephemeral: true});
+            int.editReply({content: 'Invalid amount of tokens.', ephemeral: true});
             return;
         }
         const { collection, client: mongoClient } = await connectToMongoDB();
@@ -21,7 +21,7 @@ module.exports = {
             const suggestionMessage = SuggestionCache.get(int.user.id).message;
             const suggestion = await localFunctions.getSuggestion(suggestionMessage.id);
             if (suggestion.upvotes-suggestion.downvotes < 1) {
-                int.reply({content: 'There is not enough net upvotes for this to go trough. 1 is minimal.', ephemeral: true});
+                int.editReply({content: 'There is not enough net upvotes for this to go trough. 1 is minimal.', ephemeral: true});
                 return;
             }
             const reason = int.fields.getTextInputValue("text-reason");
