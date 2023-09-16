@@ -5,7 +5,7 @@ const dbName = 'Ozen'; // Your MongoDB database name
 const collectionName = 'Special'; // Your collection name
 
 async function connectToMongoDBSpecial() {
-  const uri = process.env['mongo'];
+  const uri = process.env.MONGO;
   const client = new MongoClient(uri);
 
   try {
