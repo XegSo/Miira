@@ -11,7 +11,7 @@ module.exports = {
         const suggestionUser = await client.users.fetch(suggestion.user)
         try {           
             const thread = await int.message.startThread({
-                name: `${suggestionUser}'s suggestion thread`,
+                name: `${suggestionUser.tag}'s suggestion thread`,
                 autoArchiveDuration: 60,
             })
             thread.members.add(int.user.id);
