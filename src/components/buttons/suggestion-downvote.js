@@ -14,7 +14,7 @@ module.exports = {
         if (suggestion.status === 'Approved.' || suggestion.status === 'Denied.') return;
         let voters = suggestion.voters;
         if (suggestion.user === int.user.id) {
-            int.editReply({content: 'You cannot downvote your own suggerstion.', ephemeral: true});
+            int.editReply({content: 'You cannot downvote your own suggestion.', ephemeral: true});
             return;
         }
         if (voters.downvoters.some((voter) => voter === int.user.id)) {
