@@ -8,9 +8,10 @@ module.exports = {
     async execute (int, client) {
         await int.deferReply({ ephemeral: true });
         const suggestion = await localFunctions.getSuggestion(int.message.id);
+        const suggestionUser = await client.users.fetch(suggestion.user)
         try {           
             const thread = await int.message.startThread({
-                name: `${client.users.fetch(suggestion.user)}'s suggestion thread`,
+                name: `${suggestionUser}'s suggestion thread`,
                 autoArchiveDuration: 60,
             })
             thread.members.add(int.user.id);
