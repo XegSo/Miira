@@ -9,7 +9,7 @@ module.exports = {
     },
     async execute (int, client) {
         await int.deferReply({ ephemeral: true });
-        const reward = parseInt(int.fields.getTextInputValue("reward"));
+        const reward = Math.max(parseInt(int.fields.getTextInputValue("reward")),5000);
         if (!Number.isInteger(reward)) {
             int.reply({content: 'Invalid amount of tokens.', ephemeral: true});
             return;
