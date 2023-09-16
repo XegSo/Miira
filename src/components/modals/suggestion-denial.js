@@ -24,7 +24,7 @@ module.exports = {
             .setTimestamp()
             .setDescription(suggestion.embed.data.description)
             .addFields(
-                { name: '\u200B', value: `**Status: ${status}**\n🔺 Total Upvote count: ${suggestion.upvotes}.\n🔻 Total Downvote count: ${suggestion.downvotes}.\n❌ Denied by <@${int.user.id}>\nReason: ${reason}` },
+                { name: '\u200B', value: `**Status: ${status}**\n\n🔺 Total Upvote count: ${suggestion.upvotes}.\n🔻 Total Downvote count: ${suggestion.downvotes}.\n🔴 Denied by <@${int.user.id}>\nReason: ${reason}` },
             );
         suggestionMessage.edit({ embeds: [updatedEmbed], components: [] });
         suggestionMessage.reply(`<@${suggestion.user}> Your suggestion has been denied.\nReason: ${reason}`);

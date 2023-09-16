@@ -10,6 +10,7 @@ module.exports = {
     async execute (int, client) {
         await int.deferReply({ ephemeral: true });
         const reward = Math.min(parseInt(int.fields.getTextInputValue("reward")),5000);
+        console.log(reward)
         if (!Number.isInteger(reward)) {
             int.editReply({content: 'Invalid amount of tokens.', ephemeral: true});
             return;
@@ -17,7 +18,7 @@ module.exports = {
         const { collection, client: mongoClient } = await connectToMongoDB();
         const logChannel = int.guild.channels.cache.get('1152347792539402250');
         try {
-            const currentBalance = await localFunctions.getBalance(int.user.id, collection);
+            const currentBalance = await localFunctions.getBalance(suggestion.user, collection);
             const suggestionMessage = SuggestionCache.get(int.user.id).message;
             const suggestion = await localFunctions.getSuggestion(suggestionMessage.id);
             if (suggestion.upvotes-suggestion.downvotes < 1) {
@@ -37,7 +38,7 @@ module.exports = {
                 .setTimestamp()
                 .setDescription(suggestion.embed.data.description)
                 .addFields(
-                    { name: '\u200B', value: `**Status: ${status}**\n🔺 Total Upvote count: ${suggestion.upvotes}.\n🔻 Total Downvote count: ${suggestion.downvotes}.\n✔️ Approved by <@${int.user.id}>\nReason: ${reason}` },
+                    { name: '\u200B', value: `**Status: ${status}**\n\n🔺 Total Upvote count: ${suggestion.upvotes}.\n🔻 Total Downvote count: ${suggestion.downvotes}.\n🟢 Approved by <@${int.user.id}>\nReason: ${reason}` },
                 );
             suggestionMessage.edit({ embeds: [updatedEmbed], components: [] });
             const newBalance = currentBalance + reward;
@@ -47,9 +48,9 @@ module.exports = {
             const logEmbed = new EmbedBuilder()
               .setColor('#f26e6a')
               .setImage('https://puu.sh/JPffc/3c792e61c9.png')
-              .setAuthor({ name: `✔️ New suggestion approved.`, iconURL: suggestion.embed.data.author.icon_url })
+              .setAuthor({ name: `🟢 New suggestion approved.`, iconURL: suggestion.embed.data.author.icon_url })
               .setThumbnail('https://puu.sh/JP9Iw/a365159d0e.png')
-              .setDescription(`**Suggested by <@${suggestion.user}>**\n\n${suggestion.embed.data.description}\nDate: <t:${Math.floor(new Date(Date.now()) / 1000)}:F>.`)
+              .setDescription(`**Suggested by <@${suggestion.user}>\nApproved by <@${int.user.id}>**\n\n${suggestion.embed.data.description}\n\nDate: <t:${Math.floor(new Date(Date.now()) / 1000)}:F>.`)
             logChannel.send({ content: '', embeds: [logEmbed] });
             SuggestionCache.delete(int.user.id);
             int.editReply({ content: 'Suggestion successfully approved.', ephemeral: true });

@@ -13,12 +13,16 @@ module.exports = {
         const suggestion = await localFunctions.getSuggestion(int.message.id);
         if (suggestion.status === 'Approved.' || suggestion.status === 'Denied.') return;
         let voters = suggestion.voters;
-        if (voters.some((voter) => voter === int.user.id)) {
-            int.editReply({content: 'You cannot vote again or vote your own suggestion.', ephemeral: true});
+        if (suggestion.user === int.user.id) {
+            int.editReply({content: 'You cannot downvote your own suggerstion.', ephemeral: true});
             return;
         }
-        voters.push(int.user.id);
-        let upvotes = suggestion.upvotes;
+        if (voters.downvoters.some((voter) => voter === int.user.id)) {
+            int.editReply({content: 'You cannot downvote this suggestion again.', ephemeral: true});
+            return;
+        }
+        voters.downvoters.push(int.user.id);
+        let upvotes = voters.upvoters.some((voter) => voter === int.user.id) ? suggestion.upvotes-1 : suggestion.upvotes;
         let downvotes = suggestion.downvotes+1;
         const updatedEmbed = new EmbedBuilder()
                 .setThumbnail(suggestion.embed.data.thumbnail.url)
@@ -31,7 +35,7 @@ module.exports = {
                     .setTimestamp()
                     .setDescription(suggestion.embed.data.description)
                     .addFields(
-                        { name: '\u200B', value: `**Status: ${suggestion.status}**\n**Click on 🔺 to upvote.**\nTotal upvotes: ${upvotes}\n\nClick on 🔻 to downvote.\nTotal downvotes: ${downvotes}\n\n*Only admins can click on ✔️ or ❌.*\n` },
+                        { name: '\u200B', value: `**Status: ${suggestion.status}**\n\nClick on 🔺 to upvote.\nTotal upvotes: ${upvotes}\n\nClick on 🔻 to downvote.\nTotal downvotes: ${downvotes}\n\n*Only admins can click on ✅ or ❎.*\n` },
                     );
         int.message.edit({ embeds: [updatedEmbed] });
         int.editReply({content: 'You\'ve successfully voted.', ephemeral: true});

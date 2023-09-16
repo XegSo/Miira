@@ -10,11 +10,17 @@ module.exports = {
         name: 'suggestion-deny'
     },
     async execute (int, client) {
+        const suggestion = await localFunctions.getSuggestion(int.message.id);
+        if (suggestion.user === int.user.id) {
+            await localFunctions.liquidateSuggestion(int.message.id);
+            int.message.delete();
+            int.reply({content: 'Suggestion successfully removed.', ephemeral: true});
+            return;
+        }
         if (!localConstants.staffUserIds.includes(int.user.id)) {
             int.reply({content: 'wtf are you doing step brother >.<', ephemeral: true});
             return;
         }
-        const suggestion = await localFunctions.getSuggestion(int.message.id);
         if (suggestion.status === 'Approved.' || suggestion.status === 'Denied.') return;
 
         const modal = new ModalBuilder()
