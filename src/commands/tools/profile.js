@@ -230,7 +230,7 @@ module.exports = {
             }
 
             if (roles.includes("Staff")) {
-                localFunctions.convertToGrayscale();
+                localFunctions.convertToGrayscale(ctx);
             }
 
             const attachment = new AttachmentBuilder(canvas.toBuffer("image/png"), {

@@ -204,7 +204,7 @@ module.exports = {
     },
 
 
-    convertToGrayscale: function () {
+    convertToGrayscale: function (ctx) {
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
 
