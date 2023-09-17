@@ -138,9 +138,9 @@ module.exports = {
 
             let background = null;
 
-            if (roles.includes("Staff")) {  
+            if (roles.includes("Staff")) {
                 background = await Canvas.loadImage("./assets/backgrounds/Profile Staff.png");
-                ctx.drawImage(background, 0, 0, canvas.width, canvas.height); 
+                ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
             } else if (supporterValue) {
                 switch (supporterValue) {
                     case 'I':
@@ -177,7 +177,7 @@ module.exports = {
                         break;
                 }
 
-            } else {    
+            } else {
                 background = await Canvas.loadImage("./assets/backgrounds/Profile.png");
                 ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
             }
@@ -230,7 +230,22 @@ module.exports = {
             }
 
             if (roles.includes("Staff")) {
-                localFunctions.convertToGrayscale(ctx);
+                function convertToGrayscale() {
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = imageData.data;
+
+                    for (let i = 0; i < data.length; i += 4) {
+                        const gray = (data[i] + data[i + 1] + data[i + 2]) / 3; // Calculate grayscale value
+                        data[i] = gray;
+                        data[i + 1] = gray;
+                        data[i + 2] = gray;
+                    }
+
+                    ctx.putImageData(imageData, 0, 0);
+                }
+
+                // Call the function to convert to grayscale
+                convertToGrayscale();
             }
 
             const attachment = new AttachmentBuilder(canvas.toBuffer("image/png"), {
