@@ -7,7 +7,7 @@ module.exports = {
     name: 'guildMemberAdd',
     async execute(member) {
         const welcomeChannel = member.guild.channels.cache.get(localConstants.welcomeChannelID);
-        registerFont('Montserrat-MediumItalic.ttf', {
+        registerFont('./assets/fonts/Montserrat-MediumItalic.ttf', {
             family: "Montserrat"
         });
 
@@ -25,7 +25,7 @@ module.exports = {
         const canvas = Canvas.createCanvas(2800,646);
         const ctx = canvas.getContext("2d");
 
-        const background = await Canvas.loadImage("./Welcome Discord.png");
+        const background = await Canvas.loadImage("./assets/backgrounds/Welcome Discord.png");
 
         ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 

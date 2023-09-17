@@ -121,6 +121,92 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { balance } }, { upsert: true });
     },
 
+    getBadges: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.badges || null : null;
+    },
+
+    updateBadges: function (roles) {
+        console.log("Updating badges");
+        let badges = [];
+        if (roles.includes("Designer")) {
+            badges.push('Designer');
+        }
+        if (roles.includes("Tournament")) {
+            badges.push('Tournament');
+        }
+        if (roles.includes("Developer")) {
+            badges.push('Developer');
+        }
+        if (roles.includes("Website Host")) {
+            badges.push('Website Host');
+        }
+        if (roles.includes("Top Supporter")) {
+            badges.push('Top Supporter');
+        }
+        if (roles.includes("Special Donator")) {
+            badges.push('Special Donator');
+        }
+        if (roles.includes("Contrubitor")) {
+            badges.push('Contrubitor');
+        }
+        if (roles.includes("Admin")) {
+            badges.push('Admin');
+        }
+        if (roles.includes("AI")) {
+            badges.push('AI');
+        }
+        if (roles.includes("Mod")) {
+            badges.push('Mod');
+        }
+        if (roles.includes("Tourney Staff")) {
+            badges.push('Tourney Staff');
+        }
+        if (roles.includes("Website Staff")) {
+            badges.push('Website Staff');
+        }
+        if (roles.includes("Premium")) {
+            for (const item of roles) {
+                const match = item.match(/Mirage (\w+)/);
+                if (match) {
+                    badges.push(match[0]);
+                    break; // Stop the loop once a match is found
+                }
+            }
+        }
+        if (roles.includes("Former Premium")) {
+            badges.push('Former Premium');
+        }
+        if (roles.includes("Active Member")) {
+            if (roles.includes("Novice")) {
+                badges.push('Novice');
+            }
+            if (roles.includes("Advanced")) {
+                badges.push('Advanced');
+            }
+            if (roles.includes("Ultimate")) {
+                badges.push('Ultimate');
+            }
+        }
+        if (roles.includes("Participant")) {
+            for (const item of roles) {
+                const match = item.match(/Prestige (\d+)/);
+                if (match) {
+                    badges.push(match[0]);
+                    break; // Stop the loop once a match is found
+                }
+            }
+        }
+        if (roles.includes("Alumni")) {
+            badges.push('Alumni');
+        }
+        return badges;
+    },
+
+    setBadges: async function (userId, badges, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { badges } }, { upsert: true });
+    },
+
     getTopCombo: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.topCombo || 0 : 0;
@@ -394,7 +480,7 @@ function scheduleDailyDecay() {
     }, delay);
 }
 
-async function getSuggestion (messageId) {
+async function getSuggestion(messageId) {
     const { collectionSpecial, client: mongoClient } = await connectToMongoDBSpecial();
     try {
         const messageEmbed = await collectionSpecial.findOne({ _id: messageId });
