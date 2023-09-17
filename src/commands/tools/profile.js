@@ -137,7 +137,7 @@ module.exports = {
             }
 
             let background = null;
-            
+
             if (roles.includes("Staff")) {  
                 background = await Canvas.loadImage("./assets/backgrounds/Profile Staff.png");
                 ctx.drawImage(background, 0, 0, canvas.width, canvas.height); 
@@ -227,6 +227,10 @@ module.exports = {
                 let badgeImage = await Canvas.loadImage(`./assets/badges/${badge}.png`);
                 ctx.drawImage(badgeImage, posxBadges, 207, 92, 92);
                 posxBadges = posxBadges + 160;
+            }
+
+            if (roles.includes("Staff")) {
+                convertToGrayscale();
             }
 
             const attachment = new AttachmentBuilder(canvas.toBuffer("image/png"), {

@@ -203,6 +203,22 @@ module.exports = {
         return badges;
     },
 
+
+    convertToGrayscale: function () {
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+
+        for (let i = 0; i < data.length; i += 4) {
+            const gray = (data[i] + data[i + 1] + data[i + 2]) / 3; // Calculate grayscale value
+            data[i] = gray;
+            data[i + 1] = gray;
+            data[i + 2] = gray;
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+    },
+
+
     setBadges: async function (userId, badges, collection) {
         await collection.updateOne({ _id: userId }, { $set: { badges } }, { upsert: true });
     },
