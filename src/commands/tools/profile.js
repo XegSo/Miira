@@ -137,8 +137,9 @@ module.exports = {
             }
 
             let background = null;
+            const staff = roles.includes("Staff");
 
-            if (roles.includes("Staff")) {
+            if (staff) {
                 background = await Canvas.loadImage("./assets/backgrounds/Profile Staff.png");
                 ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
             } else if (supporterValue) {
@@ -181,22 +182,33 @@ module.exports = {
                 background = await Canvas.loadImage("./assets/backgrounds/Profile.png");
                 ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
             }
-
-            ctx.fillStyle = "#f9e1e1";
+            if (staff) {
+                ctx.fillStyle = "#FFFFFF";
+            } else {
+                ctx.fillStyle = "#f9e1e1";
+            }
             ctx.textAlign = "start";
             var ntext = int.user.username.split("").join(String.fromCharCode(8202))
             const name = applyText(canvas, `${int.user.tag}`, 'Montserrat', 114, 'normal');
             ctx.font = name;
             ctx.fillText(ntext, 494, 120);
 
-            ctx.fillStyle = "e2d8d8";
+            if (staff) {
+                ctx.fillStyle = "#FFFFFF";
+            } else {
+                ctx.fillStyle = "#e2d8d8";
+            }
             ctx.textAlign = "start";
             var btext = formattedBalance.split("").join(String.fromCharCode(8202))
             const balanceText = applyText(canvas, `${formattedBalance}`, 'Montserrat', 125, 'italic');
             ctx.font = balanceText;
             ctx.fillText(btext, 603, 436);
 
-            ctx.fillStyle = "e2d8d8";
+            if (staff) {
+                ctx.fillStyle = "#FFFFFF";
+            } else {
+                ctx.fillStyle = "#e2d8d8";
+            }
             ctx.textAlign = "start";
             const comboFullText = `TOP COMBO: ${topCombo}`;
             var ctext = comboFullText.split("").join(String.fromCharCode(8202))
@@ -204,7 +216,12 @@ module.exports = {
             ctx.font = comboText;
             ctx.fillText(ctext, 1777, 388);
 
-            ctx.fillStyle = "e2d8d8";
+
+            if (staff) {
+                ctx.fillStyle = "#FFFFFF";
+            } else {
+                ctx.fillStyle = "#e2d8d8";
+            }
             ctx.textAlign = "start";
             var ltext = userLevel.split("").join(String.fromCharCode(8202))
             const levelText = applyText(canvas, `${userLevel}`, 'Montserrat', 78, 'italic');
@@ -213,7 +230,11 @@ module.exports = {
 
             let posyBoosts = 54;
             for (const boost of boosts) {
-                ctx.fillStyle = "b48585";
+                if (staff) {
+                    ctx.fillStyle = "#FFFFFF";
+                } else {
+                    ctx.fillStyle = "#b48585";
+                }
                 ctx.textAlign = "end";
                 var botext = boost.split("").join(String.fromCharCode(8202))
                 const boostText = applyText(canvas, `${boost}`, 'Montserrat', 34, 'normal');
@@ -227,25 +248,6 @@ module.exports = {
                 let badgeImage = await Canvas.loadImage(`./assets/badges/${badge}.png`);
                 ctx.drawImage(badgeImage, posxBadges, 207, 92, 92);
                 posxBadges = posxBadges + 160;
-            }
-
-            if (roles.includes("Staff")) {
-                function convertToGrayscale() {
-                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    const data = imageData.data;
-
-                    for (let i = 0; i < data.length; i += 4) {
-                        const gray = (data[i] + data[i + 1] + data[i + 2]) / 3; // Calculate grayscale value
-                        data[i] = gray;
-                        data[i + 1] = gray;
-                        data[i + 2] = gray;
-                    }
-
-                    ctx.putImageData(imageData, 0, 0);
-                }
-
-                // Call the function to convert to grayscale
-                convertToGrayscale();
             }
 
             const attachment = new AttachmentBuilder(canvas.toBuffer("image/png"), {
