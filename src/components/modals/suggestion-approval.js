@@ -18,9 +18,9 @@ module.exports = {
         const { collection, client: mongoClient } = await connectToMongoDB();
         const logChannel = int.guild.channels.cache.get('1152347792539402250');
         try {
+            const suggestion = await localFunctions.getSuggestion(suggestionMessage.id);
             const currentBalance = await localFunctions.getBalance(suggestion.user, collection);
             const suggestionMessage = SuggestionCache.get(int.user.id).message;
-            const suggestion = await localFunctions.getSuggestion(suggestionMessage.id);
             if (suggestion.upvotes-suggestion.downvotes < 1) {
                 int.editReply({content: 'There is not enough net upvotes for this to go trough. 1 is minimal.', ephemeral: true});
                 return;
