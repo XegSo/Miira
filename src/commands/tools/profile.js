@@ -69,11 +69,9 @@ module.exports = {
 
             if (roles.includes("Level 3")) {
                 userLevel = "LEVEL 3";
-            }
-            if (roles.includes("Level 2")) {
+            } else if (roles.includes("Level 2")) {
                 userLevel = "LEVEL 2";
-            }
-            if (roles.includes("Level 1")) {
+            } else if (roles.includes("Level 1")) {
                 userLevel = "LEVEL 1";
             }
 
