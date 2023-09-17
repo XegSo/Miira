@@ -118,7 +118,7 @@ module.exports = {
 
             ctx.drawImage(avatar, 30, 30, 510, 510);
 
-            const background = await Canvas.loadImage("./assets/backgrounds/profile.png");
+            const background = await Canvas.loadImage("./assets/backgrounds/Profile.png");
             ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
             ctx.fillStyle = "#f9e1e1";
