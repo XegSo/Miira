@@ -2,6 +2,7 @@ const { Client, Collection, GatewayIntentBits, EmbedBuilder, Events, Partials } 
 require('dotenv').config();
 const token = process.env.TOKEN;
 const fs = require('fs');
+const path = require('path');
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -26,16 +27,20 @@ client.buttons = new Collection();
 client.selectMenus = new Collection();
 client.modals = new Collection();
 
+fs.readdirSync(path.join(__dirname, "/functions/handlers/")).filter((file) => {
+  require(`./functions/handlers/${file}`)(client);
+});
 
-const functionFolders = fs.readdirSync(`./src/functions`);
-for (const folder of functionFolders) {
-  const functionFiles = fs.readdirSync(`./src/functions/${folder}`).filter((file) => file.endsWith('.js'));
-  for (const file of functionFiles) 
-    require(`./functions/${folder}/${file}`)(client);
-}
+
 client.handleEvents();
 client.handleCommands();
 client.handleComponents();
+
+/*
+client.on("ready", () => {
+  client.hardReset();
+})
+*/
 
 // Start the daily decay schedule
 localFunctions.scheduleDailyDecay();
