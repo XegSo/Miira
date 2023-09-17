@@ -16,7 +16,7 @@ module.exports = {
         const purchasedItemValue = parseInt(purchasedItem.value.replace(/[^\d]/g, ''));
 
         // Establish a connection to MongoDB
-        const { collection, client: mongoClient } = await connectToMongoDB();
+        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
 
         try {
         // Check if the user has enough tokens

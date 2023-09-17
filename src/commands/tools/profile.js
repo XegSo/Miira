@@ -1,10 +1,8 @@
 const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const { connectToMongoDB } = require('../../mongo');
-const { connectToMongoDBSpecial } = require('../../mongoSpecial');
 const { registerFont } = require('canvas');
 const Canvas = require('canvas');
 const localFunctions = require('../../functions');
-const localConstants = require('../../constants');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -30,8 +28,8 @@ module.exports = {
         }
         const date = Date.now();
         const userId = int.user.id;
-        const { collection, client: mongoClient } = await connectToMongoDB();
-        const { collectionSpecial, client: mongoClientSpecial } = await connectToMongoDBSpecial();
+        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+        const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB("Special");
         try {
             const NormalBoostboostEndTime = await localFunctions.getBoostEndTime(userId, collection);
             const remainingTimeNormalBoost = NormalBoostboostEndTime ? NormalBoostboostEndTime - date : 0;

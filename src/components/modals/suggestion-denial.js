@@ -1,6 +1,5 @@
 const { SuggestionCache } = require('../buttons/suggestion-deny');
 const { EmbedBuilder } = require('discord.js');
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 
 module.exports = {

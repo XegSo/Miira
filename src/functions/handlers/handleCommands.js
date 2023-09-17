@@ -1,25 +1,23 @@
 const fs = require('fs');
+const path = require('path');
 
 module.exports = (client) => {
     client.handleCommands = async() => {
-        const commandFolders = fs.readdirSync("./src/commands");
-        for (const folder of commandFolders) {
-            const commandFiles = fs
-                .readdirSync(`./src/commands/${folder}`)
-                .filter((file) => file.endsWith('.js'));
+        const { commands, commandArray } = client;
 
-            const { commands, commandArray } = client;    
-            for (const file of commandFiles) {
-                const command = require(`../../commands/${folder}/${file}`);
+        fs.readdirSync(path.join(__dirname, "../../commands/tools")).filter((file) => {
+            if (file.endsWith('.js')) {
+                const command = require(path.join(__dirname, (`../../commands/tools/${file}`)));
                 commands.set(command.data.name, command);
                 commandArray.push(command.data.toJSON());
                 console.log(`Command: ${command.data.name} has been loaded.`);
             }
-        }
-    };
+        })
+    }
+
+    // Si SlashCommands se duplican entonces hacer hardreset.
     client.hardReset = async()  => {
         const guild = await client.guilds.fetch('630281137998004224');
-        console.log(guild);
         const { commands } = client;
         commands.set([]);
         guild.commands.set([]);

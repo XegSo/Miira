@@ -14,7 +14,7 @@ module.exports = {
     const selectedItem = localConstants.shopItems.find((item) => item.name === itemName);
     if (!itemName || !selectedItem) return;
 
-    const { collection, client: mongoClient } = await connectToMongoDB();
+    const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
 
     if ((selectedItem.name === "Novice Active Member Role" && int.member.roles.cache.has('1150870507445563452')) || (selectedItem.name === "Advanced Active Member Role" && int.member.roles.cache.has('1150870529104949330')) || (selectedItem.name === "Ultimate Active Member Role" && int.member.roles.cache.has('1150870546842660904'))) {
       int.reply({ content: `You already have this item active!`, ephemeral: true });

@@ -31,7 +31,7 @@ module.exports = {
                 return;
             }
             if (suggestion.status === 'Approved.') return;
-            const { collection, client: mongoClient } = await connectToMongoDB();
+            const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
             try {
                 const currentBalance = await localFunctions.getBalance(suggestion.user, collection);
                 const suggestionChannel = reaction.message.channel;

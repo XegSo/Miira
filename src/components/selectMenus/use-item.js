@@ -1,6 +1,5 @@
 const { EmbedBuilder, PermissionsBitField, ChannelType } = require('discord.js');
 const { connectToMongoDB } = require('../../mongo');
-const { connectToMongoDBSpecial } = require('../../mongoSpecial');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 
@@ -12,7 +11,7 @@ module.exports = {
     const userId = int.user.id;
     const guild = int.guild;
     const selectedItem = int.values[0];
-    const { collection, client: mongoClient } = await connectToMongoDB();
+    const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
     const userInventory = await localFunctions.getInventory(userId, collection);
 
     if (selectedItem && userInventory.some((item) => item.name === selectedItem)) {

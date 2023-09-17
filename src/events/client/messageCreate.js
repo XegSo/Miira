@@ -1,5 +1,4 @@
 const { connectToMongoDB } = require('../../mongo');
-const { connectToMongoDBSpecial } = require('../../mongoSpecial');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 const userCooldowns = new Map();
@@ -36,8 +35,8 @@ module.exports = {
         startOfDay.setHours(0, 0, 0, 0);
 
         // Establish a connection to MongoDB
-        const { collection, client: mongoClient } = await connectToMongoDB();
-        const { collectionSpecial, client: mongoClientSpecial } = await connectToMongoDBSpecial();
+        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+        const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB("Special");
         const globalBoost = await localFunctions.getGlobalBoost(collectionSpecial);
         const globalBoostEndTime = globalBoost.boostEndTime;
         const globalBoostValue = globalBoost.multiplier;
