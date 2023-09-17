@@ -61,6 +61,7 @@ const MirageFormat = Intl.NumberFormat('en-US', {
 const suggestionChannelID = '880953549561954314';
 
 const botId = '959278677789663302';
+const guildId = "630281137998004224"
 
 const timeInterval = 5000; // Define the time interval in milliseconds
 const blacklistedChannels = ['630995793670701065', '746040634548289606', '1118649160858599487', '781152261023596584', '795652942299791370'];
@@ -80,6 +81,7 @@ module.exports = {
     MirageFormat,
     suggestionChannelID,
     botId,
+    guildId,
     timeInterval,
     blacklistedChannels,
     comboInterval,

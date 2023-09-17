@@ -15,7 +15,7 @@ module.exports = {
             int.editReply({content: 'Invalid amount of tokens.', ephemeral: true});
             return;
         }
-        const { collection, client: mongoClient } = await connectToMongoDB();
+        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         const logChannel = int.guild.channels.cache.get('1152347792539402250');
         try {
             const suggestionMessage = SuggestionCache.get(int.user.id).message;

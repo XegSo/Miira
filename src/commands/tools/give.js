@@ -32,7 +32,7 @@ module.exports = {
         }
     
         // Establish a connection to MongoDB
-        const { collection, client: mongoClient } = await connectToMongoDB();
+        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
     
         try {
           const currentBalance = await localFunctions.getBalance(userId.id, collection); // Fetch user's balance from the database

@@ -10,7 +10,7 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
-        const { collection, client: mongoClient } = await connectToMongoDB();
+        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         // Retrieve the user's inventory items from the database
         const userInventory = await localFunctions.getInventory(userId, collection);
     

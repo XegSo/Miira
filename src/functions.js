@@ -1,6 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
 const { connectToMongoDB } = require('./mongo');
-const { connectToMongoDBSpecial } = require('./mongoSpecial');
 const localConstants = require('./constants');
 
 
@@ -59,7 +58,7 @@ module.exports = {
 
     handleReferralCommand: async function (int) {
         const userId = int.user.id;
-        const { collection, mongoClient } = await connectToMongoDB();
+        const { collection, mongoClient } = await connectToMongoDB("OzenCollection");
         try {
             // Check if the user already has a referral code
             let referralCode = await getReferralCode(userId, collection);
@@ -274,7 +273,7 @@ module.exports = {
 
 
     applyGlobalBoost: async function (multiplier, durationInHours) {
-        const { collectionSpecial, client: mongoClient } = await connectToMongoDBSpecial();
+        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
         try {
 
             // Calculate boost end time
@@ -298,7 +297,8 @@ module.exports = {
             let suggestion = await getSuggestion(messageId);
             voters = suggestion.voters;
         }
-        const { collectionSpecial, client: mongoClient } = await connectToMongoDBSpecial();
+        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+
         try {
 
             await collectionSpecial.updateOne({ _id: messageId }, { $set: { user, status, embed, upvotes, downvotes, voters } }, { upsert: true });
@@ -314,7 +314,8 @@ module.exports = {
     },
 
     liquidateSuggestion: async function (messageId) {
-        const { collectionSpecial, client: mongoClient } = await connectToMongoDBSpecial();
+        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+
         try {
 
             await collectionSpecial.deleteOne({ _id: messageId });
@@ -330,7 +331,8 @@ module.exports = {
     },
 
     getSuggestion: async function (messageId) {
-        const { collectionSpecial, client: mongoClient } = await connectToMongoDBSpecial();
+        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+
         try {
             const messageEmbed = await collectionSpecial.findOne({ _id: messageId });
             return messageEmbed ? messageEmbed || [] : [];
@@ -415,7 +417,7 @@ async function setReferralCode(userId, referralCode, collection) {
 
 async function fetchUserDataFromDatabase() {
     // Establish a connection to MongoDB
-    const { collection, client: mongoClient } = await connectToMongoDB();
+    const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
 
     try {
         const userData = await collection.find({}).toArray();
@@ -435,7 +437,7 @@ async function handleDailyDecay() {
     console.log("Running daily decay");
 
     // Establish a connection to MongoDB
-    const { collection, client: mongoClient } = await connectToMongoDB();
+    const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
 
     try {
         const users = await collection.find({}).toArray();
@@ -482,7 +484,7 @@ function scheduleDailyDecay() {
 }
 
 async function getSuggestion(messageId) {
-    const { collectionSpecial, client: mongoClient } = await connectToMongoDBSpecial();
+    const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
     try {
         const messageEmbed = await collectionSpecial.findOne({ _id: messageId });
         return messageEmbed ? messageEmbed || [] : [];
