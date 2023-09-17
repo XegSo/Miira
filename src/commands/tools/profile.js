@@ -58,7 +58,6 @@ module.exports = {
 
             const roles = int.member.roles.cache.map(role => role.name);
             const badgesDB = await localFunctions.getBadges(userId, collection);
-            const username = int.user.username;
 
             if (badgesDB) {
                 badges = badgesDB;
@@ -116,8 +115,69 @@ module.exports = {
 
             ctx.drawImage(avatar, 30, 30, 510, 510);
 
-            const background = await Canvas.loadImage("./assets/backgrounds/Profile.png");
-            ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+            let prestigeValue = null;
+            let supporterValue = null;
+
+            for (const item of badges) {
+                const match = item.match(/Mirage (\w+)/);
+                if (match) {
+                    supporterValue = match[1];
+                    break;
+                }
+            }
+
+            if (!supporterValue) {
+                for (const item of badges) {
+                    const match = item.match(/Prestige (\d+)/);
+                    if (match) {
+                        prestigeValue = match[1];
+                        break;
+                    }
+                }
+            }
+
+            let background = null;
+ 
+            if (supporterValue) {
+                switch (supporterValue) {
+                    case 'I':
+                    case 'II':
+                        background = await Canvas.loadImage("./assets/backgrounds/Profile Supporter Base.png");
+                        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+                        break;
+                    case 'III':
+                    case 'IV':
+                    case 'V':
+                    case 'VI':
+                    case 'VII':
+                    case 'VIII':
+                    case 'X':
+                        background = await Canvas.loadImage("./assets/backgrounds/Profile Supporter 3 Plus.png");
+                        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+                        break;
+                }
+            } else if (prestigeValue) {
+                switch (prestigeValue) {
+                    case '1':
+                    case '2':
+                        background = await Canvas.loadImage("./assets/backgrounds/Profile Prestige Base.png");
+                        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+                        break;
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                        background = await Canvas.loadImage("./assets/backgrounds/Profile Prestige 3 Plus.png");
+                        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+                        break;
+                }
+
+            } else {    
+                background = await Canvas.loadImage("./assets/backgrounds/Profile.png");
+                ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+            }
 
             ctx.fillStyle = "#f9e1e1";
             ctx.textAlign = "start";
