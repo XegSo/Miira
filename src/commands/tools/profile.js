@@ -137,8 +137,11 @@ module.exports = {
             }
 
             let background = null;
- 
-            if (supporterValue) {
+            
+            if (roles.includes("Staff")) {  
+                background = await Canvas.loadImage("./assets/backgrounds/Profile Staff.png");
+                ctx.drawImage(background, 0, 0, canvas.width, canvas.height); 
+            } else if (supporterValue) {
                 switch (supporterValue) {
                     case 'I':
                     case 'II':
@@ -174,9 +177,6 @@ module.exports = {
                         break;
                 }
 
-            } else if (roles.includes("Staff")) {  
-                background = await Canvas.loadImage("./assets/backgrounds/Profile Staff.png");
-                ctx.drawImage(background, 0, 0, canvas.width, canvas.height); 
             } else {    
                 background = await Canvas.loadImage("./assets/backgrounds/Profile.png");
                 ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
