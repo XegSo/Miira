@@ -174,6 +174,9 @@ module.exports = {
                         break;
                 }
 
+            } else if (roles.includes("Staff")) {  
+                background = await Canvas.loadImage("./assets/backgrounds/Profile Staff.png");
+                ctx.drawImage(background, 0, 0, canvas.width, canvas.height); 
             } else {    
                 background = await Canvas.loadImage("./assets/backgrounds/Profile.png");
                 ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
