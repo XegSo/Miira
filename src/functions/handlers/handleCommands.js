@@ -17,16 +17,6 @@ module.exports = (client) => {
                 console.log(`Command: ${command.data.name} has been loaded.`);
             }
         })
-
-        // Get all .js files in subfolders of the commands directory
-        const jsFiles = getJsFiles(path.join(__dirname, "../../commands"));
-
-        for (const file of jsFiles) {
-            const command = require(file);
-            commands.set(command.data.name, command);
-            commandArray.push(command.data.toJSON());
-            console.log(`Command: ${command.data.name} has been loaded.`);
-        }
         
         try {
             console.log('Started refreshing application (/) commands.');
