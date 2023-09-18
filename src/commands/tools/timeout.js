@@ -62,6 +62,6 @@ module.exports = {
             return;
         });
         
-        await int.reply({ embeds: [embed] });
+        await int.editReply({ embeds: [embed] });
     }    
 }
