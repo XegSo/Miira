@@ -9,9 +9,9 @@ module.exports = (client) => {
     client.handleCommands = async () => {
         const { commands, commandArray } = client;
 
-        fs.readdirSync(path.join(__dirname, "../../commands/tools")).filter((file) => {
+        fs.readdirSync(path.join(__dirname, "../../commands")).filter((file) => {
             if (file.endsWith('.js')) {
-                const command = require(path.join(__dirname, (`../../commands/tools/${file}`)));
+                const command = require(path.join(__dirname, (`../../commands/${file}`)));
                 commands.set(command.data.name, command);
                 commandArray.push(command.data.toJSON());
                 console.log(`Command: ${command.data.name} has been loaded.`);
