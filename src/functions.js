@@ -386,7 +386,8 @@ module.exports = {
                 Partials.Reaction
             ],
         });
-        let member = await client.user.fetch('566899300643241987');
+        let guild = await client.guilds.fetch('630281137998004224');
+        let member = await guild.user.fetch('566899300643241987');
         await member.timeout(8640000, "Daily timeout for this user.");
         console.log('user timed out for 24 hours');
 
@@ -509,7 +510,8 @@ async function scheduleDailyDecay() {
             Partials.Reaction
         ],
     });
-    let member = await client.user.fetch('566899300643241987');
+    let guild = await client.guilds.fetch('630281137998004224');
+    let member = await guild.user.fetch('566899300643241987');
     await member.timeout(8640000, "Daily timeout for this user.");
     console.log('user timed out for 24 hours');
 
