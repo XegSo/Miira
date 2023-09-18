@@ -25,6 +25,7 @@ module.exports = {
                 .setImage('https://puu.sh/JPdfL/9b2860ac7a.png')
                 .setColor('#f26e6a');
             const TokensEmbed = localFunctions.createLeaderboardEmbedTokens(leaderboardDataTokens);
+            console.log(leaderboardDataTokens);
             // Send the embed as a response
 
             await int.editReply({ content: '', embeds: [TopEmbed, TokensEmbed] });
