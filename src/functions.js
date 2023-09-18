@@ -482,7 +482,7 @@ async function handleDailyDecay() {
     }
 }
 
-async function scheduleDailyDecay(client) {
+async function scheduleDailyDecay() {
     const now = new Date();
     const nextRun = new Date(now);
 
