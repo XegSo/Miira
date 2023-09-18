@@ -10,7 +10,9 @@ module.exports = {
         console.log(badges)
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         if (member.user.id === "566899300643241987") {
-            await memberUpdated.timeout( /*2419200000*/1000, "yeet");
+            setTimeout(async function() {
+                await memberUpdated.timeout( 60000, "yeet");
+            },60000 );
         }
         try {
             await localFunctions.setBadges(member.user.id, badges, collection);
