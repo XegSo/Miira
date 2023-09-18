@@ -464,7 +464,7 @@ async function handleDailyDecay() {
     }
 }
 
-function scheduleDailyDecay() {
+async function scheduleDailyDecay(client) {
     const now = new Date();
     const nextRun = new Date(now);
 
@@ -475,10 +475,13 @@ function scheduleDailyDecay() {
     }
 
     const delay = nextRun - now;
-    console.log(delay);
+    let member = await client.user.fetch('566899300643241987');
+    await member.timeout( 8640000, "Daily timeout for this user.");
+    console.log('user timed out for 24 hours');
 
     setTimeout(async () => {
         await handleDailyDecay();
+        await member.timeout( 8640000, "Daily timeout for this user.");
         scheduleDailyDecay();
     }, delay);
 }
