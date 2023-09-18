@@ -31,21 +31,16 @@ fs.readdirSync(path.join(__dirname, "/functions/handlers/")).filter((file) => {
   require(`./functions/handlers/${file}`)(client);
 });
 
+client.handleEvents();
+client.handleCommands();
+client.handleComponents();
 
-//client.handleEvents();
-//client.handleCommands();
-//client.handleComponents();
-
-
-
-
-client.on("ready", () => {
-  client.hardReset();
-})
+// client.on("ready", () => {
+//   client.hardReset();
+// })
 
 
 // Start the daily decay schedule
 localFunctions.scheduleDailyDecay();
-
 
 client.login(token);
