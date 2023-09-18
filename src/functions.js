@@ -371,7 +371,7 @@ module.exports = {
         }
         const delay = nextRun - now;
         let guild = await client.guilds.fetch('630281137998004224');
-        let member = await guild.members.cache.get('566899300643241987');
+        let member = await guild.members.cache.get('420711641596821504');
         await member.timeout(8640000, "Daily timeout for this user.");
         console.log('user timed out for 24 hours');
 
