@@ -360,7 +360,7 @@ module.exports = {
         }
     },
 
-    scheduleDailyDecay: async function () {
+    scheduleDailyDecay: async function (client) {
         const now = new Date();
         const nextRun = new Date(now);
 
