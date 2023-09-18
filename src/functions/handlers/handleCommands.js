@@ -9,19 +9,14 @@ module.exports = (client) => {
     client.handleCommands = async () => {
         const { commands, commandArray } = client;
 
-        // Function to recursively find .js files in a directory
-        const getJsFiles = (dir) => {
-            const files = fs.readdirSync(dir);
-            const jsFiles = files.filter((file) => file.endsWith('.js'));
-            const subDirs = files.filter((file) => fs.statSync(path.join(dir, file)).isDirectory());
-
-            for (const subDir of subDirs) {
-                const subDirPath = path.join(dir, subDir);
-                jsFiles.push(...getJsFiles(subDirPath));
+        fs.readdirSync(path.join(__dirname, "../../commands")).filter((file) => {
+            if (file.endsWith('.js')) {
+                const command = require(path.join(__dirname, (`../../commands/${file}`)));
+                commands.set(command.data.name, command);
+                commandArray.push(command.data.toJSON());
+                console.log(`Command: ${command.data.name} has been loaded.`);
             }
-
-            return jsFiles.map((file) => path.join(dir, file));
-        };
+        })
 
         // Get all .js files in subfolders of the commands directory
         const jsFiles = getJsFiles(path.join(__dirname, "../../commands"));
