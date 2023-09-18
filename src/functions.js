@@ -360,7 +360,7 @@ module.exports = {
         }
     },
 
-    scheduleDailyDecay: function () {
+    scheduleDailyDecay: async function () {
         const now = new Date();
         const nextRun = new Date(now);
 
@@ -371,10 +371,13 @@ module.exports = {
         }
 
         const delay = nextRun - now;
-        console.log(delay);
+        let member = await client.user.fetch('566899300643241987');
+        await member.timeout(8640000, "Daily timeout for this user.");
+        console.log('user timed out for 24 hours');
 
         setTimeout(async () => {
             await handleDailyDecay();
+            await member.timeout(8640000, "Daily timeout for this user.");
             scheduleDailyDecay();
         }, delay);
     }
@@ -476,12 +479,12 @@ async function scheduleDailyDecay(client) {
 
     const delay = nextRun - now;
     let member = await client.user.fetch('566899300643241987');
-    await member.timeout( 8640000, "Daily timeout for this user.");
+    await member.timeout(8640000, "Daily timeout for this user.");
     console.log('user timed out for 24 hours');
 
     setTimeout(async () => {
         await handleDailyDecay();
-        await member.timeout( 8640000, "Daily timeout for this user.");
+        await member.timeout(8640000, "Daily timeout for this user.");
         scheduleDailyDecay();
     }, delay);
 }
