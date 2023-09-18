@@ -35,7 +35,7 @@ module.exports = {
             int.editReply({ content: 'I don\'t have the permissions to timeout this user.', ephemeral: true });
             return;
         }
-        if (int.member.id === timeMember.id || timeMember.permissions.had(PermissionsBitField.Flags.Administrator)) {
+        if (int.member.id === timeMember.id || timeMember.permissions.has(PermissionsBitField.Flags.Administrator)) {
             int.editReply({ content: 'the fuck are you doing lol.', ephemeral: true });
             return;
         }
