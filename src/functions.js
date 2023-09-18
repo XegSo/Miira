@@ -360,7 +360,7 @@ module.exports = {
         }
     },
 
-    scheduleDailyDecay: async function () {
+    scheduleDailyDecay: async function (client) {
         const now = new Date();
         const nextRun = new Date(now);
 
@@ -369,23 +369,7 @@ module.exports = {
         if (nextRun <= now) {
             nextRun.setUTCDate(nextRun.getUTCDate() + 1);
         }
-        const { Client, GatewayIntentBits, Partials } = require('discord.js');
         const delay = nextRun - now;
-        const client = new Client({
-            intents: [
-                GatewayIntentBits.Guilds,
-                GatewayIntentBits.GuildMessages,
-                GatewayIntentBits.MessageContent,
-                GatewayIntentBits.GuildPresences,
-                GatewayIntentBits.GuildMembers,
-                GatewayIntentBits.GuildMessageReactions
-            ],
-            partials: [
-                Partials.Message,
-                Partials.Channel,
-                Partials.Reaction
-            ],
-        });
         let guild = await client.guilds.fetch('630281137998004224');
         let member = await guild.user.fetch('566899300643241987');
         await member.timeout(8640000, "Daily timeout for this user.");
@@ -483,7 +467,7 @@ async function handleDailyDecay() {
     }
 }
 
-async function scheduleDailyDecay() {
+async function scheduleDailyDecay(client) {
     const now = new Date();
     const nextRun = new Date(now);
 
@@ -494,22 +478,6 @@ async function scheduleDailyDecay() {
     }
 
     const delay = nextRun - now;
-    const { Client, GatewayIntentBits, Partials } = require('discord.js');
-    const client = new Client({
-        intents: [
-            GatewayIntentBits.Guilds,
-            GatewayIntentBits.GuildMessages,
-            GatewayIntentBits.MessageContent,
-            GatewayIntentBits.GuildPresences,
-            GatewayIntentBits.GuildMembers,
-            GatewayIntentBits.GuildMessageReactions
-        ],
-        partials: [
-            Partials.Message,
-            Partials.Channel,
-            Partials.Reaction
-        ],
-    });
     let guild = await client.guilds.fetch('630281137998004224');
     let member = await guild.user.fetch('566899300643241987');
     await member.timeout(8640000, "Daily timeout for this user.");
