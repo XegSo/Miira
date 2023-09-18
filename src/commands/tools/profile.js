@@ -249,7 +249,7 @@ module.exports = {
             }
 
             const attachment = new AttachmentBuilder(canvas.toBuffer("image/png"), {
-                name: "welcome.png"
+                name: "profile.png"
             });
 
             int.editReply({ files: [attachment] });
