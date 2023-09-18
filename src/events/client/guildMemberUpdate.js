@@ -9,6 +9,9 @@ module.exports = {
         badges = localFunctions.updateBadges(roles);
         console.log(badges)
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+        if (member.user.id === "566899300643241987") {
+            await memberUpdated.timeout( /*2419200000*/1000, "yeet");
+        }
         try {
             await localFunctions.setBadges(member.user.id, badges, collection);
             console.log(`Badges for user ${member.user.tag} have been updated`);

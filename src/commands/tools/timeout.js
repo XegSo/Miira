@@ -22,7 +22,7 @@ module.exports = {
                 .setDescription('Reason of timeout.')
         ),
     async execute(int, client) {
-        await int.deferReply({ ephemeral: true });
+        await int.deferReply();
         const timeUser = int.options.getUser('user');
         const timeMember = await int.guild.members.fetch(timeUser.id);
         const duration = int.options.getInteger('minutes')*60;
