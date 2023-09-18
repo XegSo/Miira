@@ -17,9 +17,9 @@ module.exports = (client) => {
 
     // Si SlashCommands se duplican entonces hacer hardreset.
     client.hardReset = async()  => {
-        const guild = await client.guilds.fetch('630281137998004224');
+        //const guild = await client.guilds.fetch('630281137998004224');
         const { commands } = client;
         commands.set([]);
-        guild.commands.set([]);
+        //guild.commands.set([]);
     }
 };

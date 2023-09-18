@@ -32,17 +32,17 @@ fs.readdirSync(path.join(__dirname, "/functions/handlers/")).filter((file) => {
 });
 
 
-client.handleEvents();
-client.handleCommands();
-client.handleComponents();
+//client.handleEvents();
+//client.handleCommands();
+//client.handleComponents();
 
 
 
-/*
+
 client.on("ready", () => {
   client.hardReset();
 })
-*/
+
 
 // Start the daily decay schedule
 localFunctions.scheduleDailyDecay();
