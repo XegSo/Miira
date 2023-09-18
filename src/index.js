@@ -41,6 +41,6 @@ client.handleComponents();
 
 
 // Start the daily decay schedule
-localFunctions.scheduleDailyDecay(client);
+localFunctions.scheduleDailyDecay();
 
 client.login(token);
