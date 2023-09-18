@@ -89,7 +89,7 @@ module.exports = {
 
             if (GlobalBoostTime) {
                 if (GlobalBoostTime > date) {
-                    const secondsRemainingGlobalBoost = remainingTimeGlobalBoost / 1000;
+                    const secondsRemainingGlobalBoost = (remainingTimeGlobalBoost - date) / 1000;
                     if (secondsRemainingGlobalBoost < 60) {
                         boosts.push(`${GlobalBoostMultiplier}X GLOBAL BOOST EXPIRING IN ${Math.round(secondsRemainingGlobalBoost)} SECONDS`);
                     }
