@@ -1,5 +1,5 @@
 const { ActivityType } = require('discord.js');
-const localFunctions = require('./functions');
+const localFunctions = require('../../functions');
 
 module.exports = {
     name: 'ready',
