@@ -231,7 +231,7 @@ module.exports = {
                 if (staff) {
                     ctx.fillStyle = "#FFFFFF";
                 } else {
-                    ctx.fillStyle = "#b48585";
+                    ctx.fillStyle = "#f9e1e1";
                 }
                 ctx.textAlign = "end";
                 var botext = boost.split("").join(String.fromCharCode(8202))
