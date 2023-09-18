@@ -49,7 +49,7 @@ module.exports = {
             console.log(`User: ${message.author.tag}`);
             console.log(`Message length: ${messageLength}`);
             let tokensEarned;
-            let tokensEarnedNB = (0.3 * messageLength) / (5 + (0.0001 * (messageLength ** 2))) * (2 - (2 * (Math.E ** (-0.2))));
+            let tokensEarnedNB = (0.12 * messageLength) / (1.5 + (0.0001 * (messageLength ** 2))) * (2.5 - (2.5 * (Math.E ** (-0.2))));
             console.log(`Tokens earned without bonus: ${tokensEarnedNB}`);
 
             // Check if the user has an active combo
@@ -61,7 +61,7 @@ module.exports = {
                     // Calculate combo bonus based on the time elapsed
                     console.log(`Current combo ${comboData.messages}`);
                     let comboBonus = comboData.messages;
-                    tokensEarned = (0.3 * messageLength) / (5 + (0.0001 * (messageLength ** 2))) * (2 - (2 * (Math.E ** (-0.2 * (comboBonus + 1)))));
+                    tokensEarned = (0.12 * messageLength) / (1.5 + (0.0001 * (messageLength ** 2))) * (2.5 - (2.5 * (Math.E ** (-0.2 * (comboBonus + 1)))));
                     console.log(`Tokens earned with bonus: ${tokensEarned}`);
                     if (20 < messageLength) {
                         comboData.messages++; // Increment the number of messages in the combo
