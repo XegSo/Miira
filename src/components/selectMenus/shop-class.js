@@ -3,26 +3,11 @@ const { SelectMenuBuilder, ActionRowBuilder } = require('@discordjs/builders');
 const localConstants = require('../../constants');
 
 module.exports = {
-    data: new SlashCommandBuilder()
-        .setName('shop')
-        .setDescription('Lists the shop where you can buy items.')
-        .addStringOption(option => 
-            option
-                .setName('class')
-                .setDescription('Select whick kind of items to display')
-                .setRequired(true)
-                .addChoices(
-                { name: 'Augments', value: 'Augments' },
-                { name: 'Roles', value: 'Roles' },
-                { name: 'Commissions', value: 'Commissions' },
-                { name: 'Collab Perks', value: 'Collab Perks' },
-                { name: 'Extra', value: 'Extra' },
-                //{ name: 'Cosmetics', value: 'Cosmetics' },
-                //{ name: 'Instant Goodies', value: 'Instant Goodies' },
-                )
-        ),
+    data: {
+        name: 'shop-class'
+    },
     async execute(int, client) {
-        const shopType = int.options.getString('class');
+        const shopType = int.values[0];
         const shopEmbed = new EmbedBuilder()
             .setImage('https://puu.sh/JPffc/3c792e61c9.png')
             .setColor('#f26e6a')
@@ -56,10 +41,11 @@ module.exports = {
             ]);
         const actionRowOptions = new ActionRowBuilder().addComponents(options);
         const actionRowShopClass = new ActionRowBuilder().addComponents(shopClass);
-        int.reply({
+        int.message.edit({
         content: '',
         embeds: [BuyEmbed, shopEmbed],
         components: [actionRowOptions,actionRowShopClass],
         });
+        int.reply({content: `You're now on the ${shopType} section`, ephemeral: true});
     }    
 }

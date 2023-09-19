@@ -249,6 +249,15 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { inventory } }, { upsert: true });
     },
 
+    getOnUse: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.onUse || [] : [];
+    },
+
+    setOnUse: async function (userId, onUse, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { onUse } }, { upsert: true });
+    },
+
     getBoostEndTime: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.tokensBoostEndTime || null : null;

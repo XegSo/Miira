@@ -3,11 +3,21 @@ const { connectToMongoDB } = require('../../mongo');
 const { registerFont } = require('canvas');
 const Canvas = require('canvas');
 const localFunctions = require('../../functions');
+const localConstants = require('../../constants');
+const inventory = require('./inventory');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('profile')
-        .setDescription('Shows your server profile.'),
+        .setDescription('Shows your server profile.')
+        .addStringOption(option => 
+            option
+                .setName('update')
+                .setDescription('Updates your cosmetics (use if there is a cosmetic missing on your inventory.)')
+                .addChoices(
+                { name: 'yes', value: 'Update' },
+                )
+        ),
     async execute(int, client) {
         await int.deferReply();
         registerFont('./assets/fonts/Montserrat-Medium.ttf', {
@@ -43,6 +53,10 @@ module.exports = {
             const existingBalance = balance ? balance : 0;
             const topCombo = await localFunctions.getTopCombo(userId, collection) || 0;
 
+            let userInventory = await localFunctions.getInventory(userId, collection) || [];
+
+            let onUse = await localFunctions.getOnUse(userId, collection);
+
             let MirageFormat = Intl.NumberFormat('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
@@ -55,6 +69,7 @@ module.exports = {
             let userLevel = 'LEVEL 0';
 
             const roles = int.member.roles.cache.map(role => role.name);
+            const staff = roles.includes("Staff");
             const badgesDB = await localFunctions.getBadges(userId, collection);
 
             if (badgesDB) {
@@ -113,71 +128,63 @@ module.exports = {
 
             ctx.drawImage(avatar, 30, 30, 510, 510);
 
-            let prestigeValue = null;
-            let supporterValue = null;
+            let updated = false;
 
-            for (const item of badges) {
-                const match = item.match(/Mirage (\w+)/);
-                if (match) {
-                    supporterValue = match[1];
-                    break;
+            if ((!onUse.length && !inventory.length) || int.options.getString('update')) { //Updates cosmetics if the user doesn't have them
+                const mirageNoPlusBG = (roles.some((role) => /Mirage/.test(role)) && !roles.includes('Mirage I') && !roles.includes('Mirage II')) && (!userInventory.find((item) => item.name === 'Premium Background Plus') && !onUse.find((item) => item.name === 'Premium Background Plus'));
+                const mirageNoBG = (roles.includes('Mirage I') && roles.includes('Mirage II')) && (!userInventory.find((item) => item.name === 'Premium Background') && !onUse.find((item) => item.name === 'Premium Background'));
+                const prestigeNoPlusBG = (roles.some((role) => /Prestige/.test(role)) && !roles.includes('Prestige 1') && !roles.includes('Prestige 2')) && (!userInventory.find((item) => item.name === 'Prestige Background Plus') && !onUse.find((item) => item.name === 'Prestige Background Plus'));
+                const prestigeNoBG = (roles.includes('Prestige 1') || roles.includes('Prestige 2')) && (!userInventory.find((item) => item.name === 'Prestige Background') && !onUse.find((item) => item.name === 'Prestige Background'));
+                const staffNoBG = roles.some((role) => /Staff/.test(role)) && (!userInventory.find((item) => item.name === 'Staff Background') && !onUse.find((item) => item.name === 'Staff Background'));
+
+
+                if (staffNoBG) {
+                    const staffBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Staff Background');
+                    userInventory.push(staffBg);
+                    updated = true;
                 }
-            }
 
-            if (!supporterValue) {
-                for (const item of badges) {
-                    const match = item.match(/Prestige (\d+)/);
-                    if (match) {
-                        prestigeValue = match[1];
-                        break;
+                if (mirageNoPlusBG) {
+                    const miragePlusBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Premium Background Plus');
+                    userInventory.push(miragePlusBg);
+                    updated = true;
+                    if (!userInventory.find((item) => item.name === 'Premium Background')) {
+                        const mirageExtraBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Premium Background');
+                        userInventory.push(mirageExtraBg);
                     }
                 }
+
+                if (mirageNoBG) {
+                    const mirageBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Premium Background');
+                    userInventory.push(mirageBg);
+                    updated = true;
+                }
+
+                if (prestigeNoPlusBG) {
+                    const prestigePlusBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Prestige Background Plus');
+                    userInventory.push(prestigePlusBg);
+                    updated = true;
+                }
+
+                if (prestigeNoBG) {
+                    const prestigeBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Prestige Background');
+                    userInventory.push(prestigeBg);
+                    updated = true;
+                }
+
+                if (updated) {
+                    await localFunctions.setInventory(userId, userInventory, collection);
+                    console.log(`Cosmetics updated for ${int.user.tag}`);
+                }
             }
+            
+            let background = onUse.find((item) => item.type === 'background');
 
-            let background = null;
-            const staff = roles.includes("Staff");
-
-            if (staff) {
-                background = await Canvas.loadImage("./assets/backgrounds/Profile Staff.png");
+            if (background) {
+                background = await Canvas.loadImage(`./assets/backgrounds/${background.name}.png`);
                 ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-            } else if (supporterValue) {
-                switch (supporterValue) {
-                    case 'I':
-                    case 'II':
-                        background = await Canvas.loadImage("./assets/backgrounds/Profile Supporter Base.png");
-                        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-                        break;
-                    case 'III':
-                    case 'IV':
-                    case 'V':
-                    case 'VI':
-                    case 'VII':
-                    case 'VIII':
-                    case 'X':
-                        background = await Canvas.loadImage("./assets/backgrounds/Profile Supporter 3 Plus.png");
-                        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-                        break;
-                }
-            } else if (prestigeValue) {
-                switch (prestigeValue) {
-                    case '1':
-                    case '2':
-                        background = await Canvas.loadImage("./assets/backgrounds/Profile Prestige Base.png");
-                        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-                        break;
-                    case '3':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                    case '8':
-                        background = await Canvas.loadImage("./assets/backgrounds/Profile Prestige 3 Plus.png");
-                        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-                        break;
-                }
-
             } else {
-                background = await Canvas.loadImage("./assets/backgrounds/Profile.png");
+                background = await Canvas.loadImage(`./assets/backgrounds/Profile.png`);
                 ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
             }
             if (staff) {

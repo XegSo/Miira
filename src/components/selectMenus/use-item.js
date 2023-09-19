@@ -16,6 +16,7 @@ module.exports = {
 
     if (selectedItem && userInventory.some((item) => item.name === selectedItem)) {
 	  const itemIndex = userInventory.findIndex((item) => item.name === selectedItem);
+    const itemObject = userInventory.find((item) => item.name === selectedItem);
       // Check if the selected item is the "Tokens Boost X2 72h" item
       if (selectedItem === 'Tokens Boost X2 72h') {
         // Check if the user already has an active boost
@@ -153,7 +154,21 @@ module.exports = {
         int.reply({ content: `Global boost applied!`, ephemeral: true });
         announcementsChannel.send(`<@&1107112464455311400> <@${int.user.id}> has activated a global 4X Token Boost for 24 hours!`);
 
-      } else {
+      } else if (itemObject.isReturnable) {
+        let onUseItems = await localFunctions.getOnUse(userId, collection);
+        let backgroundOnUse = onUseItems.find((item) => item.type === 'background');
+        if (backgroundOnUse) {
+          if (backgroundOnUse.name === selectedItem) {
+            int.reply({ content: `You're already using this cosmetic!`, ephemeral: true });
+            return;
+          }
+          onUseItems = onUseItems.filter((item) => item.type !== 'background');
+          userInventory.push(backgroundOnUse);
+        }
+        onUseItems.push(itemObject);
+        await localFunctions.setOnUse(userId, onUseItems, collection);
+        int.reply({ content: `Cosmetic succesfully enabled!`, ephemeral: true });
+      }else {
         int.reply({ content: `Something went wrong...`, ephemeral: true });
         return;
       }

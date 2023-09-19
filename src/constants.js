@@ -32,26 +32,32 @@ const rolesToRemove = [
 ];
 
 const shopItems = [
-    { name: 'Tokens Boost X2 72h', value: '1,000 ₥', id: 'tokens-boost', desc: 'Obtain a X2 Token Boost per message sent in the next 72h.' }, //Coded
-    { name: 'Novice Active Member Role', value: '5,000 ₥', id: 'active-novice-role', desc: 'Obtain a role in the server that displays you\'re an active user along with a badge for all of your future collab materials.' }, //Coded
-    { name: 'Avatar GFX Commission', value: '10,000 ₥', id: 'avatar-com', desc: 'Request a custom Avatar GFX Commission.' }, //Coded
-    { name: 'Advanced Active Member Role', value: '20,000 ₥', id: 'active-advanced-role', desc: 'Obtain a role in the server that displays you\'re an active user along with a badge for all of your future collab materials.' }, //Coded
-    //{ name: 'Avatar 2.0', value: '10,000 ₥', id: 'avatar-special', desc: 'Obtain a Special Designed Avatar for the current megacollab.' }, //website interaction
-    // { name: 'me! Section Banner 2.0', value: '12,000 ₥', id: 'banner-special', desc: 'Obtain a Special Designed Banner for the current megacollab.' }, //website interaction
-    { name: 'Mirage I Perk', value: '50,000 ₥', id: 'mirage-one', desc: 'Be able to claim the Mirage I Paid perk for one collab.' }, //Coded
-    { name: 'Previous Megacollab Avatar', value: '50,000 ₥', id: 'avatar-collab-pre', desc: 'Obtain a customized Megacollab avatar with any of the previous designs.' }, //Coded
-    { name: 'Banner GFX Commission', value: '70,000 ₥', id: 'banner-com', desc: 'Request a custom Banner GFX Commission.' }, //Coded
-    { name: 'Previous Megacollab Banner', value: '70,000 ₥', id: 'banner-collab-pre', desc: 'Obtain a customized Megacollab banner with any of the previous designs.' }, //Coded
-    { name: 'Overlay GFX Commission', value: '80,000 ₥', id: 'overlay-com', desc: 'Request a custom Stream Overlay GFX Commission.' }, //Coded
-    { name: 'Ultimate Active Member Role', value: '80,000 ₥', id: 'active-ultimate-role', desc: 'Obtain a role on top of the server that displays you\'re an active user along with a special badge for all of your future collab materials.' }, //Coded
-    { name: 'Endless Mirage Skin', value: '200,000 ₥', id: 'mirage-skin', desc: 'Obtain the current Megacollab\'s skin customized with your name and images.' }, //Coded
-    { name: 'Collab Early Access', value: '300,000 ₥', id: 'early-access', desc: 'Obtain Early Access for the next megacollab.' },
-    { name: 'Permanent X2 Boost', value: '300,000 ₥', id: 'perma-boost', desc: 'Obtain a permanent X2 Token Boost per message sent.' }, //Coded
-    { name: 'Global Boost', value: '300,000 ₥', id: 'global-boost', desc: 'Set a global boost of X4 tokens for 24 Hours.' },
-    { name: 'Prestige Boost', value: '800,000 ₥', id: 'prestige-boost', desc: 'Get +1 Prestige Level.' },
-    { name: 'Owner\'s maid suit pics', value: '10,000,000 ₥', id: 'feet', desc: 'owo' }
+    { name: 'Tokens Boost X2 72h', value: '1,000 ₥', id: 'tokens-boost', desc: 'Obtain a X2 Token Boost per message sent in the next 72h.', class: 'Augments', isReturnable: false }, //Coded
+    { name: 'Novice Active Member Role', value: '5,000 ₥', id: 'active-novice-role', desc: 'Obtain a role in the server that displays you\'re an active user along with a badge for all of your future collab materials.', class: 'Roles', isReturnable: false  }, //Coded
+    { name: 'Avatar GFX Commission', value: '10,000 ₥', id: 'avatar-com', desc: 'Request a custom Avatar GFX Commission.', class: 'Commissions', isReturnable: false  }, //Coded
+    { name: 'Advanced Active Member Role', value: '20,000 ₥', id: 'active-advanced-role', desc: 'Obtain a role in the server that displays you\'re an active user along with a badge for all of your future collab materials.', class: 'Roles', isReturnable: false  }, //Coded
+    { name: 'Mirage I Perk', value: '50,000 ₥', id: 'mirage-one', desc: 'Be able to claim the Mirage I Paid perk for one collab.', class: 'Collab Perks', isReturnable: false  }, //Coded
+    { name: 'Previous Megacollab Avatar', value: '50,000 ₥', id: 'avatar-collab-pre', desc: 'Obtain a customized Megacollab avatar with any of the previous designs.', class: 'Commissions', isReturnable: false  }, //Coded
+    { name: 'Banner GFX Commission', value: '70,000 ₥', id: 'banner-com', desc: 'Request a custom Banner GFX Commission.', class: 'Commissions', isReturnable: false  }, //Coded
+    { name: 'Previous Megacollab Banner', value: '70,000 ₥', id: 'banner-collab-pre', desc: 'Obtain a customized Megacollab banner with any of the previous designs.', class: 'Commissions', isReturnable: false  }, //Coded
+    { name: 'Overlay GFX Commission', value: '80,000 ₥', id: 'overlay-com', desc: 'Request a custom Stream Overlay GFX Commission.', class: 'Commissions', isReturnable: false }, //Coded
+    { name: 'Ultimate Active Member Role', value: '80,000 ₥', id: 'active-ultimate-role', desc: 'Obtain a role on top of the server that displays you\'re an active user along with a special badge for all of your future collab materials.', class: 'Roles', isReturnable: false }, //Coded
+    { name: 'Endless Mirage Skin', value: '200,000 ₥', id: 'mirage-skin', desc: 'Obtain the current Megacollab\'s skin customized with your name and images.', class: 'Collab Perks', isReturnable: false }, //Coded
+    { name: 'Collab Early Access', value: '300,000 ₥', id: 'early-access', desc: 'Obtain Early Access for the next megacollab.', class: 'Collab Perks', isReturnable: false },
+    { name: 'Permanent X2 Boost', value: '300,000 ₥', id: 'perma-boost', desc: 'Obtain a permanent X2 Token Boost per message sent.', class: 'Augments', isReturnable: false }, //Coded
+    { name: 'Global Boost', value: '300,000 ₥', id: 'global-boost', desc: 'Set a global boost of X4 tokens for 24 Hours.', class: 'Augments', isReturnable: false }, //Coded
+    { name: 'Prestige Boost', value: '800,000 ₥', id: 'prestige-boost', desc: 'Get +1 Prestige Level.', class: 'Collab Perks', isReturnable: false },
+    { name: 'Owner\'s maid suit pics', value: '10,000,000 ₥', id: 'feet', desc: 'owo', class: 'Extra', isReturnable: false }
     // Add more items as needed, ensuring each item is an object with 'name' and 'value'
 ];
+
+const nonPurchaseableBackgrounds = [
+    {name: 'Prestige Background', value: 'Obtained by participating on collabs.' , id: 'pres-bg', desc: 'Special prestige profile cosmetic obtained by participating on collabs.', class: 'Cosmetics', type: 'background', isReturnable: true },
+    {name: 'Prestige Background Plus', value: 'Obtained by participating on 3+ collabs.', id: 'pres-bg-plus', desc: 'Special prestige profile cosmetic obtained by participating more than 3 collabs.', class: 'Cosmetics', type: 'background', isReturnable: true },
+    {name: 'Premium Background', value: 'Obtained by purchagin premium.', id: 'premium-bg', desc: 'Special **premium** profile cosmetic.', class: 'Cosmetics', type: 'background', isReturnable: true },
+    {name: 'Premium Background Plus', value: 'Obtained by purchasing a high premium tier.', id: 'premium-bg-plus', desc: 'Special **premium plus** profile cosmetic.', class: 'Cosmetics', type: 'background', isReturnable: true },
+    {name: 'Staff Background', value: 'Obtained by being staff.', id: 'staff-bg', desc: 'Special profile cosmetic for staff.', class: 'Cosmetics', type: 'background', isReturnable: true }
+]
 
 const MirageFormat = Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2,
@@ -85,6 +91,7 @@ module.exports = {
     timeInterval,
     blacklistedChannels,
     comboInterval,
+    nonPurchaseableBackgrounds,
     blacklistedChars,
     welcomeChannelID,
     dailyCheckHour,

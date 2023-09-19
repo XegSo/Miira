@@ -13,7 +13,9 @@ module.exports = {
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         // Retrieve the user's inventory items from the database
         const userInventory = await localFunctions.getInventory(userId, collection);
-    
+        const onUse = await localFunctions.getOnUse(userId, collection);
+
+
         const inventoryEmbedTop = new EmbedBuilder()
           .setImage('https://puu.sh/JPcRE/8db81baad8.png')
           .setColor('#f26e6a');
@@ -46,14 +48,20 @@ module.exports = {
         ];
     
         const inventoryEmbedBottom = new EmbedBuilder()
-          .setAuthor({ name: `${int.user.tag}'s Inventory`, iconURL: int.user.displayAvatarURL() })
           .setImage('https://puu.sh/JPffc/3c792e61c9.png')
           .setColor('#f26e6a');
-    
+        inventoryEmbedBottom.addFields({ name:  `\u200B`, value: '\`\`\`🔐 Items on storage\`\`\`' });
         for (const item of userInventory) {
-          inventoryEmbedBottom.addFields({ name:  `✨ ${item.name}`, value: item.desc });
+          inventoryEmbedBottom.addFields({ name:  `· ${item.name}`, value: item.desc });
         }
-    
+        
+        if (onUse) {
+          inventoryEmbedBottom.addFields({ name:  `\u200B`, value: '\`\`\`🚀 Items on use\`\`\`' });
+          for (const item of onUse) {
+            inventoryEmbedBottom.addFields({ name:  `· ${item.name}`, value: item.desc });
+          }
+        }
+
         const actionRow = new ActionRowBuilder().addComponents(options);
         await int.editReply({
           content: '',
