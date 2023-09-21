@@ -13,7 +13,7 @@ module.exports = {
         try {
             await localFunctions.setBadges(member.user.id, badges, collection);
             console.log(`Badges for user ${member.user.tag} have been updated`); 
-            localFunctions.updateNonPurchaseableCosmetics(member.user.id, collection, roles, userInventory, onUse) //Updates cosmetics
+            await localFunctions.updateNonPurchaseableCosmetics(member.user.id, collection, roles, userInventory, onUse) //Updates cosmetics
             console.log(`Cosmetics for user ${member.user.tag} have been updated`); 
         } finally {
             mongoClient.close();

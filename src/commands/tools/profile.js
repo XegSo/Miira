@@ -105,7 +105,7 @@ module.exports = {
             ctx.drawImage(avatar, 30, 30, 510, 510);
 
             if (!onUse.length && !userInventory.length) { //Updates cosmetics if the user doesn't have them
-                localFunctions.updateNonPurchaseableCosmetics(userId, collection, roles, userInventory, onUse)
+                await localFunctions.updateNonPurchaseableCosmetics(userId, collection, roles, userInventory, onUse)
             }
             
             let backgroundName = onUse.find((item) => item.type === 'background').name || 'Profile';
