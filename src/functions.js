@@ -10,6 +10,10 @@ registerFont('./assets/fonts/Montserrat-Italic.ttf', {
     family: "Montserrat",
     style: "italic"
 });
+registerFont('./assets/fonts/Montserrat-MediumItalic.ttf', {
+    family: "Montserrat",
+    style: "medium italic"
+});
 
 module.exports = {
     removeURLsAndColons: function (content) {

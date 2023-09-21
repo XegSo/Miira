@@ -1,5 +1,5 @@
 const localConstants = require('../../constants');
-const { registerFont } = require('canvas');
+const localFunctions = require('../../functions');
 const Canvas = require('canvas');
 const { AttachmentBuilder } = require('discord.js');
 
@@ -7,20 +7,6 @@ module.exports = {
     name: 'guildMemberAdd',
     async execute(member) {
         const welcomeChannel = member.guild.channels.cache.get(localConstants.welcomeChannelID);
-        registerFont('./assets/fonts/Montserrat-MediumItalic.ttf', {
-            family: "Montserrat"
-        });
-
-        const applyText = (canvas, text) => {
-            const ctx = canvas.getContext("2d");
-
-            let fontsize = 126;
-
-            do {
-                ctx.font = `${fontsize -= 10}px Montserrat`
-            } while (ctx.measureText(text).width > canvas.width - 300);
-            return ctx.font;
-        }
 
         const canvas = Canvas.createCanvas(2800,646);
         const ctx = canvas.getContext("2d");
@@ -29,13 +15,7 @@ module.exports = {
 
         ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-        ctx.fillStyle = "#FFFFFF";
-        ctx.textAlign = "center";
-        ctx.font = applyText(canvas, `${member.user.tag}`);
-
-        ctx.letterSpacing = 200;
-
-        ctx.fillText(member.user.username.toUpperCase(), 1400, 495);
+        localFunctions.ctxText(canvas, ctx, "#FFFFFF", member.user.username.toUpperCase(), "center", "Montserrat", 126, "medium italic", 1400, 495);
 
         ctx.beginPath();
         ctx.arc(1400, 201, 152, 0, Math.PI * 2, true);
