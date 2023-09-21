@@ -44,6 +44,7 @@ module.exports = {
             let userLevel = 'LEVEL 0';
             let textColor = "#f9e1e1";
             const comboFullText = `TOP COMBO: ${topCombo}`;;
+            let backgroundName = '';
 
             const roles = int.member.roles.cache.map(role => role.name);
             const badgesDB = await localFunctions.getBadges(userId, collection);
@@ -108,8 +109,13 @@ module.exports = {
                 await localFunctions.updateNonPurchaseableCosmetics(userId, collection, roles, userInventory, onUse)
                 console.log(`Cosmetics for user ${int.user.tag} have been updated`); 
             }
-            
-            let backgroundName = onUse.find((item) => item.type === 'background').name || 'Profile';
+
+            try {
+                backgroundName = onUse.find((item) => item.type === 'background').name;
+            } catch (error) {
+                backgroundName = 'Profile';
+            }   
+
             if (backgroundName === "Staff Background") {
                 textColor = "#FFFFFF";
             }
