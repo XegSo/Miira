@@ -596,4 +596,4 @@ function applyText(canvas, text, fontFamily, fontSize, fontStyle) {
 
 async function setInventory(userId, inventory, collection) {
     await collection.updateOne({ _id: userId }, { $set: { inventory } }, { upsert: true });
-},
+}
