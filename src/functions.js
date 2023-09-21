@@ -331,7 +331,7 @@ module.exports = {
         }
 
         if (updated) {
-            await localFunctions.setInventory(userId, userInventory, collection);
+            await setInventory(userId, userInventory, collection);
             console.log(`Cosmetics updated for ${int.user.tag}`);
         } else {
             console.log(`No cosmetics updated for ${int.user.tag}`);
@@ -585,7 +585,7 @@ async function getSuggestion(messageId) {
     }
 }
 
- function applyText(canvas, text, fontFamily, fontSize, fontStyle) {
+function applyText(canvas, text, fontFamily, fontSize, fontStyle) {
     const ctx = canvas.getContext("2d");
 
     do {
@@ -593,3 +593,7 @@ async function getSuggestion(messageId) {
     } while (ctx.measureText(text).width > canvas.width - 300);
     return ctx.font;
 }
+
+async function setInventory(userId, inventory, collection) {
+    await collection.updateOne({ _id: userId }, { $set: { inventory } }, { upsert: true });
+},
