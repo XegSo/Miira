@@ -332,10 +332,7 @@ module.exports = {
 
         if (updated) {
             await setInventory(userId, userInventory, collection);
-            console.log(`Cosmetics updated for ${int.user.tag}`);
-        } else {
-            console.log(`No cosmetics updated for ${int.user.tag}`);
-        }
+        } 
     }, 
 
     ctxText: function (canvas, ctx, textColor, text, align, font, fontSize, style, x, y) {

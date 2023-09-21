@@ -106,6 +106,7 @@ module.exports = {
 
             if (!onUse.length && !userInventory.length) { //Updates cosmetics if the user doesn't have them
                 await localFunctions.updateNonPurchaseableCosmetics(userId, collection, roles, userInventory, onUse)
+                console.log(`Cosmetics for user ${int.user.tag} have been updated`); 
             }
             
             let backgroundName = onUse.find((item) => item.type === 'background').name || 'Profile';
