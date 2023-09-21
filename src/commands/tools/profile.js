@@ -4,38 +4,13 @@ const { registerFont } = require('canvas');
 const Canvas = require('canvas');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
-const inventory = require('./inventory');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('profile')
-        .setDescription('Shows your server profile.')
-        .addStringOption(option => 
-            option
-                .setName('update')
-                .setDescription('Updates your cosmetics (use if there is a cosmetic missing on your inventory.)')
-                .addChoices(
-                { name: 'yes', value: 'Update' },
-                )
-        ),
+        .setDescription('Shows your server profile.'),
     async execute(int, client) {
         await int.deferReply();
-        registerFont('./assets/fonts/Montserrat-Medium.ttf', {
-            family: "Montserrat",
-            weight: 'normal'
-        });
-        registerFont('./assets/fonts/Montserrat-Italic.ttf', {
-            family: "Montserrat",
-            style: "italic"
-        });
-        const applyText = (canvas, text, fontFamily, fontSize, fontStyle) => {
-            const ctx = canvas.getContext("2d");
-
-            do {
-                ctx.font = `${fontStyle} ${fontSize}px ${fontFamily}`;
-            } while (ctx.measureText(text).width > canvas.width - 300);
-            return ctx.font;
-        }
         const date = Date.now();
         const userId = int.user.id;
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
@@ -67,9 +42,10 @@ module.exports = {
             let boosts = [];
             let badges = [];
             let userLevel = 'LEVEL 0';
+            let textColor = "#f9e1e1";
+            const comboFullText = `TOP COMBO: ${topCombo}`;;
 
             const roles = int.member.roles.cache.map(role => role.name);
-            const staff = roles.includes("Staff");
             const badgesDB = await localFunctions.getBadges(userId, collection);
 
             if (badgesDB) {
@@ -128,123 +104,29 @@ module.exports = {
 
             ctx.drawImage(avatar, 30, 30, 510, 510);
 
-            let updated = false;
-
-            if ((!onUse.length && !inventory.length) || int.options.getString('update')) { //Updates cosmetics if the user doesn't have them
-                const mirageNoPlusBG = (roles.some((role) => /Mirage/.test(role)) && !roles.includes('Mirage I') && !roles.includes('Mirage II')) && (!userInventory.find((item) => item.name === 'Premium Background Plus') && !onUse.find((item) => item.name === 'Premium Background Plus'));
-                const mirageNoBG = (roles.includes('Mirage I') && roles.includes('Mirage II')) && (!userInventory.find((item) => item.name === 'Premium Background') && !onUse.find((item) => item.name === 'Premium Background'));
-                const prestigeNoPlusBG = (roles.some((role) => /Prestige/.test(role)) && !roles.includes('Prestige 1') && !roles.includes('Prestige 2')) && (!userInventory.find((item) => item.name === 'Prestige Background Plus') && !onUse.find((item) => item.name === 'Prestige Background Plus'));
-                const prestigeNoBG = (roles.includes('Prestige 1') || roles.includes('Prestige 2')) && (!userInventory.find((item) => item.name === 'Prestige Background') && !onUse.find((item) => item.name === 'Prestige Background'));
-                const staffNoBG = roles.some((role) => /Staff/.test(role)) && (!userInventory.find((item) => item.name === 'Staff Background') && !onUse.find((item) => item.name === 'Staff Background'));
-
-
-                if (staffNoBG) {
-                    const staffBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Staff Background');
-                    userInventory.push(staffBg);
-                    updated = true;
-                }
-
-                if (mirageNoPlusBG) {
-                    const miragePlusBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Premium Background Plus');
-                    userInventory.push(miragePlusBg);
-                    updated = true;
-                    if (!userInventory.find((item) => item.name === 'Premium Background')) {
-                        const mirageExtraBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Premium Background');
-                        userInventory.push(mirageExtraBg);
-                    }
-                }
-
-                if (mirageNoBG) {
-                    const mirageBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Premium Background');
-                    userInventory.push(mirageBg);
-                    updated = true;
-                }
-
-                if (prestigeNoPlusBG) {
-                    const prestigePlusBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Prestige Background Plus');
-                    userInventory.push(prestigePlusBg);
-                    updated = true;
-                }
-
-                if (prestigeNoBG) {
-                    const prestigeBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Prestige Background');
-                    userInventory.push(prestigeBg);
-                    updated = true;
-                }
-
-                if (updated) {
-                    await localFunctions.setInventory(userId, userInventory, collection);
-                    console.log(`Cosmetics updated for ${int.user.tag}`);
-                }
+            if (!onUse.length && !userInventory.length) { //Updates cosmetics if the user doesn't have them
+                localFunctions.updateNonPurchaseableCosmetics(userId, collection, roles, userInventory, onUse)
             }
             
-            let background = onUse.find((item) => item.type === 'background');
-
-            if (background) {
-                background = await Canvas.loadImage(`./assets/backgrounds/${background.name}.png`);
-                ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-            } else {
-                background = await Canvas.loadImage(`./assets/backgrounds/Profile.png`);
-                ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+            let backgroundName = onUse.find((item) => item.type === 'background').name || 'Profile';
+            if (backgroundName === "Staff Background") {
+                textColor = "#FFFFFF";
             }
-            if (staff) {
-                ctx.fillStyle = "#FFFFFF";
-            } else {
-                ctx.fillStyle = "#f9e1e1";
-            }
-            ctx.textAlign = "start";
-            var ntext = int.user.username.split("").join(String.fromCharCode(8202))
-            const name = applyText(canvas, `${int.user.tag}`, 'Montserrat', 114, 'normal');
-            ctx.font = name;
-            ctx.fillText(ntext, 494, 120);
 
-            if (staff) {
-                ctx.fillStyle = "#FFFFFF";
-            } else {
-                ctx.fillStyle = "#e2d8d8";
-            }
-            ctx.textAlign = "start";
-            var btext = formattedBalance.split("").join(String.fromCharCode(8202))
-            const balanceText = applyText(canvas, `${formattedBalance}`, 'Montserrat', 125, 'italic');
-            ctx.font = balanceText;
-            ctx.fillText(btext, 603, 436);
+            background = await Canvas.loadImage(`./assets/backgrounds/${backgroundName}.png`);
+            ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-            if (staff) {
-                ctx.fillStyle = "#FFFFFF";
-            } else {
-                ctx.fillStyle = "#e2d8d8";
-            }
-            ctx.textAlign = "start";
-            const comboFullText = `TOP COMBO: ${topCombo}`;
-            var ctext = comboFullText.split("").join(String.fromCharCode(8202))
-            const comboText = applyText(canvas, `${topCombo}`, 'Montserrat', 78, 'italic');
-            ctx.font = comboText;
-            ctx.fillText(ctext, 1777, 388);
+            localFunctions.ctxText(canvas, ctx, textColor, int.user.username.split("").join(String.fromCharCode(8202)), 'start', 'Montserrat', 114, 'normal', 494, 120);
 
+            localFunctions.ctxText(canvas, ctx, textColor, formattedBalance.split("").join(String.fromCharCode(8202)), 'start', 'Montserrat', 125, 'italic', 603, 436);
 
-            if (staff) {
-                ctx.fillStyle = "#FFFFFF";
-            } else {
-                ctx.fillStyle = "#e2d8d8";
-            }
-            ctx.textAlign = "start";
-            var ltext = userLevel.split("").join(String.fromCharCode(8202))
-            const levelText = applyText(canvas, `${userLevel}`, 'Montserrat', 78, 'italic');
-            ctx.font = levelText;
-            ctx.fillText(ltext, 1777, 511);
+            localFunctions.ctxText(canvas, ctx, textColor, comboFullText.split("").join(String.fromCharCode(8202)), 'start', 'Montserrat', 78, 'italic', 1777, 388);
+
+            localFunctions.ctxText(canvas, ctx, textColor, userLevel.split("").join(String.fromCharCode(8202)), 'start', 'Montserrat', 78, 'italic', 1777, 511);
 
             let posyBoosts = 54;
             for (const boost of boosts) {
-                if (staff) {
-                    ctx.fillStyle = "#FFFFFF";
-                } else {
-                    ctx.fillStyle = "#f9e1e1";
-                }
-                ctx.textAlign = "end";
-                var botext = boost.split("").join(String.fromCharCode(8202))
-                const boostText = applyText(canvas, `${boost}`, 'Montserrat', 34, 'normal');
-                ctx.font = boostText;
-                ctx.fillText(botext, 2764, posyBoosts);
+                localFunctions.ctxText(canvas, ctx, textColor, boost.split("").join(String.fromCharCode(8202)), 'end', 'Montserrat', 34, 'Normal', 2764, posyBoosts);
                 posyBoosts = posyBoosts + 50;
             }
 

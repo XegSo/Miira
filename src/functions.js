@@ -1,7 +1,15 @@
 const { EmbedBuilder } = require('discord.js');
 const { connectToMongoDB } = require('./mongo');
 const localConstants = require('./constants');
-
+const { registerFont } = require('canvas');
+registerFont('./assets/fonts/Montserrat-Medium.ttf', {
+    family: "Montserrat",
+    weight: 'normal'
+});
+registerFont('./assets/fonts/Montserrat-Italic.ttf', {
+    family: "Montserrat",
+    style: "italic"
+});
 
 module.exports = {
     removeURLsAndColons: function (content) {
@@ -280,6 +288,72 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { referralCode } }, { upsert: true });
     },
 
+    updateNonPurchaseableCosmetics: async function (userId, collection, roles, userInventory, onUse) {
+        const mirageNoPlusBG = (roles.some((role) => /Mirage/.test(role)) && !roles.includes('Mirage I') && !roles.includes('Mirage II')) && (!userInventory.find((item) => item.name === 'Premium Background Plus') && !onUse.find((item) => item.name === 'Premium Background Plus'));
+        const mirageNoBG = (roles.includes('Mirage I') && roles.includes('Mirage II')) && (!userInventory.find((item) => item.name === 'Premium Background') && !onUse.find((item) => item.name === 'Premium Background'));
+        const prestigeNoPlusBG = (roles.some((role) => /Prestige/.test(role)) && !roles.includes('Prestige 1') && !roles.includes('Prestige 2')) && (!userInventory.find((item) => item.name === 'Prestige Background Plus') && !onUse.find((item) => item.name === 'Prestige Background Plus'));
+        const prestigeNoBG = (roles.includes('Prestige 1') || roles.includes('Prestige 2')) && (!userInventory.find((item) => item.name === 'Prestige Background') && !onUse.find((item) => item.name === 'Prestige Background'));
+        const staffNoBG = roles.some((role) => /Staff/.test(role)) && (!userInventory.find((item) => item.name === 'Staff Background') && !onUse.find((item) => item.name === 'Staff Background'));
+        let updated = false;
+
+        if (staffNoBG) {
+            const staffBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Staff Background');
+            userInventory.push(staffBg);
+            updated = true;
+        }
+
+        if (mirageNoPlusBG) {
+            const miragePlusBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Premium Background Plus');
+            userInventory.push(miragePlusBg);
+            updated = true;
+            if (!userInventory.find((item) => item.name === 'Premium Background')) {
+                const mirageExtraBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Premium Background');
+                userInventory.push(mirageExtraBg);
+            }
+        }
+
+        if (mirageNoBG) {
+            const mirageBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Premium Background');
+            userInventory.push(mirageBg);
+            updated = true;
+        }
+
+        if (prestigeNoPlusBG) {
+            const prestigePlusBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Prestige Background Plus');
+            userInventory.push(prestigePlusBg);
+            updated = true;
+        }
+
+        if (prestigeNoBG) {
+            const prestigeBg = localConstants.nonPurchaseableBackgrounds.find((item) => item.name === 'Prestige Background');
+            userInventory.push(prestigeBg);
+            updated = true;
+        }
+
+        if (updated) {
+            await localFunctions.setInventory(userId, userInventory, collection);
+            console.log(`Cosmetics updated for ${int.user.tag}`);
+        } else {
+            console.log(`No cosmetics updated for ${int.user.tag}`);
+        }
+    }, 
+
+    ctxText: function (canvas, ctx, textColor, text, align, font, fontSize, style, x, y) {
+        ctx.fillStyle = textColor;
+        ctx.textAlign = align;
+        const name = applyText(canvas, `${text}`, font, fontSize, style);
+        ctx.font = name;
+        ctx.fillText(text, x, y);
+    },
+
+    applyText: function (canvas, text, fontFamily, fontSize, fontStyle) {
+        const ctx = canvas.getContext("2d");
+    
+        do {
+            ctx.font = `${fontStyle} ${fontSize}px ${fontFamily}`;
+        } while (ctx.measureText(text).width > canvas.width - 300);
+        return ctx.font;
+    },
 
     applyGlobalBoost: async function (multiplier, durationInHours) {
         const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
@@ -509,4 +583,13 @@ async function getSuggestion(messageId) {
             mongoClient.close();
         }
     }
+}
+
+ function applyText(canvas, text, fontFamily, fontSize, fontStyle) {
+    const ctx = canvas.getContext("2d");
+
+    do {
+        ctx.font = `${fontStyle} ${fontSize}px ${fontFamily}`;
+    } while (ctx.measureText(text).width > canvas.width - 300);
+    return ctx.font;
 }
