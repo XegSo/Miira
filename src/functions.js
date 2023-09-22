@@ -132,6 +132,20 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { balance } }, { upsert: true });
     },
 
+    setPerkUsage: async function (status, collection) {
+        await collection.updateOne({ _id: "Premium Data" }, { $set: { status } }, { upsert: true });
+    },
+
+    setPerkStartingDecayDate: async function (date, collection) {
+        await collection.updateOne({ _id: "Premium Data" }, { $set: { date } }, { upsert: true });
+    },
+
+    getPerkStartingDecayDate: async function (collection) {
+        const premium = await collection.findOne({ _id: "Premium Data" });
+        return premium ? premium.date || 0 : 0;
+    },
+
+
     getBadges: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.badges || null : null;
@@ -261,6 +275,15 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { inventory } }, { upsert: true });
     },
 
+    getPerks: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.perks || [] : [];
+    },
+
+    setPerks: async function (userId, perks, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { perks } }, { upsert: true });
+    },
+
     getOnUse: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.onUse || [] : [];
@@ -357,14 +380,14 @@ module.exports = {
     },
 
     applyGlobalBoost: async function (multiplier, durationInHours) {
-        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+        const { collection: collection, client: mongoClient } = await connectToMongoDB("Special");
         try {
 
             // Calculate boost end time
             const currentTime = Date.now();
             const boostEndTime = currentTime + durationInHours * 3600000; // Convert hours to milliseconds
 
-            await collectionSpecial.updateOne({ _id: "Global Boost" }, { $set: { multiplier, boostEndTime } }, { upsert: true });
+            await collection.updateOne({ _id: "Global Boost" }, { $set: { multiplier, boostEndTime } }, { upsert: true });
 
         } catch (error) {
             console.error('Error applying global boost:', error);
@@ -455,14 +478,14 @@ module.exports = {
         }
         const delay = nextRun - now;
         let guild = await client.guilds.fetch('630281137998004224');
-        let member = await guild.members.cache.get('420711641596821504');
+        let member = await guild.members.cache.find(member => member.id === "420711641596821504");
         await member.timeout(86400000, "Daily timeout for this user.");
         console.log('user timed out for 24 hours');
 
         setTimeout(async () => {
             await handleDailyDecay();
             await member.timeout(86400000, "Daily timeout for this user.");
-            scheduleDailyDecay();
+            scheduleDailyDecay(client);
         }, delay);
     }
 }
@@ -563,14 +586,14 @@ async function scheduleDailyDecay(client) {
 
     const delay = nextRun - now;
     let guild = await client.guilds.fetch('630281137998004224');
-    let member = await guild.user.fetch('566899300643241987');
+    let member = await guild.members.cache.find(member => member.id === "420711641596821504");
     await member.timeout(8640000, "Daily timeout for this user.");
     console.log('user timed out for 24 hours');
 
     setTimeout(async () => {
         await handleDailyDecay();
-        await member.timeout(8640000, "Daily timeout for this user.");
-        scheduleDailyDecay();
+        await member.timeout(86040000, "Daily timeout for this user.");
+        scheduleDailyDecay(client);
     }, delay);
 }
 

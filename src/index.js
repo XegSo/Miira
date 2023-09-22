@@ -19,7 +19,6 @@ const client = new Client({
   ],
 });
 
-const localFunctions = require('./functions');
 
 client.commands = new Collection();
 client.commandArray = [];
@@ -40,7 +39,6 @@ client.handleComponents();
 // })
 
 
-// Start the daily decay schedule
-//localFunctions.scheduleDailyDecay();
+
 
 client.login(token);

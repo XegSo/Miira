@@ -77,7 +77,7 @@ const welcomeChannelID = '713108912764616704';
 
 // Schedule the daily decay to run at a specific time (e.g., 2:00 AM UTC)
 const dailyCheckHour = 0; // Adjust this as needed
-const dailyCheckMinute = 21;
+const dailyCheckMinute = 0;
 
 module.exports = {
     rolesLevel,

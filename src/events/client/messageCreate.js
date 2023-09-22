@@ -58,9 +58,9 @@ module.exports = {
 
                 // Check if the user's combo is still active
                 if (currentTime - comboData.lastMessageTime < localConstants.comboInterval) {
-                    // Calculate combo bonus based on the time elapsed
                     console.log(`Current combo ${comboData.messages}`);
                     let comboBonus = comboData.messages;
+                    comboData.lastMessageTime = currentTime;
                     tokensEarned = (0.12 * messageLength) / (1.5 + (0.0001 * (messageLength ** 2))) * (2.5 - (2.5 * (Math.E ** (-0.2 * (comboBonus + 1)))));
                     console.log(`Tokens earned with bonus: ${tokensEarned}`);
                     if (20 < messageLength) {
