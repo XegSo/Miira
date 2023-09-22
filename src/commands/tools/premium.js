@@ -67,33 +67,33 @@ module.exports = {
                     new ButtonBuilder()
                         .setCustomId('info-one')
                         .setLabel('1️⃣')
-                        .setStyle('Success'),
+                        .setStyle('Primary'),
                     new ButtonBuilder()
                         .setCustomId('info-two')
                         .setLabel('2️⃣')
-                        .setStyle('Success'),
+                        .setStyle('Primary'),
                     new ButtonBuilder()
                         .setCustomId('info-tree')
                         .setLabel('3️⃣')
-                        .setStyle('Success'),
+                        .setStyle('Primary'),
                     new ButtonBuilder()
                         .setCustomId('info-four')
                         .setLabel('4️⃣')
-                        .setStyle('Success'),
+                        .setStyle('Primary'),
                     new ButtonBuilder()
                         .setCustomId('info-five')
                         .setLabel('5️⃣')
-                        .setStyle('Success'),
+                        .setStyle('Primary'),
                 )
                 extraComponents = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId('info-six')
                         .setLabel('6️⃣')
-                        .setStyle('Success'),
+                        .setStyle('Primary'),
                     new ButtonBuilder()
                         .setCustomId('info-seven')
                         .setLabel('7️⃣')
-                        .setStyle('Success'),
+                        .setStyle('Primary'),
                 )
             }
 
