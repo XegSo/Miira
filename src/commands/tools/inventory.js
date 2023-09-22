@@ -23,7 +23,7 @@ module.exports = {
       
           if (!userInventory || userInventory.length === 0) {
             const emptyEmbedBottom = new EmbedBuilder()
-              .setAuthor({ name: `${int.user.tag}'s Inventory`, iconURL: int.user.displayAvatarURL() })
+              .setDescription('\`\`\`🔐 Items on storage\`\`\`')
               .setImage('https://puu.sh/JPffc/3c792e61c9.png')
               .setColor('#f26e6a')
               .addFields({ name: 'Your inventory is empty.', value: 'Use /shop to get some items.' });
@@ -51,7 +51,7 @@ module.exports = {
           const inventoryEmbedBottom = new EmbedBuilder()
             .setImage('https://puu.sh/JPffc/3c792e61c9.png')
             .setColor('#f26e6a');
-          inventoryEmbedBottom.addFields({ name:  `\u200B`, value: '\`\`\`🔐 Items on storage\`\`\`' });
+          inventoryEmbedBottom.setDescription('\`\`\`🔐 Items on storage\`\`\`');
           for (const item of userInventory) {
             inventoryEmbedBottom.addFields({ name:  `· ${item.name}`, value: item.desc });
           }
