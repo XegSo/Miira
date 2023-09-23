@@ -110,11 +110,12 @@ module.exports = {
         tierEmbed.addFields(
             {
                 name: `‎`,
-                value: `\`\`\`✅ Extras\`\`\`\n • ${selectedTier.extra}`
+                value: `\`\`\`✅ Extras\`\`\`\n • ${selectedTier.extra}\n`
             }
         )
 
         tierEmbed.setFooter({ text: 'Endless Mirage', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' });
+        tierEmbed.setTimestamp()
 
         buyComponent = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
