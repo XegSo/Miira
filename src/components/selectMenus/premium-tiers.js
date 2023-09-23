@@ -114,6 +114,8 @@ module.exports = {
             }
         )
 
+        tierEmbed..setFooter({ text: 'Endless Mirage', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' });
+
         buyComponent = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId('premium-buy')
