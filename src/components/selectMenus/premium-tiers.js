@@ -59,7 +59,7 @@ module.exports = {
                 inline: true
             },
             {
-                name: '\u200B',
+                name: '‎                                      *└DX Stands for Deluxe Collabs*',
                 value: `\`\`\`🎫 Perks\`\`\`\n`,
             },
             {
@@ -70,26 +70,26 @@ module.exports = {
 
         for (const perk of selectedTier.perks) {
             if (perk.restrictions) {
-                resString = `⚠️__*** ${perk.restrictions}***__`;
+                resString = `‎          💬__ *${perk.restrictions}*__`;
             } else {
-                resString = `⚠️__*** This perk has no restrictions!***__`;
+                resString = `‎          💬__ *This perk has no restrictions!*__`;
             }
 
             if (perk.singleUse) {
                 if (perk.renewalPrice && perk.individualPrice) {
-                    priceString = `‎        └💵__ Renewal: ${perk.renewalPrice}$__        └💵__ Price: ${perk.individualPrice}$__        🛑__** Single use perk.**__`;
+                    priceString = `\n‎        └💵__ Renewal: ${perk.renewalPrice}$__        └💵__ Price: ${perk.individualPrice}$__        🛑__** Single use perk.**__`;
                 } else if (perk.renewalPrice) {
-                    priceString = `‎        └💵__ Renewal: ${perk.renewalPrice}$__                                   🛑__** Single use perk.**__`;
+                    priceString = `\n‎        └💵__ Renewal: ${perk.renewalPrice}$__                                   🛑__** Single use perk.**__`;
                 } else if (perk.individualPrice) {
-                    priceString = `‎        └💵__ Price: ${perk.individualPrice}$__                                       🛑__** Single use perk.**__`;
+                    priceString = `\n‎        └💵__ Price: ${perk.individualPrice}$__                                       🛑__** Single use perk.**__`;
                 }
             } else {
                 if (perk.renewalPrice && perk.individualPrice) {
-                    priceString = `‎        └💵__ Renewal: ${perk.renewalPrice}$__        └💵__ Price: ${perk.individualPrice}$__`;
+                    priceString = `\n‎        └💵__ Renewal: ${perk.renewalPrice}$__        └💵__ Price: ${perk.individualPrice}$__`;
                 } else if (perk.renewalPrice) {
-                    priceString = `‎        └💵__ Renewal: ${perk.renewalPrice}$__`;
+                    priceString = `\n‎        └💵__ Renewal: ${perk.renewalPrice}$__`;
                 } else if (perk.individualPrice) {
-                    priceString = `‎        └💵__ Price: ${perk.individualPrice}$__`;
+                    priceString = `\n‎        └💵__ Price: ${perk.individualPrice}$__`;
                 } else {
                     priceString = '\u200B';
                 }
@@ -97,8 +97,8 @@ module.exports = {
 
             tierEmbed.addFields(
                 {
-                    name: `\`\`✒️${perk.name}\`\``,
-                    value: ` • ${perk.description}\n${priceString}`
+                    name: `\`\`✒️ ${perk.name}\`\``,
+                    value: `‎  • ${perk.description}${priceString}`
                 },
                 {
                     name: resString,
