@@ -293,6 +293,11 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { perks } }, { upsert: true });
     },
 
+    getPremiumData: async function (collection) {
+        const premium = await collection.findOne({ _id: 'Premium Data' });
+        return premium ? premium || [] : [];
+    },
+
     getOnUse: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.onUse || [] : [];
@@ -496,6 +501,33 @@ module.exports = {
             await member.timeout(86400000, "Daily timeout for this user.");
             scheduleDailyDecay(client);
         }, delay);
+    },
+
+    romanToInteger: function (roman) {
+        const romanNumerals = {
+            I: 1,
+            V: 5,
+            X: 10,
+            L: 50,
+            C: 100,
+            D: 500,
+            M: 1000,
+        };
+    
+        let result = 0;
+    
+        for (let i = 0; i < roman.length; i++) {
+            const currentNumeral = romanNumerals[roman[i]];
+            const nextNumeral = romanNumerals[roman[i + 1]];
+    
+            if (nextNumeral && currentNumeral < nextNumeral) {
+                result -= currentNumeral;
+            } else {
+                result += currentNumeral;
+            }
+        }
+    
+        return result;
     }
 }
 

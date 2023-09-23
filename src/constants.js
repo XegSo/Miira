@@ -131,7 +131,7 @@ const premiumTiers = [
         perks: [
             {
                 name: "Premium Animated Stream Overlay",
-                description: "Obtain a special animated stream overlay for any streaming platform.",
+                description: "Obtain a special animated stream overlay.",
                 restrictions: "Images and fields will have restrictions by the design itself.",
                 renewalPrice: 3,
                 individualPrice: 15,
@@ -168,8 +168,8 @@ const premiumTiers = [
         perks: [
             {
                 name: "Early Collab Delivery",
-                description: "Obtain the collab materials at least 1 week before public release.",
-                restrictions: "Only applies for main collab materials.",
+                description: "Obtain the collab materials before public release.",
+                restrictions: "At least 1 week before and only applies for main collab materials.",
                 renewalPrice: null,
                 individualPrice: null,
                 singleUse: false,
@@ -246,7 +246,7 @@ const premiumTiers = [
     },
     {
         name: 'Mirage VII', 
-        description: 'This tier doesn\'t need to renew perks bellow, gets a customized Endless Mirage Hoodie, can host their own megacollab with us, has direct megacollab pool influence and has free access to the deluxe collabs.' , 
+        description: 'This tier doesn\'t need to renew perks bellow it, gets a customized Endless Mirage Hoodie, can host their own megacollab with us, has direct megacollab pool influence and has free access to the deluxe collabs.' , 
         roleId: '861679323739717642',
         cost: 250,
         generalRenewalPrice: null,
@@ -255,7 +255,7 @@ const premiumTiers = [
         perks: [
             {
                 name: "No Perk Renewal",
-                description: "Get permament access to all of the premium perks bellow this tier.",
+                description: "No renewal for all of the premium perks bellow this tier.",
                 restrictions: null,
                 renewalPrice: null,
                 individualPrice: null,
