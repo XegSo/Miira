@@ -4,7 +4,7 @@ const localFunctions = require('../../functions')
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('setperks')
+        .setName('setperkstatus')
         .setDescription('Change the perk usage status (Admin Only).')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
         .addStringOption(option => 

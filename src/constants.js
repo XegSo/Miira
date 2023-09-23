@@ -52,11 +52,243 @@ const shopItems = [
 ];
 
 const nonPurchaseableBackgrounds = [
-    {name: 'Prestige Background', value: 'Obtained by participating on collabs.' , id: 'pres-bg', desc: 'Special prestige profile cosmetic obtained by participating on collabs.', class: 'Cosmetics', type: 'background', isReturnable: true },
-    {name: 'Prestige Background Plus', value: 'Obtained by participating on 3+ collabs.', id: 'pres-bg-plus', desc: 'Special prestige profile cosmetic obtained by participating more than 3 collabs.', class: 'Cosmetics', type: 'background', isReturnable: true },
-    {name: 'Premium Background', value: 'Obtained by purchagin premium.', id: 'premium-bg', desc: 'Special **premium** profile cosmetic.', class: 'Cosmetics', type: 'background', isReturnable: true },
-    {name: 'Premium Background Plus', value: 'Obtained by purchasing a high premium tier.', id: 'premium-bg-plus', desc: 'Special **premium plus** profile cosmetic.', class: 'Cosmetics', type: 'background', isReturnable: true },
-    {name: 'Staff Background', value: 'Obtained by being staff.', id: 'staff-bg', desc: 'Special profile cosmetic for staff.', class: 'Cosmetics', type: 'background', isReturnable: true }
+    { name: 'Prestige Background', value: 'Obtained by participating on collabs.' , id: 'pres-bg', desc: 'Special prestige profile cosmetic obtained by participating on collabs.', class: 'Cosmetics', type: 'background', isReturnable: true },
+    { name: 'Prestige Background Plus', value: 'Obtained by participating on 3+ collabs.', id: 'pres-bg-plus', desc: 'Special prestige profile cosmetic obtained by participating more than 3 collabs.', class: 'Cosmetics', type: 'background', isReturnable: true },
+    { name: 'Premium Background', value: 'Obtained by purchagin premium.', id: 'premium-bg', desc: 'Special **premium** profile cosmetic.', class: 'Cosmetics', type: 'background', isReturnable: true },
+    { name: 'Premium Background Plus', value: 'Obtained by purchasing a high premium tier.', id: 'premium-bg-plus', desc: 'Special **premium plus** profile cosmetic.', class: 'Cosmetics', type: 'background', isReturnable: true },
+    { name: 'Staff Background', value: 'Obtained by being staff.', id: 'staff-bg', desc: 'Special profile cosmetic for staff.', class: 'Cosmetics', type: 'background', isReturnable: true }
+]
+
+const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+
+const premiumTiers = [
+    {
+        name: 'Mirage I', 
+        description: 'Starter premium role with 2 perks, both tied to the megacollabs.' , 
+        roleId: '963221388892700723',
+        cost: 5,
+        generalRenewalPrice: 2,
+        deluxePrice: 2,
+        deluxeExtraPrice: 2,
+        perks: [
+            {
+                name: "Premium Avatar",
+                description: "Obtain a special desgined avatar for the current collab.",
+                restrictions: "Only same picked character in the collab.",
+                renewalPrice: 1,
+                individualPrice: 5,
+                singleUse: true,
+            },
+            {
+                name: "Premium Cover",
+                description: "Obtain a special designed profile cover for your osu! profile.",
+                restrictions: "Only same picked character in the collab.",
+                renewalPrice: 1,
+                individualPrice: 5,
+                singleUse: true,
+            }
+        ],
+        decay: true,  
+        extra: 'This tier includes bump inmunity, a special profile cosmetic for the server and a special badge for the osu! me section.'     
+    },
+    {
+        name: 'Mirage II', 
+        description: 'This tier includes more extra materials, tied to the megacollabs.' , 
+        roleId: '767452000777535488',
+        cost: 10,
+        generalRenewalPrice: 4,
+        deluxePrice: 2,
+        deluxeExtraPrice: 2,
+        perks: [
+            {
+                name: "Premium Animated Banner",
+                description: "Obtain a special animated banner for your me! section.",
+                restrictions: "Any character can be used.",
+                renewalPrice: 2,
+                individualPrice: 10,
+                singleUse: true,
+            },
+            {
+                name: "Premium Forum Signature",
+                description: "Obtain a special signature, usable in the osu! forums.",
+                restrictions: "Any character can be used.",
+                renewalPrice: 2,
+                individualPrice: 10,
+                singleUse: true,
+            }
+        ],
+        decay: true,
+        extra: 'This tier includes bump inmunity, a special profile cosmetic for the server and a special badge for the osu! me section.'      
+    },
+    {
+        name: 'Mirage III', 
+        description: 'This tier includes more extra materials, tied to the megacollabs.' , 
+        roleId: '1146645094699642890',
+        cost: 15,
+        generalRenewalPrice: 6,
+        deluxePrice: 2,
+        deluxeExtraPrice: 2,
+        perks: [
+            {
+                name: "Premium Animated Stream Overlay",
+                description: "Obtain a special animated stream overlay for any streaming platform.",
+                restrictions: "Images and fields will have restrictions by the design itself.",
+                renewalPrice: 3,
+                individualPrice: 15,
+                singleUse: true,
+            },
+            {
+                name: "Premium Desktop Wallpaper",
+                description: "Obtain a special desktop wallpaper.",
+                restrictions: "Any character can be used.",
+                renewalPrice: 2,
+                individualPrice: 10,
+                singleUse: true,
+            },
+            {
+                name: "Premium Collab Poster",
+                description: "Obtain a printable poster of the current megacollab.",
+                restrictions: "Any character can be used.",
+                renewalPrice: 2,
+                individualPrice: 10,
+                singleUse: true,
+            }
+        ],
+        decay: true,
+        extra: 'This tier includes bump inmunity, a special profile cosmetic for the server and a special badge for the osu! me section.'      
+    }, 
+    {
+        name: 'Mirage IV', 
+        description: 'This tier includes early delivery for the collabs, along no premium decay after collabs.' , 
+        roleId: '787388728795987969',
+        cost: 20,
+        generalRenewalPrice: 4,
+        deluxePrice: 2,
+        deluxeExtraPrice: 2,
+        perks: [
+            {
+                name: "Early Collab Delivery",
+                description: "Obtain the collab materials at least 1 week before public release.",
+                restrictions: "Only applies for main collab materials.",
+                renewalPrice: null,
+                individualPrice: null,
+                singleUse: false,
+            }
+        ],
+        decay: false,
+        extra: 'This tier includes bump inmunity, no premium role decay, a special profile cosmetic for the server and a special badge for the osu! me section.'      
+    },
+    {
+        name: 'Mirage V', 
+        description: 'This tier includes a customized osu! skin and an extra set of collab materials.' , 
+        roleId: '787388721255153694',
+        cost: 40,
+        generalRenewalPrice: 16,
+        deluxePrice: 1,
+        deluxeExtraPrice: 1,
+        perks: [
+            {
+                name: "Megacollab Themed osu! skin",
+                description: "Obtain the collab's osu! skin customized for you.",
+                restrictions: "Any character and texts can be used.",
+                renewalPrice: 6,
+                individualPrice: 20,
+                singleUse: true,
+            },
+            {
+                name: "Extra Collab Materials",
+                description: "Obtain an extra set of the current megacollab materials.",
+                restrictions: "Any character can be used.",
+                renewalPrice: 6,
+                individualPrice: 20,
+                singleUse: true,
+            }
+        ],
+        decay: false,
+        extra: 'This tier includes bump inmunity, no premium role decay, a special profile cosmetic for the server and a special badge for the osu! me section.'      
+    },
+    {
+        name: 'Mirage VI', 
+        description: 'This tier includes early access to the collabs, access to the PSD templates and access to the staff chat.' , 
+        roleId: '787723186556108840',
+        cost: 100,
+        generalRenewalPrice: 20,
+        deluxePrice: 1,
+        deluxeExtraPrice: 1,
+        perks: [
+            {
+                name: "Megacollab Early Access",
+                description: "Pick a character for the collab before the public opening.",
+                restrictions: null,
+                renewalPrice: 10,
+                individualPrice: 60,
+                singleUse: true,
+            },
+            {
+                name: "Access to PSD templates",
+                description: "Get access to all the PSD templates of all of the megacollabs.",
+                restrictions: null,
+                renewalPrice: null,
+                individualPrice: null,
+                singleUse: false,
+            },
+            {
+                name: "Access to the staff chat",
+                description: "Get direct contact with the server staff.",
+                restrictions: null,
+                renewalPrice: null,
+                individualPrice: null,
+                singleUse: false,
+            }
+        ],
+        decay: false,
+        extra: 'This tier includes bump inmunity, no premium role decay, a special profile cosmetic for the server and a special badge for the osu! me section.'      
+    },
+    {
+        name: 'Mirage VII', 
+        description: 'This tier doesn\'t need to renew perks bellow, gets a customized Endless Mirage Hoodie, can host their own megacollab with us, has direct megacollab pool influence and has free access to the deluxe collabs.' , 
+        roleId: '861679323739717642',
+        cost: 250,
+        generalRenewalPrice: null,
+        deluxePrice: null,
+        deluxeExtraPrice: null,
+        perks: [
+            {
+                name: "No Perk Renewal",
+                description: "Get permament access to all of the premium perks bellow this tier.",
+                restrictions: null,
+                renewalPrice: null,
+                individualPrice: null,
+                singleUse: false,
+            },
+            {
+                name: "Custom Endless Mirage Hoodie",
+                description: "Obtain an Endless Mirage themed hoodie with your name on it.",
+                restrictions: null,
+                renewalPrice: 20,
+                individualPrice: 30,
+                singleUse: true,
+            },
+            {
+                name: "Host your own Megacollab",
+                description: "Be able to host your own megacollab with designs made by us and your influence.",
+                restrictions: null,
+                renewalPrice: 50,
+                individualPrice: 150,
+                singleUse: true,
+            },
+            {
+                name: "Megacollab Pooling Influence",
+                description: "Add any series that you would like into the collab.",
+                restrictions: "Series need to fit the topic of the collab.",
+                renewalPrice: null,
+                individualPrice: null,
+                singleUse: false,
+            }
+        ],
+        decay: false,
+        extra: 'This tier includes bump inmunity, no premium role decay, a special profile cosmetic for the server and a special badge for the osu! me section.'      
+    }
 ]
 
 const MirageFormat = Intl.NumberFormat('en-US', {
@@ -82,11 +314,13 @@ const dailyCheckMinute = 0;
 module.exports = {
     rolesLevel,
     staffUserIds,
+    romanNumerals,
     rolesToRemove,
     shopItems,
     MirageFormat,
     suggestionChannelID,
     botId,
+    premiumTiers,
     guildId,
     timeInterval,
     blacklistedChannels,

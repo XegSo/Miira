@@ -238,6 +238,15 @@ module.exports = {
         return user ? user.topCombo || 0 : 0;
     },
 
+    getUserTier: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.Tier || [] : [];
+    },
+
+    setUserTier: async function (userId, Tier, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { Tier } }, { upsert: true });
+    },
+
     setTopCombo: async function (userId, topCombo, collection) {
         await collection.updateOne({ _id: userId }, { $set: { topCombo } }, { upsert: true });
     },
