@@ -6,12 +6,12 @@ module.exports = {
         name: 'premium-info'
     },
     async execute(int, client) {
-        await int.deferReply();
+        await int.deferReply({ ephemeral: true });
 
         const premiumEmbed = new EmbedBuilder()
             .setImage('https://puu.sh/JPffc/3c792e61c9.png')
             .setColor('#f26e6a')
-            .setDescription('\`\`\`🚀 Welcome to the premium section!\`\`\`\n**In this section, you can find information about the current premium tiers and their perks!**\n\n• The perks are accumulative and the starter ones are valid for one collab. \n• After one collab, the perks will need to be renewed. \n• If there is no renewal, there is a decay into *former supporter* and the renewal prices won\'t be able to be used anymore unless premium is purchased again.\n• You can also purchase single perks for single use in collabs.\n• Premium includes bump immunity.\n\nOnly the **prominent** perks are mentioned for each tier on this embed.')
+            .setDescription('\`\`\`🚀 Welcome to the premium section!\`\`\`\n**In this section, you can find information about the current premium tiers and their perks!**\n\n• The perks are **accumulative**. \n• After one collab, most perks will need to be **renewed**. \n• If there is no renewal, there is a decay into *former supporter*.\n• You can also purchase **single perks** for single use in collabs.\n• Premium includes bump immunity.\n\nOnly the **prominent** perks are mentioned for each tier on this embed.')
             .addFields(
                 { name: ` `, value: `\`\`🎫 Mirage I Premium | Price: 5$\`\`\n └ Exclusive profile picture version.` },
                 { name: ` `, value: `\`\`🎫 Mirage II Premium | Price: 10$\`\`\n └ Animated Banner.` },
@@ -40,8 +40,7 @@ module.exports = {
         int.editReply({
             content: '',
             embeds: [premiumEmbed],
-            components: [mainComponents],
-            ephemeral: true
+            components: [mainComponents]
         });
 
     }
