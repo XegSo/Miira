@@ -110,7 +110,7 @@ module.exports = {
         tierEmbed.addFields(
             {
                 name: `‎`,
-                value: `\`\`\`✅ Extras\`\`\`\n • ${selectedTier.extra}\n`
+                value: `\`\`\`✅ Extras\`\`\`\n • ${selectedTier.extra}\n‎`
             }
         )
 
