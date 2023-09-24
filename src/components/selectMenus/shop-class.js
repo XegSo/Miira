@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const { SelectMenuBuilder, ActionRowBuilder } = require('@discordjs/builders');
 const localConstants = require('../../constants');
 

@@ -12,12 +12,12 @@ module.exports = {
       .setCustomId(`suggest-modal`)
       .setTitle('Send a suggestion');
 
-      const title = new TextInputBuilder()
+    const title = new TextInputBuilder()
       .setCustomId('suggestion-title')
       .setLabel('Resume your suggestion in a few words.')
       .setPlaceholder('Ex: Adding x to the collabs.')
       .setRequired(true)
-      .setStyle(TextInputStyle.Short);  
+      .setStyle(TextInputStyle.Short);
 
     const suggestion = new TextInputBuilder()
       .setCustomId('suggestion')

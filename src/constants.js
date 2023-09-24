@@ -78,6 +78,7 @@ const premiumTiers = [
                 renewalPrice: 1,
                 individualPrice: 5,
                 singleUse: true,
+                collabDependant: true,
             },
             {
                 name: "Premium Cover",
@@ -86,6 +87,7 @@ const premiumTiers = [
                 renewalPrice: 1,
                 individualPrice: 5,
                 singleUse: true,
+                collabDependant: true,
             }
         ],
         decay: true,  
@@ -107,6 +109,7 @@ const premiumTiers = [
                 renewalPrice: 2,
                 individualPrice: 10,
                 singleUse: true,
+                collabDependant: true,
             },
             {
                 name: "Premium Forum Signature",
@@ -115,6 +118,7 @@ const premiumTiers = [
                 renewalPrice: 2,
                 individualPrice: 10,
                 singleUse: true,
+                collabDependant: true,
             }
         ],
         decay: true,
@@ -136,6 +140,7 @@ const premiumTiers = [
                 renewalPrice: 3,
                 individualPrice: 15,
                 singleUse: true,
+                collabDependant: true,
             },
             {
                 name: "Premium Desktop Wallpaper",
@@ -144,6 +149,7 @@ const premiumTiers = [
                 renewalPrice: 2,
                 individualPrice: 10,
                 singleUse: true,
+                collabDependant: true,
             },
             {
                 name: "Premium Collab Poster",
@@ -152,6 +158,7 @@ const premiumTiers = [
                 renewalPrice: 2,
                 individualPrice: 10,
                 singleUse: true,
+                collabDependant: true,
             }
         ],
         decay: true,
@@ -173,6 +180,7 @@ const premiumTiers = [
                 renewalPrice: null,
                 individualPrice: null,
                 singleUse: false,
+                collabDependant: false,
             }
         ],
         decay: false,
@@ -194,6 +202,7 @@ const premiumTiers = [
                 renewalPrice: 6,
                 individualPrice: 20,
                 singleUse: true,
+                collabDependant: true,
             },
             {
                 name: "Extra Collab Materials",
@@ -202,6 +211,7 @@ const premiumTiers = [
                 renewalPrice: 6,
                 individualPrice: 20,
                 singleUse: true,
+                collabDependant: true,
             }
         ],
         decay: false,
@@ -223,6 +233,7 @@ const premiumTiers = [
                 renewalPrice: 10,
                 individualPrice: 60,
                 singleUse: true,
+                collabDependant: false,
             },
             {
                 name: "Access to PSD templates",
@@ -231,6 +242,7 @@ const premiumTiers = [
                 renewalPrice: null,
                 individualPrice: null,
                 singleUse: false,
+                collabDependant: false,
             },
             {
                 name: "Access to the staff chat",
@@ -239,6 +251,7 @@ const premiumTiers = [
                 renewalPrice: null,
                 individualPrice: null,
                 singleUse: false,
+                collabDependant: false,
             }
         ],
         decay: false,
@@ -260,6 +273,7 @@ const premiumTiers = [
                 renewalPrice: null,
                 individualPrice: null,
                 singleUse: false,
+                collabDependant: false,
             },
             {
                 name: "Custom Endless Mirage Hoodie",
@@ -268,6 +282,7 @@ const premiumTiers = [
                 renewalPrice: 20,
                 individualPrice: 30,
                 singleUse: true,
+                collabDependant: false,
             },
             {
                 name: "Host your own Megacollab",
@@ -276,6 +291,7 @@ const premiumTiers = [
                 renewalPrice: 50,
                 individualPrice: 150,
                 singleUse: true,
+                collabDependant: false,
             },
             {
                 name: "Megacollab Pooling Influence",
@@ -284,6 +300,7 @@ const premiumTiers = [
                 renewalPrice: null,
                 individualPrice: null,
                 singleUse: false,
+                collabDependant: false,
             }
         ],
         decay: false,

@@ -15,8 +15,9 @@ module.exports = {
         let foundRole = null;
         let renewalPrice = '';
         let decayString = '';
+        let tierString = `**No premium status found!**`;
         let ender = '├';
-        let tierString = '**No premium status found!**';
+        let tierDetails = '';
         let newPerks = [];
         const roles = int.member.roles.cache.map(role => role.name);
         const username = int.user.tag;
@@ -32,12 +33,12 @@ module.exports = {
             let userTier = await localFunctions.getUserTier(userId, collection);
 
             const premiumEmbed = new EmbedBuilder()
-                .setImage('https://puu.sh/JPffc/3c792e61c9.png')
+                .setTimestamp()
                 .setColor('#f26e6a')
 
-            if (!userTier.name && int.member.roles.cache.has('743505566617436301')) {
+            if (!userTier && int.member.roles.cache.has('743505566617436301')) {
                 console.log('Executing insertion of perks');
-                for (const numeral of localConstants.romanNumerals) { //find the role and assign it to the database
+                for (const numeral of localConstants.romanNumerals) { //find the fucker and assign it to the database
                     const roleToFind = `Mirage ${numeral}`;
                     foundRole = int.member.roles.cache.find(role => role.name === roleToFind);
 
@@ -49,7 +50,8 @@ module.exports = {
                         };
                         await localFunctions.setUserTier(userId, foundTier, collection);
                         tierString = `**Current Tier: ${foundTier.name}**`;
-                        if (tierNumber > 3) { //for non renewable tiers, assign the non renewable perks
+                        tierDetails = localConstants.premiumTiers.find(tier => tier.name === foundRole.name);
+                        if (tierNumber > 3) { //for non renewable fuck, assign the non renewable fuckers
                             for (const tier of tiers) {
                                 for (const perk of tier.perks) {
                                     if ((tierNumber === 7 || tierNumber === 10)) {
@@ -73,6 +75,11 @@ module.exports = {
                 }
             } else {
                 tierString = `**Current Tier: ${userTier.name}**`;
+                tierDetails = localConstants.premiumTiers.find(tier => tier.name === userTier.name);
+            }
+
+            if (tierDetails.generalRenewalPrice) {
+                tierString = `${tierString}\n*Renewal price for all perks: ${tierDetails.generalRenewalPrice}$*`;
             }
 
             if (userPerks) {
@@ -80,21 +87,22 @@ module.exports = {
                     .setCustomId('use-perks')
                     .setPlaceholder('Use your perks.')
 
-                premiumEmbed.setAuthor({ name: `💎 Welcome to your premium dashboard ${username}!`, iconURL: int.user.displayAvatarURL() })
-                premiumEmbed.setDescription(`${tierString}`)
+                premiumEmbed.setAuthor({ name: `💎 Welcome to your premium dashboard ${username}!`, iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' });
+                premiumEmbed.setThumbnail(int.user.displayAvatarURL());
 
                 if (userPerks.some(perk => perk.singleUse === false)) {
                     premiumEmbed.addFields(
                         {
-                            name: '‎',
+                            name: `${tierString}`,
                             value: `\`\`\`❇️ Permanent perks\`\`\``,
                         },
                     )
+                    tierString = '‎'
                     for (const perk of userPerks) {
                         if (!perk.singleUse) {
                             premiumEmbed.addFields({
                                 name: ` `,
-                                value: `\`\`🎫 ${perk.name}\`\`
+                                value: `\`\`✒️ ${perk.name}\`\`
                                      [└](https://discord.com/channels/630281137998004224/767374005782052864) ${perk.description}`
                             });
                         }
@@ -104,7 +112,7 @@ module.exports = {
                 if (userPerks.some(perk => perk.singleUse === true)) {
                     premiumEmbed.addFields(
                         {
-                            name: '‎',
+                            name: `${tierString}`,
                             value: `\`\`\`✅ Perks available to claim!\`\`\``,
                         },
                     )
@@ -166,11 +174,12 @@ module.exports = {
 
             } else if (roles.includes("Premium")) {
 
-                decayString = `\n └ Your role will decay on <t:${premiumData.date}:R>.`;
+                decayString = `\n └ Your tier will decay on <t:${premiumData.date}:R>.`;
 
                 premiumEmbed.setAuthor({ name: `💎 Welcome to your premium dashboard ${username}!`, iconURL: int.user.displayAvatarURL() })
                 premiumEmbed.setDescription(`${tierString}\n\`\`\`⚠️ No perks available to claim!\`\`\``)
                 premiumEmbed.addFields({ name: ` `, value: `\`\`🎫 Notice\`\`\n ├ It\'s recommended to renew any of your perks.${decayString}` })
+                premiumEmbed.setThumbnail(int.user.displayAvatarURL());
                 mainComponents = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId('premium-info')

@@ -240,7 +240,7 @@ module.exports = {
 
     getUserTier: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
-        return user ? user.Tier || [] : [];
+        return user ? user.Tier || null : null;
     },
 
     setUserTier: async function (userId, Tier, collection) {
@@ -286,7 +286,7 @@ module.exports = {
 
     getPerks: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
-        return user ? user.perks || [] : [];
+        return user ? user.perks || null : null;
     },
 
     setPerks: async function (userId, perks, collection) {

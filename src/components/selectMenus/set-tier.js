@@ -18,13 +18,12 @@ module.exports = {
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         try {
             let newPerks = [];
-            let newTier = [];
             let newRoleId = '';
             const pendingTier = int.values[0];
             let currentTier = await localFunctions.getUserTier(pendingUser.user.id, collection);
             console.log(currentTier);
             if (currentTier) {
-                await pendingMember.roles.remove(currentTier[0].roleId);
+                await pendingMember.roles.remove(currentTier.id);
             }
 
             for (const tier of localConstants.premiumTiers) {
@@ -41,9 +40,8 @@ module.exports = {
 
             await pendingMember.roles.add(newRoleId);
             await pendingMember.roles.add('743505566617436301');
-            newTier.push({ tier: pendingTier, roleId: newRoleId });
             await localFunctions.setPerks(pendingUser.user.id, newPerks, collection);
-            await localFunctions.setUserTier(pendingUser.user.id, newTier, collection);
+            await localFunctions.setUserTier(pendingUser.user.id, { name: pendingTier, id: newRoleId }, collection);
 
             int.editReply(`Tier given to <@${pendingUser.user.id}>`)
             giveTierCache.delete(int.user.id);
