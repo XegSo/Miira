@@ -54,7 +54,7 @@ const shopItems = [
 const nonPurchaseableBackgrounds = [
     { name: 'Prestige Background', value: 'Obtained by participating on collabs.' , id: 'pres-bg', desc: 'Special prestige profile cosmetic obtained by participating on collabs.', class: 'Cosmetics', type: 'background', isReturnable: true },
     { name: 'Prestige Background Plus', value: 'Obtained by participating on 3+ collabs.', id: 'pres-bg-plus', desc: 'Special prestige profile cosmetic obtained by participating more than 3 collabs.', class: 'Cosmetics', type: 'background', isReturnable: true },
-    { name: 'Premium Background', value: 'Obtained by purchagin premium.', id: 'premium-bg', desc: 'Special **premium** profile cosmetic.', class: 'Cosmetics', type: 'background', isReturnable: true },
+    { name: 'Premium Background', value: 'Obtained by purchasing premium.', id: 'premium-bg', desc: 'Special **premium** profile cosmetic.', class: 'Cosmetics', type: 'background', isReturnable: true },
     { name: 'Premium Background Plus', value: 'Obtained by purchasing a high premium tier.', id: 'premium-bg-plus', desc: 'Special **premium plus** profile cosmetic.', class: 'Cosmetics', type: 'background', isReturnable: true },
     { name: 'Staff Background', value: 'Obtained by being staff.', id: 'staff-bg', desc: 'Special profile cosmetic for staff.', class: 'Cosmetics', type: 'background', isReturnable: true }
 ]
