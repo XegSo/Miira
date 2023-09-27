@@ -32,7 +32,7 @@ const rolesToRemove = [
 ];
 
 const shopItems = [
-    { name: 'Tokens Boost X2 72h', value: '1,000 ₥', id: 'tokens-boost', desc: 'Obtain a X2 Token Boost per message sent in the next 72h.', class: 'Augments', isReturnable: false }, //Coded
+    { name: 'Tokens Boost X2 72h', value: '4,000 ₥', id: 'tokens-boost', desc: 'Obtain a X2 Token Boost per message sent in the next 72h.', class: 'Augments', isReturnable: false }, //Coded
     { name: 'Novice Active Member Role', value: '5,000 ₥', id: 'active-novice-role', desc: 'Obtain a role in the server that displays you\'re an active user along with a badge for all of your future collab materials.', class: 'Roles', isReturnable: false  }, //Coded
     { name: 'Avatar GFX Commission', value: '10,000 ₥', id: 'avatar-com', desc: 'Request a custom Avatar GFX Commission.', class: 'Commissions', isReturnable: false  }, //Coded
     { name: 'Advanced Active Member Role', value: '20,000 ₥', id: 'active-advanced-role', desc: 'Obtain a role in the server that displays you\'re an active user along with a badge for all of your future collab materials.', class: 'Roles', isReturnable: false  }, //Coded
