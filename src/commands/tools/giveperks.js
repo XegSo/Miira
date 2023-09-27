@@ -17,7 +17,7 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         if (int.user.id !== '687004886922952755') return;
-        const userId = int.options.getUser('user');
+        const user = int.options.getUser('user');
         const perkMenu = new SelectMenuBuilder()
                 .setCustomId('set-perks')
                 .setPlaceholder('Select the perks.')
@@ -31,7 +31,7 @@ module.exports = {
         });
 
         givePerksCache.set(int.user.id, {
-            user: userId,
+            user: user,
         });
 
         const row = new ActionRowBuilder().addComponents(perkMenu);

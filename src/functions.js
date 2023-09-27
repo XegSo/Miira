@@ -2,6 +2,7 @@ const { EmbedBuilder } = require('discord.js');
 const { connectToMongoDB } = require('./mongo');
 const localConstants = require('./constants');
 const { registerFont } = require('canvas');
+const fs = require('fs');
 registerFont('./assets/fonts/Montserrat-Medium.ttf', {
     family: "Montserrat",
     weight: 'normal'
@@ -293,6 +294,55 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { perks } }, { upsert: true });
     },
 
+    getPendingPerks: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.pendingPerks || [] : [];
+    },
+
+    setPendingPerks: async function (userId, pendingPerks, perk, collection) {
+        let fullPerk = [];
+        for (const tier of localConstants.premiumTiers) {
+            for (const perks of tier.perks) {
+                if (perks.name === perk) {
+                    fullPerk = perks;
+                    break;
+                }
+            }
+        }
+        try {
+            const existingPerksIndex = pendingPerks.findIndex(pendingPerks => pendingPerks.name === fullPerk.name);
+
+            if (existingPerksIndex !== -1) {
+                pendingPerks[existingPerksIndex] = fullPerk;
+            } else {
+                pendingPerks.push(fullPerk);
+            }
+        } catch (error) {
+            console.log(error);
+            pendingPerks.push(fullPerk);
+        }
+        await collection.updateOne({ _id: userId }, { $set: { pendingPerks } }, { upsert: true });
+    },
+
+    createPerksJSON: function (jsonPath, newObj) {
+        let existingData = [];
+        if (fs.existsSync(jsonPath)) {
+            const jsonData = fs.readFileSync(jsonPath, 'utf-8');
+            existingData = JSON.parse(jsonData);
+            const existingObjIndex = existingData.findIndex(obj => obj.discordId === newObj.discordId);
+
+            if (existingObjIndex !== -1) {
+                existingData[existingObjIndex] = newObj;
+            } else {
+                existingData.push(newObj);
+            }    
+        } else {
+            existingData.push(newObj);
+        }
+        fs.writeFileSync(jsonPath, JSON.stringify(existingData, null, 2));
+        console.log(`New data added to ${jsonPath}`);
+    },
+
     getPremiumData: async function (collection) {
         const premium = await collection.findOne({ _id: 'Premium Data' });
         return premium ? premium || [] : [];
@@ -373,8 +423,8 @@ module.exports = {
 
         if (updated) {
             await setInventory(userId, userInventory, collection);
-        } 
-    }, 
+        }
+    },
 
     ctxText: function (canvas, ctx, textColor, text, align, font, fontSize, style, x, y) {
         ctx.fillStyle = textColor;
@@ -386,7 +436,7 @@ module.exports = {
 
     applyText: function (canvas, text, fontFamily, fontSize, fontStyle) {
         const ctx = canvas.getContext("2d");
-    
+
         do {
             ctx.font = `${fontStyle} ${fontSize}px ${fontFamily}`;
         } while (ctx.measureText(text).width > canvas.width - 300);
@@ -513,20 +563,20 @@ module.exports = {
             D: 500,
             M: 1000,
         };
-    
+
         let result = 0;
-    
+
         for (let i = 0; i < roman.length; i++) {
             const currentNumeral = romanNumerals[roman[i]];
             const nextNumeral = romanNumerals[roman[i + 1]];
-    
+
             if (nextNumeral && currentNumeral < nextNumeral) {
                 result -= currentNumeral;
             } else {
                 result += currentNumeral;
             }
         }
-    
+
         return result;
     }
 }

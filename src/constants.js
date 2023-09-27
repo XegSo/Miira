@@ -79,6 +79,7 @@ const premiumTiers = [
                 individualPrice: 5,
                 singleUse: true,
                 collabDependant: true,
+                tier: 1,
             },
             {
                 name: "Premium Cover",
@@ -88,6 +89,7 @@ const premiumTiers = [
                 individualPrice: 5,
                 singleUse: true,
                 collabDependant: true,
+                tier: 1,
             }
         ],
         decay: true,  
@@ -110,6 +112,7 @@ const premiumTiers = [
                 individualPrice: 10,
                 singleUse: true,
                 collabDependant: true,
+                tier: 2,
             },
             {
                 name: "Premium Forum Signature",
@@ -119,6 +122,7 @@ const premiumTiers = [
                 individualPrice: 10,
                 singleUse: true,
                 collabDependant: true,
+                tier: 2,
             }
         ],
         decay: true,
@@ -137,10 +141,11 @@ const premiumTiers = [
                 name: "Premium Animated Stream Overlay",
                 description: "Obtain a special animated stream overlay.",
                 restrictions: "Images and fields will have restrictions by the design itself.",
-                renewalPrice: 3,
+                renewalPrice: 6,
                 individualPrice: 15,
                 singleUse: true,
                 collabDependant: true,
+                tier: 3,
             },
             {
                 name: "Premium Desktop Wallpaper",
@@ -150,6 +155,7 @@ const premiumTiers = [
                 individualPrice: 10,
                 singleUse: true,
                 collabDependant: true,
+                tier: 3,
             },
             {
                 name: "Premium Collab Poster",
@@ -159,6 +165,7 @@ const premiumTiers = [
                 individualPrice: 10,
                 singleUse: true,
                 collabDependant: true,
+                tier: 3,
             }
         ],
         decay: true,
@@ -181,6 +188,7 @@ const premiumTiers = [
                 individualPrice: null,
                 singleUse: false,
                 collabDependant: false,
+                tier: 4,
             }
         ],
         decay: false,
@@ -199,19 +207,21 @@ const premiumTiers = [
                 name: "Megacollab Themed osu! skin",
                 description: "Obtain the collab's osu! skin customized for you.",
                 restrictions: "Any character and texts can be used.",
-                renewalPrice: 6,
+                renewalPrice: 10,
                 individualPrice: 20,
                 singleUse: true,
                 collabDependant: true,
+                tier: 5,
             },
             {
                 name: "Extra Collab Materials",
                 description: "Obtain an extra set of the current megacollab materials.",
                 restrictions: "Any character can be used.",
-                renewalPrice: 6,
+                renewalPrice: 10,
                 individualPrice: 20,
                 singleUse: true,
                 collabDependant: true,
+                tier: 5,
             }
         ],
         decay: false,
@@ -230,10 +240,11 @@ const premiumTiers = [
                 name: "Megacollab Early Access",
                 description: "Pick a character for the collab before the public opening.",
                 restrictions: null,
-                renewalPrice: 10,
+                renewalPrice: 15,
                 individualPrice: 60,
                 singleUse: true,
                 collabDependant: false,
+                tier: 6,
             },
             {
                 name: "Access to PSD templates",
@@ -243,6 +254,7 @@ const premiumTiers = [
                 individualPrice: null,
                 singleUse: false,
                 collabDependant: false,
+                tier: 6,
             },
             {
                 name: "Access to the staff chat",
@@ -252,6 +264,7 @@ const premiumTiers = [
                 individualPrice: null,
                 singleUse: false,
                 collabDependant: false,
+                tier: 6,
             }
         ],
         decay: false,
@@ -274,6 +287,7 @@ const premiumTiers = [
                 individualPrice: null,
                 singleUse: false,
                 collabDependant: false,
+                tier: 7,
             },
             {
                 name: "Custom Endless Mirage Hoodie",
@@ -283,15 +297,17 @@ const premiumTiers = [
                 individualPrice: 30,
                 singleUse: true,
                 collabDependant: false,
+                tier: 7,
             },
             {
                 name: "Host your own Megacollab",
-                description: "Be able to host your own megacollab with designs made by us and your influence.",
+                description: "Host your own megacollab with designs made by us.",
                 restrictions: null,
                 renewalPrice: 50,
                 individualPrice: 150,
                 singleUse: true,
                 collabDependant: false,
+                tier: 7,
             },
             {
                 name: "Megacollab Pooling Influence",
@@ -301,6 +317,7 @@ const premiumTiers = [
                 individualPrice: null,
                 singleUse: false,
                 collabDependant: false,
+                tier: 7,
             }
         ],
         decay: false,

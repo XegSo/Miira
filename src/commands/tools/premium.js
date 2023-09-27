@@ -16,7 +16,6 @@ module.exports = {
         let renewalPrice = '';
         let decayString = '';
         let tierString = `**No premium status found!**`;
-        let ender = '├';
         let tierDetails = '';
         let newPerks = [];
         const roles = int.member.roles.cache.map(role => role.name);
@@ -49,12 +48,13 @@ module.exports = {
                             id: foundRole.id
                         };
                         await localFunctions.setUserTier(userId, foundTier, collection);
+                        userTier = foundTier;
                         tierString = `**Current Tier: ${foundTier.name}**`;
                         tierDetails = localConstants.premiumTiers.find(tier => tier.name === foundRole.name);
                         if (tierNumber > 3) { //for non renewable fuck, assign the non renewable fuckers
                             for (const tier of tiers) {
                                 for (const perk of tier.perks) {
-                                    if ((tierNumber === 7 || tierNumber === 10)) {
+                                    if ((tierNumber === 7 || tierNumber === 10) && (perk.name !== 'Host your own Megacollab' || perk.name !== 'Custom Endless Mirage Hoodie')) {
                                         newPerks.push(perk);
                                         console.log(`Perk ${perk.name} has been pushed.`)
                                     } else if (!perk.singleUse) {
@@ -82,6 +82,8 @@ module.exports = {
                 tierString = `${tierString}\n*Renewal price for all perks: ${tierDetails.generalRenewalPrice}$*`;
             }
 
+            console.log(userTier.name);
+
             if (userPerks) {
                 let useMenu = new SelectMenuBuilder()
                     .setCustomId('use-perks')
@@ -94,42 +96,48 @@ module.exports = {
                     premiumEmbed.addFields(
                         {
                             name: `${tierString}`,
-                            value: `\`\`\`❇️ Permanent perks\`\`\``,
+                            value: `\`\`\`🔮 Permanent perks\`\`\``,
                         },
                     )
                     tierString = '‎'
                     for (const perk of userPerks) {
-                        if (!perk.singleUse) {
+                        if ((!perk.singleUse || userTier.name === 'Mirage VII' || userTier.name === 'Mirage X') && perk.name !== 'Host your own Megacollab' && perk.name !== 'Custom Endless Mirage Hoodie') {
+                            if (perk.singleUse) {
+                                useMenu.addOptions({ label: perk.name, value: perk.name, description: perk.description });
+                            }
                             premiumEmbed.addFields({
                                 name: ` `,
                                 value: `\`\`✒️ ${perk.name}\`\`
-                                     [└](https://discord.com/channels/630281137998004224/767374005782052864) ${perk.description}`
+                                         [└](https://discord.com/channels/630281137998004224/767374005782052864) ${perk.description}`
                             });
                         }
                     }
                 }
-
                 if (userPerks.some(perk => perk.singleUse === true)) {
                     premiumEmbed.addFields(
                         {
                             name: `${tierString}`,
-                            value: `\`\`\`✅ Perks available to claim!\`\`\``,
+                            value: `\`\`\`✅ Perks available to use!\`\`\``,
                         },
                     )
                     for (const perk of userPerks) {
-                        if (perk.singleUse) {
+                        if (perk.singleUse && userTier.name !== 'Mirage VII' && userTier.name !== 'Mirage X') {
                             if (perk.renewalPrice) {
                                 renewalPrice = `\n └ Your current renewal price is ${perk.renewalPrice}$.`;
                             } else {
                                 renewalPrice = '';
-                                ender = '└';
                             }
                             premiumEmbed.addFields({
                                 name: ` `,
                                 value: `\`\`🎫 ${perk.name}\`\`
-                                     [├](https://discord.com/channels/630281137998004224/767374005782052864) ${perk.description}
-                                     ├ Use the dropdown menu bellow to use your perk.
-                                     ${ender} This perk can only be used **once**!${renewalPrice}`
+                                     [├](https://discord.com/channels/630281137998004224/767374005782052864) ${perk.description}${renewalPrice}`
+                            });
+                            useMenu.addOptions({ label: perk.name, value: perk.name, description: perk.description });
+                        } else if (perk.name === 'Custom Endless Mirage Hoodie' || perk.name === 'Host your own Megacollab') {
+                            premiumEmbed.addFields({
+                                name: ` `,
+                                value: `\`\`🎫 ${perk.name}\`\`
+                                     [├](https://discord.com/channels/630281137998004224/767374005782052864) ${perk.description}`
                             });
                             useMenu.addOptions({ label: perk.name, value: perk.name, description: perk.description });
                         }

@@ -49,7 +49,7 @@ module.exports = {
             console.log(`User: ${message.author.tag}`);
             console.log(`Message length: ${messageLength}`);
             let tokensEarned;
-            let tokensEarnedNB = (0.12 * messageLength) / (1.5 + (0.0001 * (messageLength ** 2))) * (2.5 - (2.5 * (Math.E ** (-0.2))));
+            let tokensEarnedNB = (0.1 * messageLength) / (0.5 + (0.00004 * (messageLength ** 2))) * (2.5 - (2.5 * (Math.E ** (-0.2))));
             console.log(`Tokens earned without bonus: ${tokensEarnedNB}`);
 
             // Check if the user has an active combo
@@ -61,10 +61,21 @@ module.exports = {
                     console.log(`Current combo ${comboData.messages}`);
                     let comboBonus = comboData.messages;
                     comboData.lastMessageTime = currentTime;
-                    tokensEarned = (0.12 * messageLength) / (1.5 + (0.0001 * (messageLength ** 2))) * (2.5 - (2.5 * (Math.E ** (-0.2 * (comboBonus + 1)))));
+                    tokensEarned = (0.1 * messageLength) / (0.5 + (0.00004 * (messageLength ** 2))) * (2.5 - (2.5 * (Math.E ** (-0.2 * (comboBonus + 1)))));
                     console.log(`Tokens earned with bonus: ${tokensEarned}`);
                     if (20 < messageLength) {
                         comboData.messages++; // Increment the number of messages in the combo
+                        switch (comboData.messages) {
+                            case 5:
+                                message.react('🎈');
+                                break;
+                            case 10:
+                                message.react('🔥');
+                                break;
+                            case 15:
+                                message.react('♨️');
+                                break;
+                        }
                     }
                     const topCombo = await localFunctions.getTopCombo(userId, collection); // Fetch top combo from the database
                     if (topCombo < comboData.messages) {
@@ -72,6 +83,7 @@ module.exports = {
                     }
                 } else {
                     // Combo has expired, reset combo data
+                    message.react('🪦');
                     comboData.messages = 1; // Reset the message count
                     comboData.lastMessageTime = currentTime;
                     console.log(`User has lost its combo.`);
@@ -93,11 +105,11 @@ module.exports = {
             const hasLevel = localConstants.rolesLevel.some(roleName => message.member.roles.cache.some(role => role.name === roleName));
 
             if (!hasLevel) {
-                if (currentBalance > 300) {
+                if (currentBalance > 150) {
                     message.member.roles.add(localConstants.rolesLevel[2]);
                 } else if (currentBalance > 100) {
                     message.member.roles.add(localConstants.rolesLevel[1]);
-                } else if (currentBalance > 40) {
+                } else if (currentBalance > 20) {
                     message.member.roles.add(localConstants.rolesLevel[0]);
                 }
             }
@@ -128,9 +140,10 @@ module.exports = {
             }
 
             if (!lastMessageDate || lastMessageDate < startOfDay.getTime()) {
-                // It's the user's first message ever, give them an extra 20 tokens
-                tokensEarned += 20;
-                console.log('First message of the user, assigning 20 tokens bonus.');
+                // It's the user's first message, give them an extra 20 tokens
+                tokensEarned += 80;
+                console.log('First message of the user, assigning 80 tokens bonus.');
+                message.react('💸');
             }
 
             //Update user's balance in the database
