@@ -65,17 +65,6 @@ module.exports = {
                     console.log(`Tokens earned with bonus: ${tokensEarned}`);
                     if (20 < messageLength) {
                         comboData.messages++; // Increment the number of messages in the combo
-                        switch (comboData.messages) {
-                            case 5:
-                                message.react('🎈');
-                                break;
-                            case 10:
-                                message.react('🔥');
-                                break;
-                            case 15:
-                                message.react('♨️');
-                                break;
-                        }
                     }
                     const topCombo = await localFunctions.getTopCombo(userId, collection); // Fetch top combo from the database
                     if (topCombo < comboData.messages) {
@@ -144,6 +133,29 @@ module.exports = {
                 tokensEarned += 80;
                 console.log('First message of the user, assigning 80 tokens bonus.');
                 message.react('💸');
+            }
+
+            switch (comboData.messages) {
+                case 5:
+                    message.react('🎈');
+                    break;
+                case 10:
+                    message.react('🔥');
+                    break;
+                case 15:
+                    message.react('🚀');
+                    tokensEarned += 80;
+                    break;
+                case 30:
+                    message.react('💰');
+                    tokensEarned += 160;   
+                    break; 
+                case 60:
+                    message.react('💰');
+                    tokensEarned += 320;   
+                case 100:
+                    message.react('💰');
+                    tokensEarned += 500;         
             }
 
             //Update user's balance in the database
