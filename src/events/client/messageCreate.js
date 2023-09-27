@@ -66,26 +66,16 @@ module.exports = {
                     if (20 < messageLength) {
                         comboData.messages++; // Increment the number of messages in the combo
                         switch (comboData.messages) {
-                            case 5:
-                                message.react('🎈');
-                                break;
-                            case 10:
-                                message.react('🔥');
-                                break;
-                            case 15:
-                                message.react('🚀');
-                                tokensEarned += 80;
-                                break;
                             case 30:
                                 message.react('💰');
-                                tokensEarned += 160;   
+                                tokensEarned += 100;   
                                 break; 
                             case 60:
                                 message.react('💰');
-                                tokensEarned += 320;   
+                                tokensEarned += 200;   
                             case 100:
                                 message.react('💰');
-                                tokensEarned += 500;         
+                                tokensEarned += 300;         
                         }
                     }
                     const topCombo = await localFunctions.getTopCombo(userId, collection); // Fetch top combo from the database
@@ -94,7 +84,6 @@ module.exports = {
                     }
                 } else {
                     // Combo has expired, reset combo data
-                    message.react('🪦');
                     comboData.messages = 1; // Reset the message count
                     comboData.lastMessageTime = currentTime;
                     console.log(`User has lost its combo.`);
