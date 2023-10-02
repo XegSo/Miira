@@ -68,14 +68,28 @@ module.exports = {
                         switch (comboData.messages) {
                             case 30:
                                 message.react('💰');
-                                tokensEarned += 100;   
-                                break; 
+                                tokensEarned += 100;
+                                break;
                             case 60:
                                 message.react('💰');
-                                tokensEarned += 200;   
+                                tokensEarned += 200;
+                                break;
                             case 100:
                                 message.react('💰');
-                                tokensEarned += 300;         
+                                tokensEarned += 300;
+                                break;
+                            case 200:
+                                message.react('💰');
+                                tokensEarned += 300;
+                                break;
+                            case 300:
+                                message.react('💰');
+                                tokensEarned += 300;
+                                break;
+                            case 400:
+                                message.react('💰');
+                                tokensEarned += 300;
+                                break;
                         }
                     }
                     const topCombo = await localFunctions.getTopCombo(userId, collection); // Fetch top combo from the database
