@@ -64,6 +64,7 @@ const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', '
 const premiumTiers = [
     {
         name: 'Mirage I', 
+        id: 1,
         description: 'Starter premium role with 2 perks, both tied to the megacollabs.' , 
         roleId: '963221388892700723',
         cost: 5,
@@ -97,6 +98,7 @@ const premiumTiers = [
     },
     {
         name: 'Mirage II', 
+        id: 2,
         description: 'This tier includes more extra materials, tied to the megacollabs.' , 
         roleId: '767452000777535488',
         cost: 10,
@@ -130,6 +132,7 @@ const premiumTiers = [
     },
     {
         name: 'Mirage III', 
+        id: 3,
         description: 'This tier includes more extra materials, tied to the megacollabs.' , 
         roleId: '1146645094699642890',
         cost: 15,
@@ -173,6 +176,7 @@ const premiumTiers = [
     }, 
     {
         name: 'Mirage IV', 
+        id: 4,
         description: 'This tier includes early delivery for the collabs, along no premium decay after collabs.' , 
         roleId: '787388728795987969',
         cost: 20,
@@ -196,6 +200,7 @@ const premiumTiers = [
     },
     {
         name: 'Mirage V', 
+        id: 5,
         description: 'This tier includes a customized osu! skin and an extra set of collab materials.' , 
         roleId: '787388721255153694',
         cost: 40,
@@ -229,6 +234,7 @@ const premiumTiers = [
     },
     {
         name: 'Mirage VI', 
+        id: 6,
         description: 'This tier includes early access to the collabs, access to the PSD templates and access to the staff chat.' , 
         roleId: '787723186556108840',
         cost: 100,
@@ -272,6 +278,7 @@ const premiumTiers = [
     },
     {
         name: 'Mirage VII', 
+        id: 7,
         description: 'This tier doesn\'t need to renew perks bellow it, gets a customized Endless Mirage Hoodie, can host their own megacollab with us, has direct megacollab pool influence and has free access to the deluxe collabs.' , 
         roleId: '861679323739717642',
         cost: 250,
