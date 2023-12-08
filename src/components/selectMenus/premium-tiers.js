@@ -2,6 +2,7 @@ const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 const { EmbedBuilder } = require('discord.js');
 const { SelectMenuBuilder, ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
+const selectionTier = new Map();
 
 module.exports = {
     data: {
@@ -13,6 +14,9 @@ module.exports = {
         const tierName = int.values[0]; // Get the selected item from the dropdown
         const selectedTier = localConstants.premiumTiers.find((tier) => tier.name === tierName);
         if (!tierName || !selectedTier) return;
+        selectionTier.set(int.user.id, {
+            tier: selectedTier,
+        });
 
         let deluxeEntry = 'Free.';
         let deluxeExtra = 'Free.';
@@ -147,4 +151,5 @@ module.exports = {
             ephemeral: true
         });
     },
+    selectionTier: selectionTier
 };

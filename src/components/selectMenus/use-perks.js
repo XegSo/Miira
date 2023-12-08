@@ -10,6 +10,7 @@ module.exports = {
         name: 'use-perks'
     },
     async execute(int, client) {
+        await int.deferReply({ ephemeral: true });
         const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB("Special");
         const selectedPerk = int.values[0];
         console.log(selectedPerk);

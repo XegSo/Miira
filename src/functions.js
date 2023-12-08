@@ -287,7 +287,29 @@ module.exports = {
 
     getPerks: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
-        return user ? user.perks || null : null;
+        return user ? user.perks || [] : [];
+    },
+
+    getTier: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.Tier || [] : [];
+    },
+
+    getCart: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.cart || [] : [];
+    },
+
+    setCart: async function (userId, cart, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { cart } }, { upsert: true });
+    },
+
+    delTier: async function (userId, collection, item) {
+        try {
+            await collection.updateOne({ _id: userId }, { $unset: { Tier: "" } });
+        } catch (e) {
+            console.log(e);
+        }
     },
 
     setPerks: async function (userId, perks, collection) {
@@ -564,6 +586,33 @@ module.exports = {
             M: 1000,
         };
 
+        let result = 0;
+
+        for (let i = 0; i < roman.length; i++) {
+            const currentNumeral = romanNumerals[roman[i]];
+            const nextNumeral = romanNumerals[roman[i + 1]];
+
+            if (nextNumeral && currentNumeral < nextNumeral) {
+                result -= currentNumeral;
+            } else {
+                result += currentNumeral;
+            }
+        }
+
+        return result;
+    },
+
+    premiumToInteger: function (string) {
+        const romanNumerals = {
+            I: 1,
+            V: 5,
+            X: 10,
+            L: 50,
+            C: 100,
+            D: 500,
+            M: 1000,
+        };
+        const roman = string.replace("Mirage ","");
         let result = 0;
 
         for (let i = 0; i < roman.length; i++) {
