@@ -57,35 +57,35 @@ module.exports = {
                 let userCart = await localFunctions.getCart(userId, collection);
                 let userTierDB = await localFunctions.getTier(userId, collection);
                 let userPerks = await localFunctions.getPerks(userId, collection);
-                if (userTierDB) {
+                if (userTierDB.length) {
                     userTier = localConstants.premiumTiers.find(t => t.name === userTierDB.name);
                     userTierInteger = localFunctions.premiumToInteger(userTier.name);
-                }   
-                
-                if (userTierDB && selectedTierInteger > userTierInteger) {
-                    price = selectedTier.cost - userTier.cost;
-                    buyMenu.addOptions({ label: selectedTier.name, value: selectedTier.name, description: `Upgrade cost: ${price}$` });
-                    arrayOfObjects.push({ name: selectedTier.name, type: "Upgrade", price: price });
-                } else if (selectedTierInteger !== userTierInteger) {
+                    if (selectedTierInteger > userTierInteger) {
+                        buyMenu.addOptions({ label: selectedTier.name, value: selectedTier.name, description: `Upgrade cost:${selectedTier.cost - userTier.cost}$` });
+                        arrayOfObjects.push({ name: selectedTier.name, type: "Upgrade", price: price });
+                    } else if (selectedTierInteger !== userTierInteger) {
+                        buyMenu.addOptions({ label: selectedTier.name, value: selectedTier.name, description: `Cost: ${selectedTier.cost}$` });
+                        arrayOfObjects.push({ name: selectedTier.name, type: "Tier", price: selectedTier.cost });
+                    }   
+                } else {
                     buyMenu.addOptions({ label: selectedTier.name, value: selectedTier.name, description: `Cost: ${selectedTier.cost}$` });
                     arrayOfObjects.push({ name: selectedTier.name, type: "Tier", price: selectedTier.cost });
                 }
+
                 let type = null;
                 for (const perk of selectedTier.perks) {
-                    if (!perk.individualPrice || !perk.renewalPrice || userPerks.find(p => p.name === perk.name)) {
+                    if (!perk.individualPrice || !perk.renewalPrice || userPerks.find(p => p.name === perk.name) || userCart.find(p => p.name === perk.name)) {
                         continue;
                     }
-                    if (!userCart.find(p => p.name === perk.name)) {
-                        if (userTierDB && (userTierInteger >= selectedTierInteger)) {
-                            type = "Renewal";
-                            price = perk.renewalPrice;
-                        } else {
-                            type = "Perk";
-                            price = perk.individualPrice;
-                        }
-                        buyMenu.addOptions({ label: perk.name, value: perk.name, description: `Cost: ${price}$` });
-                        arrayOfObjects.push({ name: perk.name, type: type, price: price });
+                    if (userTierDB && (userTierInteger >= selectedTierInteger)) {
+                        type = "Renewal";
+                        price = perk.renewalPrice;
+                    } else {
+                        type = "Perk";
+                        price = perk.individualPrice;
                     }
+                    buyMenu.addOptions({ label: perk.name, value: perk.name, description: `Cost: ${price}$` });
+                    arrayOfObjects.push({ name: perk.name, type: type, price: price });
                 }   
 
                 buyMenu.setMaxValues(buyMenu.options.length);
