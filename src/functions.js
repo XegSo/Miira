@@ -312,6 +312,14 @@ module.exports = {
         }
     },
 
+    delCart: async function (userId, collection, item) {
+        try {
+            await collection.updateOne({ _id: userId }, { $unset: { cart: "" } });
+        } catch (e) {
+            console.log(e);
+        }
+    },
+
     setPerks: async function (userId, perks, collection) {
         await collection.updateOne({ _id: userId }, { $set: { perks } }, { upsert: true });
     },
@@ -603,6 +611,9 @@ module.exports = {
     },
 
     premiumToInteger: function (string) {
+        if (string === "Mirage 0") {
+            return 0;
+        }
         const romanNumerals = {
             I: 1,
             V: 5,

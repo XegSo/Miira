@@ -23,19 +23,31 @@ module.exports = {
             .setPlaceholder('Add content to your shopping cart.')  
             .setMinValues(1)
 
-        let buyEmbed = new EmbedBuilder()
+        let buyEmbed = new EmbedBuilder()  
+            .setTimestamp()
             .setColor('#f26e6a')
-            .setThumbnail('https://puu.sh/JP9Iw/a365159d0e.png')
-            .setImage('https://puu.sh/JPffc/3c792e61c9.png')
-            .setDescription(`\`\`\`🚀 Buy more Perks\`\`\`\n • Select the perks you would like to buy`)    
+            .setAuthor({ name: `💎 Welcome to the perk shop ${int.user.tag}!`, iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+            .setThumbnail(int.user.displayAvatarURL()) 
 
         try {
             let userCart = await localFunctions.getCart(userId, collection);
             let userPerks = await localFunctions.getPerks(userId, collection);
             let dbTier = await localFunctions.getTier(userId, collection);
-            if (dbTier.length) {
+            let fullTier = [];
+            console.log(dbTier);
+            if (typeof dbTier !== "undefined") {
                 userTier = localFunctions.premiumToInteger(dbTier.name);
+                fullTier = localConstants.premiumTiers.find((e) => e.name === dbTier.name);
+            } else {
+                userTier = 0
             }
+            console.log(userTier);
+            buyEmbed.addFields(
+                {
+                    name: `**Current Tier: ${userTier}**`,
+                    value: `\`\`\`💵 Renewable and Purchaseable Perks\`\`\``,
+                }
+            )
             localConstants.premiumTiers.forEach((tier) => {
                 tier.perks.forEach((perk) => {
                     if (!(userCart.find(p => p.name === perk.name) || userPerks.find(pp => pp.name === perk.name)) && perk.renewalPrice && perk.individualPrice) {
@@ -44,8 +56,41 @@ module.exports = {
                         } else {
                             price = perk.individualPrice;
                         }
-                        buyMenu.addOptions({ label: perk.name , value: perk.name, description: `Cost: ${price}$` })
-                        arrayOfObjects.push({ name: perk.name, type: "Perk", price: price });
+                        if (!userPerks.length && typeof dbTier !== "undefined") {
+                            buyEmbed.addFields(
+                                {
+                                    name: `‎`,
+                                    value: `\`\`✒️ Renewal for Tier ${userTier}\`\`
+                                 [├](https://discord.com/channels/630281137998004224/767374005782052864) ${perk.description}
+                                 └ Renewal cost: ${fullTier.generalRenewalPrice}$`,
+                                }
+                            )
+                            buyMenu.addOptions({ label: perk.name, value: perk.name, description: `Renewal cost: ${perk.renewalPrice}$` });
+                            arrayOfObjects.push({ name: perk.name, type: "Renewal", price: price, tier: tier.id, class: 'Tier' });
+                        }
+                        if (perk.renewalPrice && (userTier >= tier.id)) {
+                            buyEmbed.addFields(
+                                {
+                                    name: `‎`,
+                                    value: `\`\`✒️ ${perk.name}\`\`
+                                 [├](https://discord.com/channels/630281137998004224/767374005782052864) ${perk.description}
+                                 └ Renewal cost: ${perk.renewalPrice}$`,
+                                }
+                            )
+                            buyMenu.addOptions({ label: perk.name, value: perk.name, description: `Renewal cost: ${perk.renewalPrice}$` });
+                            arrayOfObjects.push({ name: perk.name, type: "Renewal", price: price, tier: tier.id, class: 'Perk' });
+                        } else if (perk.individualPrice && (tier.id > userTier)) {
+                            buyEmbed.addFields(
+                                {
+                                    name: `‎`,
+                                    value: `\`\`✒️ ${perk.name}\`\`
+                                 [├](https://discord.com/channels/630281137998004224/767374005782052864) ${perk.description}
+                                 └ Purchase cost: ${perk.individualPrice}$`,
+                                }
+                            )
+                            buyMenu.addOptions({ label: perk.name, value: perk.name, description: `Purchase cost: ${perk.individualPrice}$` });
+                            arrayOfObjects.push({ name: perk.name, type: "Perk", price: price, tier: tier.id });
+                        }
                     }
                 });
             });

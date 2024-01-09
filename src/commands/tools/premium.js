@@ -55,11 +55,11 @@ module.exports = {
                     let buyComponents = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('premium-info')
-                            .setLabel('✒️ Premium Info')
+                            .setLabel('✒️ About')
                             .setStyle('Primary'),
                         new ButtonBuilder()
                             .setCustomId('perks-buy')
-                            .setLabel('🔀 Buy more Perks')
+                            .setLabel('🔀 Perk Shop')
                             .setStyle('Primary'),
                         new ButtonBuilder()
                             .setCustomId('premium-buy')
@@ -228,21 +228,38 @@ module.exports = {
                     mainComponents = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('premium-info')
-                            .setLabel('✒️ Premium Info')
+                            .setLabel('✒️ About')
                             .setStyle('Primary'),
                         new ButtonBuilder()
                             .setCustomId('perks-buy')
-                            .setLabel('🔀 Buy more Perks')
+                            .setLabel('🔀 Perk Shop')
                             .setStyle('Primary'),
                     )
 
                     if (userTier.name !== "Mirage VII" || userTier.name !== "Mirage X") {
                         const upgradeButton = new ButtonBuilder()
                             .setCustomId('upgrade-tier')
-                            .setLabel('⏏️ Upgrade your Tier')
+                            .setLabel('⏏️ Upgrade')
                             .setStyle('Primary')
                         mainComponents.addComponents(upgradeButton);
                     }
+
+                    if (userTier.name !== "Mirage I") {
+                        mainComponents.addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('downgrade-tier')
+                                .setLabel('🔽 Downgrade')
+                                .setStyle('Primary'),
+                        )
+                    }
+
+                    mainComponents.addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('premium-renew')
+                            .setLabel('🔁 Renew')
+                            .setStyle('Primary'),
+                    );
+
 
                     try {
                         if (useMenu.options[0].data) {
@@ -272,17 +289,26 @@ module.exports = {
                     mainComponents = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('premium-info')
-                            .setLabel('✒️ Premium Info')
+                            .setLabel('✒️ About')
                             .setStyle('Primary'),
                         new ButtonBuilder()
-                            .setCustomId('renew-perks')
-                            .setLabel('🔁 Renew Here')
+                            .setCustomId('premium-renew')
+                            .setLabel('🔁 Renew')
                             .setStyle('Primary'),
                         new ButtonBuilder()
                             .setCustomId('upgrade-tier')
-                            .setLabel('⏏️ Upgrade your Tier')
-                            .setStyle('Primary'),
+                            .setLabel('⏏️ Upgrade')
+                            .setStyle('Primary'),    
                     )
+
+                    if (userTier.name !== "Mirage I") {
+                        mainComponents.addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('downgrade-tier')
+                                .setLabel('🔽 Downgrade')
+                                .setStyle('Primary'),
+                        )
+                    }
 
                     int.editReply({
                         content: '',

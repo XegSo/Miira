@@ -85,7 +85,7 @@ module.exports = {
                         price = perk.individualPrice;
                     }
                     buyMenu.addOptions({ label: perk.name, value: perk.name, description: `Cost: ${price}$` });
-                    arrayOfObjects.push({ name: perk.name, type: type, price: price });
+                    arrayOfObjects.push({ name: perk.name, type: type, price: price, tier: localFunctions.premiumToInteger(selectedTier.name) });
                 }   
 
                 buyMenu.setMaxValues(buyMenu.options.length);
@@ -99,6 +99,10 @@ module.exports = {
                     content: '',
                     embeds: [buyEmbed],
                     components: [buyComponents],
+                });
+            } catch {
+                int.editReply({
+                    content: 'Illegal action performed. Try opening this menu again.',
                 });
             } finally {
                 selectionTier.delete(int.user.id);
