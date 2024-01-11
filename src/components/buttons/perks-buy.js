@@ -26,7 +26,7 @@ module.exports = {
         let buyEmbed = new EmbedBuilder()  
             .setTimestamp()
             .setColor('#f26e6a')
-            .setAuthor({ name: `💎 Welcome to the perk shop ${int.user.tag}!`, iconURL: int.user.displayAvatarURL() })
+            .setAuthor({ name: `Welcome to the perk shop ${int.user.tag}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
             .setFooter({ text: 'Endless Mirage', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
 
         try {
@@ -37,7 +37,7 @@ module.exports = {
             let allPossiblePerks = [];
             let renewalString = '';
             let purchaseablePerks = [];
-            if (typeof dbTier !== "undefined") {
+            if (dbTier.length) {
                 userTier = localFunctions.premiumToInteger(dbTier.name);
                 fullTier = localConstants.premiumTiers.find((e) => e.name === dbTier.name);
                 renewalString = `*Renewal Price for all perks: ${fullTier.generalRenewalPrice}$*`
@@ -52,12 +52,14 @@ module.exports = {
                 renewalString = `Renewal of all perks is not possible with the current premium status.`
             }
             buyEmbed.setDescription(`**Current Tier: ${dbTier.name}**\n${renewalString}`)
-            buyEmbed.addFields(
-                {
-                    name: ` `,
-                    value: `**\`\`\`prolog\n💵 Renewable perks᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`,
-                }
-            )
+            if (dbTier.name !== "None!") {
+                buyEmbed.addFields(
+                    {
+                        name: ` `,
+                        value: `**\`\`\`prolog\n💵 Renewable perks᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`,
+                    }
+                )
+            }    
             localConstants.premiumTiers.forEach((tier) => {  
                 tier.perks.forEach((perk) => {
                     if (!(userCart.find(p => p.name === perk.name) || userPerks.find(pp => pp.name === perk.name)) && perk.renewalPrice && perk.individualPrice) {
@@ -83,12 +85,12 @@ module.exports = {
                         }
                     }
                 });
-            });
+            }); 
             if (purchaseablePerks.length !== 0) {
                 buyEmbed.addFields(
                     {
                         name: ` `,
-                        value: `**\`\`\`prolog\n💵 Purchaseable perks\`\`\`**`,
+                        value: `**\`\`\`prolog\n💵 Purchaseable perks᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`,
                     }
                 )
                 for (perk of purchaseablePerks) {

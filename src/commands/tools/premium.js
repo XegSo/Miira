@@ -15,7 +15,7 @@ module.exports = {
         let foundRole = null;
         let renewalPrice = '';
         let decayString = '';
-        let tierString = `**No premium status found!᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼**`;
+        let tierString = `**No premium status found!᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼**`;
         let tierDetails = '';
         let newPerks = [];
         const username = int.user.tag;
@@ -36,7 +36,7 @@ module.exports = {
                         .setCustomId('use-perks')
                         .setPlaceholder('Use your perks.')
 
-                    premiumEmbed.setAuthor({ name: `💎 Welcome to your perks dashboard ${username}!`, iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' });
+                    premiumEmbed.setAuthor({ name: `Welcome to your perks dashboard ${username}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' });
                     premiumEmbed.setThumbnail(int.user.displayAvatarURL());
                     premiumEmbed.addFields(
                         {
@@ -65,10 +65,6 @@ module.exports = {
                         new ButtonBuilder()
                             .setCustomId('perks-buy')
                             .setLabel('🔀 Perk Shop')
-                            .setStyle('Primary'),
-                        new ButtonBuilder()
-                            .setCustomId('premium-buy')
-                            .setLabel('⏏️ Buy Premium')
                             .setStyle('Primary'),
                     )
 
@@ -177,7 +173,7 @@ module.exports = {
                         .setCustomId('use-perks')
                         .setPlaceholder('Use your perks.')
 
-                    premiumEmbed.setAuthor({ name: `💎 Welcome to your premium dashboard ${username}!`, iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' });
+                    premiumEmbed.setAuthor({ name: `Welcome to your premium dashboard ${username}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' });
                     premiumEmbed.setThumbnail(int.user.displayAvatarURL());
 
                     if (userPerks.some(perk => perk.singleUse === false)) {
@@ -282,7 +278,7 @@ module.exports = {
 
                     decayString = `\n └ Your tier will decay <t:${premiumData.date}:R>.`;
 
-                    premiumEmbed.setAuthor({ name: `💎 Welcome to your premium dashboard ${username}!`, iconURL: int.user.displayAvatarURL() })
+                    premiumEmbed.setAuthor({ name: `Welcome to your premium dashboard ${username}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
                     premiumEmbed.setDescription(`${tierString}\n**\`\`\`ml\n⚠️ No perks available to claim!᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`)
                     premiumEmbed.addFields({ name: ` `, value: `\`\`🎫 Notice\`\`\n ├ It\'s recommended to renew any of your perks.${decayString}` })
                     premiumEmbed.setThumbnail(int.user.displayAvatarURL());
