@@ -34,6 +34,7 @@ module.exports = {
             let userPerks = await localFunctions.getPerks(userId, collection);
             let dbTier = await localFunctions.getTier(userId, collection);
             let fullTier = [];
+            let userPerksNR = [];
             let allPossiblePerks = [];
             let renewalString = '';
             let purchaseablePerks = [];
@@ -43,6 +44,7 @@ module.exports = {
                 fullTier = localConstants.premiumTiers.find((e) => e.name === dbTier.name);
                 renewalString = `*Renewal Price for all perks: ${fullTier.generalRenewalPrice}$*`
                 allPossiblePerks = await localFunctions.getFullPerksOfTier(userTier);
+                userPerksNR = userPerks.filter((e) => e.renewalPrice !== null);
                 if (typeof allPossiblePerks.find((e) => userPerks.find((p) => p.name === e.name)) === "undefined" && typeof dbTier !== "undefined") {
                     console.log('b');
                     buyMenu.addOptions({ label: fullTier.name, value: fullTier.name, description: `Renewal cost: ${fullTier.generalRenewalPrice}$` });
@@ -54,14 +56,22 @@ module.exports = {
                 renewalString = `Renewal of all perks is not possible with the current premium status.`
             }
             buyEmbed.setDescription(`**Current Tier: ${dbTier.name}**\n${renewalString}`)
-            if (dbTier.name !== "None!") {
+            if (dbTier.name !== "None!" && (dbTier.name !== "Mirage VII" || dbTier.name !== "Mirage X")) {
                 buyEmbed.addFields(
                     {
                         name: ` `,
                         value: `**\`\`\`prolog\n💵 Renewable perks᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`,
                     }
                 )
-            }    
+            } else if ((dbTier.name !== "Mirage VII" || dbTier.name !== "Mirage X") && localFunctions.compareArrays(userPerksNR,allPossiblePerks)) {
+                buyEmbed.addFields(
+                    {
+                        name: ` `,
+                        value: `**\`\`\`prolog\n🥂 Nice to see you here! If you're interested on another hoodie or hosting another megacollab, DM xegc!\`\`\`**`,
+                    }
+                )
+                buyMenu.addOptions({ label: 'The love from the server owner', value: perk.name, description: `uwu (I had to add something lol discord gets angry if I don't)` });
+            }
             localConstants.premiumTiers.forEach((tier) => {  
                 tier.perks.forEach((perk) => {
                     if (!(userCart.find(p => p.name === perk.name) || userPerks.find(pp => pp.name === perk.name)) && perk.renewalPrice && perk.individualPrice) {
@@ -76,7 +86,7 @@ module.exports = {
                             )
                             buyMenu.addOptions({ label: perk.name, value: perk.name, description: `Renewal cost: ${perk.renewalPrice}$` });
                             arrayOfObjects.push({ name: perk.name, type: "Renewal", price: perk.renewalPrice, tier: tier.id, class: 'Perk' });
-                        } else if (perk.individualPrice && (tier.id > userTier)) {
+                        } else if (perk.individualPrice && ((tier.id > userTier) || ((userTier === 7 || userTier === 10) && (perk.avname === 'Endless Mirage Hoodie' || perk.avname === 'Host a Megacollab')))) {
                             let neededData = {avname: perk.avname, name: perk.name, individualPrice: perk.individualPrice, id: tier.id}
                             purchaseablePerks.push(neededData);
                         }
