@@ -29,8 +29,9 @@ module.exports = {
             const allOptions = initializedMap.get(int.user.id).choices;
             let fullChoices = allOptions.filter(obj => pendingItems.includes(obj.name))  
             let addedToCartEmbed = new EmbedBuilder()
+                .setFooter({ text: 'Endless Mirage', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                 .setColor('#f26e6a')
-                .setImage('https://puu.sh/JPffc/3c792e61c9.png')  
+                .setTimestamp(); 
             let contentString = "";
             let userTier = await localFunctions.getUserTier(userId, collection);
             let tierInChoices = await fullChoices.find((element) => element.type === "Tier");
@@ -152,7 +153,7 @@ module.exports = {
                                     }
                                 }
                                 if (renewalsInChoices.length === 1) {
-                                    if (localFunctions.premiumToInteger(renewalsInChoices[1].name) >= item.tier) {
+                                    if (localFunctions.premiumToInteger(renewalsInChoices[0].name) >= item.tier) {
                                         int.editReply("You cannot add a tier renewal while having perks renewals that this tier includes in your cart. Remove the perk renewals before proceeding.");
                                         break mainProcess;
                                     }
@@ -207,7 +208,7 @@ module.exports = {
             console.log(newCart);
             await localFunctions.setCart(userId, newCart, collection);
             allMaps[initializedMapIndex].delete(int.user.id);
-            addedToCartEmbed.setDescription(`\`\`\`🚀 Content added to your cart\`\`\`${contentString}`); 
+            addedToCartEmbed.setDescription(`**\`\`\`prolog\n🚀 Content added to your cart᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**${contentString}`); 
             mainComponents = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('premium-info')

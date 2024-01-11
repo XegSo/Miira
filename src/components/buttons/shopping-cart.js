@@ -28,11 +28,11 @@ module.exports = {
                     cartEmbed.addFields(
                         {
                             name: `᲼`,
-                            value: `**\`\`🔗 ${item.name}\`\`**\n ├ Type: ${item.type}\n └ Price: ${item.price}`,
+                            value: `**\`\`🔗 ${item.name}\`\`**\n ├ Type: ${item.type}\n └ Price: ${item.price}$`,
                         },
                     ) 
                     totalCost = totalCost + item.price;
-                    deleteMenu.addOptions({ label: item.name, value: item.name, description: `Cost: ${item.price}` });
+                    deleteMenu.addOptions({ label: item.name, value: item.name, description: `Cost: ${item.price}$` });
                 }
                 cartEmbed.addFields(
                     {
