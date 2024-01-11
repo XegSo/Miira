@@ -15,7 +15,7 @@ module.exports = {
         let foundRole = null;
         let renewalPrice = '';
         let decayString = '';
-        let tierString = `**No premium status found!**`;
+        let tierString = `**No premium status found!᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼**`;
         let tierDetails = '';
         let newPerks = [];
         const username = int.user.tag;
@@ -24,8 +24,9 @@ module.exports = {
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB("Special");
         const premiumEmbed = new EmbedBuilder()
-                    .setTimestamp()
+                    .setFooter({ text: 'Endless Mirage', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
+                    .setTimestamp();
 
         if (!int.member.roles.cache.has('743505566617436301')) {
             try {
@@ -40,7 +41,7 @@ module.exports = {
                     premiumEmbed.addFields(
                         {
                             name: `${tierString}`,
-                            value: `\`\`\`✅ Perks available to use!\`\`\``,
+                            value: `**\`\`\`ml\n✅ Perks available to use!᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`,
                         },
                         )
                     for (const perk of userPerks) {
@@ -58,6 +59,10 @@ module.exports = {
                             .setLabel('✒️ About')
                             .setStyle('Primary'),
                         new ButtonBuilder()
+                            .setCustomId('shopping-cart')
+                            .setLabel('🛒 Cart')
+                            .setStyle('Primary'),     
+                        new ButtonBuilder()
                             .setCustomId('perks-buy')
                             .setLabel('🔀 Perk Shop')
                             .setStyle('Primary'),
@@ -73,15 +78,17 @@ module.exports = {
                         components: [useComponents, buyComponents],
                     });
                 } else {
-                    premiumEmbed.setDescription('\`\`\`🚀 Welcome to the premium section!\`\`\`\n**In this section, you can find information about the current premium tiers and their perks!**\n\n• The perks are **accumulative**. \n• After one collab, most perks will need to be **renewed**. \n• If there is no renewal, there is a decay into *former supporter*.\n• You can also purchase **single perks** for single use in collabs.\n• Premium includes bump immunity.\n\nOnly the **prominent** perks are mentioned for each tier on this embed.');
+                    premiumEmbed.setDescription('**\`\`\`ml\n 🚀 Welcome to the premium section!\`\`\`**\n**In this section, you can find information about the current premium tiers and their perks!᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼**\n\n**\`\`• The perks are ACCUMULATIVE.᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`** \n**\`\`• After one collab, most perks will need to be RENEWED.᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`** \n**\`\`• If there is no renewal, there is a DECAY into former supporter.᲼᲼᲼\`\`**\n**\`\`• You can also purchase SINGLE PERKS for single use in collabs.᲼᲼᲼᲼᲼\`\`**\n**\`\`• Premium includes bump immunity.᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`**');
                     premiumEmbed.addFields(
+                        { name: ` `, value: `**\`\`\`ml\n⚠️ Only the prominent perks are mentioned for each tier.\`\`\`**` }, 
                         { name: ` `, value: `\`\`🎫 Mirage I Premium | Price: 5$\`\`\n └ Exclusive profile picture version.` },
                         { name: ` `, value: `\`\`🎫 Mirage II Premium | Price: 10$\`\`\n └ Animated Banner.` },
                         { name: ` `, value: `\`\`🎫 Mirage III Premium | Price: 15$\`\`\n └ Animated Stream Overlay.` },
                         { name: ` `, value: `\`\`🎫 Mirage IV Premium | Price: 20$\`\`\n └ Early collab delivery.\n` },
                         { name: ` `, value: `\`\`🎫 Mirage V Premium | Price: 40$\`\`\n └ Customized collab themed osu! skin.` },
                         { name: ` `, value: `\`\`🎫 Mirage VI Premium | Price: 100$\`\`\n └ Collab early access.` },
-                        { name: ` `, value: `\`\`🎫 Mirage VII Premium | Price: 250$\`\`\n └ Host your own megacollab.\n\n **You can find the full information about each tier in the list bellow.**` },
+                        { name: ` `, value: `\`\`🎫 Mirage VII Premium | Price: 250$\`\`\n └ Host your own megacollab.` },
+                        { name: ` `, value: `**\`\`\`prolog\n💎 Find the full details about each tier in the list bellow.\`\`\`**` },  
                     );
 
                     const defaultComponents = new ActionRowBuilder().addComponents(
@@ -177,7 +184,7 @@ module.exports = {
                         premiumEmbed.addFields(
                             {
                                 name: `${tierString}`,
-                                value: `\`\`\`🔮 Permanent perks\`\`\``,
+                                value: `**\`\`\`ml\n🔮 Permanent perks\`\`\`**`,
                             },
                         )
                         tierString = '‎'
@@ -198,7 +205,7 @@ module.exports = {
                         premiumEmbed.addFields(
                             {
                                 name: `${tierString}`,
-                                value: `\`\`\`✅ Perks available to use!\`\`\``,
+                                value: `**\`\`\`ml\n✅ Perks available to use!᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`,
                             },
                         )
                         for (const perk of userPerks) {
@@ -231,34 +238,27 @@ module.exports = {
                             .setLabel('✒️ About')
                             .setStyle('Primary'),
                         new ButtonBuilder()
+                            .setCustomId('shopping-cart')
+                            .setLabel('🛒 Cart')
+                            .setStyle('Primary'),    
+                        new ButtonBuilder()
                             .setCustomId('perks-buy')
-                            .setLabel('🔀 Perk Shop')
-                            .setStyle('Primary'),
+                            .setLabel('🔀 Shop')
+                            .setStyle('Primary'),    
                     )
 
                     if (userTier.name !== "Mirage VII" || userTier.name !== "Mirage X") {
-                        const upgradeButton = new ButtonBuilder()
+                        mainComponents.addComponents(
+                        new ButtonBuilder()
                             .setCustomId('upgrade-tier')
                             .setLabel('⏏️ Upgrade')
-                            .setStyle('Primary')
-                        mainComponents.addComponents(upgradeButton);
-                    }
-
-                    if (userTier.name !== "Mirage I") {
-                        mainComponents.addComponents(
-                            new ButtonBuilder()
-                                .setCustomId('downgrade-tier')
-                                .setLabel('🔽 Downgrade')
-                                .setStyle('Primary'),
-                        )
-                    }
-
-                    mainComponents.addComponents(
+                            .setStyle('Primary'),
                         new ButtonBuilder()
                             .setCustomId('premium-renew')
                             .setLabel('🔁 Renew')
                             .setStyle('Primary'),
-                    );
+                        );
+                    }
 
 
                     try {
@@ -283,7 +283,7 @@ module.exports = {
                     decayString = `\n └ Your tier will decay <t:${premiumData.date}:R>.`;
 
                     premiumEmbed.setAuthor({ name: `💎 Welcome to your premium dashboard ${username}!`, iconURL: int.user.displayAvatarURL() })
-                    premiumEmbed.setDescription(`${tierString}\n\`\`\`⚠️ No perks available to claim!\`\`\``)
+                    premiumEmbed.setDescription(`${tierString}\n**\`\`\`ml\n⚠️ No perks available to claim!᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`)
                     premiumEmbed.addFields({ name: ` `, value: `\`\`🎫 Notice\`\`\n ├ It\'s recommended to renew any of your perks.${decayString}` })
                     premiumEmbed.setThumbnail(int.user.displayAvatarURL());
                     mainComponents = new ActionRowBuilder().addComponents(
@@ -291,6 +291,14 @@ module.exports = {
                             .setCustomId('premium-info')
                             .setLabel('✒️ About')
                             .setStyle('Primary'),
+                        new ButtonBuilder()
+                            .setCustomId('shopping-cart')
+                            .setLabel('🛒 Cart')
+                            .setStyle('Primary'),   
+                        new ButtonBuilder()
+                            .setCustomId('perks-buy')
+                            .setLabel('🔀 Shop')
+                            .setStyle('Primary'),      
                         new ButtonBuilder()
                             .setCustomId('premium-renew')
                             .setLabel('🔁 Renew')
@@ -300,15 +308,6 @@ module.exports = {
                             .setLabel('⏏️ Upgrade')
                             .setStyle('Primary'),    
                     )
-
-                    if (userTier.name !== "Mirage I") {
-                        mainComponents.addComponents(
-                            new ButtonBuilder()
-                                .setCustomId('downgrade-tier')
-                                .setLabel('🔽 Downgrade')
-                                .setStyle('Primary'),
-                        )
-                    }
 
                     int.editReply({
                         content: '',

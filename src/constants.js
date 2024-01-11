@@ -74,6 +74,7 @@ const premiumTiers = [
         perks: [
             {
                 name: "Premium Avatar",
+                avname: "Premium Avatar",
                 description: "Obtain a special desgined avatar for the current collab.",
                 restrictions: "Only same picked character in the collab.",
                 renewalPrice: 1,
@@ -84,6 +85,7 @@ const premiumTiers = [
             },
             {
                 name: "Premium Cover",
+                avname: "Premium Cover",
                 description: "Obtain a special designed profile cover for your osu! profile.",
                 restrictions: "Only same picked character in the collab.",
                 renewalPrice: 1,
@@ -108,6 +110,7 @@ const premiumTiers = [
         perks: [
             {
                 name: "Premium Animated Banner",
+                avname: "Animated Banner",
                 description: "Obtain a special animated banner for your me! section.",
                 restrictions: "Any character can be used.",
                 renewalPrice: 2,
@@ -118,6 +121,7 @@ const premiumTiers = [
             },
             {
                 name: "Premium Forum Signature",
+                avname: "Forum Signature",
                 description: "Obtain a special signature, usable in the osu! forums.",
                 restrictions: "Any character can be used.",
                 renewalPrice: 2,
@@ -142,6 +146,7 @@ const premiumTiers = [
         perks: [
             {
                 name: "Premium Animated Stream Overlay",
+                avname: "Stream Overlay",
                 description: "Obtain a special animated stream overlay.",
                 restrictions: "Images and fields will have restrictions by the design itself.",
                 renewalPrice: 6,
@@ -152,6 +157,7 @@ const premiumTiers = [
             },
             {
                 name: "Premium Desktop Wallpaper",
+                avname: "Desktop Wallpaper",
                 description: "Obtain a special desktop wallpaper.",
                 restrictions: "Any character can be used.",
                 renewalPrice: 2,
@@ -162,6 +168,7 @@ const premiumTiers = [
             },
             {
                 name: "Premium Collab Poster",
+                avname: "Collab Poster",
                 description: "Obtain a printable poster of the current megacollab.",
                 restrictions: "Any character can be used.",
                 renewalPrice: 2,
@@ -210,6 +217,7 @@ const premiumTiers = [
         perks: [
             {
                 name: "Megacollab Themed osu! skin",
+                avname: "osu! skin",
                 description: "Obtain the collab's osu! skin customized for you.",
                 restrictions: "Any character and texts can be used.",
                 renewalPrice: 10,
@@ -220,6 +228,7 @@ const premiumTiers = [
             },
             {
                 name: "Extra Collab Materials",
+                avname: "Extra Materials",
                 description: "Obtain an extra set of the current megacollab materials.",
                 restrictions: "Any character can be used.",
                 renewalPrice: 10,
@@ -244,6 +253,7 @@ const premiumTiers = [
         perks: [
             {
                 name: "Megacollab Early Access",
+                avname: "Early Access",
                 description: "Pick a character for the collab before the public opening.",
                 restrictions: null,
                 renewalPrice: 15,
@@ -298,6 +308,7 @@ const premiumTiers = [
             },
             {
                 name: "Custom Endless Mirage Hoodie",
+                avname: "Endless Mirage Hoodie",
                 description: "Obtain an Endless Mirage themed hoodie with your name on it.",
                 restrictions: null,
                 renewalPrice: 20,
@@ -308,6 +319,7 @@ const premiumTiers = [
             },
             {
                 name: "Host your own Megacollab",
+                avname: "Host a Megacollab",
                 description: "Host your own megacollab with designs made by us.",
                 restrictions: null,
                 renewalPrice: 50,

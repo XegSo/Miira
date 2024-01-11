@@ -493,6 +493,36 @@ module.exports = {
         }
     },
 
+    getFullPerksOfTier: async function (limit) {
+        let Tperks = [];
+        for (let i = 0; i < localConstants.premiumTiers.length; i++) {
+            let tier = localConstants.premiumTiers[i];
+            for (let j = 0; j < tier.perks.length; j++) {
+                let perk = tier.perks[j];
+                Tperks.push(perk);
+                if (tier.id > limit) {
+                    break; 
+                }
+            }
+            if (tier.id > limit) {
+                break; 
+            }
+        }
+        Tperks = Tperks.filter(obj => obj.renewalPrice !== null);
+        return Tperks;
+    },
+
+    compareArrays: function (arr1, arr2) {
+        if (arr1.length !== arr2.length) {
+            return false;
+        }
+        const set1 = new Set(arr1.map(JSON.stringify));
+        const set2 = new Set(arr2.map(JSON.stringify));
+
+        return set1.size === set2.size;
+
+    },
+
     updateSuggestion: async function (messageId, user, status, embed, upvotes, downvotes, voters) {
         if (!voters) {
             let suggestion = await getSuggestion(messageId);

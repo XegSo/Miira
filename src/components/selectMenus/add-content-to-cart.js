@@ -44,20 +44,15 @@ module.exports = {
                     int.editReply("You cannot add the tier you already have.");
                     break mainProcess; 
                 }
-                if (localFunctions.premiumToInteger(tierInChoices.name) >= localFunctions.premiumToInteger(userTier.name)) {
+                if (localFunctions.premiumToInteger(tierInChoices.name) > localFunctions.premiumToInteger(userTier.name)) {
                     console.log('changing tier type to upgrade');
                     upgradeInChoices = tierInChoices;
                     upgradeInChoices.type = 'Upgrade';
                     upgradeInChoices.price = upgradeInChoices.price - localConstants.premiumTiers.find((element) => element.name === userTier.name).cost;
                     tierInChoices = await fullChoices.find((element) => element.type === "Upgrade");
                 } else {
-                    if (localFunctions.premiumToInteger(userTier.name) >= localFunctions.premiumToInteger(tierInChoices.name)) {
-                        int.editReply("You cannot downgrade your tier this way.");
-                        break mainProcess;
-                    } else {
-                        upgradeInChoices = [{name: tierInChoices.name, type: 'Upgrade', price: tierInChoices.price - localConstants.premiumTiers.find((e) => e.name === userTier.name).cost}];
-                        tierInChoices = await fullChoices.find((element) => element.type === "Upgrade");
-                    }
+                    int.editReply("You cannot downgrade your tier this way.");
+                    break mainProcess;
                 }
             }
             if (perksInChoices.length && typeof tierInChoices !== "undefined") {
@@ -120,6 +115,14 @@ module.exports = {
                                     }
                                 }  
                             }
+                            if (renewalsInChoices.length) {
+                                for (perk of renewalsInChoices) {
+                                    if (localFunctions.premiumToInteger(item.name) >= perk.tier) {
+                                        int.editReply("You cannot add a perk renewal while having a tier that includes it in your cart. Please remove the tier of your cart first before adding.");
+                                        break mainProcess;
+                                    }
+                                }  
+                            }
                             break;
                         case 'Perk':
                             if (perksInChoices.find((element) => element.name === item.name)) {
@@ -161,25 +164,27 @@ module.exports = {
                                     }
                                 }
                             } else if (item.class === 'Tier') {
-                                if (renewalsInChoices.length > 1) {
-                                    for (perk of renewalsInChoices) {
-                                        if (localFunctions.premiumToInteger(item.name) > perk.tier) {
-                                            int.editReply("You cannot add a perk renewal while having a tier renewal in your cart that includes the renewal of the perk.");
-                                            break mainProcess;
-                                        }
-                                    }
-                                }
-                                if (renewalsInChoices.length === 1) {
-                                    int.editReply("You already have this renewal in your cart.");
+                                if (typeof renewalsInChoices.find((e) => e.name === item.name) !== "undefined") {
+                                    int.editReply("What are you doing stepbro >.>");
                                     break mainProcess;
                                 }
+                                let renewalInt = localFunctions.premiumToInteger(item.name);
+                                let perksInRenewal = await localFunctions.getFullPerksOfTier(renewalInt);
+                                if (typeof perksInRenewal.find((element) => perksInChoices.find((e) => e.name === element.name)) !== "undefined" || typeof perksInRenewal.find((element) => renewalsInChoices.find((e) => e.name === element.name)) !== "undefined") {
+                                    int.editReply("Cannot add this perk while having a tier renewal in your cart that includes it. Remove the tier renewal before proceeding.");
+                                    break mainProcess;
+                                }
+                            } 
+                            if (typeof upgradeInChoices !== "undefined") {
+                                int.editReply("You cannot add a tier upgrade while having a tier renewal in your cart. Remove the renewal before proceeding.");
+                                break mainProcess;
                             }
                             break;           
                     }
                 }
             }
 
-            if (typeof tierInChoices !== "undefined") {
+            if (typeof tierInChoices !== "undefined" && typeof upgradeInChoices == "undefined") {
                 console.log(`T ${tierInChoices.name}`);
                 newCart = newCart.filter(obj => obj.type !== "Tier");
                 newCart.push(tierInChoices);

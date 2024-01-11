@@ -31,7 +31,7 @@ module.exports = {
 
         let tierEmbed = new EmbedBuilder()
             .setColor('#f26e6a')
-            .setDescription(`\`\`\`🚀 ${selectedTier.name}\`\`\`\n • ${selectedTier.description}${decayString}`)
+            .setDescription(`**\`\`\`ml\n🚀 ${selectedTier.name}\`\`\`**\n • ${selectedTier.description}${decayString}`)
 
         if (selectedTier.generalRenewalPrice) {
             renewalPrice = `${selectedTier.generalRenewalPrice}$`;
@@ -45,7 +45,7 @@ module.exports = {
         tierEmbed.addFields(
             {
                 name: '‎',
-                value: `\`\`\`💵 Pricing\`\`\`\n`,
+                value: `**\`\`\`ml\n💵 Pricing\`\`\`**\n`,
             },
             {
                 name: '\u200B',
@@ -64,7 +64,7 @@ module.exports = {
             },
             {
                 name: '‎                                      *└DX Stands for Deluxe Collabs*',
-                value: `\`\`\`🎫 Perks\`\`\`\n`,
+                value: `**\`\`\`ml\n🎫 Perks\`\`\`**\n`,
             },
             {
                 name: '*Renewing this tier renews all of the perks (Including previous tiers).*\n*You can renew individual perks or buy perks if you\'re not supporter.*\n',
@@ -114,7 +114,7 @@ module.exports = {
         tierEmbed.addFields(
             {
                 name: `‎`,
-                value: `\`\`\`✅ Extras\`\`\`\n • ${selectedTier.extra}\n‎`
+                value: `**\`\`\`ml\n✅ Extras\`\`\`**\n • ${selectedTier.extra}\n‎`
             }
         )
 
@@ -124,7 +124,7 @@ module.exports = {
         buyComponent = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId('premium-buy')
-                .setLabel('⏏️ Purchase.')
+                .setLabel('⏏️ Purchase')
                 .setStyle('Primary'),
 
         )

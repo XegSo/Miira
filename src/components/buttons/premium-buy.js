@@ -24,8 +24,8 @@ module.exports = {
             .setMinValues(1)
 
         let buyEmbed = new EmbedBuilder()
-            .setThumbnail('https://puu.sh/JP9Iw/a365159d0e.png')
-            .setImage('https://puu.sh/JPffc/3c792e61c9.png')
+            .setFooter({ text: 'Endless Mirage', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+            .setTimestamp()
             .setColor('#f26e6a')   
         if (!selectionTier.size && !int.member.roles.cache.has('743505566617436301')) {
             try {
@@ -50,7 +50,7 @@ module.exports = {
         } else {
             try {
                 const selectedTier = selectionTier.get(int.user.id).tier;
-                buyEmbed.setDescription(`\`\`\`🚀 ${selectedTier.name}\`\`\`\n • ${selectedTier.description}\n • Select if you would like to buy the tier or some perks of it`) 
+                buyEmbed.setDescription(`**\`\`\`ml\n🚀 ${selectedTier.name}\`\`\`**\n • ${selectedTier.description}\n • Select if you would like to buy the tier or some perks of it᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼`) 
                 const selectedTierInteger = localFunctions.premiumToInteger(selectedTier.name);
                 let userTierInteger = 0;
                 let userTier = {};

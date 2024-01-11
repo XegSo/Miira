@@ -5,7 +5,7 @@ const localFunctions = require('../../functions');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('cleancart')
-        .setDescription('Cleans an user\'s cart.')
+        .setDescription('Cleans an user\'s cart (Admin Only).')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
         .addUserOption(option =>
             option

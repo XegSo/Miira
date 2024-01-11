@@ -35,7 +35,8 @@ module.exports = {
             const tiersEmbed = new EmbedBuilder()
                 .setTimestamp()
                 .setColor('#f26e6a')
-                .setDescription(`\`\`\`🚀 Upgrade your tier\`\`\`\n • Bellow you can find the tiers your can upgrade to with their prices adapted to your current tier.\n • By upgrading, you will get all of the perks of the tier and the ones bellow renewed.`)
+                .setFooter({ text: 'Endless Mirage', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                .setDescription(`**\`\`\`ml\n🚀 Upgrade your tier\`\`\`**\n • Bellow you can find the tiers your can upgrade to with their prices adapted to your current tier.\n • By upgrading, you will get all of the perks of the tier and the ones bellow renewed.`)
 
             if (upgradeablePerks.length !== 0) {
                 let buyMenu = new SelectMenuBuilder()
@@ -47,8 +48,8 @@ module.exports = {
                             {
                                 name: `‎`,
                                 value: `\`\`✒️ ${tier.name}\`\`
-                             [├](https://discord.com/channels/630281137998004224/767374005782052864) ${tier.description}
                              └ **Upgrade cost: ${tier.cost-fullTier.cost}$**`,
+                                inline: true,
                             }
                         )
                         buyMenu.addOptions({ label: tier.name, value: `${tier.name}`, description: `Upgrade cost: ${tier.cost-fullTier.cost}$` });
