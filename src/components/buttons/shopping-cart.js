@@ -57,7 +57,7 @@ module.exports = {
                     components: [deleteComponent, cartComponents],
                 });
             } else {
-                cartEmbed.setDescription(`**\`\`\`ml\n🛒 Your cart is empty!᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`) 
+                cartEmbed.setDescription(`**\`\`\`ml\n🛒 Your cart is empty!᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`) 
                 int.editReply({
                     content: '',
                     embeds: [cartEmbed],
