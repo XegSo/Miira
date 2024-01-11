@@ -42,7 +42,7 @@ module.exports = {
                 console.log('a');
                 userTier = localFunctions.premiumToInteger(dbTier.name);
                 fullTier = localConstants.premiumTiers.find((e) => e.name === dbTier.name);
-                renewalString = `*Renewal Price for all perks: ${fullTier.generalRenewalPrice}$*`
+                renewalString = `*Renewal Price for all perks: ${fullTier.generalRenewalPrice ? fullTier.generalRenewalPrice : 'You are on the peak tier! how awesone'}$*`
                 allPossiblePerks = await localFunctions.getFullPerksOfTier(userTier);
                 userPerksNR = userPerks.filter((e) => e.renewalPrice !== null);
                 if (typeof allPossiblePerks.find((e) => userPerks.find((p) => p.name === e.name)) === "undefined" && typeof dbTier !== "undefined") {
@@ -63,7 +63,7 @@ module.exports = {
                         value: `**\`\`\`prolog\n💵 Renewable perks᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`,
                     }
                 )
-            } else if ((dbTier.name !== "Mirage VII" || dbTier.name !== "Mirage X") && localFunctions.compareArrays(userPerksNR,allPossiblePerks)) {
+            } else if ((dbTier.name == "Mirage VII" || dbTier.name == "Mirage X") && localFunctions.compareArrays(userPerksNR,allPossiblePerks)) {
                 buyEmbed.addFields(
                     {
                         name: ` `,
