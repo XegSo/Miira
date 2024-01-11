@@ -39,14 +39,12 @@ module.exports = {
             let renewalString = '';
             let purchaseablePerks = [];
             if (typeof dbTier !== "undefined") {
-                console.log('a');
                 userTier = localFunctions.premiumToInteger(dbTier.name);
                 fullTier = localConstants.premiumTiers.find((e) => e.name === dbTier.name);
-                renewalString = `*Renewal Price for all perks: ${fullTier.generalRenewalPrice ? fullTier.generalRenewalPrice : 'You are on the peak tier! how awesone'}$*`
+                renewalString = `*Renewal Price for all perks: ${fullTier.generalRenewalPrice ? fullTier.generalRenewalPrice : 'You are on the peak tier! Your renewal price is 0'}$*`
                 allPossiblePerks = await localFunctions.getFullPerksOfTier(userTier);
                 userPerksNR = userPerks.filter((e) => e.renewalPrice !== null);
                 if (typeof allPossiblePerks.find((e) => userPerks.find((p) => p.name === e.name)) === "undefined" && typeof dbTier !== "undefined") {
-                    console.log('b');
                     buyMenu.addOptions({ label: fullTier.name, value: fullTier.name, description: `Renewal cost: ${fullTier.generalRenewalPrice}$` });
                     arrayOfObjects.push({ name: fullTier.name, type: "Renewal", price: fullTier.generalRenewalPrice, tier: fullTier.id, class: 'Tier' });
                 }  
@@ -56,21 +54,21 @@ module.exports = {
                 renewalString = `Renewal of all perks is not possible with the current premium status.`
             }
             buyEmbed.setDescription(`**Current Tier: ${dbTier.name}**\n${renewalString}`)
-            if (dbTier.name !== "None!" && (dbTier.name !== "Mirage VII" || dbTier.name !== "Mirage X")) {
+            if (dbTier.name !== "None!" && (userTier !== 7 && userTier !== 10)) {
                 buyEmbed.addFields(
                     {
                         name: ` `,
                         value: `**\`\`\`prolog\n💵 Renewable perks᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`,
                     }
                 )
-            } else if ((dbTier.name == "Mirage VII" || dbTier.name == "Mirage X") && localFunctions.compareArrays(userPerksNR,allPossiblePerks)) {
+            } else if ((userTier === 7 || userTier === 10) && localFunctions.compareArrays(userPerksNR,allPossiblePerks)) {
                 buyEmbed.addFields(
                     {
                         name: ` `,
-                        value: `**\`\`\`prolog\n🥂 Nice to see you here! If you're interested on another hoodie or hosting another megacollab, DM xegc!\`\`\`**`,
+                        value: `**\`\`\`ml\n🥂 Nice to see you here! If you're interested on another hoodie or hosting another megacollab, DM xegc!\`\`\`**`,
                     }
                 )
-                buyMenu.addOptions({ label: 'The love from the server owner', value: perk.name, description: `uwu (I had to add something lol discord gets angry if I don't)` });
+                buyMenu.addOptions({ label: 'The love from the server owner', value: 'secret', description: `uwu (I had to add something lol discord gets angry if I don't)` });
             }
             localConstants.premiumTiers.forEach((tier) => {  
                 tier.perks.forEach((perk) => {
