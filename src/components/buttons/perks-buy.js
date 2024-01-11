@@ -37,12 +37,14 @@ module.exports = {
             let allPossiblePerks = [];
             let renewalString = '';
             let purchaseablePerks = [];
-            if (dbTier.length) {
+            if (typeof dbTier !== "undefined") {
+                console.log('a');
                 userTier = localFunctions.premiumToInteger(dbTier.name);
                 fullTier = localConstants.premiumTiers.find((e) => e.name === dbTier.name);
                 renewalString = `*Renewal Price for all perks: ${fullTier.generalRenewalPrice}$*`
                 allPossiblePerks = await localFunctions.getFullPerksOfTier(userTier);
                 if (typeof allPossiblePerks.find((e) => userPerks.find((p) => p.name === e.name)) === "undefined" && typeof dbTier !== "undefined") {
+                    console.log('b');
                     buyMenu.addOptions({ label: fullTier.name, value: fullTier.name, description: `Renewal cost: ${fullTier.generalRenewalPrice}$` });
                     arrayOfObjects.push({ name: fullTier.name, type: "Renewal", price: fullTier.generalRenewalPrice, tier: fullTier.id, class: 'Tier' });
                 }  
@@ -98,7 +100,7 @@ module.exports = {
                         }
                     )
                     buyMenu.addOptions({ label: perk.name, value: perk.name, description: `Purchase cost: ${perk.individualPrice}$` });
-                    arrayOfObjects.push({ name: perk.name, type: "Perk", price: perk.price, tier: perk.id });
+                    arrayOfObjects.push({ name: perk.name, type: "Perk", price: perk.individualPrice, tier: perk.id });
                 }
             }
             buyMenu.setMaxValues(buyMenu.options.length);
