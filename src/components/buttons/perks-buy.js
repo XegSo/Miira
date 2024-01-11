@@ -63,11 +63,6 @@ module.exports = {
             localConstants.premiumTiers.forEach((tier) => {  
                 tier.perks.forEach((perk) => {
                     if (!(userCart.find(p => p.name === perk.name) || userPerks.find(pp => pp.name === perk.name)) && perk.renewalPrice && perk.individualPrice) {
-                        if (userTier > localFunctions.premiumToInteger(tier.name)) {
-                            price = perk.renewalPrice;
-                        } else {
-                            price = perk.individualPrice;
-                        }
                         if (perk.renewalPrice && (userTier >= tier.id)) {
                             buyEmbed.addFields(
                                 {
@@ -78,7 +73,7 @@ module.exports = {
                                 }
                             )
                             buyMenu.addOptions({ label: perk.name, value: perk.name, description: `Renewal cost: ${perk.renewalPrice}$` });
-                            arrayOfObjects.push({ name: perk.name, type: "Renewal", price: price, tier: tier.id, class: 'Perk' });
+                            arrayOfObjects.push({ name: perk.name, type: "Renewal", price: perk.renewalPrice, tier: tier.id, class: 'Perk' });
                         } else if (perk.individualPrice && (tier.id > userTier)) {
                             let neededData = {avname: perk.avname, name: perk.name, individualPrice: perk.individualPrice, id: tier.id}
                             purchaseablePerks.push(neededData);
@@ -103,7 +98,7 @@ module.exports = {
                         }
                     )
                     buyMenu.addOptions({ label: perk.name, value: perk.name, description: `Purchase cost: ${perk.individualPrice}$` });
-                    arrayOfObjects.push({ name: perk.name, type: "Perk", price: price, tier: perk.id });
+                    arrayOfObjects.push({ name: perk.name, type: "Perk", price: perk.price, tier: perk.id });
                 }
             }
             buyMenu.setMaxValues(buyMenu.options.length);
