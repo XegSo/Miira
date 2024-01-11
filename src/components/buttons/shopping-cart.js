@@ -47,7 +47,7 @@ module.exports = {
                         .setLabel('💵 Checkout')
                         .setStyle('Success'),    
                     new ButtonBuilder()
-                        .setCustomId('perks-buy')
+                        .setCustomId('empty-cart')
                         .setLabel('🚮 Empty cart')
                         .setStyle('Danger'),
                 )
