@@ -192,7 +192,7 @@ module.exports = {
                                 premiumEmbed.addFields({
                                     name: ` `,
                                     value: `\`\`✒️ ${perk.name}\`\`
-                                             [└](https://discord.com/channels/630281137998004224/767374005782052864) ${perk.description}`
+                                             └ ${perk.description}`
                                 });
                             }
                         }
@@ -214,14 +214,14 @@ module.exports = {
                                 premiumEmbed.addFields({
                                     name: ` `,
                                     value: `\`\`🎫 ${perk.name}\`\`
-                                         [├](https://discord.com/channels/630281137998004224/767374005782052864) ${perk.description}${renewalPrice}`
+                                     └ ${perk.description}${renewalPrice}`
                                 });
                                 useMenu.addOptions({ label: perk.name, value: perk.name, description: perk.description });
                             } else if (perk.name === 'Custom Endless Mirage Hoodie' || perk.name === 'Host your own Megacollab') {
                                 premiumEmbed.addFields({
                                     name: ` `,
                                     value: `\`\`🎫 ${perk.name}\`\`
-                                         [├](https://discord.com/channels/630281137998004224/767374005782052864) ${perk.description}`
+                                     └ ${perk.description}`
                                 });
                                 useMenu.addOptions({ label: perk.name, value: perk.name, description: perk.description });
                             }
