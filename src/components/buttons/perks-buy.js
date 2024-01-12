@@ -24,10 +24,9 @@ module.exports = {
             .setMinValues(1)
 
         let buyEmbed = new EmbedBuilder()  
-            .setTimestamp()
             .setColor('#f26e6a')
             .setAuthor({ name: `Welcome to the perk shop ${int.user.tag}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
-            .setFooter({ text: 'Endless Mirage', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+            .setFooter({ text: 'Endless Mirage | Premium Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
 
         try {
             let userCart = await localFunctions.getCart(userId, collection);
@@ -38,10 +37,11 @@ module.exports = {
             let allPossiblePerks = [];
             let renewalString = '';
             let purchaseablePerks = [];
+            let i = false;
             if (typeof dbTier !== "undefined") {
                 userTier = localFunctions.premiumToInteger(dbTier.name);
                 fullTier = localConstants.premiumTiers.find((e) => e.name === dbTier.name);
-                renewalString = `*Renewal Price for all perks: ${fullTier.generalRenewalPrice ? fullTier.generalRenewalPrice : 'You are on the peak tier! Your renewal price is 0'}$*`
+                renewalString = `*Renewal Price for all perks: ${fullTier.generalRenewalPrice ? fullTier.generalRenewalPrice : 'You are on the peak tier! Your renewal price is 0'}$`
                 allPossiblePerks = await localFunctions.getFullPerksOfTier(userTier);
                 userPerksNR = userPerks.filter((e) => e.renewalPrice !== null);
                 if (typeof allPossiblePerks.find((e) => userPerks.find((p) => p.name === e.name)) === "undefined" && typeof dbTier !== "undefined") {
@@ -53,22 +53,15 @@ module.exports = {
                 dbTier = {name: 'None!'}
                 renewalString = `Renewal of all perks is not possible with the current premium status.`
             }
-            buyEmbed.setDescription(`**Current Tier: ${dbTier.name}**\n${renewalString}`)
-            if (dbTier.name !== "None!" && (userTier !== 7 && userTier !== 10)) {
-                buyEmbed.addFields(
-                    {
-                        name: ` `,
-                        value: `**\`\`\`prolog\n💵 Renewable perks᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`,
-                    }
-                )
+            if (dbTier.name !== "None!" && (userTier !== 7 && userTier !== 10) && !localFunctions.compareArrays(allPossiblePerks, userPerksNR)) {
+                renewalString = renewalString.concat(`*\n                                                                                                        **\`\`\`prolog\n💵 Renewable perks\`\`\`**\n`)
+                buyEmbed.setDescription(`**Current Tier: ${dbTier.name}**\n${renewalString}`);
+                i = true;
             } else if ((userTier === 7 || userTier === 10) && localFunctions.compareArrays(userPerksNR,allPossiblePerks)) {
-                buyEmbed.addFields(
-                    {
-                        name: ` `,
-                        value: `**\`\`\`ml\n🥂 Nice to see you here! If you're interested on another hoodie or hosting another megacollab, DM xegc!\`\`\`**`,
-                    }
-                )
+                renewalString = renewalString.concat(`*\n                                                                                                        **\`\`\`ml\n🥂 Nice to see you here! If you're interested on another hoodie or hosting another megacollab, DM xegc!\`\`\`**`)
+                buyEmbed.setDescription(`**Current Tier: ${dbTier.name}**\n${renewalString}`);
                 buyMenu.addOptions({ label: 'The love from the server owner', value: 'secret', description: `uwu (I had to add something lol discord gets angry if I don't)` });
+                i = true;
             }
             localConstants.premiumTiers.forEach((tier) => {  
                 tier.perks.forEach((perk) => {
@@ -77,8 +70,7 @@ module.exports = {
                             buyEmbed.addFields(
                                 {
                                     name: ` `,
-                                    value: `\`\`✒️ ${perk.avname}\`\`
-                                 **└ Renewal:** ${perk.renewalPrice}$`,
+                                    value: `\`\`✒️ ${perk.avname}\`\`\n **└ Renewal:** ${perk.renewalPrice}$`,
                                     inline: true,
                                 }
                             )
@@ -92,18 +84,22 @@ module.exports = {
                 });
             }); 
             if (purchaseablePerks.length !== 0) {
-                buyEmbed.addFields(
-                    {
-                        name: ` `,
-                        value: `**\`\`\`prolog\n💵 Purchaseable perks᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`,
-                    }
-                )
+                if (i) {
+                    buyEmbed.addFields(
+                        {
+                            name: ` `,
+                            value: `**\`\`\`prolog\n💵 Purchaseable perks\`\`\`**\n`,
+                        }
+                    )
+                } else {
+                    renewalString = renewalString.concat(`*\n                                                                                                        **\`\`\`prolog\n💵 Purchaseable perks\`\`\`**\n`)
+                    buyEmbed.setDescription(`**Current Tier: ${dbTier.name}**\n${renewalString}`);
+                }
                 for (perk of purchaseablePerks) {
                     buyEmbed.addFields(
                         {
                             name: ` `,
-                            value: `\`\`✒️ ${perk.avname}\`\`
-                         **└ Cost:** ${perk.individualPrice}$`,
+                            value: `\`\`✒️ ${perk.avname}\`\`\n **└ Cost:** ${perk.individualPrice}$`,
                             inline: true,
                         }
                     )
@@ -116,6 +112,12 @@ module.exports = {
             perkCache.set(int.user.id, {
                 choices: arrayOfObjects,
             });
+            buyEmbed.addFields(
+                {
+                    name: `‎`,
+                    value: `<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>`,
+                }
+            )
             int.editReply({
                 content: '',
                 embeds: [buyEmbed],
