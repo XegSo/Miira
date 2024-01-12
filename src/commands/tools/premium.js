@@ -192,7 +192,7 @@ module.exports = {
                                 premiumEmbed.addFields({
                                     name: ` `,
                                     value: `\`\`✒️ ${perk.name}\`\`
-                                             └ ${perk.description}`
+                                         ├ ${perk.description}`
                                 });
                             }
                         }
