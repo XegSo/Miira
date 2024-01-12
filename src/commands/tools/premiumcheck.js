@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 const { SelectMenuBuilder, ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
@@ -7,18 +7,28 @@ const localConstants = require('../../constants');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('premium')
-        .setDescription('Endless Mirage Premium Pannel.'),
+        .setName('premiumcheck')
+        .setDescription('Check an user\'s premium status (Admin Only).')
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+        .addUserOption(option =>
+            option
+                .setName('user')
+                .setDescription('User to assign the tier')
+                .setRequired(true)
+        ),
     async execute(int, client) {
+        if (int.user.id !== '687004886922952755') return;
         await int.deferReply({ ephemeral: true });
-        const userId = int.user.id;
+        const userId = int.options.getUser('user').id;
+        const guild = int.guild;
         let foundRole = null;
         let renewalPrice = '';
         let decayString = '';
         let tierString = `**No premium status found!**`;
         let tierDetails = '';
         let newPerks = [];
-        const username = int.user.tag;
+        const username = int.options.getUser('user').tag;
+        const member = await guild.members.fetch(userId);
         const tiers = localConstants.premiumTiers;
 
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
@@ -27,7 +37,7 @@ module.exports = {
                     .setFooter({ text: 'Endless Mirage | Premium Dashboard\n' , iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
 
-        if (!int.member.roles.cache.has('743505566617436301')) {
+        if (!member.roles.cache.has('743505566617436301')) {
             try {
                 let userPerks = await localFunctions.getPerks(userId, collection);
                 if (userPerks.length !== 0) {
@@ -115,12 +125,11 @@ module.exports = {
                 let premiumData = await localFunctions.getPremiumData(collectionSpecial);
                 let mainComponents = [];
                 let userTier = await localFunctions.getUserTier(userId, collection);
-
-                if (!userTier && int.member.roles.cache.has('743505566617436301') && !int.member.roles.cache.has('1150484454071091280')) {
+                if (!userTier && member.roles.cache.has('743505566617436301') && !member.roles.cache.has('1150484454071091280')) {
                     console.log('Executing insertion of perks'); //this needs to be moved into functions
                     for (const numeral of localConstants.romanNumerals) { //find the fucker and assign it to the database
                         const roleToFind = `Mirage ${numeral}`;
-                        foundRole = int.member.roles.cache.find(role => role.name === roleToFind);
+                        foundRole = member.roles.cache.find(role => role.name === roleToFind);
 
                         if (foundRole) {
                             let tierNumber = localFunctions.romanToInteger(numeral);
