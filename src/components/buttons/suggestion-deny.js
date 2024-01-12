@@ -17,7 +17,7 @@ module.exports = {
             return;
         }
         if (!localConstants.staffUserIds.includes(int.user.id)) {
-            int.reply({content: 'wtf are you doing step brother >.<', ephemeral: true});
+            int.reply({content: 'You cannot deny suggestions.', ephemeral: true});
             return;
         }
         if (suggestion.status === 'Approved.' || suggestion.status === 'Denied.') return;

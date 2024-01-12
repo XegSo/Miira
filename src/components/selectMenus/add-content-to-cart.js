@@ -26,6 +26,7 @@ module.exports = {
                 break mainProcess; 
             }
             let newCart = [];
+            console.log(initializedMap.get(int.user.id));
             const allOptions = initializedMap.get(int.user.id).choices;
             let fullChoices = allOptions.filter(obj => pendingItems.includes(obj.name))  
             let addedToCartEmbed = new EmbedBuilder()
@@ -226,8 +227,11 @@ module.exports = {
             });
 
         } catch (e) {
+            int.editReply("Please reopen the menu if you desire to add another item to your cart!");
             console.log(e);
             mongoClient.close();
-        }    
+        } finally {
+            mongoClient.close();
+        }
     }
 }

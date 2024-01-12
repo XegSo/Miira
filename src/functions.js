@@ -239,6 +239,11 @@ module.exports = {
         return user ? user.topCombo || 0 : 0;
     },
 
+    getPendingPaymentAmount: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.CurrentPendingPayment || 0 : 0;
+    },
+
     getUserTier: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.Tier || null : null;
@@ -401,12 +406,21 @@ module.exports = {
         return user ? user.tokensPermaBoost || false : false;
     },
 
+    getPaymentInfo: async function (email, collection) {
+        const payment = await collection.findOne({ email: email });
+        return payment ? payment || [] : [];
+    },
+
     setPermaBoost: async function (userId, isActive, collection) {
         await collection.updateOne({ _id: userId }, { $set: { tokensPermaBoost: isActive } }, { upsert: true });
     },
 
     setReferralCode: async function (userId, referralCode, collection) {
         await collection.updateOne({ _id: userId }, { $set: { referralCode } }, { upsert: true });
+    },
+
+    setCurrentPendingPayment: async function (userId, CurrentPendingPayment, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { CurrentPendingPayment } }, { upsert: true });
     },
 
     updateNonPurchaseableCosmetics: async function (userId, collection, roles, userInventory, onUse) {
@@ -512,6 +526,24 @@ module.exports = {
         return Tperks;
     },
 
+    getFullPerksOfTierWNR: async function (limit) {
+        let Tperks = [];
+        for (let i = 0; i < localConstants.premiumTiers.length; i++) {
+            let tier = localConstants.premiumTiers[i];
+            for (let j = 0; j < tier.perks.length; j++) {
+                let perk = tier.perks[j];
+                Tperks.push(perk);
+                if (tier.id > limit) {
+                    break; 
+                }
+            }
+            if (tier.id > limit) {
+                break; 
+            }
+        }
+        return Tperks;
+    },
+
     compareArrays: function (arr1, arr2) {
         if (arr1.length !== arr2.length) {
             return false;
@@ -559,6 +591,15 @@ module.exports = {
                 mongoClient.close();
             }
         }
+    },
+
+    liquidatePaymentData: async function (email, collection) {
+        try {
+            await collection.deleteOne({ email: email });
+        } catch (error) {
+            console.error('Error liquidating payment data:', error);
+            return null;
+        } 
     },
 
     getSuggestion: async function (messageId) {

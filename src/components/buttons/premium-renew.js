@@ -66,7 +66,7 @@ module.exports = {
             console.log(newCart);
 
             await localFunctions.setCart(userId, newCart, collection);
-            addedToCartEmbed.setDescription(`\`\`\`🚀 Content added to your cart\`\`\`${contentString}`); 
+            addedToCartEmbed.setDescription(`**\`\`\`prolog\n🚀 Content added to your cart᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**${contentString}`); 
             mainComponents = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('premium-info')

@@ -23,6 +23,8 @@ module.exports = {
                 let deleteMenu = new SelectMenuBuilder()
                         .setCustomId('delete-cart-items')
                         .setPlaceholder('Remove specific items from the cart.')
+                        .setMinValues(1)
+                        .setMaxValues(cartItems.length);
                 cartEmbed.setDescription(`**\`\`\`prolog\n🛒 Current items in cart᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`)   
                 for (item of cartItems) {
                     cartEmbed.addFields(
@@ -43,7 +45,7 @@ module.exports = {
                 const deleteComponent = new ActionRowBuilder().addComponents(deleteMenu);
                 let cartComponents = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
-                        .setCustomId('premium-info')
+                        .setCustomId('checkout')
                         .setLabel('💵 Checkout')
                         .setStyle('Success'),    
                     new ButtonBuilder()
@@ -54,7 +56,7 @@ module.exports = {
                 int.editReply({
                     content: '',
                     embeds: [cartEmbed],
-                    components: [deleteComponent, cartComponents],
+                    components: [cartComponents, deleteComponent],
                 });
             } else {
                 cartEmbed.setDescription(`**\`\`\`ml\n🛒 Your cart is empty!᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**`) 

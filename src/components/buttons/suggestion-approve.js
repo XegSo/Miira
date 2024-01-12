@@ -11,7 +11,7 @@ module.exports = {
     },
     async execute (int, client) {
         if (!localConstants.staffUserIds.includes(int.user.id)) {
-            int.reply({content: 'wtf are you doing step brother >.<', ephemeral: true});
+            int.reply({content: 'You cannot approve suggestions.', ephemeral: true});
             return;
         }
         const suggestion = await localFunctions.getSuggestion(int.message.id);

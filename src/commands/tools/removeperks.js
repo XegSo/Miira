@@ -26,8 +26,12 @@ module.exports = {
 
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");        
 
-        try {
+        main: try {
             const userPerks = await localFunctions.getPerks(user.id, collection);
+            if (userPerks.length === 0) {
+                int.editReply('The user has no perks in the database.');
+                break main;
+            }
             userPerks.forEach((perk) => {
                 perkMenu.addOptions({ label: perk.name , value: perk.name, description: `${perk.name}` })
             });
