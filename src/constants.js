@@ -545,7 +545,7 @@ const guildId = "630281137998004224"
 
 const timeInterval = 5000; // Define the time interval in milliseconds
 const blacklistedChannels = ['630995793670701065', '746040634548289606', '1118649160858599487', '781152261023596584', '795652942299791370'];
-const comboInterval = 5 * 60 * 1000; // 3 minutes in milliseconds
+const comboInterval = 8 * 60 * 1000; // 8 minutes in milliseconds
 const blacklistedChars = ['>', '<', '??', 't!', 'http', '!', ':']; // Add any characters you want to blacklist here
 const welcomeChannelID = '713108912764616704';
 

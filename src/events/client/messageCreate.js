@@ -61,7 +61,7 @@ module.exports = {
                     console.log(`Current combo ${comboData.messages}`);
                     let comboBonus = comboData.messages;
                     comboData.lastMessageTime = currentTime;
-                    tokensEarned = (0.1 * messageLength) / (0.5 + (0.00004 * (messageLength ** 2))) * (1.5 - (1.5 * (Math.E ** (-0.2 * (comboBonus + 1)))));
+                    tokensEarned = 20*Math.log(4*messageLength*-2.5)* (1.5 - (1.5 * (Math.E ** (-0.02 * (comboBonus + 1)))));
                     console.log(`Tokens earned with bonus: ${tokensEarned}`);
                     if (20 < messageLength) {
                         comboData.messages++; // Increment the number of messages in the combo
@@ -143,6 +143,12 @@ module.exports = {
             }
 
             const lastMessageDate = await localFunctions.getLastMessageDate(userId, collection); // Fetch the last message date for the user from the database
+
+            if (typeof lastMessageDate === "undefined") {
+                tokensEarned += 900;
+                console.log('First message of the user in the server since the system was created, assigning 900 tokens bonus.');
+                message.react('868437778004836372');
+            }
 
             if (globalBoostEndTime) {
                 if (globalBoostEndTime < currentTime) {
