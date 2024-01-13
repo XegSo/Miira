@@ -61,7 +61,7 @@ module.exports = {
                     console.log(`Current combo ${comboData.messages}`);
                     let comboBonus = comboData.messages;
                     comboData.lastMessageTime = currentTime;
-                    tokensEarned = 20*Math.log(4*messageLength*-2.5)* (1.5 - (1.5 * (Math.E ** (-0.02 * (comboBonus + 1)))));
+                    tokensEarned = 20*Math.log(Math.E, 4*messageLength*-2.5)* (1.5 - (1.5 * (Math.E ** (-0.02 * (comboBonus + 1)))));
                     console.log(`Tokens earned with bonus: ${tokensEarned}`);
                     if (20 < messageLength) {
                         comboData.messages++; // Increment the number of messages in the combo
