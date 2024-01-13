@@ -93,10 +93,10 @@ module.exports = {
 
             let type = null;
             for (const perk of selectedTier.perks) {
-                if (!perk.individualPrice || !perk.renewalPrice || userPerks.find(p => p.name === perk.name) || userCart.find(p => p.name === perk.name)) {
+                if (!perk.individualPrice || !perk.renewalPrice || typeof userPerks.find(p => p.name === perk.name) !== "undefined" || typeof userCart.find(p => p.name === perk.name) !== "undefined") {
                     continue;
                 }
-                if (userTierDB && (userTierInteger >= selectedTierInteger)) {
+                if (userTierDB.length !== 0 && (userTierInteger >= selectedTierInteger)) {
                     type = "Renewal";
                     price = perk.renewalPrice;
                 } else {
@@ -126,10 +126,11 @@ module.exports = {
                 embeds: [buyEmbed],
                 components: [buyComponents],
             });
-        } catch {
+        } catch (e) {
             int.editReply({
                 content: 'Illegal action performed. Try opening this menu again.',
             });
+            console.log(e);
         } finally {
             selectionTier.delete(int.user.id);
             mongoClient.close();
