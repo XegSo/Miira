@@ -138,16 +138,40 @@ module.exports = {
 
 
       } else if (selectedItem === "Mirage I Perk") {
-        if (int.member.roles.cache.has('1146644779464151151')) {
-          int.editReply({ content: `You already have this perk active!`, ephemeral: true });
+        let perk = localConstants.premiumTiers[0].perks;
+        let userPerks = await localFunctions.getPerks(userId, collection);
+        if (typeof userPerks.find(e => e.name === perk[0].name) === "undefined" || typeof userPerks.find(e => e.name === perk[1].name) === "undefined") {
+          userPerks.push(perk);
+          await localFunctions.setPerks(userId, userPerks, collection);
+        } else {
+          int.editReply({ content: `You already have one of the perks of the Mirage I Premium Tier!`, ephemeral: true });
           return;
         }
+        int.editReply({ content: `You have obtained the Mirage I Perk! Check /premium`, ephemeral: true });
 
-        await int.member.roles.add('1146644779464151151');
+      } else if (selectedItem === "Endless Mirage Skin") {
+        let perk = localConstants.premiumTiers[4].perks[0];
+        let userPerks = await localFunctions.getPerks(userId, collection);
+        if (typeof userPerks.find(e => e.name === perk.name) === "undefined" ) {
+          userPerks.push(perk);
+          await localFunctions.setPerks(userId, userPerks, collection);
+        } else {
+          int.editReply({ content: `You already have this perk!`, ephemeral: true });
+          return;
+        }
+        int.editReply({ content: `You have obtained the Endless Mirage Skin Perk! Check /premium`, ephemeral: true });
 
-
-        int.editReply({ content: `You have obtained the Mirage I Perk! Make sure to check <#871874459169071165>`, ephemeral: true });
-
+      } else if (selectedItem === "Collab Early Access") {
+        let perk = localConstants.premiumTiers[6].perks[0];
+        let userPerks = await localFunctions.getPerks(userId, collection);
+        if (typeof userPerks.find(e => e.name === perk.name) === "undefined" ) {
+          userPerks.push(perk);
+          await localFunctions.setPerks(userId, userPerks, collection);
+        } else {
+          int.editReply({ content: `You already have this perk!`, ephemeral: true });
+          return;
+        }
+        int.editReply({ content: `You have obtained the Collab Early Access Perk! Check /premium`, ephemeral: true });
 
       } else if (selectedItem === "Global Boost") {
         const announcementsChannel = int.guild.channels.cache.get('764561474000912434');
@@ -169,7 +193,7 @@ module.exports = {
         onUseItems.push(itemObject);
         await localFunctions.setOnUse(userId, onUseItems, collection);
         int.editReply({ content: `Cosmetic succesfully enabled!`, ephemeral: true });
-      }else {
+      } else {
         int.editReply({ content: `Something went wrong...`, ephemeral: true });
         return;
       }
