@@ -12,6 +12,12 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
+        let messageId = null;
+        let messageTier = [];
+        if (int.message.channelId === '767374005782052864') {
+            messageId = int.message.id;
+        }
+        console.log(int.message.id);
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         const userId = int.user.id;
         var arrayOfObjects = [];
@@ -28,10 +34,39 @@ module.exports = {
             .setColor('#f26e6a')   
         main: try {
             if (!selectionTier.size) {
-                int.editReply({
-                    content: 'Illegal action performed. Try opening this menu again.',
-                });
-                break main;
+                if (messageId) {
+                    switch (messageId) {
+                        case '1195513874032631961':
+                            messageTier = localConstants.premiumTiers[0];
+                        break;
+                        case '1195513875139936337':
+                            messageTier = localConstants.premiumTiers[1];
+                        break;
+                        case '1195513876377260074':
+                            messageTier = localConstants.premiumTiers[2];
+                        break;
+                        case '1195513877350338701':
+                            messageTier = localConstants.premiumTiers[3];
+                        break;
+                        case '1195513878482796605':
+                            messageTier = localConstants.premiumTiers[4];
+                        break;
+                        case '1195513899219423293':
+                            messageTier = localConstants.premiumTiers[5];
+                        break;
+                        case '1195513901194936464':
+                            messageTier = localConstants.premiumTiers[6];
+                        break;
+                    }
+                    selectionTier.set(int.user.id, {
+                        tier: messageTier,
+                    });
+                } else {
+                    int.editReply({
+                        content: 'Illegal action performed. Try opening this menu again.',
+                    });
+                    break main;
+                }
             }
             const selectedTier = selectionTier.get(int.user.id).tier;
             buyEmbed.setDescription(`**\`\`\`ml\n🚀 ${selectedTier.name}\`\`\`**                                                                                                           \n • ${selectedTier.description}\n • Select if you would like to buy the tier or some perks of it`) 

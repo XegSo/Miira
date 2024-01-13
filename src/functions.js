@@ -146,7 +146,6 @@ module.exports = {
         return premium ? premium.date || 0 : 0;
     },
 
-
     getBadges: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.badges || null : null;
