@@ -25,7 +25,7 @@ module.exports = {
       const currentBalance = await localFunctions.getBalance(userId, collection); // Fetch user's balance from the database
       let userInventory = await localFunctions.getInventory(userId, collection) || [];
 
-      if (currentBalance >= selectedItem.value_int && !userInventory.some((item) => item.name === selectedItem.name)) {
+      if (parseInt(currentBalance) >= selectedItem.value_int && !userInventory.some((item) => item.name === selectedItem.name)) {
         // Create a verification message with Yes and No buttons
         const verificationMessage = await int.reply({
           content: `Are you sure you want to buy ${selectedItem.name} for ${selectedItem.value}?`,
