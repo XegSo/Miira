@@ -25,6 +25,18 @@ module.exports = {
                 int.editReply("This action cannot be performed. Open the shop dashboard again to proceed.");
                 break mainProcess; 
             }
+
+            mainComponents = new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId('premium-info')
+                    .setLabel('✒️ Continue Shopping')
+                    .setStyle('Primary'),
+                new ButtonBuilder()
+                    .setCustomId('shopping-cart')
+                    .setLabel('✅ Check your cart')
+                    .setStyle('Primary'),
+            ) 
+
             let newCart = [];
             console.log(initializedMap.get(int.user.id));
             const allOptions = initializedMap.get(int.user.id).choices;
@@ -42,7 +54,10 @@ module.exports = {
             if (userTier && typeof tierInChoices !== "undefined") { //TO BE REWRITTEN
                 console.log(tierInChoices);
                 if (userTier.name === tierInChoices.name) {
-                    int.editReply("You cannot add the tier you already have.");
+                    int.editReply({
+                        content: 'You cannot add the tier you already have.',
+                        components: [mainComponents],
+                    });
                     break mainProcess; 
                 }
                 if (localFunctions.premiumToInteger(tierInChoices.name) > localFunctions.premiumToInteger(userTier.name)) {
@@ -52,12 +67,18 @@ module.exports = {
                     upgradeInChoices.price = upgradeInChoices.price - localConstants.premiumTiers.find((element) => element.name === userTier.name).cost;
                     tierInChoices = await fullChoices.find((element) => element.type === "Upgrade");
                 } else {
-                    int.editReply("You cannot downgrade your tier this way.");
+                    int.editReply({
+                        content: 'You cannot downgrade your tier this way.',
+                        components: [mainComponents],
+                    });
                     break mainProcess;
                 }
             }
             if (perksInChoices.length && typeof tierInChoices !== "undefined") {
-                int.editReply("You cannot add the tier and the perks of that tier at the same time. The tier itself already includes the perks");
+                int.editReply({
+                    content: 'You cannot add the tier and the perks of that tier at the same time. The tier itself already includes the perks.',
+                    components: [mainComponents],
+                });
                 break mainProcess;
             }
 
@@ -87,14 +108,20 @@ module.exports = {
                         case 'Tier':
                             if (typeof tierInChoices !== "undefined") {
                                 if (item.name === tierInChoices.name) {
-                                    int.editReply("You already have this tier in your cart.");
+                                    int.editReply({
+                                        content: 'You already have this tier in your cart.',
+                                        components: [mainComponents],
+                                    });
                                     break mainProcess;
                                 }
                             }
                             if (perksInChoices.length) {
                                 for (perk of perksInChoices) {
                                     if (localFunctions.premiumToInteger(item.name) >= perk.tier) {
-                                        int.editReply("You cannot add a perk while having a tier that includes it in your cart. Please remove the tier of your cart first before adding.");
+                                        int.editReply({
+                                            content: 'You cannot add a perk while having a tier that includes it in your cart. Please remove the tier of your cart first before adding.',
+                                            components: [mainComponents],
+                                        });
                                         break mainProcess;
                                     }
                                 }  
@@ -104,14 +131,20 @@ module.exports = {
                             if (typeof upgradeInChoices !== "undefined") {
                                 console.log(upgradeInChoices);
                                 if (item.name === upgradeInChoices.name) {
-                                    int.editReply("You already have this upgrade in your cart.");
+                                    int.editReply({
+                                        content: 'You already have this upgrade in your cart.',
+                                        components: [mainComponents],
+                                    });
                                     break mainProcess;
                                 }
                             }
                             if (perksInChoices.length) {
                                 for (perk of perksInChoices) {
                                     if (localFunctions.premiumToInteger(item.name) >= perk.tier) {
-                                        int.editReply("You cannot add a perk while having a tier that includes it in your cart. Please remove the tier of your cart first before adding.");
+                                        int.editReply({
+                                            content: 'You cannot add a perk while having a tier that includes it in your cart. Please remove the tier of your cart first before adding.',
+                                            components: [mainComponents],
+                                        });
                                         break mainProcess;
                                     }
                                 }  
@@ -119,7 +152,10 @@ module.exports = {
                             if (renewalsInChoices.length) {
                                 for (perk of renewalsInChoices) {
                                     if (localFunctions.premiumToInteger(item.name) >= perk.tier) {
-                                        int.editReply("You cannot add a perk renewal while having a tier that includes it in your cart. Please remove the tier of your cart first before adding.");
+                                        int.editReply({
+                                            content: 'You cannot add a perk renewal while having a tier that includes it in your cart. Please remove the tier of your cart first before adding.',
+                                            components: [mainComponents],
+                                        });
                                         break mainProcess;
                                     }
                                 }  
@@ -127,19 +163,28 @@ module.exports = {
                             break;
                         case 'Perk':
                             if (perksInChoices.find((element) => element.name === item.name)) {
-                                int.editReply("You already have this perk in your cart.");
+                                int.editReply({
+                                    content: 'You already have this in your cart.',
+                                    components: [mainComponents],
+                                });
                                 break mainProcess;
                             }
                             if (typeof upgradeInChoices !== "undefined") {
                                 console.log(upgradeInChoices);
                                 if (localFunctions.premiumToInteger(upgradeInChoices.name) >= item.tier) {
-                                    int.editReply("You cannot add this tier while having perks that its purchase includes in your cart. Please remove the perks of your cart first before adding.");
+                                    int.editReply({
+                                        content: 'You cannot add this tier while having perks that its purchase includes in your cart. Please remove the perks of your cart first before adding.',
+                                        components: [mainComponents],
+                                    });
                                     break mainProcess;
                                 }
                             } else if (typeof tierInChoices !== "undefined") {
                                 console.log(tierInChoices);
                                 if (localFunctions.premiumToInteger(tierInChoices.name) >= item.tier) {
-                                    int.editReply("You cannot add this tier while having perks that its purchase includes in your cart. Please remove the perks of your cart first before adding.");
+                                    int.editReply({
+                                        content: 'You cannot add this tier while having perks that its purchase includes in your cart. Please remove the perks of your cart first before adding.',
+                                        components: [mainComponents],
+                                    });
                                     break mainProcess;
                                 }
                             }
@@ -148,36 +193,54 @@ module.exports = {
                             if (item.class === 'Perk') {
                                 if (typeof upgradeInChoices !== "undefined") {
                                     if (localFunctions.premiumToInteger(upgradeInChoices.name) >= item.tier) {
-                                        int.editReply("You cannot add a tier upgrade while having perks renewals that this tier includes in your cart. Remove the perk renewals before proceeding.");
+                                        int.editReply({
+                                            content: 'You cannot add a tier upgrade while having perks renewals that this tier includes in your cart. Remove the perk renewals before proceeding.',
+                                            components: [mainComponents],
+                                        });
                                         break mainProcess;
                                     }
                                 }
                                 if (renewalsInChoices.length === 1) {
                                     if (localFunctions.premiumToInteger(renewalsInChoices[0].name) >= item.tier) {
-                                        int.editReply("You cannot add a tier renewal while having perks renewals that this tier includes in your cart. Remove the perk renewals before proceeding.");
+                                        int.editReply({
+                                            content: 'You cannot add a tier renewal while having perks renewals that this tier includes in your cart. Remove the perk renewals before proceeding.',
+                                            components: [mainComponents],
+                                        });
                                         break mainProcess;
                                     }
                                 }
                                 if (renewalsInChoices.length > 1) {
                                     if (renewalsInChoices.find((element) => element.name === item.name)) {
-                                        int.editReply("You already have this renewal in your cart.");
+                                        int.editReply({
+                                            content: 'You already have this in your cart!',
+                                            components: [mainComponents],
+                                        });
                                         break mainProcess;
                                     }
                                 }
                             } else if (item.class === 'Tier') {
                                 if (typeof renewalsInChoices.find((e) => e.name === item.name) !== "undefined") {
-                                    int.editReply("What are you doing stepbro >.>");
+                                    int.editReply({
+                                        content: 'You already have this in your cart!',
+                                        components: [mainComponents],
+                                    });
                                     break mainProcess;
                                 }
                                 let renewalInt = localFunctions.premiumToInteger(item.name);
                                 let perksInRenewal = await localFunctions.getFullPerksOfTier(renewalInt);
                                 if (typeof perksInRenewal.find((element) => perksInChoices.find((e) => e.name === element.name)) !== "undefined" || typeof perksInRenewal.find((element) => renewalsInChoices.find((e) => e.name === element.name)) !== "undefined") {
-                                    int.editReply("Cannot add this perk while having a tier renewal in your cart that includes it. Remove the tier renewal before proceeding.");
+                                    int.editReply({
+                                        content: 'Cannot add this perk while having a tier renewal in your cart that includes it. Remove the tier renewal before proceeding.',
+                                        components: [mainComponents],
+                                    });
                                     break mainProcess;
                                 }
                             } 
                             if (typeof upgradeInChoices !== "undefined") {
-                                int.editReply("You cannot add a tier upgrade while having a tier renewal in your cart. Remove the renewal before proceeding.");
+                                int.editReply({
+                                    content: 'You cannot add a tier upgrade while having a tier renewal in your cart. Remove the renewal before proceeding.',
+                                    components: [mainComponents],
+                                });
                                 break mainProcess;
                             }
                             break;           
@@ -209,17 +272,6 @@ module.exports = {
             await localFunctions.setCart(userId, newCart, collection);
             allMaps[initializedMapIndex].delete(int.user.id);
             addedToCartEmbed.setDescription(`**\`\`\`prolog\n🚀 Content added to your cart\`\`\`                                                                                                           **${contentString}`); 
-
-            mainComponents = new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                    .setCustomId('premium-info')
-                    .setLabel('✒️ Continue Shopping')
-                    .setStyle('Primary'),
-                new ButtonBuilder()
-                    .setCustomId('shopping-cart')
-                    .setLabel('✅ Check your cart')
-                    .setStyle('Primary'),
-            ) 
             addedToCartEmbed.addFields(
                 {
                     name: `‎`,
