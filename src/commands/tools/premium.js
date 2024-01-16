@@ -12,14 +12,11 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
-        let foundRole = null;
         let renewalPrice = '';
         let decayString = '';
         let tierString = `**No premium status found!**`;
         let tierDetails = '';
-        let newPerks = [];
         const username = int.user.tag;
-        const tiers = localConstants.premiumTiers;
 
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB("Special");
@@ -117,43 +114,11 @@ module.exports = {
                 let userTier = await localFunctions.getUserTier(userId, collection);
 
                 if (!userTier && int.member.roles.cache.has('743505566617436301') && !int.member.roles.cache.has('1150484454071091280')) {
-                    console.log('Executing insertion of perks'); //this needs to be moved into functions
-                    for (const numeral of localConstants.romanNumerals) { //find the fucker and assign it to the database
-                        const roleToFind = `Mirage ${numeral}`;
-                        foundRole = int.member.roles.cache.find(role => role.name === roleToFind);
-
-                        if (foundRole) {
-                            let tierNumber = localFunctions.romanToInteger(numeral);
-                            const foundTier = {
-                                name: foundRole.name,
-                                id: foundRole.id
-                            };
-                            await localFunctions.setUserTier(userId, foundTier, collection);
-                            userTier = foundTier;
-                            tierString = `**Current Tier: ${foundTier.name}**`;
-                            tierDetails = localConstants.premiumTiers.find(tier => tier.name === foundRole.name);
-                            if (tierNumber > 3) { //for non renewable fuck, assign the non renewable fuckers
-                                for (const tier of tiers) {
-                                    for (const perk of tier.perks) {
-                                        if ((tierNumber === 7 || tierNumber === 10) && (perk.name !== 'Host your own Megacollab' || perk.name !== 'Custom Endless Mirage Hoodie')) { //Peak tiers have all the perks permanent to them
-                                            newPerks.push(perk);
-                                            console.log(`Perk ${perk.name} has been pushed.`)
-                                        } else if (!perk.singleUse) {
-                                            newPerks.push(perk);
-                                            console.log(`Perk ${perk.name} has been pushed.`)
-                                        }
-                                    }
-                                    if (tier.name === roleToFind) {
-                                        await localFunctions.setPerks(userId, newPerks, collection);
-                                        console.log(`Perks uploaded.`)
-                                        userPerks = newPerks;
-                                        break;
-                                    }
-                                }
-                            }
-                            break;
-                        }
-                    }
+                    let premiumDetails = await localFunctions.assignPremium(int, userId, collection);
+                    userTier = premiumDetails[0];
+                    userPerks = premiumDetails[1];
+                    tierDetails = premiumDetails[2];
+                    tierString = `**Current Tier: ${userTier.name}**`;
                 } else if (userTier) {
                     tierString = `**Current Tier: ${userTier.name}**`;
                     tierDetails = localConstants.premiumTiers.find(tier => tier.name === userTier.name);
@@ -171,7 +136,7 @@ module.exports = {
                         .setPlaceholder('Use your perks.')
 
                     premiumEmbed.setAuthor({ name: `Welcome to your premium dashboard ${username}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' });
-
+                    // to rewrite into a single for loop with switch case
                     if (userPerks.some(perk => perk.singleUse === false)) {
                         premiumEmbed.setDescription(`${tierString}\n                                                                                                        **\`\`\`ml\n🔮 Permanent perks\`\`\`**`)
                         tierString = ' '

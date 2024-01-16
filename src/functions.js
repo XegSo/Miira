@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { EmbedBuilder } = require('discord.js');
 const { connectToMongoDB } = require('./mongo');
 const localConstants = require('./constants');
@@ -16,7 +17,57 @@ registerFont('./assets/fonts/Montserrat-MediumItalic.ttf', {
     style: "medium italic"
 });
 
+
 module.exports = {
+
+    capitalizeFirstLetter: function (str) {
+        if (typeof str !== 'string' || str.length === 0) {
+            return str; // return unchanged if input is not a non-empty string
+        }
+    
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    },
+
+    assignPremium: async function (int, userId, collection) {
+        let newPerks = [];
+        let foundRole = null;
+        let foundTier = [];
+        console.log('Executing insertion of perks');
+        for (const numeral of localConstants.romanNumerals) { //find the fucker and assign it to the database
+            const roleToFind = `Mirage ${numeral}`;
+            foundRole = int.member.roles.cache.find(role => role.name === roleToFind);
+            if (foundRole) {
+                tierDetails = localConstants.premiumTiers.find(tier => tier.name === foundRole.name);
+                let tierNumber = romanToInteger(numeral);
+                foundTier = {
+                    name: foundRole.name,
+                    id: foundRole.id
+                };
+                await setUserTier(userId, foundTier, collection);
+                if (tierNumber > 3) { //for non renewable fuck, assign the non renewable fuckers
+                    for (const tier of localConstants.premiumTiers) {
+                        for (const perk of tier.perks) {
+                            if ((tierNumber === 7 || tierNumber === 10) && (perk.name !== 'Host your own Megacollab' || perk.name !== 'Custom Endless Mirage Hoodie')) { //Peak tiers have all the perks permanent to them
+                                newPerks.push(perk);
+                                console.log(`Perk ${perk.name} has been pushed.`)
+                            } else if (!perk.singleUse) {
+                                newPerks.push(perk);
+                                console.log(`Perk ${perk.name} has been pushed.`)
+                            }
+                        }
+                        if (tier.name === roleToFind) {
+                            await setPerks(userId, newPerks, collection);
+                            console.log(`Perks uploaded.`)
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        return [foundTier, newPerks, tierDetails];
+    },
+
     removeURLsAndColons: function (content) {
         // Remove URLs (http, https, www) and colons
         return content.replace(/(https?:\/\/|www\.)[^\s]+|:[^\s]+:|<[^>]+>/g, '');
@@ -123,6 +174,29 @@ module.exports = {
     },
 
     // Helper functions for interacting with MongoDB
+
+    setCollab: async function (collab, collection) {
+        await collection.insertOne(collab);
+    },
+
+    setCollabPool: async function (collab, pool, collection) {
+        try {
+            await collection.updateOne({ name: collab }, { $set: { pool } }, { upsert: true });
+            console.log('uploaded');
+        } catch (e){
+            console.log(e)
+        }
+    },
+
+    getCollabs: async function (collection) {
+        const allCollabs = await collection.find({}).toArray();
+        return allCollabs ? allCollabs || null : null;
+    },
+
+    getCollab: async function (name, collection) {
+        const collab = await collection.findOne({ name: name });
+        return collab ? collab || null : null;
+    },
 
     getBalance: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
@@ -369,7 +443,7 @@ module.exports = {
                 existingData[existingObjIndex] = newObj;
             } else {
                 existingData.push(newObj);
-            }    
+            }
         } else {
             existingData.push(newObj);
         }
@@ -514,11 +588,11 @@ module.exports = {
                 let perk = tier.perks[j];
                 Tperks.push(perk);
                 if (tier.id > limit) {
-                    break; 
+                    break;
                 }
             }
             if (tier.id > limit) {
-                break; 
+                break;
             }
         }
         Tperks = Tperks.filter(obj => obj.renewalPrice !== null);
@@ -533,11 +607,11 @@ module.exports = {
                 let perk = tier.perks[j];
                 Tperks.push(perk);
                 if (tier.id > limit) {
-                    break; 
+                    break;
                 }
             }
             if (tier.id > limit) {
-                break; 
+                break;
             }
         }
         return Tperks;
@@ -598,7 +672,7 @@ module.exports = {
         } catch (error) {
             console.error('Error liquidating payment data:', error);
             return null;
-        } 
+        }
     },
 
     getSuggestion: async function (messageId) {
@@ -693,7 +767,7 @@ module.exports = {
             D: 500,
             M: 1000,
         };
-        const roman = string.replace("Mirage ","");
+        const roman = string.replace("Mirage ", "");
         let result = 0;
 
         for (let i = 0; i < roman.length; i++) {
@@ -841,4 +915,39 @@ function applyText(canvas, text, fontFamily, fontSize, fontStyle) {
 
 async function setInventory(userId, inventory, collection) {
     await collection.updateOne({ _id: userId }, { $set: { inventory } }, { upsert: true });
+}
+
+async function setUserTier(userId, Tier, collection) {
+    await collection.updateOne({ _id: userId }, { $set: { Tier } }, { upsert: true });
+}
+
+function romanToInteger(roman) {
+    const romanNumerals = {
+        I: 1,
+        V: 5,
+        X: 10,
+        L: 50,
+        C: 100,
+        D: 500,
+        M: 1000,
+    };
+
+    let result = 0;
+
+    for (let i = 0; i < roman.length; i++) {
+        const currentNumeral = romanNumerals[roman[i]];
+        const nextNumeral = romanNumerals[roman[i + 1]];
+
+        if (nextNumeral && currentNumeral < nextNumeral) {
+            result -= currentNumeral;
+        } else {
+            result += currentNumeral;
+        }
+    }
+
+    return result;
+}
+
+async function setPerks(userId, perks, collection) {
+    await collection.updateOne({ _id: userId }, { $set: { perks } }, { upsert: true });
 }

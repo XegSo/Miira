@@ -38,7 +38,6 @@ module.exports = {
             ) 
 
             let newCart = [];
-            console.log(initializedMap.get(int.user.id));
             const allOptions = initializedMap.get(int.user.id).choices;
             let fullChoices = allOptions.filter(obj => pendingItems.includes(obj.name))  
             let addedToCartEmbed = new EmbedBuilder()
@@ -52,7 +51,6 @@ module.exports = {
             let upgradeInChoices = await fullChoices.find((element) => element.type === "Upgrade");
 
             if (userTier && typeof tierInChoices !== "undefined") { //TO BE REWRITTEN
-                console.log(tierInChoices);
                 if (userTier.name === tierInChoices.name) {
                     int.editReply({
                         content: 'You cannot add the tier you already have.',
@@ -61,7 +59,6 @@ module.exports = {
                     break mainProcess; 
                 }
                 if (localFunctions.premiumToInteger(tierInChoices.name) > localFunctions.premiumToInteger(userTier.name)) {
-                    console.log('changing tier type to upgrade');
                     upgradeInChoices = tierInChoices;
                     upgradeInChoices.type = 'Upgrade';
                     upgradeInChoices.price = upgradeInChoices.price - localConstants.premiumTiers.find((element) => element.name === userTier.name).cost;
@@ -83,14 +80,12 @@ module.exports = {
             }
 
             let cartItems = await localFunctions.getCart(userId, collection);
-            console.log(`Current Cart: ${cartItems}`);
             newCart = cartItems;
 
             if (perksInChoices.length && userTier) {
                 let userTierInt = localFunctions.premiumToInteger(userTier.name);
                 for (perk of perksInChoices) {
                     if (userTierInt >= perk.tier) {
-                        console.log('changing perk type to renewal');
                         let objIndex = perksInChoices.findIndex((obj => obj.name === perk.name));
                         let perkToRenew = perksInChoices.splice(objIndex, 1)[0];
                         renewalsInChoices.push(perkToRenew);
@@ -129,7 +124,6 @@ module.exports = {
                             break;
                         case 'Upgrade':
                             if (typeof upgradeInChoices !== "undefined") {
-                                console.log(upgradeInChoices);
                                 if (item.name === upgradeInChoices.name) {
                                     int.editReply({
                                         content: 'You already have this upgrade in your cart.',
@@ -170,7 +164,6 @@ module.exports = {
                                 break mainProcess;
                             }
                             if (typeof upgradeInChoices !== "undefined") {
-                                console.log(upgradeInChoices);
                                 if (localFunctions.premiumToInteger(upgradeInChoices.name) >= item.tier) {
                                     int.editReply({
                                         content: 'You cannot add this tier while having perks that its purchase includes in your cart. Please remove the perks of your cart first before adding.',
@@ -179,7 +172,6 @@ module.exports = {
                                     break mainProcess;
                                 }
                             } else if (typeof tierInChoices !== "undefined") {
-                                console.log(tierInChoices);
                                 if (localFunctions.premiumToInteger(tierInChoices.name) >= item.tier) {
                                     int.editReply({
                                         content: 'You cannot add this tier while having perks that its purchase includes in your cart. Please remove the perks of your cart first before adding.',
@@ -249,26 +241,21 @@ module.exports = {
             }
 
             if (typeof tierInChoices !== "undefined" && typeof upgradeInChoices == "undefined") {
-                console.log(`T ${tierInChoices.name}`);
                 newCart = newCart.filter(obj => obj.type !== "Tier");
                 newCart.push(tierInChoices);
             } else if (perksInChoices.length) {
-                console.log(`P ${perksInChoices}`);
                 Array.prototype.push.apply(newCart,perksInChoices);
             } else if (typeof upgradeInChoices !== "undefined") {
-                console.log(`U ${upgradeInChoices.name}`);
                 newCart = newCart.filter(obj => obj.type !== "Upgrade");
                 newCart.push(upgradeInChoices);
             }
             if (renewalsInChoices.length) {
-                console.log(`R ${renewalsInChoices}`);
                 Array.prototype.push.apply(newCart,renewalsInChoices);
             }
 
             for (content of fullChoices) {
                 contentString = contentString.concat(`\n • `, `**Name:** ${content.name} \n   **Price:** ${content.price}$ \n **   Type:** ${content.type}\n`);
             }
-            console.log(newCart);
             await localFunctions.setCart(userId, newCart, collection);
             allMaps[initializedMapIndex].delete(int.user.id);
             addedToCartEmbed.setDescription(`**\`\`\`prolog\n🚀 Content added to your cart\`\`\`                                                                                                           **${contentString}`); 

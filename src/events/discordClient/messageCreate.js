@@ -1,6 +1,7 @@
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
+const { poolCache } = require('../../components/buttons/pool-collab')
 const userCooldowns = new Map();
 const userCombos = new Map();
 
@@ -11,6 +12,29 @@ module.exports = {
 
         const userId = message.author.id;
         const currentTime = Date.now();
+
+        const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
+        // Pool uploads for collabs
+        try {
+            if (typeof poolCache !== "undefined" && poolCache.get(0).userId === userId && message.reference.messageId === poolCache.get(0).messageId && message.attachments.size > 0) {
+                console.log('aaaa');
+                const attachment = message.attachments.first();
+                if (attachment.name.endsWith('.json')) {
+                    if (message.author.id !== "687004886922952755") return;
+                    const response = await fetch(attachment.url);
+                    const buffer = Buffer.from(await response.arrayBuffer());
+                    const jsonData = JSON.parse(buffer.toString());
+                    const collabName = poolCache.get(0).collab;
+                    await localFunctions.setCollabPool(collabName, jsonData, collabCollection);
+                    message.reply('Pool uploaded to the database succesfully!');
+                    poolCache.delete(0);
+                }
+            }
+        } catch (e) {
+            console.log(e);
+        } finally {
+            mongoClientCollabs.close();
+        }
 
         // Check if the message starts with a blacklisted character
         if (localConstants.blacklistedChars.some((char) => message.content.startsWith(char))) {

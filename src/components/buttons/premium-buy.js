@@ -17,7 +17,6 @@ module.exports = {
         if (int.message.channelId === '767374005782052864') {
             messageId = int.message.id;
         }
-        console.log(int.message.id);
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         const userId = int.user.id;
         var arrayOfObjects = [];
@@ -33,8 +32,13 @@ module.exports = {
             .setFooter({ text: 'Endless Mirage | Premium Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')   
         main: try {
+            let userTierDB = await localFunctions.getTier(userId, collection);
             if (!selectionTier.size) {
+                if (!userTierDB.length && int.member.roles.cache.has('743505566617436301')) {
+                    await localFunctions.assignPremium(int, userId, collection);
+                }
                 if (messageId) {
+                    
                     switch (messageId) {
                         case '1195513874032631961':
                             messageTier = localConstants.premiumTiers[0];
@@ -73,8 +77,8 @@ module.exports = {
             const selectedTierInteger = localFunctions.premiumToInteger(selectedTier.name);
             let userTierInteger = 0;
             let userTier = {};
+            userTierDB = await localFunctions.getTier(userId, collection);
             let userCart = await localFunctions.getCart(userId, collection);
-            let userTierDB = await localFunctions.getTier(userId, collection);
             let userPerks = await localFunctions.getPerks(userId, collection);
             if (userTierDB.length) {
                 userTier = localConstants.premiumTiers.find(t => t.name === userTierDB.name);

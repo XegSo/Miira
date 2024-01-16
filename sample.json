@@ -1,0 +1,200 @@
+{
+    "size": 25,
+    "categories": [
+        {
+            "category_name": "RPG Anime",
+            "id_min": "1",
+            "id_max": "13",
+            "size": 13,
+            "startingSheetCell": "B2",
+            "series": [
+                {
+                    "series_name": "Genshin Impact",
+                    "id_min": 1,
+                    "id_max": 10,
+                    "size": 5,
+                    "startingSheetCell": "B2",
+                    "chars": [
+                        {
+                            "name": "Ganyu",
+                            "id": "01",
+                            "imgURL": "https://storage.googleapis.com/experiment2/01.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Kirara",
+                            "id": "02",
+                            "imgURL": "https://storage.googleapis.com/experiment2/02.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Hu Tao",
+                            "id": "03",
+                            "imgURL": "https://storage.googleapis.com/experiment2/03.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Xiao",
+                            "id": "04",
+                            "imgURL": "https://storage.googleapis.com/experiment2/04.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Venti",
+                            "id": "05",
+                            "imgURL": "https://storage.googleapis.com/experiment2/05.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Faruzan",
+                            "id": "06",
+                            "imgURL": "https://storage.googleapis.com/experiment2/06.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Yae Miko",
+                            "id": "07",
+                            "imgURL": "https://storage.googleapis.com/experiment2/07.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Furina",
+                            "id": "08",
+                            "imgURL": "https://storage.googleapis.com/experiment2/08.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Charlotte",
+                            "id": "09",
+                            "imgURL": "https://storage.googleapis.com/experiment2/09.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Nahida",
+                            "id": "10",
+                            "imgURL": "https://storage.googleapis.com/experiment2/10.png",
+                            "status": "available"
+                        }
+                    ]
+                },
+                {
+                    "series_name": "Honkai Impact 3rd",
+                    "id_min": 11,
+                    "id_max": 13,
+                    "size": 5,
+                    "startingSheetCell": "B2",
+                    "chars": [
+                        {
+                            "name": "Rozaliya",
+                            "id": "11",
+                            "imgURL": "https://storage.googleapis.com/experiment2/11.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Elysia",
+                            "id": "12",
+                            "imgURL": "https://storage.googleapis.com/experiment2/12.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Griseo",
+                            "id": "13",
+                            "imgURL": "https://storage.googleapis.com/experiment2/13.png",
+                            "status": "available"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "category_name": "Gacha Anime",
+            "id_min": "14",
+            "id_max": "25",
+            "size": 12,
+            "startingSheetCell": "D2",
+            "series": [
+                {
+                    "series_name": "Arknights",
+                    "id_min": 14,
+                    "id_max": 25,
+                    "size": 9,
+                    "startingSheetCell": "D2",
+                    "chars": [
+                        {
+                            "name": "U-Official",
+                            "id": "14",
+                            "imgURL": "https://storage.googleapis.com/experiment2/14.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Jessica the Liberated",
+                            "id": "15",
+                            "imgURL": "https://storage.googleapis.com/experiment2/15.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Almond",
+                            "id": "16",
+                            "imgURL": "https://storage.googleapis.com/experiment2/16.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Coldshot",
+                            "id": "17",
+                            "imgURL": "https://storage.googleapis.com/experiment2/17.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Eyjafjalla the Hvít Aska",
+                            "id": "18",
+                            "imgURL": "https://storage.googleapis.com/experiment2/18.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Swire the Elegant Wit",
+                            "id": "19",
+                            "imgURL": "https://storage.googleapis.com/experiment2/19.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Poncirus",
+                            "id": "20",
+                            "imgURL": "https://storage.googleapis.com/experiment2/20.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Bryophyta",
+                            "id": "21",
+                            "imgURL": "https://storage.googleapis.com/experiment2/21.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Valarqvin",
+                            "id": "22",
+                            "imgURL": "https://storage.googleapis.com/experiment2/22.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Typhon",
+                            "id": "23",
+                            "imgURL": "https://storage.googleapis.com/experiment2/23.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Santalla",
+                            "id": "24",
+                            "imgURL": "https://storage.googleapis.com/experiment2/24.png",
+                            "status": "available"
+                        },
+                        {
+                            "name": "Executor the Ex Foedere",
+                            "id": "25",
+                            "imgURL": "https://storage.googleapis.com/experiment2/25.png",
+                            "status": "available"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

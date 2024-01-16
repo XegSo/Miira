@@ -12,15 +12,20 @@
   "dependencies": {
     "@discordjs/builders": "1.6.5",
     "@discordjs/rest": "1.0.0",
+    "atob": "^2.1.2",
     "bancho.js": "^0.11.6",
     "canvas": "2.11.2",
     "chalk": "4.1.2",
     "discord.js": "14.13.0",
     "dotenv": "16.0.0",
     "get-random-values": "1.2.2",
+    "google-auth-library": "^9.4.2",
+    "google-spreadsheet": "^4.1.1",
+    "googleapis": "^130.0.0",
     "math": "0.0.3",
     "mongodb": "6.0.0",
     "mongoose": "6.2.9",
+    "node-fetch": "^3.3.2",
     "osu-api-extended": "^2.7.67",
     "osu-web.js": "^1.4.0"
   }
