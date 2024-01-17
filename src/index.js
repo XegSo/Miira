@@ -41,7 +41,7 @@ fs.readdirSync(path.join(__dirname, "/functions/handlers/")).filter((file) => {
   require(`./functions/handlers/${file}`)(banchoClient);
 });
 
-banchoClient.handleEvents();
+banchoClient.handleEvents(client);
 client.handleEvents();
 client.handleCommands();
 client.handleComponents();

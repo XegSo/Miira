@@ -12,8 +12,8 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-        main: try {
-            let userOsuData = await localFunctions.getOsuID(userId, collection);
+        try {
+            let userOsuData = await localFunctions.getOsuData(userId, collection);
             if (!userOsuData) {
                 components = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
@@ -25,7 +25,7 @@ module.exports = {
                     content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
                     components: [components]
                 });
-                break main;
+                return;
             }
         } finally {
             mongoClient.close();

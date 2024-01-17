@@ -548,12 +548,14 @@ const blacklistedChannels = ['630995793670701065', '746040634548289606', '111864
 const comboInterval = 8 * 60 * 1000; // 8 minutes in milliseconds
 const blacklistedChars = ['>', '<', '??', 't!', 'http', '!', ':']; // Add any characters you want to blacklist here
 const welcomeChannelID = '713108912764616704';
+const logChannelID = '1197205849572126861';
 
 // Schedule the daily decay to run at a specific time (e.g., 2:00 AM UTC)
 const dailyCheckHour = 0; // Adjust this as needed
 const dailyCheckMinute = 0;
 
 module.exports = {
+    logChannelID,
     rolesLevel,
     staffUserIds,
     romanNumerals,

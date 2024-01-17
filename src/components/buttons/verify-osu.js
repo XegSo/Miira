@@ -20,7 +20,8 @@ module.exports = {
                 osu_user = fetchCache.get(userId).osu_user;
             }
             const currentData = await localFunctions.getVerificationData(userId, collection);
-            if (!currentData) {
+            console.log(currentData);
+            if (currentData.length === 0) {
                 verificationCode = localFunctions.generateRandomCode();
                 const verification = {
                     user: osu_user,

@@ -61,7 +61,7 @@ module.exports = {
                         break messageCheck;
                     }
                 }
-            } 
+            }
             const messageLength = localFunctions.removeURLsAndColons(message.content).length; // Clean and calculate the message length 
             if (messageLength == 0) {
                 break messageCheck;
@@ -81,7 +81,7 @@ module.exports = {
                     console.log(`Current combo ${comboData.messages}`);
                     let comboBonus = comboData.messages;
                     comboData.lastMessageTime = currentTime;
-                    tokensEarned = 20*Math.log(Math.E, 4*messageLength*-2.5)* (1.5 - (1.5 * (Math.E ** (-0.02 * (comboBonus + 1)))));
+                    tokensEarned = 20 * Math.log(Math.E, 4 * messageLength * -2.5) * (1.5 - (1.5 * (Math.E ** (-0.02 * (comboBonus + 1)))));
                     if (tokensEarned === NaN) {
                         console.log('An issue in the token function has been encountered.')
                         tokensEarned = tokensEarnedNB;
@@ -140,16 +140,31 @@ module.exports = {
             }
 
             const currentBalance = await localFunctions.getBalance(userId, collection); // Fetch user's balance from the database
-            const hasLevel = localConstants.rolesLevel.some(roleName => message.member.roles.cache.some(role => role.name === roleName));
+            const hasLevel = localConstants.rolesLevel.filter(roleId => message.member.roles.cache.find(role => role.id === roleId));
 
-            if (!hasLevel) {
-                if (currentBalance > 150) {
-                    message.member.roles.add(localConstants.rolesLevel[2]);
-                } else if (currentBalance > 100) {
-                    message.member.roles.add(localConstants.rolesLevel[1]);
-                } else if (currentBalance > 20) {
-                    message.member.roles.add(localConstants.rolesLevel[0]);
+            if (hasLevel.length !== 0) {
+                switch (hasLevel[hasLevel.length - 1]) {
+                    case '630980373374828544':
+                        if (currentBalance > 200) {
+                            message.member.roles.remove(localConstants.rolesLevel[0]);
+                            message.member.roles.add(localConstants.rolesLevel[1]);
+                        }
+                        break;
+                    case '739111130034733108':
+                        if (currentBalance > 300) {
+                            message.member.roles.remove(localConstants.rolesLevel[0]);
+                            message.member.roles.remove(localConstants.rolesLevel[1]);
+                            message.member.roles.add(localConstants.rolesLevel[2]);
+                        }
+                        break;
+                    case '739111062682730507':
+                        if (hasLevel.length !== 1) {
+                            message.member.roles.remove(localConstants.rolesLevel[0]);
+                            message.member.roles.remove(localConstants.rolesLevel[1]); 
+                        }
                 }
+            } else if (currentBalance > 120) {
+                message.member.roles.add(localConstants.rolesLevel[0]);
             }
 
             // Check if the user has an active boost
@@ -169,8 +184,8 @@ module.exports = {
             const lastMessageDate = await localFunctions.getLastMessageDate(userId, collection); // Fetch the last message date for the user from the database
 
             if (typeof lastMessageDate === "undefined") {
-                tokensEarned += 900;
-                console.log('First message of the user in the server since the system was created, assigning 900 tokens bonus.');
+                tokensEarned += 100;
+                console.log('First message of the user in the server since the system was created, assigning 100 tokens bonus.');
                 message.react('868437778004836372');
             }
 

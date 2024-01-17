@@ -230,9 +230,9 @@ module.exports = {
         } 
     },
 
-    getOsuID: async function (userId, collection) {
+    getOsuData: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
-        return user ? user.osuID || null : null;
+        return user ? user.osuData || null : null;
     },
 
     getBalance: async function (userId, collection) {
@@ -246,7 +246,7 @@ module.exports = {
 
     getVerificationData: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
-        return user ? user.verificationData || null : null;
+        return user ? user.verificationData || [] : [];
     },
 
     setVerificationData: async function (userId, verificationData, collection) {
@@ -374,6 +374,15 @@ module.exports = {
     getUserTier: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.Tier || null : null;
+    },
+
+    getUserByOsuVerification: async function (osuname, collection) {
+        const user = await collection.findOne({ 'verificationData.user.username': osuname });
+        return user ? user || null : null;
+    },
+
+    verifyUserBancho: async function (osuname, osuData, collection) {
+        await collection.updateOne({ 'verificationData.user.username': osuname }, { $set: { osuData }, $unset: { verificationData: "" } }, { upsert: true });
     },
 
     setUserTier: async function (userId, Tier, collection) {

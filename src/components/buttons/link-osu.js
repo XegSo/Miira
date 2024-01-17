@@ -12,7 +12,7 @@ module.exports = {
         const userId = int.user.id;
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         main: try {
-            let userOsuData = await localFunctions.getOsuID(userId, collection);
+            let userOsuData = await localFunctions.getOsuData(userId, collection);
             if (userOsuData) {
                 int.editReply('You already have your osu! account linked!');
                 break main;
