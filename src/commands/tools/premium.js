@@ -16,6 +16,8 @@ module.exports = {
         let decayString = '';
         let tierString = `**No premium status found!**`;
         let tierDetails = '';
+        const guild = client.guilds.cache.get(localConstants.guildId);
+        const guildMember = guild.members.cache.get(userId)
         const username = int.user.tag;
 
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
@@ -24,7 +26,7 @@ module.exports = {
                     .setFooter({ text: 'Endless Mirage | Premium Dashboard\n' , iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
 
-        if (!int.member.roles.cache.has('743505566617436301')) {
+        if (!guildMember.roles.cache.has('743505566617436301')) {
             try {
                 let userPerks = await localFunctions.getPerks(userId, collection);
                 if (userPerks.length !== 0) {
@@ -113,8 +115,8 @@ module.exports = {
                 let mainComponents = [];
                 let userTier = await localFunctions.getUserTier(userId, collection);
 
-                if (!userTier && int.member.roles.cache.has('743505566617436301') && !int.member.roles.cache.has('1150484454071091280')) {
-                    let premiumDetails = await localFunctions.assignPremium(int, userId, collection);
+                if (!userTier && guildMember.roles.cache.has('743505566617436301') && !guildMember.roles.cache.has('1150484454071091280')) {
+                    let premiumDetails = await localFunctions.assignPremium(int, userId, collection, guildMember);
                     userTier = premiumDetails[0];
                     userPerks = premiumDetails[1];
                     tierDetails = premiumDetails[2];

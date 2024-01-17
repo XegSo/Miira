@@ -12,6 +12,7 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
+        const guild = client.guilds.cache.get(localConstants.guildId);
         let messageId = null;
         let messageTier = [];
         if (int.message.channelId === '767374005782052864') {
@@ -19,6 +20,7 @@ module.exports = {
         }
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         const userId = int.user.id;
+        const guildMember = await guild.members.fetch(userId)
         var arrayOfObjects = [];
         var price = 0;
         var buyComponents = null;
@@ -34,8 +36,8 @@ module.exports = {
         main: try {
             let userTierDB = await localFunctions.getTier(userId, collection);
             if (!selectionTier.size) {
-                if (!userTierDB.length && int.member.roles.cache.has('743505566617436301')) {
-                    await localFunctions.assignPremium(int, userId, collection);
+                if (!userTierDB.length && guildMember.roles.cache.has('743505566617436301')) {
+                    await localFunctions.assignPremium(int, userId, collection, guildMember);
                 }
                 if (messageId) {
                     

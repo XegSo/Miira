@@ -9,32 +9,10 @@ module.exports = {
     name: 'messageCreate',
     async execute(message) {
         if (message.author.bot) return;
-
+        if (message.channel.type === 'dm') return;
+        if (message.guildId !== '630281137998004224') return;
         const userId = message.author.id;
         const currentTime = Date.now();
-
-        const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
-        // Pool uploads for collabs
-        try {
-            if (typeof poolCache !== "undefined" && poolCache.get(0).userId === userId && message.reference.messageId === poolCache.get(0).messageId && message.attachments.size > 0) {
-                console.log('aaaa');
-                const attachment = message.attachments.first();
-                if (attachment.name.endsWith('.json')) {
-                    if (message.author.id !== "687004886922952755") return;
-                    const response = await fetch(attachment.url);
-                    const buffer = Buffer.from(await response.arrayBuffer());
-                    const jsonData = JSON.parse(buffer.toString());
-                    const collabName = poolCache.get(0).collab;
-                    await localFunctions.setCollabPool(collabName, jsonData, collabCollection);
-                    message.reply('Pool uploaded to the database succesfully!');
-                    poolCache.delete(0);
-                }
-            }
-        } catch (e) {
-            console.log(e);
-        } finally {
-            mongoClientCollabs.close();
-        }
 
         // Check if the message starts with a blacklisted character
         if (localConstants.blacklistedChars.some((char) => message.content.startsWith(char))) {
@@ -61,11 +39,29 @@ module.exports = {
         // Establish a connection to MongoDB
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB("Special");
+        const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
         const globalBoost = await localFunctions.getGlobalBoost(collectionSpecial);
         const globalBoostEndTime = globalBoost.boostEndTime;
         const globalBoostValue = globalBoost.multiplier;
 
         messageCheck: try {
+            if (poolCache.size !== 0) { //File upload for collabs
+                if (poolCache.get(0).userId === userId && message.reference.messageId === poolCache.get(0).messageId && message.attachments.size > 0) {
+                    console.log('aaaa');
+                    const attachment = message.attachments.first();
+                    if (attachment.name.endsWith('.json')) {
+                        if (message.author.id !== "687004886922952755") return;
+                        const response = await fetch(attachment.url);
+                        const buffer = Buffer.from(await response.arrayBuffer());
+                        const jsonData = JSON.parse(buffer.toString());
+                        const collabName = poolCache.get(0).collab;
+                        await localFunctions.setCollabPool(collabName, jsonData, collabCollection);
+                        message.reply('Pool uploaded to the database succesfully!');
+                        poolCache.delete(0);
+                        break messageCheck;
+                    }
+                }
+            } 
             const messageLength = localFunctions.removeURLsAndColons(message.content).length; // Clean and calculate the message length 
             if (messageLength == 0) {
                 break messageCheck;
@@ -210,6 +206,7 @@ module.exports = {
         } finally {
             mongoClient.close();
             mongoClientSpecial.close();
+            mongoClientCollabs.close();
         }
     }
 }

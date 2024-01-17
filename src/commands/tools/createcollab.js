@@ -60,12 +60,13 @@ module.exports = {
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         let collabObj = {
             name: int.options.getString('name'),
+            host: int.user.id,
             type: int.options.getString('type'),
             topic: int.options.getString('topic'),
-            status: "closed",
+            status: "on design",
             restriction: int.options.getString('restriction'),
-            opening: int.options.getString('openingdate'),
-            user_cap: int.options.getInteger('userlimit'),
+            opening: parseInt(int.options.getString('openingdate')),
+            user_cap: parseInt(int.options.getInteger('userlimit')),
             spreadsheetID: int.options.getString('spreadsheet') || null,
         }
         try {

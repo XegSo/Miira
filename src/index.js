@@ -1,4 +1,5 @@
 require('dotenv').config();
+const { v2, auth } = require('osu-api-extended')
 const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
@@ -6,6 +7,8 @@ const Banchojs = require("bancho.js");
 const discordToken = process.env.TOKEN;
 const banchoPass = process.env.OSU_SECRET_V1;
 const banchoUsername = process.env.OSU_USERNAME_V1;
+const clientIDv2 = process.env.OSU_CLIENT_V2;
+const clientSv2 = process.env.OSU_SECRET_V2;
 const banchoClient = new Banchojs.BanchoClient({
   username: banchoUsername,
   password: banchoPass
@@ -44,4 +47,5 @@ client.handleCommands();
 client.handleComponents();
 
 banchoClient.connect().then(() => {console.log('Connected to bancho.')});
+auth.login(clientIDv2, clientSv2, ['public']).then(() => {console.log('Connected to osu api.')});
 client.login(discordToken);

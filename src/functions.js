@@ -20,6 +20,25 @@ registerFont('./assets/fonts/Montserrat-MediumItalic.ttf', {
 
 module.exports = {
 
+    generateRandomCode: function() {
+        // Generate a random number between 10000 and 99999 (inclusive)
+        const randomCode = Math.floor(10000 + Math.random() * 90000);
+        return randomCode;
+    },
+
+    isUnixTimestamp: function (timestamp) {
+        // Check if the value is a number
+        if (typeof timestamp !== 'number') {
+            return false;
+        }
+    
+        // Check if the timestamp is within a reasonable range
+        const minUnixTimestamp = 0;
+        const maxUnixTimestamp = 2147483647; // Maximum 32-bit signed integer value
+    
+        return timestamp >= minUnixTimestamp && timestamp <= maxUnixTimestamp;
+    },
+
     capitalizeFirstLetter: function (str) {
         if (typeof str !== 'string' || str.length === 0) {
             return str; // return unchanged if input is not a non-empty string
@@ -28,14 +47,14 @@ module.exports = {
         return str.charAt(0).toUpperCase() + str.slice(1);
     },
 
-    assignPremium: async function (int, userId, collection) {
+    assignPremium: async function (int, userId, collection, guildMember) {
         let newPerks = [];
         let foundRole = null;
         let foundTier = [];
         console.log('Executing insertion of perks');
         for (const numeral of localConstants.romanNumerals) { //find the fucker and assign it to the database
             const roleToFind = `Mirage ${numeral}`;
-            foundRole = int.member.roles.cache.find(role => role.name === roleToFind);
+            foundRole = guildMember.roles.cache.find(role => role.name === roleToFind);
             if (foundRole) {
                 tierDetails = localConstants.premiumTiers.find(tier => tier.name === foundRole.name);
                 let tierNumber = romanToInteger(numeral);
@@ -179,13 +198,12 @@ module.exports = {
         await collection.insertOne(collab);
     },
 
+    editCollab: async function (collab, name, topic, status, opening, user_cap, collection) {
+        await collection.updateOne({ name: collab }, { $set: { name, topic, status, opening, user_cap } }, { upsert: true });
+    },
+
     setCollabPool: async function (collab, pool, collection) {
-        try {
-            await collection.updateOne({ name: collab }, { $set: { pool } }, { upsert: true });
-            console.log('uploaded');
-        } catch (e){
-            console.log(e)
-        }
+        await collection.updateOne({ name: collab }, { $set: { pool } }, { upsert: true });
     },
 
     getCollabs: async function (collection) {
@@ -193,9 +211,28 @@ module.exports = {
         return allCollabs ? allCollabs || null : null;
     },
 
+    getUserCollabs: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.collabs || [] : [];
+    },
+
     getCollab: async function (name, collection) {
         const collab = await collection.findOne({ name: name });
         return collab ? collab || null : null;
+    },
+
+    liquidateCollab: async function (name, collection) {
+        try {
+            await collection.deleteOne({ name: name });
+        } catch (error) {
+            console.error('Error liquidating suggestion:', error);
+            return null;
+        } 
+    },
+
+    getOsuID: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.osuID || null : null;
     },
 
     getBalance: async function (userId, collection) {
@@ -207,6 +244,23 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { balance } }, { upsert: true });
     },
 
+    getVerificationData: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.verificationData || null : null;
+    },
+
+    setVerificationData: async function (userId, verificationData, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { verificationData } }, { upsert: true });
+    },
+
+    liquidateVerificationCode: async function (userId,  collection) {
+        try {
+            await collection.updateOne({ _id: userId }, { $unset: { verificationData: "" } });
+        } catch (e) {
+            console.log(e);
+        }
+    },
+    
     setPerkUsage: async function (status, collection) {
         await collection.updateOne({ _id: "Premium Data" }, { $set: { status } }, { upsert: true });
     },
@@ -382,7 +436,7 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { cart } }, { upsert: true });
     },
 
-    delTier: async function (userId, collection, item) {
+    delTier: async function (userId, collection) {
         try {
             await collection.updateOne({ _id: userId }, { $unset: { Tier: "" } });
         } catch (e) {
