@@ -32,7 +32,7 @@ module.exports = {
                     currentData.skillRanks = skills;
                     currentData.modsData = modsData;
                     await localFunctions.verifyUserManual(userDB._id, currentData, collection);
-                    logChannel.send(`<@${userDB._id}> Your account analytics are ready!`);
+                    logChannel.send(`<@${userDB._id}> Your account analytics are ready! Run the \`\`/collabs profile\`\` command to visualize them.`);
 
                 }
             } catch (e) {
