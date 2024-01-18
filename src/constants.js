@@ -18,6 +18,80 @@ const staffUserIds = [
     '969663617828020224'
 ];
 
+const unnecesaryFieldsOsu = [
+    'default_group',
+    'is_active',
+    'is_bot',
+    'is_deleted',
+    'is_online',
+    'pm_friends_only',
+    'profile_colour',
+    'discord',
+    'has_supported',
+    'interests',
+    'location',
+    'max_blocks',
+    'max_friends',
+    'occupation',
+    'playstyle',
+    'post_count',
+    'profile_order',
+    'title',
+    'title_url',
+    'twitter',
+    'website',
+    'country',
+    'cover',
+    'kudosu',
+    'account_history',
+    'active_tournament_banner',
+    'active_tournament_banners',
+    'beatmap_playcounts_count',
+    'comments_count',
+    'favourite_beatmapset_count',
+    'graveyard_beatmapset_count',
+    'groups',
+    'guest_beatmapset_count',
+    'loved_beatmapset_count',
+    'mapping_follower_count',
+    'monthly_playcounts',
+    'nominated_beatmapset_count',
+    'page',
+    'pending_beatmapset_count',
+    'previous_usernames',
+    'ranked_beatmapset_count',
+    'replays_watched_counts',
+    'scores_best_count',
+    'scores_first_count',
+    'scores_pinned_count',
+    'scores_recent_count',
+    'support_level',
+    'user_achievements',
+    'rank_history',
+    'rankHistory',
+    'ranked_and_approved_beatmapset_count',
+    'unranked_beatmapset_count'
+];
+
+const skillRanksByScore = [
+    { rank: 'X', value: 1500 },
+    { rank: 'S', value: 800 },
+    { rank: 'A', value: 450 },
+    { rank: 'B', value: 250 },
+    { rank: 'C', value: 150 },
+    { rank: 'D', value: 75 },
+    { rank: 'F', value: 0 },
+]
+
+const necesaryFieldsTop100 = [
+    'position',
+    'mods_id',
+    'created_at',
+    'mods',
+    'pp',
+    'rank'
+];
+
 const channelCreationActions = [
     'Avatar GFX Commission',
     'Previous Megacollab Avatar',
@@ -29,6 +103,17 @@ const channelCreationActions = [
 
 const rolesToRemove = [
 
+];
+
+const prestigeRolesIDs = [
+    '963258467928408134',
+    '963258497376583780',
+    '963258518767534080',
+    '963258542930931732',
+    '963258567425658910',
+    '963258579165524008',
+    '1071824409012219994',
+    '1146532857293045790'
 ];
 
 const paypal = 'https://www.paypal.me/xegEM/';
@@ -577,5 +662,9 @@ module.exports = {
     channelCreationActions,
     paypal,
     kofi,
-    premiumPerks
+    premiumPerks,
+    unnecesaryFieldsOsu,
+    necesaryFieldsTop100,
+    skillRanksByScore,
+    prestigeRolesIDs
 };

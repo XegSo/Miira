@@ -17,7 +17,7 @@ module.exports = {
         let tierString = `**No premium status found!**`;
         let tierDetails = '';
         const guild = client.guilds.cache.get(localConstants.guildId);
-        const guildMember = guild.members.cache.get(userId)
+        const guildMember = guild.members.cache.get(userId);
         const username = int.user.tag;
 
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");

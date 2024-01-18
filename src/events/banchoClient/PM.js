@@ -21,10 +21,19 @@ module.exports = {
                 const userDB = await localFunctions.getUserByOsuVerification(correctedUsername, collection);
                 console.log(userDB.verificationData.code);
                 if (userDB.verificationData && userDB.verificationData.code === parseInt(message.message)) {
+                    const currentData = userDB.verificationData.user;
                     await localFunctions.verifyUserBancho(correctedUsername, userDB.verificationData.user, collection);
                     console.log(`User ${correctedUsername} verified succesfully.`)
                     logChannel.send(`<@${userDB._id}> Your account has been linked!`);
-                    return await message.user.sendMessage('You\'ve succesfully linked your osu! account! You can now join a collab in our discord server.');
+                    await message.user.sendMessage('You\'ve succesfully linked your osu! account! You can now join a collab in our discord server. Currently a background calculation for your analytics is running. It might take a minute or two.');
+                    const userTop100 = await v2.scores.user.category(currentData.id, 'best', {mode: currentData.playmode, limit: '100'});
+                    const skills = await localFunctions.calculateSkill(userTop100, currentData.playmode);
+                    const modsData = localFunctions.analyzeMods(userTop100);
+                    currentData.skillRanks = skills;
+                    currentData.modsData = modsData;
+                    await localFunctions.verifyUserManual(userDB._id, currentData, collection);
+                    logChannel.send(`<@${userDB._id}> Your account analytics are ready!`);
+
                 }
             } catch (e) {
                 console.log('Error during verification')

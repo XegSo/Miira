@@ -3,7 +3,7 @@ const localFunctions = require('../../functions');
 const { SlashCommandBuilder, EmbedBuilder, TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 const { fetchCache } = require('../modals/fetch-profile')
-
+const localConstants = require('../../constants');
 
 module.exports = {
     data: {
@@ -15,10 +15,11 @@ module.exports = {
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         main: try {
             let verificationCode = 0;  
-            let osu_user = []; 
+            let osu_user_full = [];
             if (fetchCache.size !== 0) {
-                osu_user = fetchCache.get(userId).osu_user;
+                osu_user_full = fetchCache.get(userId).osu_user;
             }
+            const osu_user = localFunctions.removeFields(osu_user_full, localConstants.unnecesaryFieldsOsu);
             const currentData = await localFunctions.getVerificationData(userId, collection);
             console.log(currentData);
             if (currentData.length === 0) {

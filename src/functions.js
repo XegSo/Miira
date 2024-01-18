@@ -2,8 +2,10 @@ require('dotenv').config();
 const { EmbedBuilder } = require('discord.js');
 const { connectToMongoDB } = require('./mongo');
 const localConstants = require('./constants');
+const { v2 } = require('osu-api-extended');
 const { registerFont } = require('canvas');
 const fs = require('fs');
+const { user } = require('osu-api-extended/dist/api/v1');
 registerFont('./assets/fonts/Montserrat-Medium.ttf', {
     family: "Montserrat",
     weight: 'normal'
@@ -21,9 +23,314 @@ registerFont('./assets/fonts/Montserrat-MediumItalic.ttf', {
 module.exports = {
 
     generateRandomCode: function() {
-        // Generate a random number between 10000 and 99999 (inclusive)
-        const randomCode = Math.floor(10000 + Math.random() * 90000);
-        return randomCode;
+        // Generate a random number between 10000 and 99999
+        const randomCode = Math.floor(Math.random() * 90000) + 10000;
+    
+        return randomCode; // Convert to string to ensure it's exactly 5 digits
+    },
+
+    arraySum: function (ar1, ar2) {
+        [ar1, ar2] = ar1.length < ar2.length ? [ar2, ar1] : [ar1, ar2];
+        return ar1.map((el, index) => el + ar2[index] || el);
+    },
+
+    analyzeMods: function (scores) { //Function made by TunnelBlick
+        const modCount = {};
+        const modCombinationCount = {};
+    
+        let totalMods = 0;
+    
+        scores.forEach(score => {
+            const currentMods = score.mods.length === 0 ? ['NM'] : score.mods;
+    
+            currentMods.forEach(mod => {
+                modCount[mod] = (modCount[mod] || 0) + 1;
+            });
+    
+            totalMods += currentMods.length;
+    
+            const modCombination = currentMods.join("");
+            modCombinationCount[modCombination] = (modCombinationCount[modCombination] || 0) + 1;
+        });
+    
+        const top4Mods = Object.entries(modCount)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 4)
+            .map(([mod, count]) => ({
+                mod,
+                percentage: (count / totalMods) * 100
+            }));
+    
+        const mostCommonModCombination = Object.entries(modCombinationCount)
+            .sort((a, b) => b[1] - a[1])
+            .map(([combination, count]) => ({
+                combination: combination,
+                count
+            }))[0];
+    
+        return {
+            top4Mods,
+            mostCommonModCombination
+        };
+    },
+
+    calculateSkill: async function (userTop100, mode) {
+        let skillsSum = [];
+        for (score of userTop100) {
+            let beatmap = score.beatmap;
+            let mods = score.mods;
+            let circles = beatmap.count_circles;
+            let scaledPP = Math.pow(score.pp, 2) / Math.pow(900, 2) + 1;
+            let mapAttributes = await v2.beatmap.id.attributes(beatmap.id, { mods: mods, ruleset: mode })
+            let srMultiplier = mapAttributes.attributes.star_rating;
+            let weight = score.weight.percentage / 100;
+            let acc = 0;
+            let rea = 0;
+            let sta = 0;
+            let aim = 0;
+            let spe = 0;
+            let pre = 0;
+            let od = beatmap.accuracy;
+            let adjustedAcc = 0;
+            let bonusObjects = circles - 400;
+            let odValue = 0;
+            let odMS = 0;
+            let cs = beatmap.cs;
+            let ar = beatmap.ar;
+            let mapLength = beatmap.total_length;
+            let bpm = beatmap.bpm;
+            switch (mode) {
+                case "osu":
+                    if (bonusObjects > 0) {
+                        adjustedAcc = Math.pow(circles, score.accuracy) / 350
+                    } else {
+                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(5, bonusObjects / 1000);
+                    }
+                    if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                        od = Math.max(10, od + od * 0.4);
+                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                        od = od - od * 0.5;
+                    }
+                    odMS = -6 * od + 79.5
+                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                        odMS /= 1.5;
+                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                        odMS /= 0.75;
+                    }
+                    odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
+                    acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
+
+                    if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                        cs = cs + cs * 0.3;
+                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                        cs = cs - cs * 0.5;
+                    }
+                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                        ar = ar + ar * 0.148;
+                    } else if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                        ar = ar + ar * 0.4;
+                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                        ar = ar - ar * 0.5;
+                    }
+                    cs = Math.min(7, cs);
+                    ar = Math.min(11, ar);
+                    rea = 2 * Math.log(cs) / Math.log(12.3 - ar) * scaledPP * srMultiplier * weight;
+                    pre = 1 / 2 * Math.exp(0.12 * cs * score.accuracy + 1) * scaledPP * srMultiplier * weight;
+
+
+                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                        mapLength = mapLength - mapLength * 0.5;
+                        bpm = bpm + bpm * 0.5;
+                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                        mapLength = mapLength + mapLength * 1 / 3;
+                        bpm = bpm - bpm * 0.25;
+                    }
+                    sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
+
+                    aim = mapAttributes.attributes.aim_difficulty * scaledPP * srMultiplier * weight;
+                    spe = mapAttributes.attributes.speed_difficulty * scaledPP * srMultiplier * weight;
+                    break;
+                case "mania":
+                    if (bonusObjects > 0) {
+                        adjustedAcc = Math.pow(circles, score.accuracy) / 350
+                    } else {
+                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(5, bonusObjects / 1000);
+                    }
+                    if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                        od = Math.max(10, od + od * 0.4);
+                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                        od = od - od * 0.5;
+                    }
+                    odMS = -6 * od + 79.5
+                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                        odMS /= 1.5;
+                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                        odMS /= 0.75;
+                    }
+                    odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
+                    acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
+
+                    pre = scaledPP * srMultiplier * odValue * weight;
+
+                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                        mapLength = mapLength - mapLength * 0.5;
+                        bpm = bpm + bpm * 0.5;
+                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                        mapLength = mapLength + mapLength * 1 / 3;
+                        bpm = bpm - bpm * 0.25;
+                    }
+                    sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
+                    spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (acc / 3) * weight;
+                    rea = 2 / 5 * Math.exp(0.008 * bpm - 0.5) * scaledPP * srMultiplier * weight;
+
+                    break;
+                case "fruits":
+                    if (bonusObjects > 0) {
+                        adjustedAcc = Math.pow(circles, score.accuracy) / 350
+                    } else {
+                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(5, bonusObjects / 1000);
+                    }
+                    if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                        od = Math.max(10, od + od * 0.4);
+                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                        od = od - od * 0.5;
+                    }
+                    odMS = -6 * od + 79.5
+                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                        odMS /= 1.5;
+                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                        odMS /= 0.75;
+                    }
+                    odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
+                    acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
+
+                    if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                        cs = cs + cs * 0.3;
+                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                        cs = cs - cs * 0.5;
+                    }
+                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                        ar = ar + ar * 0.148;
+                    } else if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                        ar = ar + ar * 0.4;
+                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                        ar = ar - ar * 0.5;
+                    }
+                    rea = Math.log(cs) / Math.log(12.5 - ar) * scaledPP * srMultiplier * weight;
+                    pre = 1 / 2 * Math.exp(0.13 * cs * score.accuracy + 1) * scaledPP * srMultiplier * weight;
+
+                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                        mapLength = mapLength - mapLength * 0.5;
+                        bpm = bpm + bpm * 0.5;
+                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                        mapLength = mapLength + mapLength * 1 / 3;
+                        bpm = bpm - bpm * 0.25;
+                    }
+                    sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
+                    spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (acc / 3) * weight;
+                    break;
+                case "taiko":
+                    if (bonusObjects > 0) {
+                        adjustedAcc = Math.pow(circles, score.accuracy) / 350
+                    } else {
+                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(5, bonusObjects / 1000);
+                    }
+                    if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                        od = Math.max(10, od + od * 0.4);
+                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                        od = od - od * 0.5;
+                    }
+                    odMS = -6 * od + 79.5
+                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                        odMS /= 1.5;
+                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                        odMS /= 0.75;
+                    }
+                    odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
+                    acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
+
+                    pre = scaledPP * srMultiplier * odValue * weight;
+
+                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                        mapLength = mapLength - mapLength * 0.5;
+                        bpm = bpm + bpm * 0.5;
+                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                        mapLength = mapLength + mapLength * 1 / 3;
+                        bpm = bpm - bpm * 0.25;
+                    }
+                    sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
+                    spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (acc / 3) * weight;
+                    rea = 2 / 5 * Math.exp(0.008 * bpm - 0.5) * scaledPP * srMultiplier * weight;
+                    break;         
+            }
+            skillsSum = arraySum(skillsSum, [acc, rea, aim, spe, sta, pre])
+        }
+        const finalSkillsPrototipe = [
+            { skill: 'Accuracy', value: skillsSum[0] },
+            { skill: 'Reaction', value: skillsSum[1] },
+            { skill: 'Aim', value: skillsSum[2] },
+            { skill: 'Speed', value: skillsSum[3] },
+            { skill: 'Stamina', value: skillsSum[4] },
+            { skill: 'Precision', value: skillsSum[5] },
+        ];
+        const result = finalSkillsPrototipe.map((skill) => {
+            const rankObj = localConstants.skillRanksByScore.find((rank) => skill.value >= rank.value);
+            const rank = rankObj ? rankObj.rank : 'F';
+        
+            return {
+                skill: skill.skill,
+                rank: rank,
+                int: Math.round(skill.value),
+            };
+        });
+        return result;
+    },
+
+    removeFields: function (dataObject, fieldsToRemove) {
+        // Check if dataObject is an object
+        if (typeof dataObject !== 'object' || Array.isArray(dataObject)) {
+            console.error('Input is not an object');
+            return dataObject; // Return original input if not an object
+        }
+
+        // Create a copy of the object to avoid modifying the original object
+        let resultObject = { ...dataObject };
+
+        // Remove specified fields from the copy
+        for (let field of fieldsToRemove) {
+            delete resultObject[field];
+        }
+
+        return resultObject;
+    },
+
+    removeFieldsArrayOfObjects: function (array, fieldsToPreserve) {
+        // Check if array is an array of objects
+        if (!Array.isArray(array) || array.some(item => typeof item !== 'object')) {
+            console.error('Input is not an array of objects');
+            return array; // Return original input if not an array of objects
+        }
+
+        // Modify each object in the array
+        return array.map(obj => {
+            // Check if obj is an object
+            if (typeof obj === 'object' && !Array.isArray(obj)) {
+                // Create a new object to store only the specified fields
+                let resultObj = {};
+
+                // Keep only the specified fields in the new object
+                for (let field of fieldsToPreserve) {
+                    if (obj.hasOwnProperty(field)) {
+                        resultObj[field] = obj[field];
+                    }
+                }
+
+                return resultObj;
+            } else {
+                console.error('Invalid object in the array:', obj);
+                return obj; // Return original object if not an object
+            }
+        });
     },
 
     isUnixTimestamp: function (timestamp) {
@@ -31,11 +338,11 @@ module.exports = {
         if (typeof timestamp !== 'number') {
             return false;
         }
-    
+
         // Check if the timestamp is within a reasonable range
         const minUnixTimestamp = 0;
         const maxUnixTimestamp = 2147483647; // Maximum 32-bit signed integer value
-    
+
         return timestamp >= minUnixTimestamp && timestamp <= maxUnixTimestamp;
     },
 
@@ -43,7 +350,7 @@ module.exports = {
         if (typeof str !== 'string' || str.length === 0) {
             return str; // return unchanged if input is not a non-empty string
         }
-    
+
         return str.charAt(0).toUpperCase() + str.slice(1);
     },
 
@@ -227,7 +534,7 @@ module.exports = {
         } catch (error) {
             console.error('Error liquidating suggestion:', error);
             return null;
-        } 
+        }
     },
 
     getOsuData: async function (userId, collection) {
@@ -244,6 +551,15 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { balance } }, { upsert: true });
     },
 
+    getDeluxeEntry: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.deluxeEntry || false : false;
+    },
+
+    setDeluxeEntry: async function (userId, deluxeEntry, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { deluxeEntry } }, { upsert: true });
+    },
+
     getVerificationData: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.verificationData || [] : [];
@@ -253,14 +569,14 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { verificationData } }, { upsert: true });
     },
 
-    liquidateVerificationCode: async function (userId,  collection) {
+    liquidateVerificationCode: async function (userId, collection) {
         try {
             await collection.updateOne({ _id: userId }, { $unset: { verificationData: "" } });
         } catch (e) {
             console.log(e);
         }
     },
-    
+
     setPerkUsage: async function (status, collection) {
         await collection.updateOne({ _id: "Premium Data" }, { $set: { status } }, { upsert: true });
     },
@@ -383,6 +699,10 @@ module.exports = {
 
     verifyUserBancho: async function (osuname, osuData, collection) {
         await collection.updateOne({ 'verificationData.user.username': osuname }, { $set: { osuData }, $unset: { verificationData: "" } }, { upsert: true });
+    },
+
+    verifyUserManual: async function (userId, osuData, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { osuData }, $unset: { verificationData: "" } }, { upsert: true });
     },
 
     setUserTier: async function (userId, Tier, collection) {
@@ -1013,4 +1333,9 @@ function romanToInteger(roman) {
 
 async function setPerks(userId, perks, collection) {
     await collection.updateOne({ _id: userId }, { $set: { perks } }, { upsert: true });
+}
+
+function arraySum(ar1, ar2) {
+    [ar1, ar2] = ar1.length < ar2.length ? [ar2, ar1] : [ar1, ar2];
+    return ar1.map((el, index) => el + ar2[index] || el);
 }
