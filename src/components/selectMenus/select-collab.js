@@ -10,17 +10,17 @@ module.exports = {
     name: 'select-collab'
   },
   async execute(int, client) {
-    if (int.user.id !== '687004886922952755') return;
     await int.deferReply({ ephemeral: true });
     const userId = int.user.id;
     const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
     const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
+    const guild = client.guilds.cache.get(localConstants.guildId);
+    const guildMember = guild.members.cache.get(userId);
     try {
       const userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
-      const allCollabs = await localFunctions.getCollabs(collection);
-      let collab = int.values[0];
+      const userOsuData = await localFunctions.getOsuData(userId, userCollection);
+      let collab = await localFunctions.getCollab(int.values[0], collection);
       let components = [];
-      collab = allCollabs.find(e => e.name === collab);
       let URLstring = '';
       if (typeof collab.spreadsheetID !== "undefined") {
         URLstring = `  [Spreadsheet URL](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})\n`
@@ -62,79 +62,96 @@ module.exports = {
       )
       components = new ActionRowBuilder();
 
-      if (typeof userCollabs === "undefined") {
+      const userData = await localFunctions.getOsuData(userId, userCollection);
+      if (userData) {
+        components.addComponents(
+          new ButtonBuilder()
+            .setCustomId('profile-collab')
+            .setLabel('🎫 General Profile')
+            .setStyle('Primary'),
+        )
+      } else {
+        components.addComponents(
+          new ButtonBuilder()
+            .setCustomId('link-osu')
+            .setLabel('🔗 Link your osu! Account')
+            .setStyle('Success'),
+        )
+      }
+
+      if (typeof userCollabs.find(e => e.collabName === collab.name) === "undefined" && collab.status !== "full") {
         switch (collab.status) {
           case 'open':
             components.addComponents(
               new ButtonBuilder()
                 .setCustomId('join-collab')
-                .setLabel('📗 Add Pool')
-                .setStyle('Primary'),
+                .setLabel('✅ Join')
+                .setStyle('Success'),
             )
             break;
           case 'early access':
             const userPerks = localFunctions.getPerks(userId, userCollection);
-            if (typeof userPerks.find(e => e.name === 'Megacollab Early Access') !== "undefined") {
-              components.addComponents(
-                new ButtonBuilder()
-                  .setCustomId('join-collab')
-                  .setLabel('📗 Add Pool')
-                  .setStyle('Primary'),
-              )
-            }
-            break;  
-        }
-      } else {
-        if (typeof userCollabs.find(e => e.name === collab.name) === "undefined") {
-          switch (collab.status) {
-            case 'open':
+            if (typeof userPerks.find(e => e.name === 'Megacollab Early Access') !== "undefined" && collab.restriction === 'megacollab') {
               components.addComponents(
                 new ButtonBuilder()
                   .setCustomId('join-collab')
                   .setLabel('✅ Join')
                   .setStyle('Success'),
               )
-              break;
-            case 'early access':
-              const userPerks = localFunctions.getPerks(userId, userCollection);
-              if (typeof userPerks.find(e => e.name === 'Megacollab Early Access') !== "undefined" && collab.restriction === 'megacollab') {
-                components.addComponents(
-                  new ButtonBuilder()
-                    .setCustomId('join-collab')
-                    .setLabel('✅ Join')
-                    .setStyle('Success'),
-                )
-              }
-            default:
-              if (int.user.id === '687004886922952755') {
-                components.addComponents(
-                  new ButtonBuilder()
-                    .setCustomId('join-collab')
-                    .setLabel('✅ Join (Testing)')
-                    .setStyle('Success'),
-                )
-              }
-              break;  
-          }
-        } else {
-          switch (collab.status) {
-            case 'delivered':
+            }
+          default:
+            if (int.user.id === '687004886922952755') {
+              components.addComponents(
+                new ButtonBuilder()
+                  .setCustomId('join-collab')
+                  .setLabel('✅ Join (Testing)')
+                  .setStyle('Success'),
+              )
+            }
+            break;
+        }
+      } else if (typeof userCollabs.find(e => e.collabName === collab.name) !== "undefined") {
+        components.addComponents(
+          new ButtonBuilder()
+            .setCustomId('profile-pick')
+            .setLabel('🛅 Collab Profile')
+            .setStyle('Primary'),
+        )
+        switch (collab.status) {
+          case 'delivered':
+            components.addComponents(
+              new ButtonBuilder()
+                .setCustomId('download-collab')
+                .setLabel('⬇️ Download')
+                .setStyle('Primary'),
+            )
+            break;
+          case 'completed':
+            components.addComponents(
+              new ButtonBuilder()
+                .setCustomId('download-collab')
+                .setLabel('⬇️ Download')
+                .setStyle('Primary'),
+            )
+            break;
+          case 'early delivery':
+            const userTier = await localFunctions.getTier(userId, userCollection);
+            let tier = 0;
+            if (!userTier && guildMember.roles.cache.has('743505566617436301') && !guildMember.roles.cache.has('1150484454071091280')) {
+              let premiumDetails = await localFunctions.assignPremium(int, userId, collection, guildMember);
+              tier = localFunctions.premiumToInteger(premiumDetails[0].name);
+            } else {
+              tier = localFunctions.premiumToInteger(userTier.name);
+            }
+            if (tier >= 4) {
               components.addComponents(
                 new ButtonBuilder()
                   .setCustomId('download-collab')
                   .setLabel('⬇️ Download')
                   .setStyle('Primary'),
               )
-              break;
-            default:
-              components.addComponents(
-                new ButtonBuilder()
-                  .setCustomId('profile-collab')
-                  .setLabel('🎫 Collab Profile')
-                  .setStyle('Primary'),
-              )
-              break;  
-          }
+            }
+            break;
         }
       }
 
@@ -147,8 +164,14 @@ module.exports = {
         )
       }
 
+      if (typeof collab.designs !== "undefined") {
+        //add embeds with designs
+      }
+
       buttonCache.set(int.user.id, {
         collab: collab.name,
+        osuData: userOsuData,
+        userCollabData: userCollabs
       })
 
       int.editReply({

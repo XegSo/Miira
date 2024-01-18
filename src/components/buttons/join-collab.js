@@ -9,12 +9,13 @@ module.exports = {
         name: 'join-collab'
     },
     async execute(int, client) {
-        await int.deferReply({ ephemeral: true });
-        const userId = int.user.id;
-        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+        const { collection: collabsCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
         try {
-            let userOsuData = await localFunctions.getOsuData(userId, collection);
+            let userOsuData = buttonCache.get(int.user.id).osuData
+            let userCollabData = buttonCache.get(int.user.id).userCollabData
+            const collabName = buttonCache.get(int.user.id).collab;
             if (!userOsuData) {
+                await int.deferReply({ ephemeral: true });
                 components = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId('link-osu')
@@ -26,9 +27,57 @@ module.exports = {
                     components: [components]
                 });
                 return;
+            } else {
+                if (typeof userCollabData.find(e => e.collabName === collabName) !== "undefined") {
+                    await int.deferReply({ ephemeral: true });
+                    int.editReply({
+                        content: 'You are already participating in this collab. To edit your data, manage your participation in your collabs profile.',
+                    });
+                }
+                const collabData = await localFunctions.getCollab(collabName, collabsCollection);
+                const modal = new ModalBuilder()
+                    .setCustomId(`join-collab`)
+                    .setTitle(`${collabName}`);
+
+                const pick = new TextInputBuilder()
+                    .setCustomId('pick')
+                    .setLabel('Type the ID of your pick.')
+                    .setPlaceholder('Only the number of the character you want to pick. Example: 1387')
+                    .setMaxLength(collabData.fieldRestrictions.av)
+                    .setStyle(TextInputStyle.Short)    
+
+                const av_text = new TextInputBuilder()
+                    .setCustomId('av_text')
+                    .setLabel('Type the text for the avatar.')
+                    .setPlaceholder('Tipically your username.')
+                    .setMinLength(2)
+                    .setMaxLength(collabData.fieldRestrictions.av)
+                    .setStyle(TextInputStyle.Short)
+
+                const ca_text = new TextInputBuilder()
+                    .setCustomId('ca_text')
+                    .setLabel('Type the text for the card.')
+                    .setPlaceholder('Tipically your username.')
+                    .setMinLength(2)
+                    .setMaxLength(collabData.fieldRestrictions.ca)
+                    .setStyle(TextInputStyle.Short)
+
+                const ca_quote = new TextInputBuilder()
+                    .setCustomId('ca_quote')
+                    .setLabel('Type a quote for the card.')
+                    .setPlaceholder('Optional.')
+                    .setMinLength(2)
+                    .setMaxLength(collabData.fieldRestrictions.ca_quote)
+                    .setStyle(TextInputStyle.Short)
+                    .setRequired(false);
+
+                modal.addComponents(new ActionRowBuilder().addComponents(pick), new ActionRowBuilder().addComponents(av_text), new ActionRowBuilder().addComponents(ca_text), new ActionRowBuilder().addComponents(ca_quote));
+
+                await int.showModal(modal);
             }
         } finally {
-            mongoClient.close();
+            mongoClientCollabs.close();
         }
     },
+    buttonCache: buttonCache
 }

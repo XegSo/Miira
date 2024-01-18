@@ -29,6 +29,17 @@ module.exports = {
                     const userTop100 = await v2.scores.user.category(currentData.id, 'best', {mode: currentData.playmode, limit: '100'});
                     const skills = await localFunctions.calculateSkill(userTop100, currentData.playmode);
                     const modsData = localFunctions.analyzeMods(userTop100);
+                    const filler = {
+                        mod: "--",
+                        percentage: "--"
+                    }
+                    let i = 0;
+                    while (i < 4) {
+                        if (typeof modsData.top4Mods[i] === "undefined") {
+                            modsData.top4Mods.push(filler);
+                        }
+                        i++;
+                    }   
                     currentData.skillRanks = skills;
                     currentData.modsData = modsData;
                     await localFunctions.verifyUserManual(userDB._id, currentData, collection);

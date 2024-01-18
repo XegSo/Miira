@@ -22,11 +22,34 @@ registerFont('./assets/fonts/Montserrat-MediumItalic.ttf', {
 
 module.exports = {
 
-    generateRandomCode: function() {
-        // Generate a random number between 10000 and 99999
+    flattenObject: function (obj, parentKey = '') {
+        let result = {};
+        for (let key in obj) {
+            let newKey = parentKey ? `${parentKey}_${key}` : key;
+            if (Array.isArray(obj[key])) {
+                for (let i = 0; i < obj[key].length; i++) {
+                    const arrayKey = `${newKey}_${i}`;
+                    result = { ...result, ...flattenObject(obj[key][i], arrayKey) };
+                }
+            } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+                result = { ...result, ...flattenObject(obj[key], newKey) };
+            } else {
+                result[newKey] = obj[key];
+            }
+        }
+        return result;
+    },
+
+    padNumberWithZeros: function (number, totalDigits) {
+        let numberStr = number.toString();
+        const zerosToPad = Math.max(0, totalDigits - numberStr.length);
+        const paddedNumber = '0'.repeat(zerosToPad) + numberStr;
+        return paddedNumber;
+    },
+
+    generateRandomCode: function () {
         const randomCode = Math.floor(Math.random() * 90000) + 10000;
-    
-        return randomCode; // Convert to string to ensure it's exactly 5 digits
+        return randomCode;
     },
 
     arraySum: function (ar1, ar2) {
@@ -37,22 +60,22 @@ module.exports = {
     analyzeMods: function (scores) { //Function made by TunnelBlick
         const modCount = {};
         const modCombinationCount = {};
-    
+
         let totalMods = 0;
-    
+
         scores.forEach(score => {
             const currentMods = score.mods.length === 0 ? ['NM'] : score.mods;
-    
+
             currentMods.forEach(mod => {
                 modCount[mod] = (modCount[mod] || 0) + 1;
             });
-    
+
             totalMods += currentMods.length;
-    
+
             const modCombination = currentMods.join("");
             modCombinationCount[modCombination] = (modCombinationCount[modCombination] || 0) + 1;
         });
-    
+
         const top4Mods = Object.entries(modCount)
             .sort((a, b) => b[1] - a[1])
             .slice(0, 4)
@@ -60,14 +83,14 @@ module.exports = {
                 mod,
                 percentage: (count / totalMods) * 100
             }));
-    
+
         const mostCommonModCombination = Object.entries(modCombinationCount)
             .sort((a, b) => b[1] - a[1])
             .map(([combination, count]) => ({
                 combination: combination,
                 count
             }))[0];
-    
+
         return {
             top4Mods,
             mostCommonModCombination
@@ -261,7 +284,7 @@ module.exports = {
                     sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
                     spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (acc / 3) * weight;
                     rea = 2 / 5 * Math.exp(0.008 * bpm - 0.5) * scaledPP * srMultiplier * weight;
-                    break;         
+                    break;
             }
             skillsSum = arraySum(skillsSum, [acc, rea, aim, spe, sta, pre])
         }
@@ -276,7 +299,7 @@ module.exports = {
         const result = finalSkillsPrototipe.map((skill) => {
             const rankObj = localConstants.skillRanksByScore.find((rank) => skill.value >= rank.value);
             const rank = rankObj ? rankObj.rank : 'F';
-        
+
             return {
                 skill: skill.skill,
                 rank: rank,
@@ -287,68 +310,51 @@ module.exports = {
     },
 
     removeFields: function (dataObject, fieldsToRemove) {
-        // Check if dataObject is an object
         if (typeof dataObject !== 'object' || Array.isArray(dataObject)) {
             console.error('Input is not an object');
-            return dataObject; // Return original input if not an object
+            return dataObject;
         }
-
-        // Create a copy of the object to avoid modifying the original object
         let resultObject = { ...dataObject };
-
-        // Remove specified fields from the copy
         for (let field of fieldsToRemove) {
             delete resultObject[field];
         }
-
         return resultObject;
     },
 
     removeFieldsArrayOfObjects: function (array, fieldsToPreserve) {
-        // Check if array is an array of objects
         if (!Array.isArray(array) || array.some(item => typeof item !== 'object')) {
             console.error('Input is not an array of objects');
-            return array; // Return original input if not an array of objects
+            return array;
         }
-
-        // Modify each object in the array
         return array.map(obj => {
-            // Check if obj is an object
             if (typeof obj === 'object' && !Array.isArray(obj)) {
-                // Create a new object to store only the specified fields
                 let resultObj = {};
-
-                // Keep only the specified fields in the new object
                 for (let field of fieldsToPreserve) {
                     if (obj.hasOwnProperty(field)) {
                         resultObj[field] = obj[field];
                     }
                 }
-
                 return resultObj;
             } else {
                 console.error('Invalid object in the array:', obj);
-                return obj; // Return original object if not an object
+                return obj;
             }
         });
     },
 
     isUnixTimestamp: function (timestamp) {
-        // Check if the value is a number
         if (typeof timestamp !== 'number') {
             return false;
         }
-
-        // Check if the timestamp is within a reasonable range
         const minUnixTimestamp = 0;
-        const maxUnixTimestamp = 2147483647; // Maximum 32-bit signed integer value
+        const maxUnixTimestamp = 2147483647;
 
         return timestamp >= minUnixTimestamp && timestamp <= maxUnixTimestamp;
     },
 
     capitalizeFirstLetter: function (str) {
         if (typeof str !== 'string' || str.length === 0) {
-            return str; // return unchanged if input is not a non-empty string
+            return str;
         }
 
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -395,7 +401,6 @@ module.exports = {
     },
 
     removeURLsAndColons: function (content) {
-        // Remove URLs (http, https, www) and colons
         return content.replace(/(https?:\/\/|www\.)[^\s]+|:[^\s]+:|<[^>]+>/g, '');
     },
 
@@ -450,23 +455,16 @@ module.exports = {
         const userId = int.user.id;
         const { collection, mongoClient } = await connectToMongoDB("OzenCollection");
         try {
-            // Check if the user already has a referral code
             let referralCode = await getReferralCode(userId, collection);
-
             if (!referralCode) {
-                // Generate and check for a unique referral code
                 referralCode = await generateUniqueReferralCode(userId, collection);
-
-                // Store the referral code in the database
                 await setReferralCode(userId, referralCode, collection);
             }
-
             return referralCode;
         } catch (error) {
             console.error('Error handling referral command:', error);
-            return null; // Return null or an appropriate error code
+            return null;
         } finally {
-            // Close the MongoDB connection if it's defined
             if (mongoClient) {
                 mongoClient.close();
             }
@@ -477,9 +475,7 @@ module.exports = {
         while (true) {
             const newReferralCode = generateReferralCode();
             const existingUser = await collection.findOne({ referralCode: newReferralCode });
-
             if (!existingUser) {
-                // The generated code is unique, store it and the user ID in the database
                 await setReferralCode(userId, newReferralCode, collection);
                 return newReferralCode;
             }
@@ -505,12 +501,20 @@ module.exports = {
         await collection.insertOne(collab);
     },
 
+    setCollabTexts: async function (collab, fieldRestrictions, collection) {
+        await collection.updateOne({ name: collab }, { $set: { fieldRestrictions } }, { upsert: true });
+    },
+
     editCollab: async function (collab, name, topic, status, opening, user_cap, collection) {
         await collection.updateOne({ name: collab }, { $set: { name, topic, status, opening, user_cap } }, { upsert: true });
     },
 
     setCollabPool: async function (collab, pool, collection) {
         await collection.updateOne({ name: collab }, { $set: { pool } }, { upsert: true });
+    },
+
+    setCollabStatus: async function (collab, status, collection) {
+        await collection.updateOne({ name: collab }, { $set: { status } }, { upsert: true });
     },
 
     getCollabs: async function (collection) {
@@ -523,9 +527,30 @@ module.exports = {
         return user ? user.collabs || [] : [];
     },
 
+    setUserCollabs: async function (userId, collabs, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { collabs } }, { upsert: true });
+    },
+
     getCollab: async function (name, collection) {
         const collab = await collection.findOne({ name: name });
         return collab ? collab || null : null;
+    },
+
+    getCollabParticipants: async function (name, collection) {
+        const collab = await collection.findOne({ name: name });
+        return collab ? collab.participants || [] : [];
+    },
+
+    setCollabParticipation: async function (collab, collection, id) {
+        await collection.updateOne({ name: collab, 'pool.items.id': id }, { $set: { 'pool.items.$.status': "picked" } }, { upsert: true });
+    },
+
+    unsetCollabParticipation: async function (collab, collection, id) {
+        await collection.updateOne({ name: collab, 'pool.items.id': id }, { $set: { 'pool.items.$.status': "available" } }, { upsert: true });
+    },
+
+    setCollabParticipants: async function (collab, collection, participants) {
+        await collection.updateOne({ name: collab }, { $set: { participants } }, { upsert: true });
     },
 
     liquidateCollab: async function (name, collection) {
@@ -946,13 +971,9 @@ module.exports = {
     applyGlobalBoost: async function (multiplier, durationInHours) {
         const { collection: collection, client: mongoClient } = await connectToMongoDB("Special");
         try {
-
-            // Calculate boost end time
             const currentTime = Date.now();
             const boostEndTime = currentTime + durationInHours * 3600000; // Convert hours to milliseconds
-
             await collection.updateOne({ _id: "Global Boost" }, { $set: { multiplier, boostEndTime } }, { upsert: true });
-
         } catch (error) {
             console.error('Error applying global boost:', error);
             return null;
@@ -1017,11 +1038,8 @@ module.exports = {
             voters = suggestion.voters;
         }
         const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
-
         try {
-
             await collectionSpecial.updateOne({ _id: messageId }, { $set: { user, status, embed, upvotes, downvotes, voters } }, { upsert: true });
-
         } catch (error) {
             console.error('Error creating suggestion:', error);
             return null;
@@ -1034,11 +1052,8 @@ module.exports = {
 
     liquidateSuggestion: async function (messageId) {
         const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
-
         try {
-
             await collectionSpecial.deleteOne({ _id: messageId });
-
         } catch (error) {
             console.error('Error liquidating suggestion:', error);
             return null;
@@ -1060,7 +1075,6 @@ module.exports = {
 
     getSuggestion: async function (messageId) {
         const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
-
         try {
             const messageEmbed = await collectionSpecial.findOne({ _id: messageId });
             return messageEmbed ? messageEmbed || [] : [];
@@ -1120,9 +1134,7 @@ module.exports = {
             D: 500,
             M: 1000,
         };
-
         let result = 0;
-
         for (let i = 0; i < roman.length; i++) {
             const currentNumeral = romanNumerals[roman[i]];
             const nextNumeral = romanNumerals[roman[i + 1]];
@@ -1133,7 +1145,6 @@ module.exports = {
                 result += currentNumeral;
             }
         }
-
         return result;
     },
 
@@ -1152,7 +1163,6 @@ module.exports = {
         };
         const roman = string.replace("Mirage ", "");
         let result = 0;
-
         for (let i = 0; i < roman.length; i++) {
             const currentNumeral = romanNumerals[roman[i]];
             const nextNumeral = romanNumerals[roman[i + 1]];
@@ -1163,7 +1173,6 @@ module.exports = {
                 result += currentNumeral;
             }
         }
-
         return result;
     }
 }
@@ -1177,9 +1186,7 @@ async function generateUniqueReferralCode(userId, collection) {
     while (true) {
         const newReferralCode = generateReferralCode();
         const existingUser = await collection.findOne({ referralCode: newReferralCode });
-
         if (!existingUser) {
-            // The generated code is unique, store it and the user ID in the database
             await setReferralCode(userId, newReferralCode, collection);
             return newReferralCode;
         }
@@ -1190,12 +1197,10 @@ function generateReferralCode() {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const codeLength = 7;
     let referralCode = '';
-
     for (let i = 0; i < codeLength; i++) {
         const randomIndex = Math.floor(Math.random() * characters.length);
         referralCode += characters.charAt(randomIndex);
     }
-
     return referralCode;
 }
 
@@ -1204,9 +1209,7 @@ async function setReferralCode(userId, referralCode, collection) {
 }
 
 async function fetchUserDataFromDatabase() {
-    // Establish a connection to MongoDB
     const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-
     try {
         const userData = await collection.find({}).toArray();
         const userDataArray = userData.map(user => ({
@@ -1214,7 +1217,6 @@ async function fetchUserDataFromDatabase() {
             credits: user.balance || 0,
             topCombo: user.topCombo || 0
         }));
-
         return userDataArray;
     } finally {
         mongoClient.close();
@@ -1223,10 +1225,7 @@ async function fetchUserDataFromDatabase() {
 
 async function handleDailyDecay() {
     console.log("Running daily decay");
-
-    // Establish a connection to MongoDB
     const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-
     try {
         const users = await collection.find({}).toArray();
 
@@ -1255,19 +1254,15 @@ async function handleDailyDecay() {
 async function scheduleDailyDecay(client) {
     const now = new Date();
     const nextRun = new Date(now);
-
     nextRun.setUTCHours(localConstants.dailyCheckHour, localConstants.dailyCheckMinute, 0, 0);
-
     if (nextRun <= now) {
         nextRun.setUTCDate(nextRun.getUTCDate() + 1);
     }
-
     const delay = nextRun - now;
     let guild = await client.guilds.fetch('630281137998004224');
     let member = await guild.members.cache.find(member => member.id === "420711641596821504");
     await member.timeout(86400000, "Daily timeout for this user.");
     console.log('user timed out for 24 hours');
-
     setTimeout(async () => {
         await handleDailyDecay();
         await member.timeout(86040000, "Daily timeout for this user.");
@@ -1289,7 +1284,6 @@ async function getSuggestion(messageId) {
 
 function applyText(canvas, text, fontFamily, fontSize, fontStyle) {
     const ctx = canvas.getContext("2d");
-
     do {
         ctx.font = `${fontStyle} ${fontSize}px ${fontFamily}`;
     } while (ctx.measureText(text).width > canvas.width - 300);
@@ -1314,9 +1308,7 @@ function romanToInteger(roman) {
         D: 500,
         M: 1000,
     };
-
     let result = 0;
-
     for (let i = 0; i < roman.length; i++) {
         const currentNumeral = romanNumerals[roman[i]];
         const nextNumeral = romanNumerals[roman[i + 1]];
@@ -1327,7 +1319,6 @@ function romanToInteger(roman) {
             result += currentNumeral;
         }
     }
-
     return result;
 }
 
@@ -1338,4 +1329,23 @@ async function setPerks(userId, perks, collection) {
 function arraySum(ar1, ar2) {
     [ar1, ar2] = ar1.length < ar2.length ? [ar2, ar1] : [ar1, ar2];
     return ar1.map((el, index) => el + ar2[index] || el);
+}
+
+
+function flattenObject (obj, parentKey = '') {
+    let result = {};
+    for (let key in obj) {
+        let newKey = parentKey ? `${parentKey}_${key}` : key;
+        if (Array.isArray(obj[key])) {
+            for (let i = 0; i < obj[key].length; i++) {
+                const arrayKey = `${newKey}_${i}`;
+                result = { ...result, ...flattenObject(obj[key][i], arrayKey) };
+            }
+        } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+            result = { ...result, ...flattenObject(obj[key], newKey) };
+        } else {
+            result[newKey] = obj[key];
+        }
+    }
+    return result;
 }

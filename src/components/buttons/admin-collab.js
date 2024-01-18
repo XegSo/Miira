@@ -15,10 +15,8 @@ module.exports = {
         await int.deferReply();
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         try {
-            const allCollabs = await localFunctions.getCollabs(collection);
-            let collab = buttonCache.get(int.user.id).collab;
+            let collab = await localFunctions.getCollab(buttonCache.get(int.user.id).collab, collection)
             let components = [];
-            collab = allCollabs.find(e => e.name === collab);
             let URLstring = '';
             if (typeof collab.spreadsheetID !== "undefined") {
                 URLstring = `  [Spreadsheet URL](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})\n`
@@ -83,11 +81,25 @@ module.exports = {
                 }
             }
 
+            components.addComponents(
+                new ButtonBuilder()
+                    .setCustomId('set-fields')
+                    .setLabel('📛 Fields')
+                    .setStyle('Primary'),
+            )
+
+            components.addComponents(
+                new ButtonBuilder()
+                    .setCustomId('set-designs')
+                    .setLabel('🔏 Designs')
+                    .setStyle('Primary'),
+            )
+
             if (collab.status !== "closed" && collab.status !== "on design") {
                 components.addComponents(
                     new ButtonBuilder()
                         .setCustomId('remove-users-collab')
-                        .setLabel('⛔️ Remove Users')
+                        .setLabel('⛔️ Prune')
                         .setStyle('Danger'),
                 )
             }
@@ -95,7 +107,7 @@ module.exports = {
             components.addComponents(
                 new ButtonBuilder()
                     .setCustomId('delete-collab')
-                    .setLabel('🚮 Delete Collab')
+                    .setLabel('🚮 Delete')
                     .setStyle('Danger'),
             )
 

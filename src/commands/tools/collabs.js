@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder, SelectMenuBuilder } = require('@discordjs/builders');
-const { tools } = require('osu-api-extended');
+const { v2, tools } = require('osu-api-extended');
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
@@ -102,7 +102,18 @@ module.exports = {
                 const userTop100 = await v2.scores.user.category(user.id, 'best', { mode: int.options.getString('gamemode'), limit: '100' });
                 int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
                 const skills = await localFunctions.calculateSkill(userTop100, int.options.getString('gamemode'));
-                const modsData = localFunctions.analyzeMods(userTop100);
+                let modsData = localFunctions.analyzeMods(userTop100);
+                const filler = {
+                    mod: "--",
+                    percentage: "--"
+                }
+                let i = 0;
+                while (i < 4) {
+                    if (typeof modsData.top4Mods[i] === "undefined") {
+                        modsData.top4Mods.push(filler);
+                    }
+                    i++;
+                }   
                 userFiltered.skillRanks = skills;
                 userFiltered.modsData = modsData;
                 await localFunctions.verifyUserManual(int.options.getString('discordid'), userFiltered, collection);
@@ -134,6 +145,30 @@ module.exports = {
                 }
                 const collabData = await localFunctions.getUserCollabs(userId, collection);
                 const collabs = await localFunctions.getCollabs(collabCollection);
+                const buttons = new ActionRowBuilder().addComponents(
+                    new ButtonBuilder()
+                        .setLabel('🔄 Update your data')
+                        .setCustomId('refresh-osu-data')
+                        .setStyle('Primary')
+                        .setDisabled(true),
+                )
+                let tier = 0;
+                let prestigeLevel = 0;
+                let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
+                prestige = prestige.name
+                if (typeof prestige !== "undefined") {
+                    prestigeLevel = parseInt(prestige.replace('Prestige ',''));
+                }
+                if (guildMember.roles.cache.has('743505566617436301')) {
+                    const userTier = await localFunctions.getUserTier(userId, collection);
+                    if (!userTier && !guildMember.roles.cache.has('1150484454071091280')) {
+                        let premiumDetails = await localFunctions.assignPremium(int, userId, collection, guildMember);
+                        tier = localFunctions.premiumToInteger(premiumDetails[0].name);
+                    } else {
+                        tier = localFunctions.premiumToInteger(userTier.name);
+                    }
+                }
+
                 const osuEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | Collabs Profile', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
@@ -146,7 +181,7 @@ module.exports = {
                         },
                         {
                             name: `‎`,
-                            value: `┌ Performance: **${userOsu.statistics.pp}pp**\n├ Join date: **<t:${new Date(userOsu.join_date).getTime() / 1000}:R>**\n├ Last online: **${userOsu.last_visit ? `<t:${new Date(userOsu.last_visit).getTime() / 1000}:R>` : "Not Available"}**\n├ Followers: **${userOsu.follower_count}**\n└ Playtime: **${Math.floor(userOsu.statistics.play_time / 3600)}h**`,
+                            value: `┌ Performance: **${userOsu.statistics.pp}pp**\n├ Join date: **<t:${new Date(userOsu.join_date).getTime() / 1000}:R>**\n├ Prestige Level: **${prestigeLevel}**\n├ Premium Tier: **${tier}**\n└ Playtime: **${Math.floor(userOsu.statistics.play_time / 3600)}h**`,
                             inline: true
                         },
                         {
@@ -172,36 +207,14 @@ module.exports = {
                         }
                     )
                 }
-                const buttons = new ActionRowBuilder().addComponents(
-                    new ButtonBuilder()
-                        .setLabel('🔄 Update your data')
-                        .setCustomId('refresh-osu-data')
-                        .setStyle('Primary')
-                        .setDisabled(true),
-                )
-                let tier = 0;
-                let prestigeLevel = 0;
-                let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
-                if (typeof prestige !== "undefined") {
-                    prestigeLevel = localFunctions.romanToInteger(prestige.name.replace('Prestige ',''));
-                }
-                if (guildMember.roles.cache.has('743505566617436301')) {
-                    const userTier = await localFunctions.getUserTier(userId, collection);
-                    if (!userTier && !guildMember.roles.cache.has('1150484454071091280')) {
-                        let premiumDetails = await localFunctions.assignPremium(int, userId, collection, guildMember);
-                        tier = localFunctions.premiumToInteger(premiumDetails[0].name);
-                    } else {
-                        tier = localFunctions.premiumToInteger(userTier.name);
-                    }
-                }
 
                 const userPerks = await localFunctions.getPerks(userId, collection);
                 let collabsToJoinCount = 0;
                 const joinMenu = new SelectMenuBuilder()
-                    .setCustomId('join-collab')
+                    .setCustomId('select-collab')
                     .setPlaceholder('Select a collab to join.')
                 for (const collab of collabs) {
-                    if ((collab.status !== "closed" && collab.status !== "on design") || userId == '687004886922952755') {
+                    if (((collab.status !== "closed" && collab.status !== "on design") || userId == '687004886922952755') && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
                         switch (collab.restriction) {
                             case "staff":
                                 if (guildMember.roles.cache.has('961891383365500938') || userId == '687004886922952755') {
@@ -263,7 +276,7 @@ module.exports = {
                         .setCustomId('manage-collab')
                         .setPlaceholder('Select a collab to manage.')
                     for (const currentCollab of collabData) {
-                        manageMenu.addOptions({ label: currentCollab.name, value: currentCollab.name });
+                        manageMenu.addOptions({ label: currentCollab.collabName, value: currentCollab.collabName });
                     }
                     const manageMenuRow = new ActionRowBuilder().addComponents(manageMenu);
                     if (collabsToJoinCount === 0) {
