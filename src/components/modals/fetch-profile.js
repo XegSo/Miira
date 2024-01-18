@@ -41,16 +41,16 @@ module.exports = {
             .setFooter({ text: 'Endless Mirage | Link your osu! Account', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')
             .setThumbnail(user.avatar_url)
-            .setDescription(`**\`\`\`ml\n📌 Is this your osu! Account?\`\`\`**\n`)
+            .setDescription(`**\`\`\`ml\n📌 Is this your osu! Account?\`\`\`**                                                                                    `)
             .addFields(
                 {
                     name: `‎`,
-                    value: `•┌ Username: **${user.username}**\n ├ Country: **${user.country.name}**\n ├ Rank: **${user.statistics.global_rank}**\n ├ Peak Rank: **${user.rank_highest.rank}**\n └ Level: **${user.statistics.level.current}**`,
+                    value: `┌ Username: **${user.username}**\n├ Country: **${user.country.name}**\n├ Rank: **${user.statistics.global_rank}**\n├ Peak Rank: **${user.rank_highest.rank}**\n└ Level: **${user.statistics.level.current}**`,
                     inline: true
                 },
                 {
                     name: `‎`,
-                    value: `•┌ Performance: **${user.statistics.pp}pp**\n ├ Join date: **<t:${new Date(user.join_date).getTime()/1000}:R>**\n ├ Last online: **${user.last_visit ? `<t:${new Date(user.last_visit).getTime()/1000}:R>` : "Not Available"}**\n ├ Followers: **${user.follower_count}**\n └ Playtime: **${Math.floor(user.statistics.play_time/3600)}h**`,
+                    value: `┌ Performance: **${user.statistics.pp}pp**\n├ Join date: **<t:${new Date(user.join_date).getTime()/1000}:R>**\n├ Last online: **${user.last_visit ? `<t:${new Date(user.last_visit).getTime()/1000}:R>` : "Not Available"}**\n├ Followers: **${user.follower_count}**\n└ Playtime: **${Math.floor(user.statistics.play_time/3600)}h**`,
                     inline: true
                 },
                 {

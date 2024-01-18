@@ -141,12 +141,12 @@ module.exports = {
                     .addFields(
                         {
                             name: `‎`,
-                            value: `•┌ Username: **${userOsu.username}**\n ├ Country: **${tools.country(userOsu.country_code)}**\n ├ Rank: **${userOsu.statistics.global_rank}**\n ├ Peak Rank: **${userOsu.rank_highest.rank}**\n └ Level: **${userOsu.statistics.level.current}**`,
+                            value: `┌ Username: **${userOsu.username}**\n├ Country: **${tools.country(userOsu.country_code)}**\n├ Rank: **${userOsu.statistics.global_rank}**\n├ Peak Rank: **${userOsu.rank_highest.rank}**\n└ Level: **${userOsu.statistics.level.current}**`,
                             inline: true
                         },
                         {
                             name: `‎`,
-                            value: `•┌ Performance: **${userOsu.statistics.pp}pp**\n ├ Join date: **<t:${new Date(userOsu.join_date).getTime() / 1000}:R>**\n ├ Last online: **${userOsu.last_visit ? `<t:${new Date(userOsu.last_visit).getTime() / 1000}:R>` : "Not Available"}**\n ├ Followers: **${userOsu.follower_count}**\n └ Playtime: **${Math.floor(userOsu.statistics.play_time / 3600)}h**`,
+                            value: `┌ Performance: **${userOsu.statistics.pp}pp**\n├ Join date: **<t:${new Date(userOsu.join_date).getTime() / 1000}:R>**\n├ Last online: **${userOsu.last_visit ? `<t:${new Date(userOsu.last_visit).getTime() / 1000}:R>` : "Not Available"}**\n├ Followers: **${userOsu.follower_count}**\n└ Playtime: **${Math.floor(userOsu.statistics.play_time / 3600)}h**`,
                             inline: true
                         },
                         {
@@ -158,12 +158,12 @@ module.exports = {
                     osuEmbed.addFields(
                         {
                             name: `‎`,
-                            value: `•┌ ACC: **${userOsu.skillRanks[0].rank}** | Score: **${userOsu.skillRanks[0].int}**\n ├ REA: **${userOsu.skillRanks[1].rank}** | Score: **${userOsu.skillRanks[1].int}**\n ├ AIM: **${userOsu.skillRanks[2].rank}** | Score: **${userOsu.skillRanks[2].int}**\n ├ SPD: **${userOsu.skillRanks[3].rank}** | Score: **${userOsu.skillRanks[3].int}**\n ├ STA: **${userOsu.skillRanks[4].rank}** | Score: **${userOsu.skillRanks[4].int}**\n └ PRE: **${userOsu.skillRanks[5].rank}** | Score: **${userOsu.skillRanks[5].int}**`,
+                            value: `┌ ACC: **${userOsu.skillRanks[0].rank}** | Score: **${userOsu.skillRanks[0].int}**\n├ REA: **${userOsu.skillRanks[1].rank}** | Score: **${userOsu.skillRanks[1].int}**\n├ AIM: **${userOsu.skillRanks[2].rank}** | Score: **${userOsu.skillRanks[2].int}**\n├ SPD: **${userOsu.skillRanks[3].rank}** | Score: **${userOsu.skillRanks[3].int}**\n├ STA: **${userOsu.skillRanks[4].rank}** | Score: **${userOsu.skillRanks[4].int}**\n└ PRE: **${userOsu.skillRanks[5].rank}** | Score: **${userOsu.skillRanks[5].int}**`,
                             inline: true
                         },
                         {
                             name: `‎`,
-                            value: `•┌ Top 1 Mod: **${userOsu.modsData.top4Mods[0].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[0].percentage)}%**\n ├ Top 2 Mod: **${userOsu.modsData.top4Mods[1].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[1].percentage)}%**\n ├ Top 3 Mod: **${userOsu.modsData.top4Mods[2].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[2].percentage)}%**\n ├ Top 4 Mod: **${userOsu.modsData.top4Mods[3].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[3].percentage)}%**\n └ Most used Combination: **${userOsu.modsData.mostCommonModCombination.combination}**`,
+                            value: `┌ Top 1 Mod: **${userOsu.modsData.top4Mods[0].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[0].percentage)}%**\n├ Top 2 Mod: **${userOsu.modsData.top4Mods[1].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[1].percentage)}%**\n├ Top 3 Mod: **${userOsu.modsData.top4Mods[2].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[2].percentage)}%**\n├ Top 4 Mod: **${userOsu.modsData.top4Mods[3].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[3].percentage)}%**\n└ Most used combination: **${userOsu.modsData.mostCommonModCombination.combination}**`,
                             inline: true
                         },
                         {
@@ -244,14 +244,14 @@ module.exports = {
                 const joinMenuRow = new ActionRowBuilder().addComponents(joinMenu);
                 if (collabData.length === 0) {
                     if (collabsToJoinCount === 0) {
-                        osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**\n *Seems like you haven't joined any collab yet...*\n*Unfortunately, there isn't any collabs you can join at the moment.*`)
+                        osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you haven't joined any collab yet...*\n*Unfortunately, there isn't any collabs you can join at the moment.*`)
                         int.editReply({
                             content: '',
                             embeds: [osuEmbed],
                             components: [buttons]
                         })
                     } else {
-                        osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**\n *Seems like you haven't joined any collab yet...*\n`)
+                        osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you haven't joined any collab yet...*\n`)
                         int.editReply({
                             content: '',
                             embeds: [osuEmbed],
@@ -267,14 +267,14 @@ module.exports = {
                     }
                     const manageMenuRow = new ActionRowBuilder().addComponents(manageMenu);
                     if (collabsToJoinCount === 0) {
-                        osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**\n*Unfortunately, there isn't any collabs you can join at the moment.*`);
+                        osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Unfortunately, there isn't any collabs you can join at the moment.*`);
                         int.editReply({
                             content: '',
                             embeds: [osuEmbed],
                             components: [buttons, manageMenuRow]
                         })
                     } else {
-                        osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**\n`);
+                        osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                    `);
                         int.editReply({
                             content: '',
                             embeds: [osuEmbed],
