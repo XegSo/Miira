@@ -17,7 +17,7 @@ module.exports = {
 
             const newPerks = userPerks.filter(perk => !pendingPerks.includes(perk.name));
             await localFunctions.setPerks(pendingUser.user.id, newPerks, collection);
-            await int.editReply(`<@${pendingUser.user.id}>'s perks have been updated.`)
+            int.editReply(`<@${pendingUser.user.id}>'s perks have been updated.`)
             removePerksCache.delete(int.user.id);
         } finally {
             mongoClient.close();

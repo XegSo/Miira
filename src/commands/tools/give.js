@@ -27,7 +27,7 @@ module.exports = {
         const amount = int.options.getInteger('amount');
     
         if (!userId || !amount) {
-          await int.editReply({ content: 'Please provide a valid user and amount.', ephemeral: true });
+          int.editReply({ content: 'Please provide a valid user and amount.', ephemeral: true });
           return;
         }
     
@@ -39,7 +39,7 @@ module.exports = {
           const newBalance = currentBalance + amount;
           await localFunctions.setBalance(userId.id, newBalance, collection);
     
-          await int.editReply({ content: `Assigned ${amount} credits to user <@${userId.id}>.`, ephemeral: true });
+          int.editReply({ content: `Assigned ${amount} credits to user <@${userId.id}>.`, ephemeral: true });
         } finally {
           mongoClient.close();
         }

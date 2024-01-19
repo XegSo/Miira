@@ -29,6 +29,6 @@ module.exports = {
         suggestionMessage.reply(`<@${suggestion.user}> Your suggestion has been denied.\nReason: ${reason}`);
         await localFunctions.liquidateSuggestion(suggestionMessage.id);
         SuggestionCache.delete(int.user.id);
-        await int.editReply({ content: 'Suggestion successfully denied.', ephemeral: true });
+        int.editReply({ content: 'Suggestion successfully denied.', ephemeral: true });
     },
 };

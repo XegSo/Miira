@@ -66,6 +66,6 @@ module.exports = {
         voters.set('downvoters', downvoters);
 
         await localFunctions.updateSuggestion(message.id, int.user.id, status, suggestionEmbed, 0, 0, voters);
-        await int.editReply({ content: 'Your suggestion has been sent successfully. \nNote: If you want to delete your own suggestion, click on the ❎ button.', ephemeral: true });
+        int.editReply({ content: 'Your suggestion has been sent successfully. \nNote: If you want to delete your own suggestion, click on the ❎ button.', ephemeral: true });
     },
 };

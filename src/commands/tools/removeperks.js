@@ -29,7 +29,7 @@ module.exports = {
         main: try {
             const userPerks = await localFunctions.getPerks(user.id, collection);
             if (userPerks.length === 0) {
-                await int.editReply('The user has no perks in the database.');
+                int.editReply('The user has no perks in the database.');
                 break main;
             }
             userPerks.forEach((perk) => {
@@ -43,7 +43,7 @@ module.exports = {
             perkMenu.setMaxValues(perkMenu.options.length);
             const row = new ActionRowBuilder().addComponents(perkMenu);
     
-            await int.editReply({
+            int.editReply({
                 components: [row]
             });
         } finally {

@@ -16,10 +16,10 @@ module.exports = {
             let name = int.fields.getTextInputValue('name');
             if (deleteCache.get(int.user.id).collab.host === int.user.id && deleteCache.get(int.user.id).collab.name === name) {
                 await localFunctions.liquidateCollab(deleteCache.get(int.user.id).collab.name, collection);
-                await int.editReply('The collab has been deleted.');
+                int.editReply('The collab has been deleted.');
                 deleteCache.delete(int.user.id);
             } else {
-                await int.editReply('Verification for deletion failed.');
+                int.editReply('Verification for deletion failed.');
                 return;
             }
         } finally {

@@ -148,7 +148,7 @@ module.exports = {
                 name: "profile.png"
             });
 
-            await int.editReply({ files: [attachment] });
+            int.editReply({ files: [attachment] });
 
 
         } finally {

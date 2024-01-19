@@ -54,7 +54,7 @@ module.exports = {
                 //TBD
             }
             await localFunctions.setPendingPerks(int.user.id, pendingPerks, perk, collection);
-            await int.editReply('Your request was submited succesfully.');
+            int.editReply('Your request was submited succesfully.');
         } finally {
             mongoClient.close();
             userCache.delete(int.user.id);

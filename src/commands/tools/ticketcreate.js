@@ -18,7 +18,7 @@ module.exports = {
         const channel = int.guild.channels.cache.get(int.options.getString('channelid'));
 
         if (!channel) {
-            await int.editReply({ content: 'Please provide a channel Id.', ephemeral: true });
+            int.editReply({ content: 'Please provide a channel Id.', ephemeral: true });
         return;
         }
         const TicketTopEmbed = new EmbedBuilder()
@@ -42,6 +42,6 @@ module.exports = {
             ],
             ephemeral: true,
         });
-        await int.editReply({ content: 'Embed created succesfully', ephemeral: true });
+        int.editReply({ content: 'Embed created succesfully', ephemeral: true });
     }    
 }
