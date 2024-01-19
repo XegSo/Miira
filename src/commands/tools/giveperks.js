@@ -36,7 +36,7 @@ module.exports = {
 
         const row = new ActionRowBuilder().addComponents(perkMenu);
 
-        int.editReply({
+        await int.editReply({
             components: [row]
         });
     },

@@ -68,7 +68,7 @@ module.exports = {
                         tier: messageTier,
                     });
                 } else {
-                    int.editReply({
+                    await int.editReply({
                         content: 'Illegal action performed. Try opening this menu again.',
                     });
                     break main;
@@ -127,13 +127,13 @@ module.exports = {
             )
 
             buyComponents = new ActionRowBuilder().addComponents(buyMenu);
-            int.editReply({
+            await int.editReply({
                 content: '',
                 embeds: [buyEmbed],
                 components: [buyComponents],
             });
         } catch (e) {
-            int.editReply({
+            await int.editReply({
                 content: 'Illegal action performed. Try opening this menu again.',
             });
             console.log(e);

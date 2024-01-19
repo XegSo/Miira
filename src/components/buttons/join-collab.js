@@ -22,7 +22,7 @@ module.exports = {
                         .setLabel('🔗 Link your osu! Account')
                         .setStyle('Success'),
                 )
-                int.editReply({
+                await int.editReply({
                     content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
                     components: [components]
                 });
@@ -30,7 +30,7 @@ module.exports = {
             } else {
                 if (typeof userCollabData.find(e => e.collabName === collabName) !== "undefined") {
                     await int.deferReply({ ephemeral: true });
-                    int.editReply({
+                    await int.editReply({
                         content: 'You are already participating in this collab. To edit your data, manage your participation in your collabs profile.',
                     });
                 }

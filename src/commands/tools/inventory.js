@@ -27,7 +27,7 @@ module.exports = {
               .setImage('https://puu.sh/JPffc/3c792e61c9.png')
               .setColor('#f26e6a')
               .addFields({ name: 'Your inventory is empty.', value: 'Use /shop to get some items.' });
-            int.editReply({
+            await int.editReply({
               content: '',
               embeds: [inventoryEmbedTop, emptyEmbedBottom],
               ephemeral: true

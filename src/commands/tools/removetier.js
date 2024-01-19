@@ -27,6 +27,6 @@ module.exports = {
             mongoClient.close();
         }
 
-        int.editReply(`Tier removed for user ${user.tag}`);
+        await int.editReply(`Tier removed for user ${user.tag}`);
     },
 }

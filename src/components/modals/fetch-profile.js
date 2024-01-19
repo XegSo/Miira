@@ -26,14 +26,14 @@ module.exports = {
             case 'taiko':
                 break;
             default:
-                int.editReply('Invalid gamemode. Please follow the modal placeholder guide for names.')
+                await int.editReply('Invalid gamemode. Please follow the modal placeholder guide for names.')
                 return;
 
         }
         const query = await v2.site.search({ mode: "user", query: name })
         const protoUser = query.user.data[0];
         if (typeof protoUser === "undefined") {
-            int.editReply('User not found! Make sure you didn\'t make a typo.');
+            await int.editReply('User not found! Make sure you didn\'t make a typo.');
             return;
         }
         const user = await v2.user.details(protoUser.id, mode);
@@ -71,7 +71,7 @@ module.exports = {
                 .setLabel('❌ No')
                 .setStyle('Danger'),
         )
-        int.editReply({
+        await int.editReply({
             content: '',
             embeds: [osuEmbed],
             components: [components]

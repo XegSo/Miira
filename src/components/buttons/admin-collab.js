@@ -37,7 +37,7 @@ module.exports = {
             dashboardEmbed.addFields(
                 {
                     name: `‎`,
-                    value: `• Type: ${localFunctions.capitalizeFirstLetter(collab.type)}\n Topic: ${localFunctions.capitalizeFirstLetter(collab.topic)}\n Status: ${localFunctions.capitalizeFirstLetter(collab.status)}\n`,
+                    value: `┌ Type: ${localFunctions.capitalizeFirstLetter(collab.type)}\n├ Topic: ${localFunctions.capitalizeFirstLetter(collab.topic)}\n└ Status: ${localFunctions.capitalizeFirstLetter(collab.status)}\n`,
                     inline: true
                 }
             );
@@ -45,7 +45,7 @@ module.exports = {
             dashboardEmbed.addFields(
                 {
                     name: `‎`,
-                    value: `• Class: ${localFunctions.capitalizeFirstLetter(collab.restriction)}\n Opening date: <t:${parseInt(collab.opening)}:R>\n${extraString}`,
+                    value: `┌ Class: ${localFunctions.capitalizeFirstLetter(collab.restriction)}\n├Opening date: <t:${parseInt(collab.opening)}:R>\n└ ${extraString}`,
                     inline: true
                 }
             );
@@ -75,7 +75,7 @@ module.exports = {
                     components.addComponents(
                         new ButtonBuilder()
                             .setCustomId('pool-collab')
-                            .setLabel('🔄 Change Pool')
+                            .setLabel('🔄 Edit Pool')
                             .setStyle('Primary'),
                     )
                 }
@@ -115,7 +115,7 @@ module.exports = {
                 collab: collab.name,
             })
 
-            int.editReply({
+            await int.editReply({
                 content: '',
                 embeds: [dashboardEmbed],
                 components: [components],
@@ -124,7 +124,7 @@ module.exports = {
             buttonCache.delete(int.user.id);
         } catch (e) {
             console.log(e)
-            int.editReply('Something went wrong...')
+            await int.editReply('Something went wrong...')
         } finally {
             mongoClient.close();
         }

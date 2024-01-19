@@ -14,7 +14,7 @@ module.exports = {
         main: try {
             let userOsuData = await localFunctions.getOsuData(userId, collection);
             if (userOsuData) {
-                int.editReply('You already have your osu! account linked!');
+                await int.editReply('You already have your osu! account linked!');
                 break main;
             }
             const modal = new ModalBuilder()

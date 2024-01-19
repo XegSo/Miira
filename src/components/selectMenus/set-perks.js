@@ -25,7 +25,7 @@ module.exports = {
                     }
                 }
             }
-            int.editReply(`Perks given to <@${pendingUser.user.id}>`)
+            await int.editReply(`Perks given to <@${pendingUser.user.id}>`)
             givePerksCache.delete(int.user.id);
         } finally {
             mongoClient.close();

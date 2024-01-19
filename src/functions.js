@@ -549,8 +549,8 @@ module.exports = {
         await collection.updateOne({ name: collab, 'pool.items.id': id }, { $set: { 'pool.items.$.status': "available" } }, { upsert: true });
     },
 
-    setCollabParticipants: async function (collab, collection, participants) {
-        await collection.updateOne({ name: collab }, { $set: { participants } }, { upsert: true });
+    addCollabParticipant: async function (collab, collection, newUser) {
+        await collection.updateOne({ name: collab }, { $push: { participants: newUser } }, { upsert: true });
     },
 
     liquidateCollab: async function (name, collection) {

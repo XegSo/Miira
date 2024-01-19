@@ -29,13 +29,13 @@ module.exports = {
                 let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
                 const itemInPool = pool.find((e) => e.id === pick);
                 if (typeof userCollabs.find(e => e.name === collab.name) !== "undefined") {
-                    return int.editReply('You are already participating in this collab!');
+                    return await int.editReply('You are already participating in this collab!');
                 }
                 if (typeof itemInPool === "undefined") {
-                    return int.editReply('Invalid character ID!');
+                    return await int.editReply('Invalid character ID!');
                 }
                 if (itemInPool.status === "picked") {
-                    return int.editReply('This character has been picked already by someone else!');
+                    return await int.editReply('This character has been picked already by someone else!');
                 }
                 await localFunctions.setCollabParticipation(collab.name, collection, pick);
                 let prestigeLevel = 0;
@@ -52,6 +52,7 @@ module.exports = {
                     }
                 }
                 if (typeof prestige !== "undefined") {
+                    prestige = prestige.name;
                     console.log(prestige);
                     prestigeLevel = parseInt(prestige.replace('Prestige ',''));
                     console.log(prestigeLevel);
@@ -72,9 +73,8 @@ module.exports = {
                 };
                 delete itemInPool.status;
                 const data = { ...userParticipant, ...itemInPool, ...userOsuData };
-                participants.push(data);
-                await localFunctions.setCollabParticipants(collab.name, collection, participants);
-                if (participants.length === collab.user_cap) {
+                await localFunctions.addCollabParticipant(collab.name, collection, data);
+                if ((participants.length + 1)=== collab.user_cap) {
                     await localFunctions.setCollabStatus(collab.name, "full", collection);
                 }
                 const profileData = {
@@ -90,7 +90,7 @@ module.exports = {
 
                 userCollabs.push(profileData);
                 await localFunctions.setUserCollabs(userId, userCollabs, userCollection);
-                int.editReply(`You've joined the collab! Pick: ${itemInPool.name}`);
+                await int.editReply(`You've joined the collab! Pick: ${itemInPool.name}`);
                 const joinEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | New Collab Participant', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
@@ -148,7 +148,7 @@ module.exports = {
             }
         } catch(e) {
             console.log(e);
-            int.editReply(`An error has ocurred but the pick has been locked for you. Please contact the owner <@687004886922952755> to complete the process!`);
+            await int.editReply(`An error has ocurred but the pick has been locked for you. Please contact the owner <@687004886922952755> to complete the process!`);
         } finally {
             mongoClient.close();
             mongoClientUsers.close();

@@ -32,22 +32,22 @@ module.exports = {
                 for (item of cartItems) {
                     switch (item.type) {
                         case 'Upgrade':
-                            int.editReply("You cannot add a tier renewal while having a tier upgrade in your cart.");
+                            await int.editReply("You cannot add a tier renewal while having a tier upgrade in your cart.");
                             break mainProcess;
                         case 'Perk':
                             if (typeof renewalPerks.find((e) => e.name === item.name) !== "undefined") {
-                                int.editReply("You cannot add a tier renewal while having a perk that the renewal includes in your cart.");
+                                await int.editReply("You cannot add a tier renewal while having a perk that the renewal includes in your cart.");
                                 break mainProcess;
                             }
                             break;
                         case 'Renewal':
                             if (item.class === 'Perk') {
                                 if (typeof renewalPerks.find((e) => e.name === item.name) !== "undefined") {
-                                    int.editReply("You cannot add a tier renewal while having a perk that the renewal includes in your cart.");
+                                    await int.editReply("You cannot add a tier renewal while having a perk that the renewal includes in your cart.");
                                     break mainProcess;
                                 }
                             } else if (item.class === 'Tier') {
-                                int.editReply("You already have a renewal for this tier in your cart dummy >.<");
+                                await int.editReply("You already have a renewal for this tier in your cart dummy >.<");
                                 break mainProcess;
                             }
                             break;           
@@ -56,7 +56,7 @@ module.exports = {
             } 
             
             if (localFunctions.compareArrays(fullPerksForTier, userPerks)) {
-                int.editReply("You can't renew when you have all the perks available for use dummy >.<");
+                await int.editReply("You can't renew when you have all the perks available for use dummy >.<");
                 break mainProcess;    
             }
 
@@ -77,7 +77,7 @@ module.exports = {
                     .setLabel('✅ Check your cart')
                     .setStyle('Primary'),
             ) 
-            int.editReply({
+            await int.editReply({
                 content: '',
                 embeds: [addedToCartEmbed],
                 components: [mainComponents],
