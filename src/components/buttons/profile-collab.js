@@ -25,7 +25,7 @@ module.exports = {
                         .setLabel('🔗 Link your osu! Account')
                         .setStyle('Success'),
                 )
-                int.editReply({
+                await int.editReply({
                     content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
                     components: [components]
                 });
@@ -151,14 +151,14 @@ module.exports = {
             if (collabData.length === 0) {
                 if (collabsToJoinCount === 0) {
                     osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you haven't joined any collab yet...*\n*Unfortunately, there isn't any collabs you can join at the moment.*`)
-                    int.editReply({
+                    await int.editReply({
                         content: '',
                         embeds: [osuEmbed],
                         components: [buttons]
                     })
                 } else {
                     osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you haven't joined any collab yet...*\n`)
-                    int.editReply({
+                    await int.editReply({
                         content: '',
                         embeds: [osuEmbed],
                         components: [buttons, joinMenuRow]
@@ -174,14 +174,14 @@ module.exports = {
                 const manageMenuRow = new ActionRowBuilder().addComponents(manageMenu);
                 if (collabsToJoinCount === 0) {
                     osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Unfortunately, there isn't any collabs you can join at the moment.*`);
-                    int.editReply({
+                    await int.editReply({
                         content: '',
                         embeds: [osuEmbed],
                         components: [buttons, manageMenuRow]
                     })
                 } else {
                     osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                    `);
-                    int.editReply({
+                    await int.editReply({
                         content: '',
                         embeds: [osuEmbed],
                         components: [buttons, manageMenuRow, joinMenuRow]

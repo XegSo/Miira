@@ -46,7 +46,7 @@ module.exports = {
         if (subcommand === "create") {
             await int.deferReply({ ephemeral: true });
             if (userId !== '687004886922952755') {
-                int.editReply('You are not allowed to do this.');
+                await int.editReply('You are not allowed to do this.');
                 return;
             }
         }
@@ -88,19 +88,19 @@ module.exports = {
         if (subcommand === "admin-link") {
             await int.deferReply({ ephemeral: true });
             if (userId !== '687004886922952755') {
-                int.editReply('You are not allowed to do this.');
+                await int.editReply('You are not allowed to do this.');
                 return;
             }
             const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
             const user = await v2.user.details(int.options.getString('osuid'), int.options.getString('gamemode'));
             if (typeof user === "undefined") {
-                int.editReply('User not found...');
+                await int.editReply('User not found...');
                 return;
             }
             try {
                 const userFiltered = localFunctions.removeFields(user, localConstants.unnecesaryFieldsOsu);
                 const userTop100 = await v2.scores.user.category(user.id, 'best', { mode: int.options.getString('gamemode'), limit: '100' });
-                int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
+                await int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
                 const skills = await localFunctions.calculateSkill(userTop100, int.options.getString('gamemode'));
                 let modsData = localFunctions.analyzeMods(userTop100);
                 const filler = {
@@ -117,7 +117,7 @@ module.exports = {
                 userFiltered.skillRanks = skills;
                 userFiltered.modsData = modsData;
                 await localFunctions.verifyUserManual(int.options.getString('discordid'), userFiltered, collection);
-                int.editReply(`<@${int.user.id}> User linked succesfully.`);
+                await int.editReply(`<@${int.user.id}> User linked succesfully.`);
             } finally {
                 mongoClient.close();
             }
@@ -137,7 +137,7 @@ module.exports = {
                             .setLabel('🔗 Link your osu! Account')
                             .setStyle('Success'),
                     )
-                    int.editReply({
+                    await int.editReply({
                         content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
                         components: [components]
                     });
@@ -258,14 +258,14 @@ module.exports = {
                 if (collabData.length === 0) {
                     if (collabsToJoinCount === 0) {
                         osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you haven't joined any collab yet...*\n*Unfortunately, there isn't any collabs you can join at the moment.*`)
-                        int.editReply({
+                        await int.editReply({
                             content: '',
                             embeds: [osuEmbed],
                             components: [buttons]
                         })
                     } else {
                         osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you haven't joined any collab yet...*\n`)
-                        int.editReply({
+                        await int.editReply({
                             content: '',
                             embeds: [osuEmbed],
                             components: [buttons, joinMenuRow]
@@ -281,14 +281,14 @@ module.exports = {
                     const manageMenuRow = new ActionRowBuilder().addComponents(manageMenu);
                     if (collabsToJoinCount === 0) {
                         osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Unfortunately, there isn't any collabs you can join at the moment.*`);
-                        int.editReply({
+                        await int.editReply({
                             content: '',
                             embeds: [osuEmbed],
                             components: [buttons, manageMenuRow]
                         })
                     } else {
                         osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                    `);
-                        int.editReply({
+                        await int.editReply({
                             content: '',
                             embeds: [osuEmbed],
                             components: [buttons, manageMenuRow, joinMenuRow]
@@ -323,14 +323,14 @@ module.exports = {
                     collabsMenu.addOptions({ label: collab.name, value: collab.name });
                 }
                 const actionRow = new ActionRowBuilder().addComponents(collabsMenu);
-                int.editReply({
+                await int.editReply({
                     content: '',
                     embeds: [dashboardEmbed],
                     components: [actionRow],
                 })
             } catch (e) {
                 console.log(e);
-                int.editReply('Something went wrong...')
+                await int.editReply('Something went wrong...')
             } finally {
                 mongoClient.close();
             }

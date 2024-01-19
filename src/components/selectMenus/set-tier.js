@@ -43,7 +43,7 @@ module.exports = {
             await localFunctions.setPerks(pendingUser.user.id, newPerks, collection);
             await localFunctions.setUserTier(pendingUser.user.id, { name: pendingTier, id: newRoleId }, collection);
 
-            int.editReply(`Tier given to <@${pendingUser.user.id}>`)
+            await int.editReply(`Tier given to <@${pendingUser.user.id}>`)
             giveTierCache.delete(int.user.id);
         } finally {
             mongoClient.close();

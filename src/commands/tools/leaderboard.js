@@ -27,14 +27,14 @@ module.exports = {
             const TokensEmbed = localFunctions.createLeaderboardEmbedTokens(leaderboardDataTokens);
             // Send the embed as a response
 
-            int.editReply({ content: '', embeds: [TopEmbed, TokensEmbed] });
+            await int.editReply({ content: '', embeds: [TopEmbed, TokensEmbed] });
         } else {
             let leaderboardDataCombo = await localFunctions.updateLeaderboardData('combo');
             const TopEmbed = new EmbedBuilder()
                 .setImage('https://puu.sh/JPdfL/9b2860ac7a.png')
                 .setColor('#f26e6a');
             const ComboEmbed = localFunctions.createLeaderboardEmbedCombo(leaderboardDataCombo);
-            int.editReply({ content: '', embeds: [TopEmbed, ComboEmbed] }); 
+            await int.editReply({ content: '', embeds: [TopEmbed, ComboEmbed] }); 
         }       
     }    
 }

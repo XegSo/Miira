@@ -71,10 +71,10 @@ module.exports = {
         }
         try {
             await localFunctions.setCollab(collabObj, collection);
-            int.editReply('New collab created succesfully in the database.')
+            await int.editReply('New collab created succesfully in the database.')
         } catch (e) {
             console.log(e);
-            int.editReply('Something went wrong...')
+            await int.editReply('Something went wrong...')
         } finally {
             mongoClient.close();
         }

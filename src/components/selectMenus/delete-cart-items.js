@@ -22,7 +22,7 @@ module.exports = {
           .setLabel('🛒 Check your cart')
           .setStyle('Success'),    
       )
-      int.editReply({
+      await int.editReply({
         content: `Your cart has been updated.`,
         components: [messageComponents],
       });

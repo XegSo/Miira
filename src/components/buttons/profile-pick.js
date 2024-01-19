@@ -151,14 +151,14 @@ module.exports = {
                 collab: buttonCache.get(userId).collab,
             })
 
-            int.editReply({
+            await int.editReply({
                 content: '',
                 embeds: [dashboardEmbed],
                 components: [components],
             });
         } catch (e) {
             console.log(e)
-            int.editReply('Something went wrong...')
+            await int.editReply('Something went wrong...')
         } finally {
             mongoClient.close();
             mongoClientUsers.close();

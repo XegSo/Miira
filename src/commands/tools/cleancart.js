@@ -26,6 +26,6 @@ module.exports = {
             mongoClient.close();
         }
 
-        int.editReply(`Cart cleared for user ${user.tag}`);
+        await int.editReply(`Cart cleared for user ${user.tag}`);
     },
 }

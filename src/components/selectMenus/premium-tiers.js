@@ -142,7 +142,7 @@ module.exports = {
                 ])
         )
 
-        int.editReply({
+        await int.editReply({
             content: '',
             embeds: [tierEmbed],
             components: [listComponent, buyComponent],

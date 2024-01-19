@@ -22,7 +22,7 @@ module.exports = {
             const collab = leaveCache.get(int.user.id).collab;
             const fullCollab = await localFunctions.getCollab(collab.collabName, collection);
             if (collab.collabPick.name !== int.fields.getTextInputValue('pick')) {
-                return int.editReply('Wrong name, make sure you didn\'t make a typo!');
+                return await int.editReply('Wrong name, make sure you didn\'t make a typo!');
             }
             if (fullCollab.type === "pooled") {
                 let pick = collab.collabPick;
@@ -33,7 +33,7 @@ module.exports = {
                 let usersInCollab = await localFunctions.getCollabParticipants(collab.collabName, collection);
                 usersInCollab = usersInCollab.filter(e => e.discordId !== userId);
                 await localFunctions.setCollabParticipants(collab.collabName, collection, usersInCollab);
-                int.editReply(`You've left the collab succesfully.`);
+                await int.editReply(`You've left the collab succesfully.`);
                 const leaveEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | New Character Available', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')

@@ -45,7 +45,7 @@ module.exports = {
                 case 'completed':
                     break;
                 default:
-                    int.editReply('Invalid Collab Status');
+                    await int.editReply('Invalid Collab Status');
                     return;
             }
             editString = editString.concat(`\n Status: ${status}`)
@@ -54,7 +54,7 @@ module.exports = {
         if (!opening) {
             opening = collabToEdit.opening;
         } else if (!localFunctions.isUnixTimestamp(parseInt(opening))) {
-            int.editReply('Invalid date');
+            await int.editReply('Invalid date');
             return;
         } else {
             editString = editString.concat(`\n Date: <t:${date}:R>`)
@@ -63,14 +63,14 @@ module.exports = {
         if (!user_cap) {
             user_cap = collabToEdit.user_cap;
         } else if (typeof parseInt(user_cap) == "undefined") {
-            int.editReply('Invalid User Cap');
+            await int.editReply('Invalid User Cap');
             return;
         } else {
             editString = editString.concat(`\n User Cap: ${user_cap}`)
         }
         try {
             await localFunctions.editCollab(collabToEdit.name, name, topic, status, parseInt(opening), parseInt(user_cap), collection);
-            int.editReply(`You've edited the following parameters:${editString}`);
+            await int.editReply(`You've edited the following parameters:${editString}`);
             editCache.delete(int.user.id);
         } finally {
             mongoClient.close();

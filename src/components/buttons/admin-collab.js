@@ -115,7 +115,7 @@ module.exports = {
                 collab: collab.name,
             })
 
-            int.editReply({
+            await int.editReply({
                 content: '',
                 embeds: [dashboardEmbed],
                 components: [components],
@@ -124,7 +124,7 @@ module.exports = {
             buttonCache.delete(int.user.id);
         } catch (e) {
             console.log(e)
-            int.editReply('Something went wrong...')
+            await int.editReply('Something went wrong...')
         } finally {
             mongoClient.close();
         }

@@ -14,9 +14,9 @@ module.exports = {
                 autoArchiveDuration: 60,
             })
             thread.members.add(int.user.id);
-            int.editReply({content: 'Thread created.', ephemeral: true});
+            await int.editReply({content: 'Thread created.', ephemeral: true});
         } catch (error) {
-            int.editReply({content: 'A thread already has been created.', ephemeral: true});
+            await int.editReply({content: 'A thread already has been created.', ephemeral: true});
             return;   
         }    
     },
