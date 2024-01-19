@@ -43,8 +43,8 @@ module.exports = {
             let tier = 0;
                 let prestigeLevel = 0;
                 let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
-                prestige = prestige.name
                 if (typeof prestige !== "undefined") {
+                    prestige = prestige.name
                     prestigeLevel = parseInt(prestige.replace('Prestige ',''));
                 }
                 if (guildMember.roles.cache.has('743505566617436301')) {

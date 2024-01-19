@@ -18,12 +18,12 @@ module.exports = {
     const guildMember = guild.members.cache.get(userId);
     try {
       const userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
-      const userOsuData = await localFunctions.getOsuData(userId, userCollection);
+      let userOsuData = await localFunctions.getOsuData(userId, userCollection);
       let collab = await localFunctions.getCollab(int.values[0], collection);
       let components = [];
       let URLstring = '';
       if (typeof collab.spreadsheetID !== "undefined") {
-        URLstring = `  [Spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})`
+        URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})`
       }
       const dashboardEmbed = new EmbedBuilder()
         .setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
@@ -33,9 +33,9 @@ module.exports = {
       let extraString = '';
 
       if (collab.user_cap !== 0) {
-        extraString = ` User Limit: ${collab.user_cap}\n`
+        extraString = `User Limit: ${collab.user_cap}\n`
       } else {
-        extraString = ` Unlimited\n`
+        extraString = `Unlimited\n`
       }
 
       dashboardEmbed.addFields(
@@ -124,15 +124,6 @@ module.exports = {
             }
             break;
         }
-      }
-
-      if (int.user.id === '687004886922952755') {
-        components.addComponents(
-          new ButtonBuilder()
-            .setCustomId('join-collab')
-            .setLabel('✅ Join (Testing)')
-            .setStyle('Success'),
-        )
       }
 
       let infoValue = "";

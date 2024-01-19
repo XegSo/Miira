@@ -553,6 +553,10 @@ module.exports = {
         await collection.updateOne({ name: collab }, { $push: { participants: newUser } }, { upsert: true });
     },
 
+    removeCollabParticipant: async function (collab, collection, userId) {
+        await collection.updateOne({ name: collab }, { $pull: { participants: { discordId: userId } } }, { upsert: true });
+    },
+
     liquidateCollab: async function (name, collection) {
         try {
             await collection.deleteOne({ name: name });
@@ -564,7 +568,7 @@ module.exports = {
 
     getOsuData: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
-        return user ? user.osuData || null : null;
+        return user ? user.osuData || 0 : 0;
     },
 
     getBalance: async function (userId, collection) {

@@ -57,7 +57,7 @@ module.exports = {
             await int.editReply('Invalid date');
             return;
         } else {
-            editString = editString.concat(`\n Date: <t:${date}:R>`)
+            editString = editString.concat(`\n Date: <t:${opening}:R>`)
         }
         let user_cap = int.fields.getTextInputValue('user_cap');
         if (!user_cap) {

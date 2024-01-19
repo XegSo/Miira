@@ -41,7 +41,6 @@ module.exports = {
                 let prestigeLevel = 0;
                 let tier = 0;
                 let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
-                prestige = prestige.name;
                 if (guildMember.roles.cache.has('743505566617436301')) {
                     const userTier = await localFunctions.getUserTier(userId, userCollection);
                     if (!userTier && !guildMember.roles.cache.has('1150484454071091280')) {

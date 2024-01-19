@@ -29,9 +29,9 @@ module.exports = {
             let extraString = '';
 
             if (collab.user_cap !== 0) {
-                extraString = ` User Limit: ${collab.user_cap}\n`
+                extraString = `User Limit: ${collab.user_cap}\n`
             } else {
-                extraString = ` Unlimited\n`
+                extraString = `Unlimited\n`
             }
 
             dashboardEmbed.addFields(
@@ -45,7 +45,7 @@ module.exports = {
             dashboardEmbed.addFields(
                 {
                     name: `‎`,
-                    value: `┌ Class: ${localFunctions.capitalizeFirstLetter(collab.restriction)}\n├Opening date: <t:${parseInt(collab.opening)}:R>\n└ ${extraString}`,
+                    value: `┌ Class: ${localFunctions.capitalizeFirstLetter(collab.restriction)}\n├ Opening date: <t:${parseInt(collab.opening)}:R>\n└ ${extraString}`,
                     inline: true
                 }
             );

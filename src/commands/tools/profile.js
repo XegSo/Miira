@@ -15,6 +15,8 @@ module.exports = {
         const userId = int.user.id;
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB("Special");
+        const guild = client.guilds.cache.get(localConstants.guildId);
+        const guildMember = guild.members.cache.get(userId);
         try {
             const NormalBoostboostEndTime = await localFunctions.getBoostEndTime(userId, collection);
             const remainingTimeNormalBoost = NormalBoostboostEndTime ? NormalBoostboostEndTime - date : 0;
@@ -46,7 +48,7 @@ module.exports = {
             const comboFullText = `TOP COMBO: ${topCombo}`;;
             let backgroundName = '';
 
-            const roles = int.member.roles.cache.map(role => role.name);
+            const roles = guildMember.roles.cache.map(role => role.name);
             const badgesDB = await localFunctions.getBadges(userId, collection);
 
             if (badgesDB) {
