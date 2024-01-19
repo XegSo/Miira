@@ -97,18 +97,18 @@ module.exports = {
               await localFunctions.delCart(userId,collection);
               await localFunctions.setPerks(userId, perksToAssign, collection);
               await localFunctions.liquidatePaymentData(email, collectionPayments);
-              await int.editReply({
+              int.editReply({
                 content: 'Your payment has been verified! Thank you for your purchase, check your new status using /premium.'
               })
               const premiumLogChannel = int.guild.channels.cache.get('1195256632318365746');
               premiumLogChannel.send({ content: '', embeds: [premiumLogEmbed] });
             } else {
-              await int.editReply({
+              int.editReply({
                 content: 'A payment with a different amount has been found. If you sent the wrong amount, DM <@687004886922952755> for a refund or if you think this is a mistake.'
               })
             }
           } else {
-            await int.editReply({
+            int.editReply({
               content: 'Your payment hasn\'t been found. Please make sure you typed your email right in the form. Try again or in case you\'re sure you didn\'t make a typo, contact the owner <@687004886922952755>'
             })
           }

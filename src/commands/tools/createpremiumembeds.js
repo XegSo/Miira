@@ -148,6 +148,6 @@ module.exports = {
             })
         }
 
-        await int.editReply('Done!');
+        int.editReply('Done!');
     }
 }

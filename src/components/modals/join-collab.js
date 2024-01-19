@@ -29,13 +29,13 @@ module.exports = {
                 let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
                 const itemInPool = pool.find((e) => e.id === pick);
                 if (typeof userCollabs.find(e => e.name === collab.name) !== "undefined") {
-                    return await int.editReply('You are already participating in this collab!');
+                    return int.editReply('You are already participating in this collab!');
                 }
                 if (typeof itemInPool === "undefined") {
-                    return await int.editReply('Invalid character ID!');
+                    return int.editReply('Invalid character ID!');
                 }
                 if (itemInPool.status === "picked") {
-                    return await int.editReply('This character has been picked already by someone else!');
+                    return int.editReply('This character has been picked already by someone else!');
                 }
                 await localFunctions.setCollabParticipation(collab.name, collection, pick);
                 let prestigeLevel = 0;
@@ -90,7 +90,7 @@ module.exports = {
 
                 userCollabs.push(profileData);
                 await localFunctions.setUserCollabs(userId, userCollabs, userCollection);
-                await int.editReply(`You've joined the collab! Pick: ${itemInPool.name}`);
+                int.editReply(`You've joined the collab! Pick: ${itemInPool.name}`);
                 const joinEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | New Collab Participant', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
@@ -148,7 +148,7 @@ module.exports = {
             }
         } catch(e) {
             console.log(e);
-            await int.editReply(`An error has ocurred but the pick has been locked for you. Please contact the owner <@687004886922952755> to complete the process!`);
+            int.editReply(`An error has ocurred but the pick has been locked for you. Please contact the owner <@687004886922952755> to complete the process!`);
         } finally {
             mongoClient.close();
             mongoClientUsers.close();

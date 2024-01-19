@@ -21,19 +21,19 @@ module.exports = {
         const timeMember = await int.guild.members.fetch(timeUser.id);
 
         if (!int.member.permissions.has(PermissionsBitField.Flags.ModerateMembers)) {
-            await int.editReply({ content: 'You don\'t have the permissions for this.', ephemeral: true });
+            int.editReply({ content: 'You don\'t have the permissions for this.', ephemeral: true });
             return;
         }
         if (!timeMember.kickable) {
-            await int.editReply({ content: 'I don\'t have the permissions to untimeout this user.', ephemeral: true });
+            int.editReply({ content: 'I don\'t have the permissions to untimeout this user.', ephemeral: true });
             return;
         }
         if (int.member.id === timeMember.id || timeMember.permissions.has(PermissionsBitField.Flags.Administrator)) {
-            await int.editReply({ content: 'the fuck are you doing lol.', ephemeral: true });
+            int.editReply({ content: 'the fuck are you doing lol.', ephemeral: true });
             return;
         }
         if (!timeMember) {
-            await int.editReply({ content: 'Please provide valid fields.', ephemeral: true });
+            int.editReply({ content: 'Please provide valid fields.', ephemeral: true });
             return;
         }
 
@@ -55,6 +55,6 @@ module.exports = {
             return;
         });
         
-        await int.editReply({ embeds: [embed] });
+        int.editReply({ embeds: [embed] });
     }    
 }

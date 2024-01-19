@@ -22,7 +22,7 @@ module.exports = {
 
         mainProcess: try {
             if (typeof initializedMap == "undefined") {
-                await int.editReply("This action cannot be performed. Open the shop dashboard again to proceed.");
+                int.editReply("This action cannot be performed. Open the shop dashboard again to proceed.");
                 break mainProcess; 
             }
 
@@ -52,7 +52,7 @@ module.exports = {
 
             if (userTier && typeof tierInChoices !== "undefined") { //TO BE REWRITTEN
                 if (userTier.name === tierInChoices.name) {
-                    await int.editReply({
+                    int.editReply({
                         content: 'You cannot add the tier you already have.',
                         components: [mainComponents],
                     });
@@ -64,7 +64,7 @@ module.exports = {
                     upgradeInChoices.price = upgradeInChoices.price - localConstants.premiumTiers.find((element) => element.name === userTier.name).cost;
                     tierInChoices = await fullChoices.find((element) => element.type === "Upgrade");
                 } else {
-                    await int.editReply({
+                    int.editReply({
                         content: 'You cannot downgrade your tier this way.',
                         components: [mainComponents],
                     });
@@ -72,7 +72,7 @@ module.exports = {
                 }
             }
             if (perksInChoices.length && typeof tierInChoices !== "undefined") {
-                await int.editReply({
+                int.editReply({
                     content: 'You cannot add the tier and the perks of that tier at the same time. The tier itself already includes the perks.',
                     components: [mainComponents],
                 });
@@ -103,7 +103,7 @@ module.exports = {
                         case 'Tier':
                             if (typeof tierInChoices !== "undefined") {
                                 if (item.name === tierInChoices.name) {
-                                    await int.editReply({
+                                    int.editReply({
                                         content: 'You already have this tier in your cart.',
                                         components: [mainComponents],
                                     });
@@ -113,7 +113,7 @@ module.exports = {
                             if (perksInChoices.length) {
                                 for (perk of perksInChoices) {
                                     if (localFunctions.premiumToInteger(item.name) >= perk.tier) {
-                                        await int.editReply({
+                                        int.editReply({
                                             content: 'You cannot add a perk while having a tier that includes it in your cart. Please remove the tier of your cart first before adding.',
                                             components: [mainComponents],
                                         });
@@ -125,7 +125,7 @@ module.exports = {
                         case 'Upgrade':
                             if (typeof upgradeInChoices !== "undefined") {
                                 if (item.name === upgradeInChoices.name) {
-                                    await int.editReply({
+                                    int.editReply({
                                         content: 'You already have this upgrade in your cart.',
                                         components: [mainComponents],
                                     });
@@ -135,7 +135,7 @@ module.exports = {
                             if (perksInChoices.length) {
                                 for (perk of perksInChoices) {
                                     if (localFunctions.premiumToInteger(item.name) >= perk.tier) {
-                                        await int.editReply({
+                                        int.editReply({
                                             content: 'You cannot add a perk while having a tier that includes it in your cart. Please remove the tier of your cart first before adding.',
                                             components: [mainComponents],
                                         });
@@ -146,7 +146,7 @@ module.exports = {
                             if (renewalsInChoices.length) {
                                 for (perk of renewalsInChoices) {
                                     if (localFunctions.premiumToInteger(item.name) >= perk.tier) {
-                                        await int.editReply({
+                                        int.editReply({
                                             content: 'You cannot add a perk renewal while having a tier that includes it in your cart. Please remove the tier of your cart first before adding.',
                                             components: [mainComponents],
                                         });
@@ -157,7 +157,7 @@ module.exports = {
                             break;
                         case 'Perk':
                             if (perksInChoices.find((element) => element.name === item.name)) {
-                                await int.editReply({
+                                int.editReply({
                                     content: 'You already have this in your cart.',
                                     components: [mainComponents],
                                 });
@@ -165,7 +165,7 @@ module.exports = {
                             }
                             if (typeof upgradeInChoices !== "undefined") {
                                 if (localFunctions.premiumToInteger(upgradeInChoices.name) >= item.tier) {
-                                    await int.editReply({
+                                    int.editReply({
                                         content: 'You cannot add this tier while having perks that its purchase includes in your cart. Please remove the perks of your cart first before adding.',
                                         components: [mainComponents],
                                     });
@@ -173,7 +173,7 @@ module.exports = {
                                 }
                             } else if (typeof tierInChoices !== "undefined") {
                                 if (localFunctions.premiumToInteger(tierInChoices.name) >= item.tier) {
-                                    await int.editReply({
+                                    int.editReply({
                                         content: 'You cannot add this tier while having perks that its purchase includes in your cart. Please remove the perks of your cart first before adding.',
                                         components: [mainComponents],
                                     });
@@ -185,7 +185,7 @@ module.exports = {
                             if (item.class === 'Perk') {
                                 if (typeof upgradeInChoices !== "undefined") {
                                     if (localFunctions.premiumToInteger(upgradeInChoices.name) >= item.tier) {
-                                        await int.editReply({
+                                        int.editReply({
                                             content: 'You cannot add a tier upgrade while having perks renewals that this tier includes in your cart. Remove the perk renewals before proceeding.',
                                             components: [mainComponents],
                                         });
@@ -194,7 +194,7 @@ module.exports = {
                                 }
                                 if (renewalsInChoices.length === 1) {
                                     if (localFunctions.premiumToInteger(renewalsInChoices[0].name) >= item.tier) {
-                                        await int.editReply({
+                                        int.editReply({
                                             content: 'You cannot add a tier renewal while having perks renewals that this tier includes in your cart. Remove the perk renewals before proceeding.',
                                             components: [mainComponents],
                                         });
@@ -203,7 +203,7 @@ module.exports = {
                                 }
                                 if (renewalsInChoices.length > 1) {
                                     if (renewalsInChoices.find((element) => element.name === item.name)) {
-                                        await int.editReply({
+                                        int.editReply({
                                             content: 'You already have this in your cart!',
                                             components: [mainComponents],
                                         });
@@ -212,7 +212,7 @@ module.exports = {
                                 }
                             } else if (item.class === 'Tier') {
                                 if (typeof renewalsInChoices.find((e) => e.name === item.name) !== "undefined") {
-                                    await int.editReply({
+                                    int.editReply({
                                         content: 'You already have this in your cart!',
                                         components: [mainComponents],
                                     });
@@ -221,7 +221,7 @@ module.exports = {
                                 let renewalInt = localFunctions.premiumToInteger(item.name);
                                 let perksInRenewal = await localFunctions.getFullPerksOfTier(renewalInt);
                                 if (typeof perksInRenewal.find((element) => perksInChoices.find((e) => e.name === element.name)) !== "undefined" || typeof perksInRenewal.find((element) => renewalsInChoices.find((e) => e.name === element.name)) !== "undefined") {
-                                    await int.editReply({
+                                    int.editReply({
                                         content: 'Cannot add this perk while having a tier renewal in your cart that includes it. Remove the tier renewal before proceeding.',
                                         components: [mainComponents],
                                     });
@@ -229,7 +229,7 @@ module.exports = {
                                 }
                             } 
                             if (typeof upgradeInChoices !== "undefined") {
-                                await int.editReply({
+                                int.editReply({
                                     content: 'You cannot add a tier upgrade while having a tier renewal in your cart. Remove the renewal before proceeding.',
                                     components: [mainComponents],
                                 });
@@ -265,14 +265,14 @@ module.exports = {
                     value: `<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>`,
                 }
             )
-            await int.editReply({
+            int.editReply({
                 content: '',
                 embeds: [addedToCartEmbed],
                 components: [mainComponents],
             });
 
         } catch (e) {
-            await int.editReply("Please reopen the menu if you desire to add another item to your cart!");
+            int.editReply("Please reopen the menu if you desire to add another item to your cart!");
             console.log(e);
             mongoClient.close();
         } finally {

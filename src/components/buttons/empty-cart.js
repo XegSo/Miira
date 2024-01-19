@@ -11,7 +11,7 @@ module.exports = {
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");   
         try {
             await localFunctions.delCart(userId,collection);
-            await int.editReply("Your cart is now empty.");
+            int.editReply("Your cart is now empty.");
         } finally {
             mongoClient.close();
         } 

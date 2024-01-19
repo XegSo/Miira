@@ -11,11 +11,11 @@ module.exports = {
         if (suggestion.status === 'Approved.' || suggestion.status === 'Denied.') return;
         let voters = suggestion.voters;
         if (suggestion.user === int.user.id) {
-            await int.editReply({content: 'You cannot downvote your own suggestion.', ephemeral: true});
+            int.editReply({content: 'You cannot downvote your own suggestion.', ephemeral: true});
             return;
         }
         if (voters.downvoters.some((voter) => voter === int.user.id)) {
-            await int.editReply({content: 'You cannot downvote this suggestion again.', ephemeral: true});
+            int.editReply({content: 'You cannot downvote this suggestion again.', ephemeral: true});
             return;
         }
         voters.downvoters.push(int.user.id);
@@ -35,7 +35,7 @@ module.exports = {
                         { name: '\u200B', value: `**Status: ${suggestion.status}**\n\nClick on 🔺 to upvote.\nTotal upvotes: ${upvotes}\n\nClick on 🔻 to downvote.\nTotal downvotes: ${downvotes}\n\n*Only admins can click on ✅ or ❎.*\n` },
                     );
         int.message.edit({ embeds: [updatedEmbed] });
-        await int.editReply({content: 'You\'ve successfully voted.', ephemeral: true});
+        int.editReply({content: 'You\'ve successfully voted.', ephemeral: true});
         await localFunctions.updateSuggestion(int.message.id, suggestion.user, suggestion.status, updatedEmbed, upvotes, downvotes, voters);
     },
 };

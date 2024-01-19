@@ -26,7 +26,7 @@ module.exports = {
         try {
             const usageStatus = await localFunctions.getPremiumData(collectionSpecial);
             if (!usageStatus.status && fullPerk.collabDependant) {
-                await int.editReply('You can\'t use this perk at the moment');
+                int.editReply('You can\'t use this perk at the moment');
                 return;
             }
 
@@ -141,7 +141,7 @@ module.exports = {
             } else if (selectedPerk === "Megacollab Early Access") {
                 //Website Implementation
             } else if (selectedPerk === "Custom Endless Mirage Hoodie") {
-                await int.editReply('Please DM <@687004886922952755> to claim this perk!');
+                int.editReply('Please DM <@687004886922952755> to claim this perk!');
             } else if (selectedPerk === "Host your own Megacollab") {
                 //TBD
             }

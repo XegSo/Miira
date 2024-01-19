@@ -33,7 +33,7 @@ module.exports = {
         };
         try {
             await localFunctions.setCollabTexts(collabToEdit.name, fieldRestrictions, collection);
-            await int.editReply(`Parameters for limiting characters have been set.`);
+            int.editReply(`Parameters for limiting characters have been set.`);
             collabCache.delete(int.user.id);
         } finally {
             mongoClient.close();

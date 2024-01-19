@@ -24,11 +24,11 @@ module.exports = {
             const wait = new Promise(resolve => setTimeout(resolve, interval)); 
             await sheet.saveUpdatedCells();
 
-            await int.editReply('Sheet edited.')
+            int.editReply('Sheet edited.')
             console.log('A cell in the sheet has been updated.');
 
         } catch (e) {
-            await int.editReply('Error.')
+            int.editReply('Error.')
             console.error('Error updating cell:', e);
         }
     },

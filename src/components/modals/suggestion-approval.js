@@ -12,7 +12,7 @@ module.exports = {
         const reward = Math.min(parseInt(int.fields.getTextInputValue("reward")),5000);
         console.log(reward)
         if (!Number.isInteger(reward)) {
-            await int.editReply({content: 'Invalid amount of tokens.', ephemeral: true});
+            int.editReply({content: 'Invalid amount of tokens.', ephemeral: true});
             return;
         }
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
@@ -22,7 +22,7 @@ module.exports = {
             const suggestion = await localFunctions.getSuggestion(suggestionMessage.id);
             const currentBalance = await localFunctions.getBalance(suggestion.user, collection);
             if (suggestion.upvotes-suggestion.downvotes < 1) {
-                await int.editReply({content: 'There is not enough net upvotes for this to go trough. 1 is minimal.', ephemeral: true});
+                int.editReply({content: 'There is not enough net upvotes for this to go trough. 1 is minimal.', ephemeral: true});
                 return;
             }
             const reason = int.fields.getTextInputValue("text-reason");
@@ -53,7 +53,7 @@ module.exports = {
               .setDescription(`**Suggested by <@${suggestion.user}>\nApproved by <@${int.user.id}>**\n\n${suggestion.embed.data.description}\n\nDate: <t:${Math.floor(new Date(Date.now()) / 1000)}:F>.`)
             logChannel.send({ content: '', embeds: [logEmbed] });
             SuggestionCache.delete(int.user.id);
-            await int.editReply({ content: 'Suggestion successfully approved.', ephemeral: true });
+            int.editReply({ content: 'Suggestion successfully approved.', ephemeral: true });
         } finally {
             if (mongoClient) {
                 mongoClient.close();
