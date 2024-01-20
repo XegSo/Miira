@@ -71,7 +71,6 @@ module.exports = {
         try {
             await localFunctions.editCollab(collabToEdit.name, name, topic, status, parseInt(opening), parseInt(user_cap), collection);
             await int.editReply(`You've edited the following parameters:${editString}`);
-            editCache.delete(int.user.id);
         } finally {
             mongoClient.close();
         }

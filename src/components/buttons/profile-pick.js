@@ -96,6 +96,8 @@ module.exports = {
                             .setStyle('Primary'),
                     )
                     break;
+                case "closed": 
+                    break;
                 case "completed":
                     components.addComponents(
                         new ButtonBuilder()
@@ -121,14 +123,14 @@ module.exports = {
                     if (fullCollab.status !== "full") {
                         components.addComponents(
                             new ButtonBuilder()
-                                .setCustomId('change-pick')
+                                .setCustomId('swap-pick')
                                 .setLabel('🔁 Swap')
                                 .setStyle('Primary'),
                         )
                     }
                     components.addComponents(
                         new ButtonBuilder()
-                            .setCustomId('swap-pick')
+                            .setCustomId('trade-pick')
                             .setLabel('🔀 Trade')
                             .setStyle('Primary'),
                     )
@@ -148,7 +150,7 @@ module.exports = {
 
 
             profileButtonCache.set(int.user.id, {
-                collab: buttonCache.get(userId).collab,
+                collab: fullCollab,
             })
 
             await int.editReply({

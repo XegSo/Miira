@@ -219,7 +219,7 @@ module.exports = {
           }
           break;
         case "experimental":
-          if ((prestigeLevel >= 4 || tier >= 4) && typeof userCollabs.find(e => e.collabName === collab.name) === "undefined" && collab.status !== "full") {
+          if ((prestigeLevel >= 0 || tier >= 4) && typeof userCollabs.find(e => e.collabName === collab.name) === "undefined" && collab.status !== "full") {
             switch (collab.status) {
               case 'open':
                 infoValue = "**You're able to join this collab!**";
@@ -232,7 +232,7 @@ module.exports = {
                 break;
             }
           } else if (collab.status !== "full") {
-            infoValue = "**This collab is a experiment. Only prestige 4+ and premium 4+ can join!**";
+            infoValue = "**This collab is a experiment. Only prestige 4+ and premium can join!**";
           } else {
             infoValue = "**This collab is full!**";
           }

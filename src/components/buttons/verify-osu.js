@@ -59,7 +59,6 @@ module.exports = {
                 embeds: [dashboardEmbed],
                 components: [components]
             })
-            fetchCache.delete(userId);
         } finally {
             mongoClient.close();
         }

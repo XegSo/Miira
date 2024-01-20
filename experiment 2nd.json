@@ -1,0 +1,20 @@
+{
+    "name": "Experimental Collab 2nd Edition v.A",
+    "type": "pooled",
+    "topic": "Anime",
+    "restriction": "experimental",
+    "opening": 1705634072,
+    "closure": 1706140800,
+    "user_cap": 25,
+    "spreadsheetID": "1Wgc4OKI7B723iyB7OH8mBIlwEsSltzbrGvrJ2jKxGCA",
+    "fieldRestrictions": {
+        "av": 8,
+        "ca": 12,
+        "ca_quote": 36
+    },
+    "designs": {
+        "av": "",
+        "ca": ""
+    },
+    "premium_designs": {}
+}

@@ -16,7 +16,7 @@ module.exports = {
         int.reply('Please reply to this message with a JSON attatchment.')
         const replyMessage = await int.fetchReply();
         const collabName = collabCache.get(int.user.id).collab
-        poolCache.set(0, {
+        poolCache.set(int.user.id, {
             collab: collabName,
             userId: int.user.id,
             messageId: replyMessage.id,

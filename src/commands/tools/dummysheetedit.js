@@ -11,13 +11,15 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         if (int.user.id !== '687004886922952755') return;
-        const cellDB = "A1";
+        const cellDB = "B3";
         try {
             const interval = (Math.floor(Math.random() * 7) + 1)*1000;
             const doc = await connectToSpreadsheet('1uyHuFB5rnNo6aXG3AuDHXtkc-xfHJKDgKi5jxamwp6I');
             const sheet = doc.sheetsByIndex[7];
             await sheet.loadCells();
-            const cell = sheet.getCellByA1(cellDB);
+            const coord = localFunctions.excelSheetCoordinateToRowCol(cellDB);
+            const cell = sheet.getCell(coord.row, coord.col);
+            console.log(cell);
             cell.value = "Hello World!";
             cell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 }}}};
             cell.textFormat = { italic: true, strikethrough: true };

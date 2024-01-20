@@ -4,6 +4,7 @@ const { v2, tools } = require('osu-api-extended');
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
+const createCollabCache = new Map();
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -44,11 +45,17 @@ module.exports = {
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(userId);
         if (subcommand === "create") {
-            await int.deferReply({ ephemeral: true });
+            await int.deferReply();
             if (userId !== '687004886922952755') {
-                await int.editReply('You are not allowed to do this.');
+                await int.editReply('You are not allowed to do this!');
                 return;
             }
+            int.editReply('Please reply to this message with a JSON attatchment.');
+            const replyMessage = await int.fetchReply();
+            createCollabCache.set(int.user.id, {
+                userId: int.user.id,
+                messageId: replyMessage.id,
+            })
         }
 
         if (subcommand === "link") {
@@ -113,7 +120,7 @@ module.exports = {
                         modsData.top4Mods.push(filler);
                     }
                     i++;
-                }   
+                }
                 userFiltered.skillRanks = skills;
                 userFiltered.modsData = modsData;
                 await localFunctions.verifyUserManual(int.options.getString('discordid'), userFiltered, collection);
@@ -157,7 +164,7 @@ module.exports = {
                 let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
                 if (typeof prestige !== "undefined") {
                     prestige = prestige.name
-                    prestigeLevel = parseInt(prestige.replace('Prestige ',''));
+                    prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
                 }
                 if (guildMember.roles.cache.has('743505566617436301')) {
                     const userTier = await localFunctions.getUserTier(userId, collection);
@@ -233,7 +240,7 @@ module.exports = {
                                 if ((collab.status === "early access" && typeof userPerks.find(e => e.name === "Megacollab Early Access")) || userId == '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                 }
-                                collabsToJoinCount++; 
+                                collabsToJoinCount++;
                                 break;
                             case "prestige":
                                 if (typeof prestige !== "undefined" || userId == '687004886922952755') {
@@ -242,7 +249,7 @@ module.exports = {
                                 collabsToJoinCount++;
                                 break;
                             case "experimental":
-                                if (tier > 4 || prestigeLevel > 4 || userId == '687004886922952755') {
+                                if (tier > 0 || prestigeLevel > 4 || userId == '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                 }
                                 collabsToJoinCount++;
@@ -336,4 +343,5 @@ module.exports = {
             }
         }
     },
+    createCollabCache: createCollabCache
 }

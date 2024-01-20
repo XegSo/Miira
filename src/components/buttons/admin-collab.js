@@ -81,20 +81,6 @@ module.exports = {
                 }
             }
 
-            components.addComponents(
-                new ButtonBuilder()
-                    .setCustomId('set-fields')
-                    .setLabel('📛 Fields')
-                    .setStyle('Primary'),
-            )
-
-            components.addComponents(
-                new ButtonBuilder()
-                    .setCustomId('set-designs')
-                    .setLabel('🔏 Designs')
-                    .setStyle('Primary'),
-            )
-
             if (collab.status !== "closed" && collab.status !== "on design") {
                 components.addComponents(
                     new ButtonBuilder()

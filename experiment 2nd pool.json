@@ -1,22 +1,5 @@
 {
     "size": 25,
-    "categories": [
-        {
-            "category_name": "RPG Anime",
-            "series_name": "Genshin Impact",
-            "coordinate": "B2"
-        },
-        {
-            "category_name": "RPG Anime",
-            "series_name": "Honkai Impact 3rd",
-            "coordinate": "D2"
-        },
-        {
-            "category_name": "Gacha Anime",
-            "series_name": "Arknights",
-            "coordinate": "F2"
-        }
-    ],
     "items": [
         {
             "name": "Ganyu",
@@ -24,7 +7,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/01.png",
             "status": "available",
             "series": "Genshin Impact",
-            "category": "RPG Anime"
+            "category": "RPG Anime",
+            "sheetIndex": "0",
+            "coordinate": "H9",
+            "localId": "00"
         },
         {
             "name": "Kirara",
@@ -32,7 +18,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/02.png",
             "status": "available",
             "series": "Genshin Impact",
-            "category": "RPG Anime"
+            "category": "RPG Anime",
+            "sheetIndex": "0",
+            "coordinate": "H9",
+            "localId": "01"
         },
         {
             "name": "Hu Tao",
@@ -40,7 +29,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/03.png",
             "status": "available",
             "series": "Genshin Impact",
-            "category": "RPG Anime"
+            "category": "RPG Anime",
+            "sheetIndex": "0",
+            "coordinate": "H9",
+            "localId": "02"
         },
         {
             "name": "Xiao",
@@ -48,7 +40,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/04.png",
             "status": "available",
             "series": "Genshin Impact",
-            "category": "RPG Anime"
+            "category": "RPG Anime",
+            "sheetIndex": "0",
+            "coordinate": "H9",
+            "localId": "03"
         },
         {
             "name": "Venti",
@@ -56,7 +51,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/05.png",
             "status": "available",
             "series": "Genshin Impact",
-            "category": "RPG Anime"
+            "category": "RPG Anime",
+            "sheetIndex": "0",
+            "coordinate": "H9",
+            "localId": "04"
         },
         {
             "name": "Faruzan",
@@ -64,7 +62,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/06.png",
             "status": "available",
             "series": "Genshin Impact",
-            "category": "RPG Anime"
+            "category": "RPG Anime",
+            "sheetIndex": "0",
+            "coordinate": "H9",
+            "localId": "05"
         },
         {
             "name": "Yae Miko",
@@ -72,7 +73,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/07.png",
             "status": "available",
             "series": "Genshin Impact",
-            "category": "RPG Anime"
+            "category": "RPG Anime",
+            "sheetIndex": "0",
+            "coordinate": "H9",
+            "localId": "06"
         },
         {
             "name": "Furina",
@@ -80,7 +84,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/08.png",
             "status": "available",
             "series": "Genshin Impact",
-            "category": "RPG Anime"
+            "category": "RPG Anime",
+            "sheetIndex": "0",
+            "coordinate": "H9",
+            "localId": "07"
         },
         {
             "name": "Charlotte",
@@ -88,7 +95,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/09.png",
             "status": "available",
             "series": "Genshin Impact",
-            "category": "RPG Anime"
+            "category": "RPG Anime",
+            "sheetIndex": "0",
+            "coordinate": "H9",
+            "localId": "08"
         },
         {
             "name": "Nahida",
@@ -96,7 +106,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/10.png",
             "status": "available",
             "series": "Genshin Impact",
-            "category": "RPG Anime"
+            "category": "RPG Anime",
+            "sheetIndex": "0",
+            "coordinate": "H9",
+            "localId": "09"
         },
         {
             "name": "Rozaliya",
@@ -104,7 +117,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/11.png",
             "status": "available",
             "series": "Honkai Impact 3rd",
-            "category": "RPG Anime"
+            "category": "RPG Anime",
+            "sheetIndex": "0",
+            "coordinate": "Q9",
+            "localId": "00"
         },
         {
             "name": "Elysia",
@@ -112,7 +128,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/12.png",
             "status": "available",
             "series": "Honkai Impact 3rd",
-            "category": "RPG Anime"
+            "category": "RPG Anime",
+            "sheetIndex": "0",
+            "coordinate": "Q9",
+            "localId": "01"
         },
         {
             "name": "Griseo",
@@ -120,7 +139,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/13.png",
             "status": "available",
             "series": "Honkai Impact 3rd",
-            "category": "RPG Anime"
+            "category": "RPG Anime",
+            "sheetIndex": "0",
+            "coordinate": "Q9",
+            "localId": "02"
         },
         {
             "name": "U-Official",
@@ -128,7 +150,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/14.png",
             "status": "available",
             "series": "Arknights",
-            "category": "Gacha Anime"
+            "category": "Gacha Anime",
+            "sheetIndex": "0",
+            "coordinate": "Z9",
+            "localId": "00"
         },
         {
             "name": "Jessica the Liberated",
@@ -136,7 +161,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/15.png",
             "status": "available",
             "series": "Arknights",
-            "category": "Gacha Anime"
+            "category": "Gacha Anime",
+            "sheetIndex": "0",
+            "coordinate": "Z9",
+            "localId": "01"
         },
         {
             "name": "Almond",
@@ -144,7 +172,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/16.png",
             "status": "available",
             "series": "Arknights",
-            "category": "Gacha Anime"
+            "category": "Gacha Anime",
+            "sheetIndex": "0",
+            "coordinate": "Z9",
+            "localId": "02"
         },
         {
             "name": "Coldshot",
@@ -152,7 +183,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/17.png",
             "status": "available",
             "series": "Arknights",
-            "category": "Gacha Anime"
+            "category": "Gacha Anime",
+            "sheetIndex": "0",
+            "coordinate": "Z9",
+            "localId": "03"
         },
         {
             "name": "Eyjafjalla the Hvít Aska",
@@ -160,7 +194,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/18.png",
             "status": "available",
             "series": "Arknights",
-            "category": "Gacha Anime"
+            "category": "Gacha Anime",
+            "sheetIndex": "0",
+            "coordinate": "Z9",
+            "localId": "04"
         },
         {
             "name": "Swire the Elegant Wit",
@@ -168,7 +205,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/19.png",
             "status": "available",
             "series": "Arknights",
-            "category": "Gacha Anime"
+            "category": "Gacha Anime",
+            "sheetIndex": "0",
+            "coordinate": "Z9",
+            "localId": "05"
         },
         {
             "name": "Poncirus",
@@ -176,7 +216,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/20.png",
             "status": "available",
             "series": "Arknights",
-            "category": "Gacha Anime"
+            "category": "Gacha Anime",
+            "sheetIndex": "0",
+            "coordinate": "Z9",
+            "localId": "06"
         },
         {
             "name": "Bryophyta",
@@ -184,7 +227,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/21.png",
             "status": "available",
             "series": "Arknights",
-            "category": "Gacha Anime"
+            "category": "Gacha Anime",
+            "sheetIndex": "0",
+            "coordinate": "Z9",
+            "localId": "07"
         },
         {
             "name": "Valarqvin",
@@ -192,7 +238,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/22.png",
             "status": "available",
             "series": "Arknights",
-            "category": "Gacha Anime"
+            "category": "Gacha Anime",
+            "sheetIndex": "0",
+            "coordinate": "Z9",
+            "localId": "08"
         },
         {
             "name": "Typhon",
@@ -200,7 +249,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/23.png",
             "status": "available",
             "series": "Arknights",
-            "category": "Gacha Anime"
+            "category": "Gacha Anime",
+            "sheetIndex": "0",
+            "coordinate": "Z9",
+            "localId": "09"
         },
         {
             "name": "Santalla",
@@ -208,7 +260,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/24.png",
             "status": "available",
             "series": "Arknights",
-            "category": "Gacha Anime"
+            "category": "Gacha Anime",
+            "sheetIndex": "0",
+            "coordinate": "Z9",
+            "localId": "10"
         },
         {
             "name": "Executor the Ex Foedere",
@@ -216,7 +271,10 @@
             "imgURL": "https://storage.googleapis.com/experiment2/25.png",
             "status": "available",
             "series": "Arknights",
-            "category": "Gacha Anime"
+            "category": "Gacha Anime",
+            "sheetIndex": "0",
+            "coordinate": "Z9",
+            "localId": "11"
         }
     ]
 }

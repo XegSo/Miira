@@ -1,5 +1,6 @@
 const path = require('path');
 const { connectToMongoDB } = require('../../mongo');
+const { connectToSpreadsheet } = require('../../googleSheets');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const { SlashCommandBuilder, EmbedBuilder, TextInputStyle } = require('discord.js');
@@ -53,7 +54,7 @@ module.exports = {
                 if (typeof prestige !== "undefined") {
                     prestige = prestige.name;
                     console.log(prestige);
-                    prestigeLevel = parseInt(prestige.replace('Prestige ',''));
+                    prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
                     console.log(prestigeLevel);
                 }
                 const userOsuDataFull = await localFunctions.getOsuData(userId, userCollection);
@@ -70,10 +71,14 @@ module.exports = {
                     tier: tier,
                     bump_imune: tier ? true : false
                 };
+                await localFunctions.setParticipationOnSheet(collab, itemInPool, userOsuDataFull.username);
                 delete itemInPool.status;
+                delete itemInPool.sheetIndex;
+                delete itemInPool.coordinate;
+                delete itemInPool.localId;
                 const data = { ...userParticipant, ...itemInPool, ...userOsuData };
                 await localFunctions.addCollabParticipant(collab.name, collection, data);
-                if ((participants.length + 1)=== collab.user_cap) {
+                if ((participants.length + 1) === collab.user_cap) {
                     await localFunctions.setCollabStatus(collab.name, "full", collection);
                 }
                 const profileData = {
@@ -89,7 +94,7 @@ module.exports = {
 
                 userCollabs.push(profileData);
                 await localFunctions.setUserCollabs(userId, userCollabs, userCollection);
-                await int.editReply(`You've joined the collab! Pick: ${itemInPool.name}`);
+
                 const joinEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | New Collab Participant', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
@@ -143,9 +148,10 @@ module.exports = {
                     .setImage(itemInPool.imgURL)
                     .setFooter({ text: 'Endless Mirage | Pick Image', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
-                logChannel.send({content: `<@${userId}>`, embeds: [joinEmbed,imageEmbed]});
+                logChannel.send({ content: `<@${userId}>`, embeds: [joinEmbed, imageEmbed] });
+                await int.editReply(`You've joined the collab! Pick: ${itemInPool.name}`);
             }
-        } catch(e) {
+        } catch (e) {
             console.log(e);
             await int.editReply(`An error has ocurred but the pick has been locked for you. Please contact the owner <@687004886922952755> to complete the process!`);
         } finally {

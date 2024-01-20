@@ -5,7 +5,7 @@ const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 const { profileButtonCache } = require('./profile-pick');
-const { profileMenuCache } = require('../selectMenus/manage-collab')
+const { profileMenuCache } = require('../selectMenus/manage-collab');
 const leaveCache = new Map();
 
 module.exports = {
@@ -15,15 +15,15 @@ module.exports = {
     async execute(int, client) {
         const userId = int.user.id;
         const initializedMap = [profileButtonCache, profileMenuCache].find(map => map.size > 0);
-        const collabName = initializedMap.get(userId).collab;
+        const collab = initializedMap.get(userId).collab;
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         try {
             const userCollabData = await localFunctions.getUserCollabs(userId, collection);
-            const currentCollab = userCollabData.find(e => e.collabName === collabName);
+            const currentCollab = userCollabData.find(e => e.collabName === collab.name);
             const currentPick = currentCollab.collabPick.name;
             const modal = new ModalBuilder()
                 .setCustomId(`leave-collab`)
-                .setTitle(`Leaving ${collabName}`);
+                .setTitle(`Leaving ${collab.name}`);
 
             const pick = new TextInputBuilder()
                 .setCustomId('pick')

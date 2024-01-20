@@ -26,6 +26,8 @@ module.exports = {
             }
             if (fullCollab.type === "pooled") {
                 let pick = collab.collabPick;
+                let pool = fullCollab.pool.items;
+                const itemInPool = pool.find((e) => e.id === pick.id);
                 let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
                 await localFunctions.unsetCollabParticipation(collab.collabName, collection, pick.id);
                 userCollabs = userCollabs.filter(e => e.collabName !== collab.collabName);
@@ -36,7 +38,10 @@ module.exports = {
                     .setColor('#f26e6a')
                     .setDescription(`**\`\`\`ml\n🎫 New Character Available!\`\`\`**                                                                                    **${fullCollab.name}**\nName:${pick.name}\nID: ${pick.id}`)
                     .setImage(pick.imgURL)
-                logChannel.send({embeds: [leaveEmbed]});
+                logChannel.send({ embeds: [leaveEmbed] });
+
+                await localFunctions.unsetParticipationOnSheet(fullCollab, itemInPool);
+
                 await int.editReply(`You've left the collab succesfully.`);
             }
         } catch (e) {

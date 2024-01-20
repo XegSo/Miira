@@ -1,7 +1,9 @@
 const { connectToMongoDB } = require('../../mongo');
+const { connectToSpreadsheet } = require('../../googleSheets');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
-const { poolCache } = require('../../components/buttons/pool-collab')
+const { poolCache } = require('../../components/buttons/pool-collab');
+const { createCollabCache } = require('../../commands/tools/collabs');
 const userCooldowns = new Map();
 const userCombos = new Map();
 
@@ -45,19 +47,75 @@ module.exports = {
         const globalBoostValue = globalBoost.multiplier;
 
         messageCheck: try {
-            if (poolCache.size !== 0) { //File upload for collabs
-                if (poolCache.get(0).userId === userId && message.reference.messageId === poolCache.get(0).messageId && message.attachments.size > 0) {
-                    console.log('aaaa');
+            if (poolCache.size !== 0) { //Pool upload for collabs
+                if (poolCache.get(userId).userId === userId && message.reference.messageId === poolCache.get(userId).messageId && message.attachments.size > 0) {
                     const attachment = message.attachments.first();
                     if (attachment.name.endsWith('.json')) {
                         if (message.author.id !== "687004886922952755") return;
                         const response = await fetch(attachment.url);
                         const buffer = Buffer.from(await response.arrayBuffer());
                         const jsonData = JSON.parse(buffer.toString());
-                        const collabName = poolCache.get(0).collab;
+                        const collabName = poolCache.get(userId).collab;
+                        const fullCollab = await localFunctions.getCollab(collabName, collabCollection);
                         await localFunctions.setCollabPool(collabName, jsonData, collabCollection);
-                        message.reply('Pool uploaded to the database succesfully!');
-                        poolCache.delete(0);
+
+                        const doc = await connectToSpreadsheet(fullCollab.spreadsheetID); //Spreadsheet update
+                        let initialization = false;
+                        let currentIndex = 0;
+                        let sheet;
+                        for (item of jsonData.items) {
+                            if (parseInt(item.sheetIndex) !== currentIndex) {
+                                initialization = false;
+                                console.log(`Changes for a category have been pushed`);
+                                await sheet.saveUpdatedCells();
+                            }
+                            if (!initialization) {
+                                sheet = doc.sheetsByIndex[parseInt(item.sheetIndex)];
+                                currentIndex = parseInt(item.sheetIndex);
+                                initialization = true;
+                                await sheet.loadCells();
+                                console.log(`Sheet ${currentIndex} loaded.`)
+                            }
+                            let originCoord = localFunctions.excelSheetCoordinateToRowCol(item.coordinate);
+                            let mainRow = originCoord.row + (3 * parseInt(item.localId))
+                            let mainCol = originCoord.col;
+                            let mainCell = sheet.getCell(mainRow, mainCol);
+                            mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
+                            mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10, link: { uri: item.imgURL } };
+                            mainCell.value = item.name;
+                            let idCell = sheet.getCell(mainRow, mainCol + 1);
+                            idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
+                            idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10 };
+                            idCell.value = item.id;
+                            let availabilityCell = sheet.getCell(mainRow + 1, mainCol);
+                            availabilityCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8, green: 0.8, blue: 0.8 } }, fontFamily: "Avenir", fontSize: 7 };
+                            availabilityCell.value = "Available";
+                            console.log(`Change registered for pick ${item.id}`)
+                            if (parseInt(item.id) === fullCollab.user_cap) {
+                                await sheet.saveUpdatedCells();
+                                console.log(`Changes for a category have been pushed`);
+                            }
+                        }
+                        message.reply('Pool uploaded to the database and spreadsheet succesfully!');
+                        poolCache.delete(userId);
+                        break messageCheck;
+                    }
+                }
+            }
+
+            if (createCollabCache.size !== 0) { //Collab Creation
+                if (createCollabCache.get(userId).userId === userId && message.reference.messageId === createCollabCache.get(userId).messageId && message.attachments.size > 0) {
+                    const attachment = message.attachments.first();
+                    if (attachment.name.endsWith('.json')) {
+                        const response = await fetch(attachment.url);
+                        const buffer = Buffer.from(await response.arrayBuffer());
+                        let jsonData = JSON.parse(buffer.toString());
+                        jsonData.host = userId;
+                        jsonData.status = "on design";
+                        console.log(jsonData);
+                        await localFunctions.setCollab(jsonData, collabCollection);
+                        message.reply('New collab created succesfully in the database.')
+                        createCollabCache.delete(userId);
                         break messageCheck;
                     }
                 }
@@ -160,7 +218,7 @@ module.exports = {
                     case '739111062682730507':
                         if (hasLevel.length !== 1) {
                             message.member.roles.remove(localConstants.rolesLevel[0]);
-                            message.member.roles.remove(localConstants.rolesLevel[1]); 
+                            message.member.roles.remove(localConstants.rolesLevel[1]);
                         }
                 }
             } else if (currentBalance > 120) {

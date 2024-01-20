@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { EmbedBuilder } = require('discord.js');
 const { connectToMongoDB } = require('./mongo');
+const { connectToSpreadsheet } = require('./googleSheets');
 const localConstants = require('./constants');
 const { v2 } = require('osu-api-extended');
 const { registerFont } = require('canvas');
@@ -22,6 +23,46 @@ registerFont('./assets/fonts/Montserrat-MediumItalic.ttf', {
 
 module.exports = {
 
+    setParticipationOnSheet: async function (collab, pick, osuname) {
+        const doc = await connectToSpreadsheet(collab.spreadsheetID);
+        const sheet = doc.sheetsByIndex[parseInt(pick.sheetIndex)];
+        await sheet.loadCells();
+        const originCoord = excelSheetCoordinateToRowCol(pick.coordinate);
+        const mainRow = originCoord.row + (3 * parseInt(pick.localId))
+        const mainCol = originCoord.col;
+        const mainCell = sheet.getCell(mainRow, mainCol);
+        mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } } } };
+        mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } }, fontFamily: "Avenir", strikethrough: true, link: { uri: pick.imgURL } };
+        const idCell = sheet.getCell(mainRow, mainCol + 1);
+        idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } } } };
+        idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } }, fontFamily: "Avenir", strikethrough: true };
+        const infoCell = sheet.getCell(mainRow + 1, mainCol);
+        infoCell.value = `Picked by ${osuname} on ${new Date().toLocaleDateString('en-GB')}`;
+        await sheet.saveUpdatedCells();
+        console.log('Join info updated on sheet.')
+    },
+
+    unsetParticipationOnSheet: async function (collab, pick) {
+        const doc = await connectToSpreadsheet(collab.spreadsheetID);
+        const sheet = doc.sheetsByIndex[parseInt(pick.sheetIndex)];
+        await sheet.loadCells();
+        let originCoord = excelSheetCoordinateToRowCol(pick.coordinate);
+        let mainRow = originCoord.row + (3 * parseInt(pick.localId))
+        let mainCol = originCoord.col;
+        let mainCell = sheet.getCell(mainRow, mainCol);
+        mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
+        mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10, link: { uri: pick.imgURL } };
+        mainCell.value = pick.name;
+        let idCell = sheet.getCell(mainRow, mainCol + 1);
+        idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
+        idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10 };
+        idCell.value = pick.id;
+        let availabilityCell = sheet.getCell(mainRow + 1, mainCol);
+        availabilityCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8, green: 0.8, blue: 0.8 } }, fontFamily: "Avenir", fontSize: 7 };
+        availabilityCell.value = "Available";
+        await sheet.saveUpdatedCells();
+    },
+
     flattenObject: function (obj, parentKey = '') {
         let result = {};
         for (let key in obj) {
@@ -38,6 +79,25 @@ module.exports = {
             }
         }
         return result;
+    },
+
+    excelSheetCoordinateToRowCol: function (coordinate) {
+        const regex = /([A-Z]+)(\d+)/;
+        const match = coordinate.match(regex);
+
+        if (!match) {
+            throw new Error("Invalid Excel sheet coordinate format");
+        }
+
+        const [, columnLetters, row] = match;
+
+        // Convert column letters to column number
+        let col = 0;
+        for (let i = 0; i < columnLetters.length; i++) {
+            col = col * 26 + (columnLetters.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+        }
+
+        return { row: parseInt(row, 10) - 1, col: col - 1 };
     },
 
     padNumberWithZeros: function (number, totalDigits) {
@@ -527,6 +587,11 @@ module.exports = {
         return user ? user.collabs || [] : [];
     },
 
+    getUserCollab: async function (userId, collection, collabName) {
+        const result = await collection.findOne({ _id: userId, 'collabs.collabName': collabName }, { 'collabs.$': 1});
+        return result ? result[0] || [] : [];
+    },
+
     setUserCollabs: async function (userId, collabs, collection) {
         await collection.updateOne({ _id: userId }, { $set: { collabs } }, { upsert: true });
     },
@@ -551,6 +616,50 @@ module.exports = {
 
     addCollabParticipant: async function (collab, collection, newUser) {
         await collection.updateOne({ name: collab }, { $push: { participants: newUser } }, { upsert: true });
+    },
+
+    editCollabParticipantPickOnCollab: async function (collab, discordId, newPick, collection) {
+        await collection.updateOne({ name: collab, 'participants.discordId': discordId }, {
+            $set: {
+                'participants.$.name': newPick.name,
+                'participants.$.imgURL': newPick.imgURL,
+                'participants.$.id': newPick.id,
+                'participants.$.series': newPick.series,
+                'participants.$.category': newPick.category,
+            }
+        }, { upsert: true });
+    },
+
+    editParticipationFields: async function (userId, collabName, av_text, ca_text, ca_quote, collection) {
+        await collection.updateOne({ _id: userId, 'collabs.collabName': collabName }, {
+            $set: {
+                'collabs.$.av_text': av_text,
+                'collabs.$.ca_text': ca_text,
+                'collabs.$.ca_quote': ca_quote
+            }
+        }, { upsert: true });
+    },
+
+    editCollabUserFields: async function (userId, collabName, av_text, ca_text, ca_quote, collection) {
+        await collection.updateOne({ name: collabName, 'participants.discordId': userId }, {
+            $set: {
+                'participants.$.av_text': av_text,
+                'participants.$.ca_text': ca_text,
+                'participants.$.ca_quote': ca_quote
+            }
+        }, { upsert: true });
+    },
+
+    editCollabParticipantPickOnUser: async function (userId, collabName, newPick, collection) {
+        await collection.updateOne({ _id: userId, 'collabs.collabName': collabName }, {
+            $set: {
+                'collabs.$.collabPick.name': newPick.name,
+                'collabs.$.collabPick.imgURL': newPick.imgURL,
+                'collabs.$.collabPick.id': newPick.id,
+                'collabs.$.collabPick.series': newPick.series,
+                'collabs.$.collabPick.category': newPick.category,
+            }
+        }, { upsert: true });
     },
 
     removeCollabParticipant: async function (collab, collection, userId) {
@@ -1336,7 +1445,7 @@ function arraySum(ar1, ar2) {
 }
 
 
-function flattenObject (obj, parentKey = '') {
+function flattenObject(obj, parentKey = '') {
     let result = {};
     for (let key in obj) {
         let newKey = parentKey ? `${parentKey}_${key}` : key;
@@ -1352,4 +1461,23 @@ function flattenObject (obj, parentKey = '') {
         }
     }
     return result;
+}
+
+function excelSheetCoordinateToRowCol (coordinate) {
+    const regex = /([A-Z]+)(\d+)/;
+    const match = coordinate.match(regex);
+
+    if (!match) {
+        throw new Error("Invalid Excel sheet coordinate format");
+    }
+
+    const [, columnLetters, row] = match;
+
+    // Convert column letters to column number
+    let col = 0;
+    for (let i = 0; i < columnLetters.length; i++) {
+        col = col * 26 + (columnLetters.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+    }
+
+    return { row: parseInt(row, 10) - 1, col: col - 1 };
 }
