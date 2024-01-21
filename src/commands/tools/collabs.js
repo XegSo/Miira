@@ -10,8 +10,10 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('collabs')
         .setDescription('Collabs dashboard')
+        .addSubcommand((subcommand) => subcommand.setName("join").setDescription('Join a collab!'))
+        .addSubcommand((subcommand) => subcommand.setName("manage").setDescription('Manage your collab participations.'))
         .addSubcommand((subcommand) => subcommand.setName("info").setDescription('View all info about the collabs hosted since 2024.'))
-        .addSubcommand((subcommand) => subcommand.setName("profile").setDescription('Manage your collab participations.'))
+        .addSubcommand((subcommand) => subcommand.setName("profile").setDescription('Manage your collab profile.'))
         .addSubcommand((subcommand) => subcommand.setName("create").setDescription('Create a collab.'))
         .addSubcommand((subcommand) => subcommand.setName("link").setDescription('Link your osu! account.'))
         .addSubcommand((subcommand) =>
@@ -289,20 +291,247 @@ module.exports = {
                     }
                     const manageMenuRow = new ActionRowBuilder().addComponents(manageMenu);
                     if (collabsToJoinCount === 0) {
-                        osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Unfortunately, there isn't any collabs you can join at the moment.*`);
+                        osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *You are participating in a collab!*`);
                         await int.editReply({
                             content: '',
                             embeds: [osuEmbed],
                             components: [buttons, manageMenuRow]
                         })
                     } else {
-                        osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                    `);
+                        osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you can join some collab!*`);
                         await int.editReply({
                             content: '',
                             embeds: [osuEmbed],
                             components: [buttons, manageMenuRow, joinMenuRow]
                         })
                     }
+                }
+            } finally {
+                mongoClient.close();
+                mongoClientCollabs.close();
+            }
+        }
+
+        if (subcommand === "manage") {
+            await int.deferReply({ ephemeral: true });
+            const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+            const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
+            try {
+                const userOsu = await localFunctions.getOsuData(userId, collection);
+                if (!userOsu) {
+                    components = new ActionRowBuilder().addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('link-osu')
+                            .setLabel('🔗 Link your osu! Account')
+                            .setStyle('Success'),
+                    )
+                    await int.editReply({
+                        content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
+                        components: [components]
+                    });
+                    return;
+                }
+                const collabData = await localFunctions.getUserCollabs(userId, collection);
+
+                const osuEmbed = new EmbedBuilder()
+                    .setFooter({ text: 'Endless Mirage | Manage Collabs', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                    .setColor('#f26e6a')
+                    .setThumbnail(userOsu.avatar_url)
+
+                const manageMenu = new SelectMenuBuilder()
+                    .setCustomId('manage-collab')
+                    .setPlaceholder('Select a collab to manage.')
+
+                let fullCollab;
+                for (const currentCollab of collabData) {
+                    fullCollab = await localFunctions.getCollab(currentCollab.collabName, collabCollection);
+                    manageMenu.addOptions({ label: currentCollab.collabName, value: currentCollab.collabName });
+                    osuEmbed.addFields(
+                        {
+                            name: `${currentCollab.collabName}`,
+                            value: `┌ Pick ID: ${currentCollab.collabPick.id}\n├ Pick Name: ${currentCollab.collabPick.name}\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${fullCollab.spreadsheetID})**__`
+                        }
+                    )
+                }
+                const manageMenuRow = new ActionRowBuilder().addComponents(manageMenu);
+                osuEmbed.addFields(
+                    {
+                        name: `‎`,
+                        value: `<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>`,
+                    },
+                );
+
+
+                if (collabData.length !== 0) {
+                    osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Manage your past and present participations in this dashboard.*`)
+                        await int.editReply({
+                            content: '',
+                            embeds: [osuEmbed],
+                            components: [manageMenuRow]
+                        })
+                } else {
+                    osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you haven't participated in a collab since the creation of this system...*`)
+                        await int.editReply({
+                            content: '',
+                            embeds: [osuEmbed]
+                        })
+                }
+
+            } finally {
+                mongoClient.close();
+                mongoClientCollabs.close();
+            }
+        }
+
+        if (subcommand === "join") {
+            await int.deferReply({ ephemeral: true });
+            const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+            const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
+            try {
+                const userOsu = await localFunctions.getOsuData(userId, collection);
+                if (!userOsu) {
+                    components = new ActionRowBuilder().addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('link-osu')
+                            .setLabel('🔗 Link your osu! Account')
+                            .setStyle('Success'),
+                    )
+                    await int.editReply({
+                        content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
+                        components: [components]
+                    });
+                    return;
+                }
+                const collabData = await localFunctions.getUserCollabs(userId, collection);
+                const collabs = await localFunctions.getCollabs(collabCollection);
+
+                let tier = 0;
+                let prestigeLevel = 0;
+                let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
+                if (typeof prestige !== "undefined") {
+                    prestige = prestige.name
+                    prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
+                }
+                if (guildMember.roles.cache.has('743505566617436301')) {
+                    const userTier = await localFunctions.getUserTier(userId, collection);
+                    if (!userTier && !guildMember.roles.cache.has('1150484454071091280')) {
+                        let premiumDetails = await localFunctions.assignPremium(int, userId, collection, guildMember);
+                        tier = localFunctions.premiumToInteger(premiumDetails[0].name);
+                    } else {
+                        tier = localFunctions.premiumToInteger(userTier.name);
+                    }
+                }
+
+                const osuEmbed = new EmbedBuilder()
+                    .setFooter({ text: 'Endless Mirage | Join a Collab', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                    .setColor('#f26e6a')
+                    .setThumbnail(userOsu.avatar_url)
+
+                const userPerks = await localFunctions.getPerks(userId, collection);
+                let collabsToJoinCount = 0;
+                const joinMenu = new SelectMenuBuilder()
+                    .setCustomId('select-collab')
+                    .setPlaceholder('Select a collab to join.')
+                for (const collab of collabs) {
+                    let user_cap = collab.user_cap;
+                    let participants = collabs.participants ? collabs.participants.length : 0;
+                    let slots = user_cap - participants;
+                    if (((collab.status !== "closed" && collab.status !== "on design") || userId == '687004886922952755') && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
+                        switch (collab.restriction) {
+                            case "staff":
+                                if (guildMember.roles.cache.has('961891383365500938') || userId == '687004886922952755') {
+                                    joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                    osuEmbed.addFields(
+                                        {
+                                            name: `${collab.name}`,
+                                            value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                        }
+                                    )
+                                }
+                                collabsToJoinCount++;
+                                break;
+                            case "deluxe":
+                                const deluxeEntry = await localFunctions.getDeluxeEntry(userId, collection);
+                                if (deluxeEntry || userId == '687004886922952755') {
+                                    joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                    osuEmbed.addFields(
+                                        {
+                                            name: `${collab.name}`,
+                                            value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R> └ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                        }
+                                    )
+                                }
+                                collabsToJoinCount++;
+                                break;
+                            case "megacollab":
+                                if ((collab.status === "early access" && typeof userPerks.find(e => e.name === "Megacollab Early Access")) || userId == '687004886922952755') {
+                                    joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                    osuEmbed.addFields(
+                                        {
+                                            name: `${collab.name}`,
+                                            value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R> └ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                        }
+                                    )
+                                }
+                                collabsToJoinCount++;
+                                break;
+                            case "prestige":
+                                if (typeof prestige !== "undefined" || userId == '687004886922952755') {
+                                    joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                    osuEmbed.addFields(
+                                        {
+                                            name: `${collab.name}`,
+                                            value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R> └ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                        }
+                                    )
+                                }
+                                collabsToJoinCount++;
+                                break;
+                            case "experimental":
+                                if (tier > 0 || prestigeLevel > 4 || userId == '687004886922952755') {
+                                    joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                    osuEmbed.addFields(
+                                        {
+                                            name: `${collab.name}`,
+                                            value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R> └ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                        }
+                                    )
+                                }
+                                collabsToJoinCount++;
+                                break;
+                            case "none":
+                                joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                osuEmbed.addFields(
+                                    {
+                                        name: `${collab.name}`,
+                                        value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R> └ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                    }
+                                )
+                                collabsToJoinCount++;
+                                break;
+                        }
+                    }
+                }
+                osuEmbed.addFields(
+                    {
+                        name: `‎`,
+                        value: `<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>`,
+                    },
+                );
+                const joinMenuRow = new ActionRowBuilder().addComponents(joinMenu);
+                if (collabsToJoinCount === 0) {
+                    osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Unfortunately, there isn't any collabs you can join at the moment.*`);
+                    await int.editReply({
+                        content: '',
+                        embeds: [osuEmbed],
+                    })
+                } else {
+                    osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Looks like you can join some collabs!*`);
+                    await int.editReply({
+                        content: '',
+                        embeds: [osuEmbed],
+                        components: [joinMenuRow]
+                    })
                 }
             } finally {
                 mongoClient.close();
@@ -317,11 +546,11 @@ module.exports = {
                 const dashboardEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
-                    .setDescription(`**\`\`\`\n🏐 Endless Mirage | Collabs Dashboard\`\`\`**`)
+                    .setDescription(`**\`\`\`\n🏐 Collabs Dashboard\`\`\`**`)
                     .addFields(
                         {
-                            name: `   **Please select a collab**`,
-                            value: `<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>`,
+                            name: `In this section, you can check information about all the collabs that have been hosted since 2024.`,
+                            value: `Use the select menu to visualize a collab.\n<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>`,
                         }
                     );
                 const collabsMenu = new SelectMenuBuilder()
