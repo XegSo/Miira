@@ -68,14 +68,14 @@ module.exports = {
                     components.addComponents(
                         new ButtonBuilder()
                             .setCustomId('pool-collab')
-                            .setLabel('📗 Add Pool')
+                            .setLabel('📁 Add Pool')
                             .setStyle('Primary'),
                     )
                 } else {
                     components.addComponents(
                         new ButtonBuilder()
                             .setCustomId('pool-collab')
-                            .setLabel('🔄 Edit Pool')
+                            .setLabel('📁 Edit Pool')
                             .setStyle('Primary'),
                     )
                 }
@@ -84,11 +84,18 @@ module.exports = {
             if (collab.status !== "closed" && collab.status !== "on design") {
                 components.addComponents(
                     new ButtonBuilder()
-                        .setCustomId('remove-users-collab')
+                        .setCustomId('remove-user-collab')
                         .setLabel('⛔️ Prune')
                         .setStyle('Danger'),
                 )
             }
+
+            components.addComponents(
+                new ButtonBuilder()
+                    .setCustomId('reset-collab')
+                    .setLabel('🔁 Reset')
+                    .setStyle('Danger'),
+            )
 
             components.addComponents(
                 new ButtonBuilder()
@@ -107,7 +114,6 @@ module.exports = {
                 components: [components],
             });
 
-            buttonCache.delete(int.user.id);
         } catch (e) {
             console.log(e)
             await int.editReply('Something went wrong...')

@@ -11,6 +11,7 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply();
         let editString = '';
+        let clientClose = true;
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         const collabToEdit = await localFunctions.getCollab(editCache.get(int.user.id).collab, collection);
         let name = int.fields.getTextInputValue('name');
@@ -58,6 +59,7 @@ module.exports = {
             return;
         } else {
             editString = editString.concat(`\n Date: <t:${opening}:R>`)
+            clientClose = false;
         }
         let user_cap = int.fields.getTextInputValue('user_cap');
         if (!user_cap) {
@@ -70,9 +72,14 @@ module.exports = {
         }
         try {
             await localFunctions.editCollab(collabToEdit.name, name, topic, status, parseInt(opening), parseInt(user_cap), collection);
+            if (!clientClose) {
+                await localFunctions.handleCollabOpenings(collection);
+            }
             await int.editReply(`You've edited the following parameters:${editString}`);
         } finally {
-            mongoClient.close();
+            if (clientClose) {
+                mongoClient.close();
+            }
         }
     },
 };

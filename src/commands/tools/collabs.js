@@ -106,6 +106,8 @@ module.exports = {
             }
             try {
                 const userFiltered = localFunctions.removeFields(user, localConstants.unnecesaryFieldsOsu);
+                userFiltered.osu_id = userFiltered.id;
+                delete userFiltered.id;
                 const userTop100 = await v2.scores.user.category(user.id, 'best', { mode: int.options.getString('gamemode'), limit: '100' });
                 await int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
                 const skills = await localFunctions.calculateSkill(userTop100, int.options.getString('gamemode'));

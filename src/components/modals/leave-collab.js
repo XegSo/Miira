@@ -32,7 +32,7 @@ module.exports = {
                 await localFunctions.unsetCollabParticipation(collab.collabName, collection, pick.id);
                 userCollabs = userCollabs.filter(e => e.collabName !== collab.collabName);
                 await localFunctions.setUserCollabs(userId, userCollabs, userCollection);
-                await localFunctions.removeCollabParticipant(collab.collabName, collection, userId)
+                await localFunctions.removeCollabParticipant(collab.collabName, collection, userId);
                 const leaveEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | New Character Available', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')

@@ -23,6 +23,90 @@ registerFont('./assets/fonts/Montserrat-MediumItalic.ttf', {
 
 module.exports = {
 
+    handleCollabOpenings: async function(collection) {
+        // Find documents with status "on design"
+        const documents = await collection.find({ status: 'on design' }).toArray();
+    
+        // Get current Unix timestamp
+        const currentTimestamp = Math.floor(Date.now() / 1000);
+    
+        // Iterate over documents and set interval for each
+        documents.forEach(document => {
+            const remainingTime = document.opening - currentTimestamp;
+    
+            if (remainingTime > 0) {
+                console.log(`Handling ${document.name} opening in ${remainingTime / 60 / 60} hours`);
+                // Set interval to update status when time has passed
+                setTimeout(async () => {
+                    await collection.updateOne({ _id: document._id }, { $set: { status: 'open' } });
+                    console.log(`${document.name} was opened`);
+                }, remainingTime * 1000); // Convert seconds to milliseconds
+            }
+        });
+    },
+    
+    handleCollabClosures: async function(collection) {
+        // Find documents with status "on design"
+        const documents = await collection.find({ status: { $in: ['open', 'full'] } }).toArray();
+    
+        // Get current Unix timestamp
+        const currentTimestamp = Math.floor(Date.now() / 1000);
+    
+        // Iterate over documents and set interval for each
+        documents.forEach(document => {
+            const remainingTime = document.closure - currentTimestamp;
+    
+            if (remainingTime > 0) {
+                console.log(`Handling ${document.name} closure in ${remainingTime / 60 / 60} hours`);
+                // Set interval to update status when time has passed
+                setTimeout(async () => {
+                    await collection.updateOne({ _id: document._id }, { $set: { status: 'closed' } });
+                    console.log(`${document.name} was closed.`);
+                }, remainingTime * 1000); // Convert seconds to milliseconds
+            }
+        });
+    },
+
+    setSheetFromZero: async function (collab, pool) {
+        const doc = await connectToSpreadsheet(collab.spreadsheetID); //Spreadsheet update
+        let initialization = false;
+        let currentIndex = 0;
+        let sheet;
+        for (item of pool) {
+            if (parseInt(item.sheetIndex) !== currentIndex) {
+                initialization = false;
+                console.log(`Changes for a category have been pushed`);
+                await sheet.saveUpdatedCells();
+            }
+            if (!initialization) {
+                sheet = doc.sheetsByIndex[parseInt(item.sheetIndex)];
+                currentIndex = parseInt(item.sheetIndex);
+                initialization = true;
+                await sheet.loadCells();
+                console.log(`Sheet ${currentIndex} loaded.`)
+            }
+            let originCoord = excelSheetCoordinateToRowCol(item.coordinate);
+            let mainRow = originCoord.row + (3 * parseInt(item.localId))
+            let mainCol = originCoord.col;
+            let mainCell = sheet.getCell(mainRow, mainCol);
+            mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
+            mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10, link: { uri: item.imgURL } };
+            mainCell.value = item.name;
+            let idCell = sheet.getCell(mainRow, mainCol + 1);
+            idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
+            idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10 };
+            idCell.value = item.id;
+            let availabilityCell = sheet.getCell(mainRow + 1, mainCol);
+            availabilityCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8, green: 0.8, blue: 0.8 } }, fontFamily: "Avenir", fontSize: 7 };
+            availabilityCell.value = "Available";
+            console.log(`Change registered for pick ${item.id}`)
+            if (parseInt(item.id) === collab.user_cap) {
+                await sheet.saveUpdatedCells();
+                console.log(`Changes for a category have been pushed`);
+            }
+        }
+    },
+
     setParticipationOnSheet: async function (collab, pick, osuname) {
         const doc = await connectToSpreadsheet(collab.spreadsheetID);
         const sheet = doc.sheetsByIndex[parseInt(pick.sheetIndex)];
@@ -588,7 +672,7 @@ module.exports = {
     },
 
     getUserCollab: async function (userId, collection, collabName) {
-        const result = await collection.findOne({ _id: userId, 'collabs.collabName': collabName }, { 'collabs.$': 1});
+        const result = await collection.findOne({ _id: userId, 'collabs.collabName': collabName }, { 'collabs.$': 1 });
         return result ? result[0] || [] : [];
     },
 
@@ -670,9 +754,37 @@ module.exports = {
         try {
             await collection.deleteOne({ name: name });
         } catch (error) {
-            console.error('Error liquidating suggestion:', error);
+            console.error('Error liquidating collab:', error);
             return null;
         }
+    },
+
+    liquidateCollabUsers: async function (name, collection) {
+        try {
+            await collection.updateOne({ name: name }, { $unset: { participants: 1 } });
+        } catch (error) {
+            console.error('Error liquidating participants:', error);
+            return null;
+        }
+    },
+
+    resetPickStatus: async function (name, collection) {
+        const query = { "name": name, "pool.items.status": 'picked' };
+        const updateResult = await collection.updateOne(
+            query,
+            { $set: { "pool.items.$[element].status": 'available' } },
+            { arrayFilters: [{ "element.status": 'picked' }] }
+        );
+
+        console.log(`Number of documents updated: ${updateResult.modifiedCount}`);
+    },
+
+    liquidateCollabFromUsers: async function (name, collection) {
+        const updateResult = await collection.updateMany(
+            {},
+            { $pull: { collabs: { collabName: name } } }
+        );
+        console.log(`Number of documents updated: ${updateResult.modifiedCount}`);
     },
 
     getOsuData: async function (userId, collection) {
@@ -1163,6 +1275,24 @@ module.exports = {
         }
     },
 
+    updateTradeRequest: async function (tradeData, collection) {
+        await collection.updateOne({ _id: tradeData.messageId }, { $set: { 'requestedUser': tradeData.requestedUser, 'traderUser': tradeData.traderUser, 'messageUrl': tradeData.messageUrl, 'collabName': tradeData.collabName } }, { upsert: true });
+    },
+
+    getTradeRequest: async function (userId, collection) {
+        const request = await collection.findOne({ 'traderUser.discordId': userId });
+        return request ? request || [] : [];
+    },
+
+    getTradeRequestByMessageId: async function (messageId, collection) {
+        const request = await collection.findOne({ _id: messageId });
+        return request ? request || [] : [];
+    },
+
+    liquidateTradeRequest: async function (messageId, collection) {
+        await collection.deleteOne({ _id: messageId });
+    },
+
     liquidateSuggestion: async function (messageId) {
         const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
         try {
@@ -1229,7 +1359,9 @@ module.exports = {
         let member = await guild.members.cache.find(member => member.id === "420711641596821504");
         await member.timeout(86400000, "Daily timeout for this user.");
         console.log('user timed out for 24 hours');
-
+        const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+        await handleCollabClosures(collection);
+        await handleCollabOpenings(collection);
         setTimeout(async () => {
             await handleDailyDecay();
             await member.timeout(86400000, "Daily timeout for this user.");
@@ -1376,6 +1508,10 @@ async function scheduleDailyDecay(client) {
     let member = await guild.members.cache.find(member => member.id === "420711641596821504");
     await member.timeout(86400000, "Daily timeout for this user.");
     console.log('user timed out for 24 hours');
+    const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+    await handleCollabClosures(collection);
+    await handleCollabOpenings(collection);
+
     setTimeout(async () => {
         await handleDailyDecay();
         await member.timeout(86040000, "Daily timeout for this user.");
@@ -1463,7 +1599,7 @@ function flattenObject(obj, parentKey = '') {
     return result;
 }
 
-function excelSheetCoordinateToRowCol (coordinate) {
+function excelSheetCoordinateToRowCol(coordinate) {
     const regex = /([A-Z]+)(\d+)/;
     const match = coordinate.match(regex);
 
@@ -1480,4 +1616,48 @@ function excelSheetCoordinateToRowCol (coordinate) {
     }
 
     return { row: parseInt(row, 10) - 1, col: col - 1 };
+}
+
+async function handleCollabOpenings(collection) {
+    // Find documents with status "on design"
+    const documents = await collection.find({ status: 'on design' }).toArray();
+
+    // Get current Unix timestamp
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+
+    // Iterate over documents and set interval for each
+    documents.forEach(document => {
+        const remainingTime = document.opening - currentTimestamp;
+
+        if (remainingTime > 0) {
+            console.log(`Handling ${document.name} opening in ${remainingTime / 60 / 60} hours`);
+            // Set interval to update status when time has passed
+            setTimeout(async () => {
+                await collection.updateOne({ _id: document._id }, { $set: { status: 'open' } });
+                console.log(`${document.name} was opened`);
+            }, remainingTime * 1000); // Convert seconds to milliseconds
+        }
+    });
+}
+
+async function handleCollabClosures(collection) {
+    // Find documents with status "on design"
+    const documents = await collection.find({ status: { $in: ['open', 'full'] } }).toArray();
+
+    // Get current Unix timestamp
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+
+    // Iterate over documents and set interval for each
+    documents.forEach(document => {
+        const remainingTime = document.closure - currentTimestamp;
+
+        if (remainingTime > 0) {
+            console.log(`Handling ${document.name} closure in ${remainingTime / 60 / 60} hours`);
+            // Set interval to update status when time has passed
+            setTimeout(async () => {
+                await collection.updateOne({ _id: document._id }, { $set: { status: 'closed' } });
+                console.log(`${document.name} was closed.`);
+            }, remainingTime * 1000); // Convert seconds to milliseconds
+        }
+    });
 }

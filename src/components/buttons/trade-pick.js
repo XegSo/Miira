@@ -4,11 +4,11 @@ const { SlashCommandBuilder, EmbedBuilder, TextInputStyle } = require('discord.j
 const { ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 const { profileButtonCache } = require('./profile-pick');
 const { profileMenuCache } = require('../selectMenus/manage-collab');
-const swapCache = new Map();
+const tradeCache = new Map();
 
 module.exports = {
     data: {
-        name: 'swap-pick'
+        name: 'trade-pick'
     },
     async execute(int, client) {
         const initializedMap = [profileButtonCache, profileMenuCache].find(map => map.size > 0);
@@ -16,31 +16,30 @@ module.exports = {
         try {
             const existingTradeRequest = await localFunctions.getTradeRequest(int.user.id, collectionSpecial);
             if (existingTradeRequest.length !== 0) {
-                return await int.reply({ content: `You cannot swap your pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
+                return await int.reply({ content: `You cannot request a trade when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
             }
             const collab = initializedMap.get(int.user.id).collab
             if (collab.type === "pooled") {
-                if (collab.status === "full") {
-                    return await int.reply({ content: 'This collab is full! There is no character to swap with', ephemeral: true });
-                }
                 const modal = new ModalBuilder()
-                    .setCustomId(`swap-pick`)
+                    .setCustomId(`trade-pick`)
                     .setTitle(`${collab.name}`);
 
                 const pick = new TextInputBuilder()
                     .setCustomId('pick')
-                    .setLabel(`Type the ID of the character to swap.`)
+                    .setLabel(`Type the ID of the character to trade.`)
                     .setStyle(TextInputStyle.Short)
 
                 modal.addComponents(new ActionRowBuilder().addComponents(pick));
-                swapCache.set(int.user.id, {
-                    collab: collab.name,
+                tradeCache.set(int.user.id, {
+                    collab: collab,
                 })
                 await int.showModal(modal);
             }
         } catch (e) {
             console.log(e);
-        } 
+        } finally {
+            mongoClientSpecial.close();
+        }
     },
-    swapCache: swapCache
+    tradeCache: tradeCache
 }
