@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { v2, auth } = require('osu-api-extended')
+const { auth } = require('osu-api-extended')
 const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
@@ -13,6 +13,7 @@ const banchoClient = new Banchojs.BanchoClient({
   username: banchoUsername,
   password: banchoPass
 });
+
 
 const client = new Client({
   intents: [
@@ -36,15 +37,16 @@ client.buttons = new Collection();
 client.selectMenus = new Collection();
 client.modals = new Collection();
 
-fs.readdirSync(path.join(__dirname, "/functions/handlers/")).filter((file) => {
-  require(`./functions/handlers/${file}`)(client);
-  require(`./functions/handlers/${file}`)(banchoClient);
+ fs.readdirSync(path.join(__dirname, "/functions/handlers/")).filter((file) => {
+   require(`./functions/handlers/${file}`)(client);
+   require(`./functions/handlers/${file}`)(banchoClient);
 });
 
 banchoClient.handleEvents(client);
 client.handleEvents();
 client.handleCommands();
 client.handleComponents();
+
 
 banchoClient.connect().then(() => {console.log('Connected to bancho.')});
 auth.login(clientIDv2, clientSv2, ['public']).then(() => {console.log('Connected to osu api.')});

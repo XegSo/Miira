@@ -3,7 +3,7 @@ const { connectToSpreadsheet } = require('../../googleSheets');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 const { poolCache } = require('../../components/buttons/pool-collab');
-const { createCollabCache } = require('../../commands/tools/collabs');
+const { createCollabCache } = require('../../commands/collabs/collabs');
 const userCooldowns = new Map();
 const userCombos = new Map();
 

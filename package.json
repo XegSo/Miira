@@ -28,5 +28,8 @@
     "node-fetch": "^3.3.2",
     "osu-api-extended": "^2.7.67",
     "osu-web.js": "^1.4.0"
+  },
+  "devDependencies": {
+    "glob": "^10.3.10"
   }
 }

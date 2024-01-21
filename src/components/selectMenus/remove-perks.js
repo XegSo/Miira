@@ -1,6 +1,6 @@
 const localFunctions = require('../../functions');
 const { connectToMongoDB } = require('../../mongo');
-const { removePerksCache } = require('../../commands/tools/removeperks');
+const { removePerksCache } = require('../../commands/collabs/removeperks');
 
 module.exports = {
     data: {

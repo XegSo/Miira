@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
-const localConstants = require('../../constants');
-const localFunctions = require('../../functions');
+const localConstants = require('../constants');
+const localFunctions = require('../functions');
 
 module.exports = {
   data: new SlashCommandBuilder()
