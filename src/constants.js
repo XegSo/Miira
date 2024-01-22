@@ -4,6 +4,8 @@ const rolesLevel = [
     '739111062682730507'
 ];
 
+const mirageLogo = "https://puu.sh/JP9Iw/a365159d0e.png";
+
 const staffUserIds = [
     '337197857566228480',
     '260016245225684992',
@@ -666,5 +668,6 @@ module.exports = {
     unnecesaryFieldsOsu,
     necesaryFieldsTop100,
     skillRanksByScore,
-    prestigeRolesIDs
+    prestigeRolesIDs,
+    mirageLogo
 };

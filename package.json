@@ -13,22 +13,27 @@
     "@discordjs/builders": "1.6.5",
     "@discordjs/rest": "1.0.0",
     "atob": "^2.1.2",
+    "axios": "^1.6.5",
     "bancho.js": "^0.11.6",
     "canvas": "2.11.2",
     "chalk": "4.1.2",
+    "chroma-js": "^2.4.2",
+    "color-diff": "^1.4.0",
     "discord.js": "14.13.0",
     "dotenv": "16.0.0",
     "get-random-values": "1.2.2",
     "google-auth-library": "^9.4.2",
     "google-spreadsheet": "^4.1.1",
     "googleapis": "^130.0.0",
+    "jimp": "^0.22.10",
     "math": "0.0.3",
     "mongodb": "6.0.0",
     "mongoose": "6.2.9",
     "node-fetch": "^3.3.2",
     "node-vibrant": "^3.2.1-alpha.1",
     "osu-api-extended": "^2.7.67",
-    "osu-web.js": "^1.4.0"
+    "osu-web.js": "^1.4.0",
+    "sharp": "^0.33.2"
   },
   "devDependencies": {
     "glob": "^10.3.10"

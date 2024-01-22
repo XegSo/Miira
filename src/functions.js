@@ -6,6 +6,8 @@ const localConstants = require('./constants');
 const { v2 } = require('osu-api-extended');
 const { registerFont } = require('canvas');
 const Vibrant = require('node-vibrant');
+const axios = require('axios');
+const sharp = require('sharp');
 const fs = require('fs');
 const { user } = require('osu-api-extended/dist/api/v1');
 registerFont('./assets/fonts/Montserrat-Medium.ttf', {
@@ -24,10 +26,47 @@ registerFont('./assets/fonts/Montserrat-MediumItalic.ttf', {
 
 module.exports = {
 
+    changeHueFromUrl: async function (imageUrl, targetColor, outputPath) {
+        try {
+            // Fetch the image data from the URL
+            const outputExists = fileExists(outputPath);
+
+            if (outputExists) {
+                console.log('Output file already exists. Skipping image processing.');
+                return;
+            }
+
+            const imageBuffer = await fetchImage(imageUrl);
+            const imageAverageColor = await calculateAverageColor(imageBuffer);
+            const imageHSL = rgbToHsl(imageAverageColor.r, imageAverageColor.g, imageAverageColor.b);
+
+            const targetHSL = hexToHSL(targetColor);
+
+            const { saturationFactor, lightnessFactor } = calculateAdjustmentFactors(imageHSL, targetHSL);
+            console.log(saturationFactor);
+            console.log(lightnessFactor);
+            // Apply the hue change
+            const modifiedImageBuffer = await sharp(imageBuffer)
+                .modulate({
+                    hue: targetHSL.h,
+                    saturation: saturationFactor,
+                    lightness: lightnessFactor
+                })
+                .toBuffer();
+
+            // Save the modified image
+            await sharp(modifiedImageBuffer).toFile(outputPath);
+            console.log('Hue change complete');
+        } catch (error) {
+            console.error('Error:', error.message || error);
+        }
+    },
+
     getMeanColor: async function (imageUrl) {
         try {
             const palette = await Vibrant.from(imageUrl).getPalette();
             const meanColor = palette.Vibrant.getHex();
+            console.log(meanColor);
             return meanColor;
         } catch (error) {
             console.error('Error:', error.message);
@@ -1673,3 +1712,91 @@ async function handleCollabClosures(collection) {
         }
     });
 }
+
+async function fetchImage(url) {
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    return response.data;
+}
+
+function hexToHSL(hex) {
+    // Remove the hash character, if present
+    hex = hex.replace(/^#/, '');
+
+    // Parse the hex color components
+    const bigint = parseInt(hex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+
+    // Convert RGB to HSL
+    const hsl = rgbToHsl(r, g, b);
+
+    // Normalize hue to the range [0, 1] and then convert to degrees
+    hsl.h = Math.floor(hsl.h * 360) % 360;
+
+    return {
+        h: hsl.h,
+        s: hsl.s,
+        l: hsl.l
+    };
+}
+
+function rgbToHsl(r, g, b) {
+    r /= 255;
+    g /= 255;
+    b /= 255;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if (max === min) {
+        h = s = 0; // achromatic
+    } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+
+    return { h, s, l };
+}
+
+function fileExists(path) {
+    try {
+        fs.accessSync(path);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
+async function calculateAverageColor(imageBuffer) {
+    const { data, info } = await sharp(imageBuffer).raw().toBuffer({ resolveWithObject: true });
+    const pixelCount = info.width * info.height;
+    let sumR = 0, sumG = 0, sumB = 0;
+  
+    for (let i = 0; i < pixelCount; i++) {
+      sumR += data[i * 4];  // Red channel
+      sumG += data[i * 4 + 1];  // Green channel
+      sumB += data[i * 4 + 2];  // Blue channel
+    }
+  
+    const averageColor = {
+      r: Math.round(sumR / pixelCount),
+      g: Math.round(sumG / pixelCount),
+      b: Math.round(sumB / pixelCount)
+    };
+  
+    return averageColor;
+  }
+
+function calculateAdjustmentFactors(imageHSL, targetHSL) {
+    const saturationFactor = imageHSL.s / targetHSL.s;
+    const lightnessFactor = imageHSL.l / targetHSL.l;
+    return { saturationFactor, lightnessFactor };
+  }

@@ -25,11 +25,11 @@ module.exports = {
       let components = [];
       let embeds = [];
       let URLstring = '';
+      const logoColored = await localFunctions.changeHueFromUrl(localConstants.mirageLogo, collabColor, `./assets/coloredLogos/logo-${collabColor}.png`);
       if (typeof collab.spreadsheetID !== "undefined") {
         URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})`
       }
       const dashboardEmbed = new EmbedBuilder()
-        .setFooter({ text: 'Endless Mirage | Collabs Dashboard'})
         .setColor(collabColor)
         .setURL('https://endlessmirage.net/')
 
@@ -271,7 +271,7 @@ module.exports = {
                   )
                 } else {
                   infoValue = "**This collab is a experiment. Only prestige 4+ and premium can join!**";
-                }  
+                }
                 break;
               case 'full':
                 infoValue = "**This collab is full!**";
@@ -322,7 +322,7 @@ module.exports = {
         )
       }
 
-
+      dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' })
       embeds.push(dashboardEmbed);
 
       if (collab.designs.length !== 0) {
@@ -377,7 +377,12 @@ module.exports = {
 
       await int.editReply({
         content: '',
-        files: [attachment],
+        files: [attachment,
+          {
+            attachment: `./assets/coloredLogos/logo-${collabColor}.png`,
+            name: 'footer.png'
+          }
+        ],
         embeds: embeds,
         components: [components],
       })
