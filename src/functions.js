@@ -388,7 +388,7 @@ module.exports = {
                     odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
                     acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
 
-                    pre = scaledPP * srMultiplier * odValue * weight;
+                    pre = 2 * scaledPP * srMultiplier * odValue * weight;
 
                     if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
                         mapLength = mapLength - mapLength * 0.5;
@@ -398,8 +398,8 @@ module.exports = {
                         bpm = bpm - bpm * 0.25;
                     }
                     sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
-                    spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (acc / 3) * weight;
-                    rea = 2 / 5 * Math.exp(0.008 * bpm - 0.5) * scaledPP * srMultiplier * weight;
+                    spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
+                    rea = 4 / 5 * Math.exp(0.008 * bpm - 0.5) * scaledPP * srMultiplier * weight;
 
                     break;
                 case "fruits":
@@ -445,7 +445,7 @@ module.exports = {
                         bpm = bpm - bpm * 0.25;
                     }
                     sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
-                    spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (acc / 3) * weight;
+                    spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
                     break;
                 case "taiko":
                     if (bonusObjects > 0) {
@@ -477,8 +477,8 @@ module.exports = {
                         bpm = bpm - bpm * 0.25;
                     }
                     sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
-                    spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (acc / 3) * weight;
-                    rea = 2 / 5 * Math.exp(0.008 * bpm - 0.5) * scaledPP * srMultiplier * weight;
+                    spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
+                    rea = 4 / 5 * Math.exp(0.008 * bpm - 0.5) * scaledPP * srMultiplier * weight;
                     break;
             }
             skillsSum = arraySum(skillsSum, [acc, rea, aim, spe, sta, pre])
