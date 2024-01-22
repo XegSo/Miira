@@ -18,6 +18,8 @@ module.exports = {
         const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
         try {
             const userOsu = await localFunctions.getOsuData(userId, collection);
+            const lastUpdate = await localFunctions.getUserLastUpdate(userId, collection);
+            const currentDate = new Date();
             if (!userOsu) {
                 components = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
@@ -33,13 +35,8 @@ module.exports = {
             }
             const collabData = await localFunctions.getUserCollabs(userId, collection);
             const collabs = await localFunctions.getCollabs(collabCollection);
-            const buttons = new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                    .setLabel('🔄 Update your data')
-                    .setCustomId('refresh-osu-data')
-                    .setStyle('Primary')
-                    .setDisabled(true),
-            )
+            let buttons;
+
             let tier = 0;
                 let prestigeLevel = 0;
                 let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
@@ -85,11 +82,36 @@ module.exports = {
                         },
                         {
                             name: `‎`,
-                            value: `┌ Top 1 Mod: **${userOsu.modsData.top4Mods[0].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[0].percentage)}%**\n├ Top 2 Mod: **${userOsu.modsData.top4Mods[1].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[1].percentage)}%**\n├ Top 3 Mod: **${userOsu.modsData.top4Mods[2].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[2].percentage)}%**\n├ Top 4 Mod: **${userOsu.modsData.top4Mods[3].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[3].percentage)}%**\n└ Most used combination: **${userOsu.modsData.mostCommonModCombination.combination}**`,
+                            value: `┌ Top 1 Mod: **${userOsu.modsData.top4Mods[0].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[0].percentage)}%**\n├ Top 2 Mod: **${userOsu.modsData.top4Mods[1].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[1].percentage)}%**\n├ Top 3 Mod: **${userOsu.modsData.top4Mods[2].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[2].percentage)}%**\n├ Top 4 Mod: **${userOsu.modsData.top4Mods[3].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[3].percentage) ? Math.round(userOsu.modsData.top4Mods[3].percentage) : userOsu.modsData.top4Mods[3].percentage}%**\n└ Most used combination: **${userOsu.modsData.mostCommonModCombination.combination}**`,
                             inline: true
-                        },
+                        }
+                    )
+                }
+
+                if (!lastUpdate|| (currentDate - lastUpdate) > 7 * 24 * 60 * 60 * 1000) {
+                    buttons = new ActionRowBuilder().addComponents(
+                        new ButtonBuilder()
+                            .setLabel('🔄 Update your data')
+                            .setCustomId('refresh-osu-data')
+                            .setStyle('Primary')
+                    )
+                    osuEmbed.addFields(
                         {
-                            name: `*You can update your data once a week.*`,
+                            name: `*You are able to update your analytics.*`,
+                            value: `<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>`,
+                        }
+                    )
+                } else {
+                    buttons = new ActionRowBuilder().addComponents(
+                        new ButtonBuilder()
+                            .setLabel('🔄 Update your data')
+                            .setCustomId('refresh-osu-data')
+                            .setStyle('Primary')
+                            .setDisabled(true),
+                    )
+                    osuEmbed.addFields(
+                        {
+                            name: `*You can update your analytics <t:${Math.floor(lastUpdate.getTime()/1000 + 604800)}:R>.*`,
                             value: `<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>`,
                         }
                     )

@@ -298,6 +298,7 @@ module.exports = {
             let beatmap = score.beatmap;
             let mods = score.mods;
             let circles = beatmap.count_circles;
+            console.log(circles);
             let scaledPP = Math.pow(score.pp, 2) / Math.pow(900, 2) + 1;
             let mapAttributes = await v2.beatmap.id.attributes(beatmap.id, { mods: mods, ruleset: mode })
             let srMultiplier = mapAttributes.attributes.star_rating;
@@ -319,10 +320,10 @@ module.exports = {
             let bpm = beatmap.bpm;
             switch (mode) {
                 case "osu":
-                    if (bonusObjects > 0) {
-                        adjustedAcc = Math.pow(circles, score.accuracy) / 350
+                    if (bonusObjects < 0) {
+                        adjustedAcc = 1.7 * Math.pow(circles, score.accuracy) / 350
                     } else {
-                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(5, bonusObjects / 1000);
+                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
                     }
                     if (typeof mods.find(e => e === 'HR') !== "undefined") {
                         od = Math.max(10, od + od * 0.4);
@@ -369,10 +370,10 @@ module.exports = {
                     spe = mapAttributes.attributes.speed_difficulty * scaledPP * srMultiplier * weight;
                     break;
                 case "mania":
-                    if (bonusObjects > 0) {
-                        adjustedAcc = Math.pow(circles, score.accuracy) / 350
+                    if (bonusObjects < 0) {
+                        adjustedAcc = 1.7 * Math.pow(circles, score.accuracy) / 350
                     } else {
-                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(5, bonusObjects / 1000);
+                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
                     }
                     if (typeof mods.find(e => e === 'HR') !== "undefined") {
                         od = Math.max(10, od + od * 0.4);
@@ -398,15 +399,16 @@ module.exports = {
                         bpm = bpm - bpm * 0.25;
                     }
                     sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
-                    spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
+                    spe = 5 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
                     rea = 4 / 5 * Math.exp(0.008 * bpm - 0.5) * scaledPP * srMultiplier * weight;
-
+                    aim = (sta + acc) / 4 + (spe + rea) / 4;
                     break;
                 case "fruits":
-                    if (bonusObjects > 0) {
-                        adjustedAcc = Math.pow(circles, score.accuracy) / 350
+                    if (bonusObjects < 0) {
+                        adjustedAcc = 1.7 * Math.pow(circles, score.accuracy) / 350
                     } else {
-                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(5, bonusObjects / 1000);
+                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000 );
+                        adjustedAcc /= 2.5;
                     }
                     if (typeof mods.find(e => e === 'HR') !== "undefined") {
                         od = Math.max(10, od + od * 0.4);
@@ -446,12 +448,14 @@ module.exports = {
                     }
                     sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
                     spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
+                    aim = (sta + acc) / 4 + (spe + rea) / 4;
                     break;
                 case "taiko":
-                    if (bonusObjects > 0) {
-                        adjustedAcc = Math.pow(circles, score.accuracy) / 350
+                    if (bonusObjects < 0) {
+                        adjustedAcc = 1.7 * Math.pow(circles, score.accuracy) / 350
                     } else {
-                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(5, bonusObjects / 1000);
+                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000 );
+                        adjustedAcc /= 2.5;
                     }
                     if (typeof mods.find(e => e === 'HR') !== "undefined") {
                         od = Math.max(10, od + od * 0.4);
@@ -479,18 +483,31 @@ module.exports = {
                     sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
                     spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
                     rea = 4 / 5 * Math.exp(0.008 * bpm - 0.5) * scaledPP * srMultiplier * weight;
+                    aim = (sta + acc) / 4 + (spe + rea) / 4;
                     break;
             }
             skillsSum = arraySum(skillsSum, [acc, rea, aim, spe, sta, pre])
         }
-        const finalSkillsPrototipe = [
-            { skill: 'Accuracy', value: skillsSum[0] },
-            { skill: 'Reaction', value: skillsSum[1] },
-            { skill: 'Aim', value: skillsSum[2] },
-            { skill: 'Speed', value: skillsSum[3] },
-            { skill: 'Stamina', value: skillsSum[4] },
-            { skill: 'Precision', value: skillsSum[5] },
-        ];
+        finalSkillsPrototipe = [];
+        if (mode === "osu") {
+            finalSkillsPrototipe = [
+                { skill: 'Accuracy', value: skillsSum[0] },
+                { skill: 'Reaction', value: skillsSum[1] },
+                { skill: 'Aim', value: skillsSum[2] },
+                { skill: 'Speed', value: skillsSum[3] },
+                { skill: 'Stamina', value: skillsSum[4] },
+                { skill: 'Precision', value: skillsSum[5] },
+            ];
+        } else {
+            finalSkillsPrototipe = [
+                { skill: 'Accuracy', value: skillsSum[0] },
+                { skill: 'Reaction', value: skillsSum[1] },
+                { skill: 'Consistency', value: skillsSum[2] },
+                { skill: 'Speed', value: skillsSum[3] },
+                { skill: 'Stamina', value: skillsSum[4] },
+                { skill: 'Precision', value: skillsSum[5] },
+            ];
+        }
         const result = finalSkillsPrototipe.map((skill) => {
             const rankObj = localConstants.skillRanksByScore.find((rank) => skill.value >= rank.value);
             const rank = rankObj ? rankObj.rank : 'F';
@@ -720,6 +737,15 @@ module.exports = {
     getUserCollabs: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.collabs || [] : [];
+    },
+
+    getUserLastUpdate: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.lastUpdateOsu || null : null;
+    },
+
+    setUserLastUpdate: async function (userId, lastUpdateOsu, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { lastUpdateOsu } }, { upsert: true });
     },
 
     getUserCollab: async function (userId, collection, collabName) {
@@ -1779,24 +1805,24 @@ async function calculateAverageColor(imageBuffer) {
     const { data, info } = await sharp(imageBuffer).raw().toBuffer({ resolveWithObject: true });
     const pixelCount = info.width * info.height;
     let sumR = 0, sumG = 0, sumB = 0;
-  
+
     for (let i = 0; i < pixelCount; i++) {
-      sumR += data[i * 4];  // Red channel
-      sumG += data[i * 4 + 1];  // Green channel
-      sumB += data[i * 4 + 2];  // Blue channel
+        sumR += data[i * 4];  // Red channel
+        sumG += data[i * 4 + 1];  // Green channel
+        sumB += data[i * 4 + 2];  // Blue channel
     }
-  
+
     const averageColor = {
-      r: Math.round(sumR / pixelCount),
-      g: Math.round(sumG / pixelCount),
-      b: Math.round(sumB / pixelCount)
+        r: Math.round(sumR / pixelCount),
+        g: Math.round(sumG / pixelCount),
+        b: Math.round(sumB / pixelCount)
     };
-  
+
     return averageColor;
-  }
+}
 
 function calculateAdjustmentFactors(imageHSL, targetHSL) {
     const saturationFactor = imageHSL.s / targetHSL.s;
     const lightnessFactor = imageHSL.l / targetHSL.l;
     return { saturationFactor, lightnessFactor };
-  }
+}
