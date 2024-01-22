@@ -5,6 +5,7 @@ const { connectToSpreadsheet } = require('./googleSheets');
 const localConstants = require('./constants');
 const { v2 } = require('osu-api-extended');
 const { registerFont } = require('canvas');
+const Vibrant = require('node-vibrant');
 const fs = require('fs');
 const { user } = require('osu-api-extended/dist/api/v1');
 registerFont('./assets/fonts/Montserrat-Medium.ttf', {
@@ -23,17 +24,28 @@ registerFont('./assets/fonts/Montserrat-MediumItalic.ttf', {
 
 module.exports = {
 
-    handleCollabOpenings: async function(collection) {
+    getMeanColor: async function (imageUrl) {
+        try {
+            const palette = await Vibrant.from(imageUrl).getPalette();
+            const meanColor = palette.Vibrant.getHex();
+            return meanColor;
+        } catch (error) {
+            console.error('Error:', error.message);
+            return null;
+        }
+    },
+
+    handleCollabOpenings: async function (collection) {
         // Find documents with status "on design"
         const documents = await collection.find({ status: 'on design' }).toArray();
-    
+
         // Get current Unix timestamp
         const currentTimestamp = Math.floor(Date.now() / 1000);
-    
+
         // Iterate over documents and set interval for each
         documents.forEach(document => {
             const remainingTime = document.opening - currentTimestamp;
-    
+
             if (remainingTime > 0) {
                 console.log(`Handling ${document.name} opening in ${remainingTime / 60 / 60} hours`);
                 // Set interval to update status when time has passed
@@ -44,18 +56,18 @@ module.exports = {
             }
         });
     },
-    
-    handleCollabClosures: async function(collection) {
+
+    handleCollabClosures: async function (collection) {
         // Find documents with status "on design"
         const documents = await collection.find({ status: { $in: ['open', 'full'] } }).toArray();
-    
+
         // Get current Unix timestamp
         const currentTimestamp = Math.floor(Date.now() / 1000);
-    
+
         // Iterate over documents and set interval for each
         documents.forEach(document => {
             const remainingTime = document.closure - currentTimestamp;
-    
+
             if (remainingTime > 0) {
                 console.log(`Handling ${document.name} closure in ${remainingTime / 60 / 60} hours`);
                 // Set interval to update status when time has passed
@@ -649,8 +661,8 @@ module.exports = {
         await collection.updateOne({ name: collab }, { $set: { fieldRestrictions } }, { upsert: true });
     },
 
-    editCollab: async function (collab, name, topic, status, opening, user_cap, collection) {
-        await collection.updateOne({ name: collab }, { $set: { name, topic, status, opening, user_cap } }, { upsert: true });
+    editCollab: async function (collab, update, collection) {
+        await collection.updateOne({ name: collab }, { $set: update }, { upsert: true });
     },
 
     setCollabPool: async function (collab, pool, collection) {

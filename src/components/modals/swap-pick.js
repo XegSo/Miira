@@ -36,7 +36,7 @@ module.exports = {
                     return await int.editReply('Invalid character ID!');
                 }
                 if (newPickFull.status === "picked") {
-                    return await int.editReply('This character has been picked already by someone else!');
+                    return await int.editReply('This character has already been picked!');
                 }
                 const userOsuDataFull = await localFunctions.getOsuData(userId, userCollection);
                 await localFunctions.unsetCollabParticipation(collab.name, collection, currentPick.id);

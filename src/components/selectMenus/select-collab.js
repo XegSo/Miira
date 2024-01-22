@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, getUserAgentAppendix } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, getUserAgentAppendix, AttachmentBuilder } = require('discord.js');
 const { SelectMenuBuilder, ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
@@ -18,17 +18,20 @@ module.exports = {
     const guildMember = guild.members.cache.get(userId);
     try {
       const userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
+      const userInCollab = userCollabs.find(e => e.collabName === collab.name) ? true : false;
       let userOsuData = await localFunctions.getOsuData(userId, userCollection);
       let collab = await localFunctions.getCollab(int.values[0], collection);
+      let collabColor = await localFunctions.getMeanColor(collab.thumbnail);
       let components = [];
+      let embeds = [];
       let URLstring = '';
       if (typeof collab.spreadsheetID !== "undefined") {
         URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})`
       }
       const dashboardEmbed = new EmbedBuilder()
-        .setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
-        .setColor('#f26e6a')
-        .setDescription(`**\`\`\`\n🏐 ${collab.name}\`\`\`**`);
+        .setFooter({ text: 'Endless Mirage | Collabs Dashboard'})
+        .setColor(collabColor)
+        .setURL('https://endlessmirage.net/')
 
       let extraString = '';
 
@@ -89,7 +92,12 @@ module.exports = {
         prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
       }
 
-      if (typeof userCollabs.find(e => e.collabName === collab.name) !== "undefined") {
+      let infoValue = "";
+
+      if (userInCollab) {
+        if (collab.restriction === "deluxe"/*&& user doesn't have extra mats purchased*/) {
+          /*add a button to purchase extra mats*/
+        }
         components.addComponents(
           new ButtonBuilder()
             .setCustomId('profile-pick')
@@ -124,56 +132,80 @@ module.exports = {
             }
             break;
         }
-      }
-
-      let infoValue = "";
-      switch (collab.restriction) {
-        case "staff":
-          if (guildMember.roles.cache.has('961891383365500938') && typeof userCollabs.find(e => e.collabName === collab.name) === "undefined" && collab.status !== "full") {
+      } else {
+        switch (collab.restriction) {
+          case "staff":
             switch (collab.status) {
               case 'open':
-                infoValue = "**As a Staff member, you can participate in this collab!**"
-                components.addComponents(
-                  new ButtonBuilder()
-                    .setCustomId('join-collab')
-                    .setLabel('✅ Join')
-                    .setStyle('Success'),
-                )
+                if (guildMember.roles.cache.has('961891383365500938')) {
+                  infoValue = "**As a Staff member, you can participate in this collab!**"
+                  components.addComponents(
+                    new ButtonBuilder()
+                      .setCustomId('join-collab')
+                      .setLabel('✅ Join')
+                      .setStyle('Success'),
+                  )
+                } else {
+                  infoValue = "**This collab is hosted for staff only!**"
+                }
+                break;
+              case 'full':
+                infoValue = "**This collab is full!**"
+                break;
+              default:
+                infoValue = "**This collab is hosted for staff only!**"
                 break;
             }
-          } else if (collab.status !== "full") {
-            infoValue = "**This collab is hosted for staff only!**"
-          } else {
-            infoValue = "**This collab is full!**"
-          }
-          break;
-        case "deluxe":
-          if (/*if user has entry for a deluxe collab &&*/ typeof userCollabs.find(e => e.collabName === collab.name) === "undefined" && collab.status !== "full") {
+            break;
+          case "deluxe":
             switch (collab.status) {
               case 'open':
-                infoValue = "**You have an entry ticket for a deluxe collab!**";
-                components.addComponents(
-                  new ButtonBuilder()
-                    .setCustomId('join-collab')
-                    .setLabel('✅ Join')
-                    .setStyle('Success'),
-                )
+                if (false /*user has entry for the collab*/) {
+                  infoValue = "**You have an entry ticket for a deluxe collab!**";
+                  components.addComponents(
+                    new ButtonBuilder()
+                      .setCustomId('join-collab')
+                      .setLabel('✅ Join')
+                      .setStyle('Success'),
+                  )
+                } else {
+                  infoValue = "**To participate in this collab, you have to pay an entry fee**";
+                  components.addComponents(
+                    new ButtonBuilder()
+                      .setCustomId('deluxe-collab-entry')
+                      .setLabel('⚙️ Buy Entry')
+                      .setStyle('Success'),
+                  )
+                }
+                break;
+              case 'on design':
+                if (false /*user has entry for the collab*/) {
+                  infoValue = "**You have an entry ticket for a deluxe collab!**";
+                  components.addComponents(
+                    new ButtonBuilder()
+                      .setCustomId('join-collab')
+                      .setLabel('✅ Join')
+                      .setStyle('Success'),
+                  )
+                } else {
+                  infoValue = "**To participate in this collab, you have to pay an entry fee**";
+                  components.addComponents(
+                    new ButtonBuilder()
+                      .setCustomId('deluxe-collab-entry')
+                      .setLabel('⚙️ Buy Entry')
+                      .setStyle('Success'),
+                  )
+                }
+                break;
+              case 'full':
+                infoValue = "**This collab is full!**";
+                break;
+              default:
+                infoValue = "**This is a paid entry collab! To participate, you can buy an entry when this collab is on design or open."
                 break;
             }
-          } else if (collab.status !== "full" /*&& no entry for deluxe*/) {
-            infoValue = "**To participate in this collab, you have to pay an entry fee**";
-            components.addComponents(
-              new ButtonBuilder()
-                .setCustomId('deluxe-collab-entry')
-                .setLabel('⚙️ Buy Entry')
-                .setStyle('Success'),
-            )
-          } else {
-            infoValue = "**This collab is full!**";
-          }
-          break;
-        case "megacollab":
-          if (typeof userCollabs.find(e => e.collabName === collab.name) === "undefined" && collab.status !== "full") {
+            break;
+          case "megacollab":
             switch (collab.status) {
               case 'open':
                 infoValue = "**Join for free to this massive osu! project!**";
@@ -185,8 +217,9 @@ module.exports = {
                 )
                 break;
               case 'early access':
-                infoValue = "**Thank you for purchasing early access!**";
+                infoValue = "**Peak premium users are now picking!**";
                 if (typeof userPerks.find(e => e.name === 'Megacollab Early Access') !== "undefined" && collab.restriction === 'megacollab') {
+                  infoValue = "**Thank you for purchasing early access!**";
                   components.addComponents(
                     new ButtonBuilder()
                       .setCustomId('join-collab')
@@ -194,16 +227,64 @@ module.exports = {
                       .setStyle('Success'),
                   )
                 }
+              case 'full':
+                infoValue = "**This collab is full! Wow!**";
+                break;
+              default:
+                infoValue = "**Massive collab hosted for free!** Endless Mirage have the history of hosting massive user collaborations since 2018 and we don't seem to be stopping anytime soon!";
+                break;
             }
-          } else if (collab.status === "full") {
-            infoValue = "**This collab is full! Wow!**";
-          }
-          break;
-        case "prestige":
-          if (prestigeLevel >= 4 && typeof userCollabs.find(e => e.collabName === collab.name) === "undefined" && collab.status !== "full") {
+            break;
+          case "prestige":
             switch (collab.status) {
               case 'open':
-                infoValue = "**You're able to join this collab!**";
+                if (prestigeLevel >= 4) {
+                  infoValue = "**You're able to participate in this collab!**";
+                  components.addComponents(
+                    new ButtonBuilder()
+                      .setCustomId('join-collab')
+                      .setLabel('✅ Join')
+                      .setStyle('Success'),
+                  )
+                } else {
+                  infoValue = "**Collab only for prestige 4+ users!**";
+                }
+                break;
+              case 'full':
+                infoValue = "**This collab is full!**";
+                break;
+              default:
+                infoValue = "**Collab only for prestige 4+ users!**";
+                break;
+            }
+            break;
+          case "experimental":
+            switch (collab.status) {
+              case 'open':
+                if (prestigeLevel >= 0 || tier >= 4) {
+                  infoValue = "**You're able to participate in this collab!**";
+                  components.addComponents(
+                    new ButtonBuilder()
+                      .setCustomId('join-collab')
+                      .setLabel('✅ Join')
+                      .setStyle('Success'),
+                  )
+                } else {
+                  infoValue = "**This collab is a experiment. Only prestige 4+ and premium can join!**";
+                }  
+                break;
+              case 'full':
+                infoValue = "**This collab is full!**";
+                break;
+              default:
+                infoValue = "**This collab is a experiment. Only prestige 4+ and premium can join!**";
+                break;
+            }
+            break;
+          case "none":
+            switch (collab.status) {
+              case 'open':
+                infoValue = "**You're able to participate in this collab!**";
                 components.addComponents(
                   new ButtonBuilder()
                     .setCustomId('join-collab')
@@ -211,64 +292,26 @@ module.exports = {
                     .setStyle('Success'),
                 )
                 break;
-            }
-          } else if (collab.status !== "full") {
-            infoValue = "**Collab only for prestige 4+ users!**";
-          } else {
-            infoValue = "**This collab is full!**";
-          }
-          break;
-        case "experimental":
-          if ((prestigeLevel >= 0 || tier >= 4) && typeof userCollabs.find(e => e.collabName === collab.name) === "undefined" && collab.status !== "full") {
-            switch (collab.status) {
-              case 'open':
-                infoValue = "**You're able to join this collab!**";
-                components.addComponents(
-                  new ButtonBuilder()
-                    .setCustomId('join-collab')
-                    .setLabel('✅ Join')
-                    .setStyle('Success'),
-                )
+              case 'full':
+                infoValue = "**This collab is full!**";
+                break;
+              default:
+                infoValue = "**There is no restrictions for this collab! How awewsome**";
                 break;
             }
-          } else if (collab.status !== "full") {
-            infoValue = "**This collab is a experiment. Only prestige 4+ and premium can join!**";
-          } else {
-            infoValue = "**This collab is full!**";
-          }
-          break;
-        case "none":
-          if (typeof userCollabs.find(e => e.collabName === collab.name) === "undefined" && collab.status !== "full") {
-            switch (collab.status) {
-              case 'open':
-                infoValue = "**You're able to join this collab!**";
-                components.addComponents(
-                  new ButtonBuilder()
-                    .setCustomId('join-collab')
-                    .setLabel('✅ Join')
-                    .setStyle('Success'),
-                )
-                break;
-            }
-          } else if (collab.status !== "full") {
-            infoValue = "**This collab is full!**";
-          }
-          break;
+            break;
+        }
       }
 
-      dashboardEmbed.addFields(
-        {
-          name: `‎`,
-          value: `${infoValue}\nPlease check the __**${URLstring}**__ for character availability and participants.`
-        }
-      )
+      dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${collab.name}\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.`);
 
       dashboardEmbed.addFields(
         {
           name: `‎`,
-          value: `<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>`,
+          value: `${infoValue}`
         }
       )
+
 
       if (userId === '687004886922952755') {
         components.addComponents(
@@ -279,8 +322,47 @@ module.exports = {
         )
       }
 
-      if (typeof collab.designs !== "undefined") {
-        //add embeds with designs
+
+      embeds.push(dashboardEmbed);
+
+      if (collab.designs.length !== 0) {
+        let i = 0;
+        let designName;
+
+        for (const design in collab.designs) {
+          switch (design) {
+            case 'av':
+              designName = 'Avatar';
+              break;
+            case 'ba':
+              designName = 'Banner';
+              break;
+            case 'ca':
+              designName = 'Card';
+              break;
+            case 'he':
+              designName = "Header";
+              break;
+            case 'wa':
+              designName = "Wallpaper";
+              break;
+            case 'ov':
+              designName = "Overlay";
+              break;
+            case 'sk':
+              designName = "Skin";
+              break;
+            case 'po':
+              designName = "Poster";
+              break;
+          }
+          let embed = new EmbedBuilder()
+            .setURL('https://endlessmirage.net/')
+            .setImage(collab.designs[design]);
+
+          embeds.push(embed);
+          i++;
+        }
       }
 
       buttonCache.set(int.user.id, {
@@ -289,11 +371,17 @@ module.exports = {
         userCollabData: userCollabs
       })
 
+      const attachment = new AttachmentBuilder(collab.thumbnail, {
+        name: "thumbnail.png"
+      });
+
       await int.editReply({
         content: '',
-        embeds: [dashboardEmbed],
+        files: [attachment],
+        embeds: embeds,
         components: [components],
-      });
+      })
+
     } catch (e) {
       console.log(e)
       await int.editReply('Something went wrong...')

@@ -3,6 +3,7 @@ const { connectToSpreadsheet } = require('../../googleSheets');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 const { poolCache } = require('../../components/buttons/pool-collab');
+const { editCache } = require('../../components/buttons/edit-collab');
 const { createCollabCache } = require('../../commands/collabs/collabs');
 const userCooldowns = new Map();
 const userCombos = new Map();
@@ -120,6 +121,23 @@ module.exports = {
                     }
                 }
             }
+
+            if (editCache.size !== 0) { //Collab Editing
+                if (editCache.get(userId).userId === userId && message.reference.messageId === editCache.get(userId).messageId && message.attachments.size > 0) {
+                    const attachment = message.attachments.first();
+                    if (attachment.name.endsWith('.json')) {
+                        const response = await fetch(attachment.url);
+                        const buffer = Buffer.from(await response.arrayBuffer());
+                        let jsonData = JSON.parse(buffer.toString());
+                        console.log(jsonData);
+                        await localFunctions.editCollab(editCache.get(userId).collab, jsonData, collabCollection);
+                        message.reply('Collab edited succesfully.')
+                        createCollabCache.delete(userId);
+                        break messageCheck;
+                    }
+                }
+            }
+
             const messageLength = localFunctions.removeURLsAndColons(message.content).length; // Clean and calculate the message length 
             if (messageLength == 0) {
                 break messageCheck;
@@ -276,6 +294,8 @@ module.exports = {
 
             // Log activity (optional)
             console.log(`${message.author.tag} earned ${tokensEarned} Mirage Tokens.\n`);
+        } catch (e) {
+            console.log(e);
         } finally {
             mongoClient.close();
             mongoClientSpecial.close();
