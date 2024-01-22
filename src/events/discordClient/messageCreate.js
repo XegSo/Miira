@@ -132,7 +132,7 @@ module.exports = {
                         console.log(jsonData);
                         await localFunctions.editCollab(editCache.get(userId).collab, jsonData, collabCollection);
                         message.reply('Collab edited succesfully.')
-                        createCollabCache.delete(userId);
+                        editCache.delete(userId);
                         break messageCheck;
                     }
                 }

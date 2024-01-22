@@ -1,5 +1,4 @@
 require('dotenv').config();
-const { EmbedBuilder } = require('discord.js');
 const { connectToMongoDB } = require('./mongo');
 const { connectToSpreadsheet } = require('./googleSheets');
 const localConstants = require('./constants');
@@ -10,6 +9,8 @@ const axios = require('axios');
 const sharp = require('sharp');
 const fs = require('fs');
 const { user } = require('osu-api-extended/dist/api/v1');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, getUserAgentAppendix, AttachmentBuilder } = require('discord.js');
+const { SelectMenuBuilder, ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
 registerFont('./assets/fonts/Montserrat-Medium.ttf', {
     family: "Montserrat",
     weight: 'normal'
@@ -74,9 +75,10 @@ module.exports = {
         }
     },
 
-    handleCollabOpenings: async function (collection) {
+    handleCollabOpenings: async function (collection, client) {
         // Find documents with status "on design"
         const documents = await collection.find({ status: 'on design' }).toArray();
+        const guild = client.guilds.cache.get(localConstants.guildId);
 
         // Get current Unix timestamp
         const currentTimestamp = Math.floor(Date.now() / 1000);
@@ -89,14 +91,75 @@ module.exports = {
                 console.log(`Handling ${document.name} opening in ${remainingTime / 60 / 60} hours`);
                 // Set interval to update status when time has passed
                 setTimeout(async () => {
+                    const logChannel = guild.channels.cache.get(document.logChannel);
+                    let embeds = [];
                     await collection.updateOne({ _id: document._id }, { $set: { status: 'open' } });
+                    let collabColor = await getMeanColor(document.thumbnail);
+                    const dashboardEmbed = new EmbedBuilder()
+                        .setColor(collabColor)
+                        .setURL('https://endlessmirage.net/')
+                    if (typeof document.spreadsheetID !== "undefined") {
+                        URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${document.spreadsheetID})`
+                    }
+                    let extraString = '';
+
+                    if (document.user_cap !== 0) {
+                        extraString = `User Limit: ${document.user_cap}\n`
+                    } else {
+                        extraString = `Unlimited\n`
+                    }
+                    dashboardEmbed.addFields(
+                        {
+                            name: `‎`,
+                            value: `┌ Type: ${capitalizeFirstLetter(document.type)}\n├ Topic: ${capitalizeFirstLetter(document.topic)}\n└ Status: Open!\n`,
+                            inline: true
+                        }
+                    );
+
+                    dashboardEmbed.addFields(
+                        {
+                            name: `‎`,
+                            value: `┌ Class: ${capitalizeFirstLetter(document.restriction)}\n├ Closing date: <t:${parseInt(document.closure)}:R>\n└ ${extraString}`,
+                            inline: true
+                        }
+                    );
+
+                    dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${document.name} is open!\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.\nTo join, issue the command \`\`/collabs join\`\`!`);
+                    dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' })
+                    embeds.push(dashboardEmbed);
+                    if (document.designs.length !== 0) {
+                        let i = 0;
+
+                        for (const design in document.designs) {
+                            let embed = new EmbedBuilder()
+                                .setURL('https://endlessmirage.net/')
+                                .setImage(document.designs[design]);
+
+                            embeds.push(embed);
+                            i++;
+                        }
+                    }
+                    const attachment = new AttachmentBuilder(document.thumbnail, {
+                        name: "thumbnail.png"
+                    });
+
+                    await logChannel.send({
+                        content: '',
+                        files: [attachment,
+                            {
+                                attachment: `./assets/coloredLogos/logo-${collabColor}.png`,
+                                name: 'footer.png'
+                            }
+                        ],
+                        embeds: embeds,
+                    })
                     console.log(`${document.name} was opened`);
                 }, remainingTime * 1000); // Convert seconds to milliseconds
             }
         });
     },
 
-    handleCollabClosures: async function (collection) {
+    handleCollabClosures: async function (collection, client) {
         // Find documents with status "on design"
         const documents = await collection.find({ status: { $in: ['open', 'full'] } }).toArray();
 
@@ -407,7 +470,7 @@ module.exports = {
                     if (bonusObjects < 0) {
                         adjustedAcc = 1.7 * Math.pow(circles, score.accuracy) / 350
                     } else {
-                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000 );
+                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
                         adjustedAcc /= 2.5;
                     }
                     if (typeof mods.find(e => e === 'HR') !== "undefined") {
@@ -454,7 +517,7 @@ module.exports = {
                     if (bonusObjects < 0) {
                         adjustedAcc = 1.7 * Math.pow(circles, score.accuracy) / 350
                     } else {
-                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000 );
+                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
                         adjustedAcc /= 2.5;
                     }
                     if (typeof mods.find(e => e === 'HR') !== "undefined") {
@@ -1437,8 +1500,8 @@ module.exports = {
         await member.timeout(86400000, "Daily timeout for this user.");
         console.log('user timed out for 24 hours');
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
-        await handleCollabClosures(collection);
-        await handleCollabOpenings(collection);
+        await handleCollabClosures(collection, client);
+        await handleCollabOpenings(collection, client);
         setTimeout(async () => {
             await handleDailyDecay();
             await member.timeout(86400000, "Daily timeout for this user.");
@@ -1586,8 +1649,8 @@ async function scheduleDailyDecay(client) {
     await member.timeout(86400000, "Daily timeout for this user.");
     console.log('user timed out for 24 hours');
     const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
-    await handleCollabClosures(collection);
-    await handleCollabOpenings(collection);
+    await handleCollabClosures(collection, client);
+    await handleCollabOpenings(collection, client);
 
     setTimeout(async () => {
         await handleDailyDecay();
@@ -1695,9 +1758,10 @@ function excelSheetCoordinateToRowCol(coordinate) {
     return { row: parseInt(row, 10) - 1, col: col - 1 };
 }
 
-async function handleCollabOpenings(collection) {
+async function handleCollabOpenings(collection, client) {
     // Find documents with status "on design"
     const documents = await collection.find({ status: 'on design' }).toArray();
+    const guild = client.guilds.cache.get(localConstants.guildId);
 
     // Get current Unix timestamp
     const currentTimestamp = Math.floor(Date.now() / 1000);
@@ -1710,7 +1774,68 @@ async function handleCollabOpenings(collection) {
             console.log(`Handling ${document.name} opening in ${remainingTime / 60 / 60} hours`);
             // Set interval to update status when time has passed
             setTimeout(async () => {
+                const logChannel = guild.channels.cache.get(document.logChannel);
+                let embeds = [];
                 await collection.updateOne({ _id: document._id }, { $set: { status: 'open' } });
+                let collabColor = await getMeanColor(document.thumbnail);
+                const dashboardEmbed = new EmbedBuilder()
+                    .setColor(collabColor)
+                    .setURL('https://endlessmirage.net/')
+                if (typeof document.spreadsheetID !== "undefined") {
+                    URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${document.spreadsheetID})`
+                }
+                let extraString = '';
+
+                if (document.user_cap !== 0) {
+                    extraString = `User Limit: ${document.user_cap}\n`
+                } else {
+                    extraString = `Unlimited\n`
+                }
+                dashboardEmbed.addFields(
+                    {
+                        name: `‎`,
+                        value: `┌ Type: ${capitalizeFirstLetter(document.type)}\n├ Topic: ${capitalizeFirstLetter(document.topic)}\n└ Status: Open!\n`,
+                        inline: true
+                    }
+                );
+
+                dashboardEmbed.addFields(
+                    {
+                        name: `‎`,
+                        value: `┌ Class: ${capitalizeFirstLetter(document.restriction)}\n├ Closing date: <t:${parseInt(document.closure)}:R>\n└ ${extraString}`,
+                        inline: true
+                    }
+                );
+
+                dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${document.name} is open!\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.\nTo join, issue the command \`\`/collabs join\`\`!`);
+                dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' })
+                embeds.push(dashboardEmbed);
+                if (document.designs.length !== 0) {
+                    let i = 0;
+
+                    for (const design in document.designs) {
+                        let embed = new EmbedBuilder()
+                            .setURL('https://endlessmirage.net/')
+                            .setImage(document.designs[design]);
+
+                        embeds.push(embed);
+                        i++;
+                    }
+                }
+                const attachment = new AttachmentBuilder(document.thumbnail, {
+                    name: "thumbnail.png"
+                });
+
+                await logChannel.send({
+                    content: '',
+                    files: [attachment,
+                        {
+                            attachment: `./assets/coloredLogos/logo-${collabColor}.png`,
+                            name: 'footer.png'
+                        }
+                    ],
+                    embeds: embeds,
+                })
                 console.log(`${document.name} was opened`);
             }, remainingTime * 1000); // Convert seconds to milliseconds
         }
@@ -1825,4 +1950,24 @@ function calculateAdjustmentFactors(imageHSL, targetHSL) {
     const saturationFactor = imageHSL.s / targetHSL.s;
     const lightnessFactor = imageHSL.l / targetHSL.l;
     return { saturationFactor, lightnessFactor };
+}
+
+function capitalizeFirstLetter(str) {
+    if (typeof str !== 'string' || str.length === 0) {
+        return str;
+    }
+
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+async function getMeanColor(imageUrl) {
+    try {
+        const palette = await Vibrant.from(imageUrl).getPalette();
+        const meanColor = palette.Vibrant.getHex();
+        console.log(meanColor);
+        return meanColor;
+    } catch (error) {
+        console.error('Error:', error.message);
+        return null;
+    }
 }
