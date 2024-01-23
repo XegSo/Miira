@@ -813,7 +813,7 @@ module.exports = {
 
     getUserCollab: async function (userId, collection, collabName) {
         const result = await collection.findOne({ _id: userId, 'collabs.collabName': collabName }, { 'collabs.$': 1 });
-        return result ? result[0] || [] : [];
+        return result ? result || [] : [];
     },
 
     setUserCollabs: async function (userId, collabs, collection) {

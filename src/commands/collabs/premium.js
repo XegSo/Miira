@@ -115,7 +115,7 @@ module.exports = {
                 let mainComponents = [];
                 let userTier = await localFunctions.getUserTier(userId, collection);
 
-                if (!userTier && guildMember.roles.cache.has('743505566617436301') && !guildMember.roles.cache.has('1150484454071091280')) {
+                if (userTier.length === 0 && guildMember.roles.cache.has('743505566617436301') && !guildMember.roles.cache.has('1150484454071091280')) {
                     let premiumDetails = await localFunctions.assignPremium(int, userId, collection, guildMember);
                     userTier = premiumDetails[0];
                     userPerks = premiumDetails[1];

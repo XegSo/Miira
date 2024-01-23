@@ -61,13 +61,14 @@ module.exports = {
 
       switch (fullCollab.status) {
         case "early delivery":
-          const userTier = await localFunctions.getTier(userId, userCollection);
           let tier = 0;
-          if (!userTier && guildMember.roles.cache.has('743505566617436301') && !guildMember.roles.cache.has('1150484454071091280')) {
-            let premiumDetails = await localFunctions.assignPremium(int, userId, collection, guildMember);
-            tier = localFunctions.premiumToInteger(premiumDetails[0].name);
-          } else {
+          const userTier = await localFunctions.getUserTier(userId, userCollection);
+          if (userTier) {
+            console.log(userTier);
             tier = localFunctions.premiumToInteger(userTier.name);
+          } else if (guildMember.roles.cache.has('743505566617436301')) {
+            let premiumDetails = await localFunctions.assignPremium(int, userId, userCollection, guildMember);
+            tier = localFunctions.premiumToInteger(premiumDetails[0].name);
           }
           if (tier >= 4) {
             components.addComponents(

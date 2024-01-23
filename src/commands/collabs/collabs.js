@@ -159,21 +159,22 @@ module.exports = {
                 const collabData = await localFunctions.getUserCollabs(userId, collection);
                 const collabs = await localFunctions.getCollabs(collabCollection);
                 let buttons;
+
                 let tier = 0;
                 let prestigeLevel = 0;
                 let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
                 if (typeof prestige !== "undefined") {
                     prestige = prestige.name
+                    
                     prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
                 }
-                if (guildMember.roles.cache.has('743505566617436301')) {
-                    const userTier = await localFunctions.getUserTier(userId, collection);
-                    if (!userTier && !guildMember.roles.cache.has('1150484454071091280')) {
-                        let premiumDetails = await localFunctions.assignPremium(int, userId, collection, guildMember);
+                const userTier = await localFunctions.getUserTier(userId, collection);
+                if (userTier) {
+                    console.log(userTier);
+                    tier = localFunctions.premiumToInteger(userTier.name);
+                } else if (guildMember.roles.cache.has('743505566617436301')) {
+                    let premiumDetails = await localFunctions.assignPremium(int, userId, collection, guildMember);
                         tier = localFunctions.premiumToInteger(premiumDetails[0].name);
-                    } else {
-                        tier = localFunctions.premiumToInteger(userTier.name);
-                    }
                 }
 
                 const osuEmbed = new EmbedBuilder()
@@ -431,17 +432,18 @@ module.exports = {
                 let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
                 if (typeof prestige !== "undefined") {
                     prestige = prestige.name
+                    
                     prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
                 }
-                if (guildMember.roles.cache.has('743505566617436301')) {
-                    const userTier = await localFunctions.getUserTier(userId, collection);
-                    if (!userTier && !guildMember.roles.cache.has('1150484454071091280')) {
-                        let premiumDetails = await localFunctions.assignPremium(int, userId, collection, guildMember);
+                const userTier = await localFunctions.getUserTier(userId, collection);
+                if (userTier) {
+                    console.log(userTier);
+                    tier = localFunctions.premiumToInteger(userTier.name);
+                } else if (guildMember.roles.cache.has('743505566617436301')) {
+                    let premiumDetails = await localFunctions.assignPremium(int, userId, collection, guildMember);
                         tier = localFunctions.premiumToInteger(premiumDetails[0].name);
-                    } else {
-                        tier = localFunctions.premiumToInteger(userTier.name);
-                    }
                 }
+
 
                 const osuEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | Join a Collab', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
@@ -468,8 +470,8 @@ module.exports = {
                                             value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
                                         }
                                     )
+                                    collabsToJoinCount++;
                                 }
-                                collabsToJoinCount++;
                                 break;
                             case "deluxe":
                                 const deluxeEntry = await localFunctions.getDeluxeEntry(userId, collection);
@@ -481,8 +483,8 @@ module.exports = {
                                             value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
                                         }
                                     )
+                                    collabsToJoinCount++;
                                 }
-                                collabsToJoinCount++;
                                 break;
                             case "megacollab":
                                 if ((collab.status === "early access" && typeof userPerks.find(e => e.name === "Megacollab Early Access")) || userId == '687004886922952755') {
@@ -493,8 +495,8 @@ module.exports = {
                                             value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
                                         }
                                     )
+                                    collabsToJoinCount++;
                                 }
-                                collabsToJoinCount++;
                                 break;
                             case "prestige":
                                 if (typeof prestige !== "undefined" || userId == '687004886922952755') {
@@ -505,8 +507,8 @@ module.exports = {
                                             value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
                                         }
                                     )
+                                    collabsToJoinCount++;
                                 }
-                                collabsToJoinCount++;
                                 break;
                             case "experimental":
                                 if (tier > 0 || prestigeLevel > 4 || userId == '687004886922952755') {
@@ -517,8 +519,8 @@ module.exports = {
                                             value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
                                         }
                                     )
+                                    collabsToJoinCount++;
                                 }
-                                collabsToJoinCount++;
                                 break;
                             case "none":
                                 joinMenu.addOptions({ label: collab.name, value: collab.name });

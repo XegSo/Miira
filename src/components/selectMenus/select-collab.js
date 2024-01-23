@@ -76,20 +76,21 @@ module.exports = {
         )
       }
 
-      const userTier = await localFunctions.getTier(userId, userCollection);
       let tier = 0;
-      if (!userTier && guildMember.roles.cache.has('743505566617436301') && !guildMember.roles.cache.has('1150484454071091280')) {
-        let premiumDetails = await localFunctions.assignPremium(int, userId, collection, guildMember);
-        tier = localFunctions.premiumToInteger(premiumDetails[0].name);
-      } else {
-        tier = localFunctions.premiumToInteger(userTier.name);
-      }
-      const userPerks = localFunctions.getPerks(userId, userCollection);
       let prestigeLevel = 0;
       let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
       if (typeof prestige !== "undefined") {
         prestige = prestige.name
+
         prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
+      }
+      const userTier = await localFunctions.getUserTier(userId, userCollection);
+      if (userTier) {
+        console.log(userTier);
+        tier = localFunctions.premiumToInteger(userTier.name);
+      } else if (guildMember.roles.cache.has('743505566617436301')) {
+        let premiumDetails = await localFunctions.assignPremium(int, userId, userCollection, guildMember);
+        tier = localFunctions.premiumToInteger(premiumDetails[0].name);
       }
 
       let infoValue = "";
