@@ -62,7 +62,8 @@ module.exports = {
 
                         const doc = await connectToSpreadsheet(fullCollab.spreadsheetID); //Spreadsheet update
                         let initialization = false;
-                        let currentIndex = 0;
+                        let currentIndex = parseInt(jsonData.items[0].sheetIndex);
+                        console.log(currentIndex);
                         let sheet;
                         for (item of jsonData.items) {
                             if (parseInt(item.sheetIndex) !== currentIndex) {
