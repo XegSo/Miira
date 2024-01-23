@@ -252,33 +252,33 @@ module.exports = {
                             case "staff":
                                 if (guildMember.roles.cache.has('961891383365500938') || userId == '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                    collabsToJoinCount++;
                                 }
-                                collabsToJoinCount++;
                                 break;
                             case "deluxe":
                                 const deluxeEntry = await localFunctions.getDeluxeEntry(userId, collection);
                                 if (deluxeEntry || userId == '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                    collabsToJoinCount++;
                                 }
-                                collabsToJoinCount++;
                                 break;
                             case "megacollab":
                                 if ((collab.status === "early access" && typeof userPerks.find(e => e.name === "Megacollab Early Access")) || userId == '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                    collabsToJoinCount++;
                                 }
-                                collabsToJoinCount++;
                                 break;
                             case "prestige":
                                 if (typeof prestige !== "undefined" || userId == '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                    collabsToJoinCount++;
                                 }
-                                collabsToJoinCount++;
                                 break;
                             case "experimental":
                                 if (tier > 0 || prestigeLevel > 4 || userId == '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                    collabsToJoinCount++;
                                 }
-                                collabsToJoinCount++;
                                 break;
                             case "none":
                                 joinMenu.addOptions({ label: collab.name, value: collab.name });
