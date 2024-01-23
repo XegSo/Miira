@@ -262,7 +262,7 @@ module.exports = {
           case "experimental":
             switch (collab.status) {
               case 'open':
-                if (prestigeLevel >= 0 || tier >= 4) {
+                if (prestigeLevel >= 4 || tier >= 1) {
                   infoValue = "**You're able to participate in this collab!**";
                   components.addComponents(
                     new ButtonBuilder()

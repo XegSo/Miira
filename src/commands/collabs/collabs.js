@@ -275,7 +275,7 @@ module.exports = {
                                 }
                                 break;
                             case "experimental":
-                                if (tier > 0 || prestigeLevel > 4 || userId == '687004886922952755') {
+                                if (tier > 0 || prestigeLevel >= 4 || userId == '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     collabsToJoinCount++;
                                 }
@@ -511,7 +511,7 @@ module.exports = {
                                 }
                                 break;
                             case "experimental":
-                                if (tier > 0 || prestigeLevel > 4 || userId == '687004886922952755') {
+                                if (tier > 0 || prestigeLevel >= 4 || userId == '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     osuEmbed.addFields(
                                         {
