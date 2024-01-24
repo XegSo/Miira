@@ -7,7 +7,7 @@ module.exports = {
     .setDescription('Suggest something for the server or collabs.'),
   async execute(int, client) {
     const modal = new ModalBuilder()
-      .setCustomId(`suggest-modal`)
+      .setCustomId("suggest-modal")
       .setTitle('Send a suggestion');
 
     const title = new TextInputBuilder()

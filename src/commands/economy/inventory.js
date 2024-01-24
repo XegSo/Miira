@@ -57,7 +57,7 @@ module.exports = {
           }
           
           if (onUse) {
-            inventoryEmbedBottom.addFields({ name:  `\u200B`, value: '\`\`\`🚀 Items on use\`\`\`' });
+            inventoryEmbedBottom.addFields({ name:  "\u200B", value: '\`\`\`🚀 Items on use\`\`\`' });
             for (const item of onUse) {
               inventoryEmbedBottom.addFields({ name:  `· ${item.name}`, value: item.desc });
             }

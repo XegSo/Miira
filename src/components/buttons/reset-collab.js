@@ -21,7 +21,7 @@ module.exports = {
             return;
         }
         const modal = new ModalBuilder()
-            .setCustomId(`reset-collab`)
+            .setCustomId("reset-collab")
             .setTitle('Collab user reset');
 
         const title = new TextInputBuilder()

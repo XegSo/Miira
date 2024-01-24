@@ -10,7 +10,7 @@ module.exports = {
         if (int.user.id !== '687004886922952755') return;
         let collab = collabCache.get(int.user.id).collab;
         const modal = new ModalBuilder()
-            .setCustomId(`set-fields`)
+            .setCustomId("set-fields")
             .setTitle(`${collab}`);
 
         const av_text = new TextInputBuilder()

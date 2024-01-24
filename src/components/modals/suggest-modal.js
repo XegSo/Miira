@@ -5,7 +5,7 @@ const localConstants = require('../../constants');
 
 module.exports = {
     data: {
-        name: `suggest-modal`
+        name: "suggest-modal"
     },
     async execute (int, client) {
         await int.deferReply({ ephemeral: true });

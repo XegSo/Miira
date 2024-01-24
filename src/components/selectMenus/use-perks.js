@@ -31,7 +31,7 @@ module.exports = {
             }
 
             const modal = new ModalBuilder()
-                .setCustomId(`perk-modal`)
+                .setCustomId("perk-modal")
                 .setTitle('Claim your perk!');
 
             const osuName = new TextInputBuilder()

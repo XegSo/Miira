@@ -41,7 +41,7 @@ module.exports = {
                 }
                 const collabData = await localFunctions.getCollab(collabName, collabsCollection);
                 const modal = new ModalBuilder()
-                    .setCustomId(`join-collab`)
+                    .setCustomId("join-collab")
                     .setTitle(`${collabName}`);
 
                 const pick = new TextInputBuilder()

@@ -25,6 +25,6 @@ module.exports = {
             .setTitle('**Future plans**')
             .setDescription('There will be implementations that will be added into this system later on, which are the following:\n\n• You will be able to generate an unique referral code that you can use to invite your friends to the collabs. Once the user you invited completes 3 bumps you obtain an amount of tokens to be defined.\n\n• You will be able to set certain scores on certain maps given by future poolers in this server to obtain credits.\n\n• You will be able to obtain tokens by setting top 10 scores, with a bit of more weight for more skilled users.\n\n• **Any ideas and feedback for this economy is welcome!**')
             .setImage('https://puu.sh/JPffc/3c792e61c9.png');
-        int.reply({ content: ``, embeds: [helpEmbedTop, helpEmbed, helpEmbed2, helpEmbed3] });
+        int.reply({ content: "", embeds: [helpEmbedTop, helpEmbed, helpEmbed2, helpEmbed3] });
     }    
 }

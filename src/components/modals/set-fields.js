@@ -4,7 +4,7 @@ const { collabCache } = require('../buttons/set-fields');
 
 module.exports = {
     data: {
-        name: `set-fields`
+        name: "set-fields"
     },
     async execute(int, client) {
         await int.deferReply();
@@ -31,7 +31,7 @@ module.exports = {
         };
         try {
             await localFunctions.setCollabTexts(collabToEdit.name, fieldRestrictions, collection);
-            await int.editReply(`Parameters for limiting characters have been set.`);
+            await int.editReply("Parameters for limiting characters have been set.");
             collabCache.delete(int.user.id);
         } finally {
             mongoClient.close();

@@ -21,12 +21,12 @@ module.exports = {
             const collab = initializedMap.get(int.user.id).collab
             if (collab.type === "pooled") {
                 const modal = new ModalBuilder()
-                    .setCustomId(`trade-pick`)
+                    .setCustomId("trade-pick")
                     .setTitle(`${collab.name}`);
 
                 const pick = new TextInputBuilder()
                     .setCustomId('pick')
-                    .setLabel(`Type the ID of the character to trade.`)
+                    .setLabel("Type the ID of the character to trade.")
                     .setStyle(TextInputStyle.Short)
 
                 modal.addComponents(new ActionRowBuilder().addComponents(pick));

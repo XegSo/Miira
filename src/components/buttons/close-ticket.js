@@ -18,7 +18,7 @@ module.exports = {
             const DelEmbed = new EmbedBuilder()
             .setColor('#f26e6a')
             .setImage('https://puu.sh/JPffc/3c792e61c9.png')
-            .setAuthor({ name: `❌ A ticket has been closed.`, iconURL: userTicket.avatar })
+            .setAuthor({ name: "❌ A ticket has been closed.", iconURL: userTicket.avatar })
             .setThumbnail('https://puu.sh/JP9Iw/a365159d0e.png')
             .setDescription(`Opened by <@${userTicket.user.id}>\nClosed by <@${int.user.id}>\nDate: <t:${timestamp}:F>.`)
             .setTimestamp();

@@ -5,7 +5,7 @@ const localFunctions = require('../../functions');
 
 module.exports = {
     data: {
-        name: `perk-modal`
+        name: "perk-modal"
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });

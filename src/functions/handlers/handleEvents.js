@@ -2,7 +2,7 @@ const fs = require('fs');
 
 module.exports = (client) => {
     client.handleEvents = async(discordClient) => {
-        const eventFolders = fs.readdirSync(`./src/events`);
+        const eventFolders = fs.readdirSync("./src/events");
         for(const folder of eventFolders) {
             const eventFiles = fs
                 .readdirSync(`./src/events/${folder}`)

@@ -21,7 +21,7 @@ module.exports = {
             return;
         }
         const modal = new ModalBuilder()
-            .setCustomId(`delete-collab`)
+            .setCustomId("delete-collab")
             .setTitle('Collab deletion');
 
         const title = new TextInputBuilder()

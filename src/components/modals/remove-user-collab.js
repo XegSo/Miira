@@ -6,7 +6,7 @@ const { yeetCache } = require('../buttons/remove-user-collab');
 
 module.exports = {
     data: {
-        name: `remove-user-collab`
+        name: "remove-user-collab"
     },
     async execute(int, client) {
         await int.deferReply({ephemeral: true});
