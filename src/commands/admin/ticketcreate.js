@@ -30,7 +30,7 @@ module.exports = {
             .setTitle('Contact staff via Ticket.')
             .setDescription('Click on the button bellow to contact staff to discuss any matter on a private channel. Keep in mind rules still apply on there.');
         await channel.send({
-            content: ``,
+            content: "",
             embeds: [TicketTopEmbed, TicketEmbed],
             components: [
                 new ActionRowBuilder().addComponents(

@@ -18,7 +18,7 @@ module.exports = {
                 break main;
             }
             const modal = new ModalBuilder()
-                .setCustomId(`fetch-profile`)
+                .setCustomId("fetch-profile")
                 .setTitle('Link your osu! account');
 
             const name = new TextInputBuilder()

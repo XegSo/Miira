@@ -4,7 +4,7 @@ const localFunctions = require('../../functions');
 
 module.exports = {
     data: {
-        name: `suggestion-denial`
+        name: "suggestion-denial"
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });

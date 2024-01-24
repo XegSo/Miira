@@ -9,7 +9,7 @@ const { leaveCache } = require('../buttons/leave-collab');
 
 module.exports = {
     data: {
-        name: `leave-collab`
+        name: "leave-collab"
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
@@ -50,7 +50,7 @@ module.exports = {
                     await localFunctions.setCollabStatus(fullCollab.name, "open", collection);
                 }
 
-                await int.editReply(`You've left the collab succesfully.`);
+                await int.editReply("You've left the collab succesfully.");
             }
         } catch (e) {
             console.log(e);

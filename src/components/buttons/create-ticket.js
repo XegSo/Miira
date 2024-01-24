@@ -60,7 +60,7 @@ module.exports = {
             const CreatedEmbed = new EmbedBuilder()
               .setColor('#f26e6a')
               .setImage('https://puu.sh/JPffc/3c792e61c9.png')
-              .setAuthor({ name: `✔️ A ticket has been opened.`, iconURL: int.user.displayAvatarURL() })
+              .setAuthor({ name: "✔️ A ticket has been opened.", iconURL: int.user.displayAvatarURL() })
               .setThumbnail('https://puu.sh/JP9Iw/a365159d0e.png')
               .setDescription(`Opened by <@${int.user.id}>\nDate: <t:${Math.floor(new Date(Date.now()) / 1000)}:F>.`)
               .setTimestamp();

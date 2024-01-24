@@ -22,12 +22,12 @@ module.exports = {
             const currentCollab = userCollabData.find(e => e.collabName === collab.name);
             const currentPick = currentCollab.collabPick.name;
             const modal = new ModalBuilder()
-                .setCustomId(`leave-collab`)
+                .setCustomId("leave-collab")
                 .setTitle(`Leaving ${collab.name}`);
 
             const pick = new TextInputBuilder()
                 .setCustomId('pick')
-                .setLabel(`Type the name of your pick to leave.`)
+                .setLabel("Type the name of your pick to leave.")
                 .setPlaceholder(`${currentPick}`)
                 .setStyle(TextInputStyle.Short)
 

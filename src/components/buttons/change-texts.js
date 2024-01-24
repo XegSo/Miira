@@ -16,7 +16,7 @@ module.exports = {
         try {
             const collab = initializedMap.get(int.user.id).collab;
             const modal = new ModalBuilder()
-                .setCustomId(`change-texts`)
+                .setCustomId("change-texts")
                 .setTitle(`${collab.name}`);
             const av_text = new TextInputBuilder()
                 .setCustomId('av_text')

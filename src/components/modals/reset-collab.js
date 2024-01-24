@@ -6,7 +6,7 @@ const { resetCache } = require('../buttons/reset-collab');
 
 module.exports = {
     data: {
-        name: `reset-collab`
+        name: "reset-collab"
     },
     async execute(int, client) {
         await int.deferReply();
