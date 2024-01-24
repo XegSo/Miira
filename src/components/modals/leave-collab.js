@@ -36,11 +36,19 @@ module.exports = {
                 const leaveEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | New Character Available', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
-                    .setDescription(`**\`\`\`ml\n🎫 New Character Available!\`\`\`**                                                                                    **${fullCollab.name}**\nName:${pick.name}\nID: ${pick.id}`)
+                    .setURL('https://endlessmirage.net/')
+                    .setDescription(`**\`\`\`ml\n🎫 New Character Available!\`\`\`**                                                                                                        **${fullCollab.name}**\nName:${pick.name}\nID: ${pick.id}`)
+
+                const embed2 = new EmbedBuilder()
                     .setImage(pick.imgURL)
-                logChannel.send({ embeds: [leaveEmbed] });
+                    .setURL('https://endlessmirage.net/')
+                logChannel.send({ embeds: [leaveEmbed, embed2] });
 
                 await localFunctions.unsetParticipationOnSheet(fullCollab, itemInPool);
+
+                if (fullCollab.status === "full") {
+                    await localFunctions.setCollabStatus(fullCollab.name, "open", collection);
+                }
 
                 await int.editReply(`You've left the collab succesfully.`);
             }

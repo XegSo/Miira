@@ -33,7 +33,6 @@ module.exports = {
             const outputExists = fileExists(outputPath);
 
             if (outputExists) {
-                console.log('Output file already exists. Skipping image processing.');
                 return;
             }
 
@@ -57,7 +56,6 @@ module.exports = {
 
             // Save the modified image
             await sharp(modifiedImageBuffer).toFile(outputPath);
-            console.log('Hue change complete');
         } catch (error) {
             console.error('Error:', error.message || error);
         }
@@ -67,7 +65,6 @@ module.exports = {
         try {
             const palette = await Vibrant.from(imageUrl).getPalette();
             const meanColor = palette.Vibrant.getHex();
-            console.log(meanColor);
             return meanColor;
         } catch (error) {
             console.error('Error:', error.message);
@@ -237,7 +234,6 @@ module.exports = {
         const infoCell = sheet.getCell(mainRow + 1, mainCol);
         infoCell.value = `Picked by ${osuname} on ${new Date().toLocaleDateString('en-GB')}`;
         await sheet.saveUpdatedCells();
-        console.log('Join info updated on sheet.')
     },
 
     unsetParticipationOnSheet: async function (collab, pick) {
@@ -361,7 +357,6 @@ module.exports = {
             let beatmap = score.beatmap;
             let mods = score.mods;
             let circles = beatmap.count_circles;
-            console.log(circles);
             let scaledPP = Math.pow(score.pp, 2) / Math.pow(900, 2) + 1;
             let mapAttributes = await v2.beatmap.id.attributes(beatmap.id, { mods: mods, ruleset: mode })
             let srMultiplier = mapAttributes.attributes.star_rating;
@@ -656,15 +651,12 @@ module.exports = {
                         for (const perk of tier.perks) {
                             if ((tierNumber === 7 || tierNumber === 10) && (perk.name !== 'Host your own Megacollab' || perk.name !== 'Custom Endless Mirage Hoodie')) { //Peak tiers have all the perks permanent to them
                                 newPerks.push(perk);
-                                console.log(`Perk ${perk.name} has been pushed.`)
                             } else if (!perk.singleUse) {
                                 newPerks.push(perk);
-                                console.log(`Perk ${perk.name} has been pushed.`)
                             }
                         }
                         if (tier.name === roleToFind) {
                             await setPerks(userId, newPerks, collection);
-                            console.log(`Perks uploaded.`)
                             break;
                         }
                     }
@@ -786,6 +778,10 @@ module.exports = {
 
     setCollabPool: async function (collab, pool, collection) {
         await collection.updateOne({ name: collab }, { $set: { pool } }, { upsert: true });
+    },
+
+    setCollabColor: async function (collab, color, collection) {
+        await collection.updateOne({ name: collab }, { $set: { color } }, { upsert: true });
     },
 
     setCollabStatus: async function (collab, status, collection) {
@@ -915,8 +911,6 @@ module.exports = {
             { $set: { "pool.items.$[element].status": 'available' } },
             { arrayFilters: [{ "element.status": 'picked' }] }
         );
-
-        console.log(`Number of documents updated: ${updateResult.modifiedCount}`);
     },
 
     liquidateCollabFromUsers: async function (name, collection) {
@@ -924,7 +918,6 @@ module.exports = {
             {},
             { $pull: { collabs: { collabName: name } } }
         );
-        console.log(`Number of documents updated: ${updateResult.modifiedCount}`);
     },
 
     getOsuData: async function (userId, collection) {
@@ -986,7 +979,6 @@ module.exports = {
     },
 
     updateBadges: function (roles) {
-        console.log("Updating badges");
         let badges = [];
         if (roles.includes("Designer")) {
             badges.push('Designer');
@@ -1221,7 +1213,6 @@ module.exports = {
             existingData.push(newObj);
         }
         fs.writeFileSync(jsonPath, JSON.stringify(existingData, null, 2));
-        console.log(`New data added to ${jsonPath}`);
     },
 
     getPremiumData: async function (collection) {
@@ -1964,7 +1955,6 @@ async function getMeanColor(imageUrl) {
     try {
         const palette = await Vibrant.from(imageUrl).getPalette();
         const meanColor = palette.Vibrant.getHex();
-        console.log(meanColor);
         return meanColor;
     } catch (error) {
         console.error('Error:', error.message);

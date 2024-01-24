@@ -28,9 +28,14 @@ module.exports = {
                 let digits = pool[0].id.length;
                 const pick = localFunctions.padNumberWithZeros(parseInt(int.fields.getTextInputValue('pick')), digits);
                 let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
+                let allCollabs = await localFunctions.getCollabs(collection);
+                let verificationCollabs = allCollabs.find(e => e.status === "open" || e.status === "full" || e.status === "delivered" || e.status === "early access");
                 const itemInPool = pool.find((e) => e.id === pick);
                 if (typeof userCollabs.find(e => e.name === collab.name) !== "undefined") {
                     return await int.editReply('You are already participating in this collab!');
+                }
+                if (typeof userCollabs.find(e => verificationCollabs.find(c => c.name === e.name)) !== "undefined") {
+                    return await int.editReply('You are already participating in an active collab!');
                 }
                 if (typeof itemInPool === "undefined") {
                     return await int.editReply('Invalid character ID!');
@@ -98,6 +103,7 @@ module.exports = {
                 const joinEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | New Collab Participant', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
+                    .setURL('https://endlessmirage.net/')
                     .setThumbnail(userOsuDataFull.avatar_url)
                     .setDescription(`**\`\`\`ml\n🎫 New Collab Participation!\`\`\`**                                                                                    **${collab.name}**`)
                     .addFields(
@@ -148,12 +154,13 @@ module.exports = {
                     .setImage(itemInPool.imgURL)
                     .setFooter({ text: 'Endless Mirage | Pick Image', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
+                    .setURL('https://endlessmirage.net/')
                 logChannel.send({ content: `<@${userId}>`, embeds: [joinEmbed, imageEmbed] });
                 await int.editReply(`You've joined the collab! Pick: ${itemInPool.name}`);
             }
         } catch (e) {
             console.log(e);
-            await int.editReply(`An error has ocurred but the pick has been locked for you. Please contact the owner <@687004886922952755> to complete the process!`);
+            await int.editReply(`An error has ocurred but the pick has been locked for you. Please retry the process, and if you encounter with any issue contact the owner <@687004886922952755>`);
         } finally {
             mongoClient.close();
             mongoClientUsers.close();

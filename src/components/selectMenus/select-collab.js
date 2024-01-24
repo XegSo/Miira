@@ -20,7 +20,13 @@ module.exports = {
       const userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
       let userOsuData = await localFunctions.getOsuData(userId, userCollection);
       let collab = await localFunctions.getCollab(int.values[0], collection);
-      let collabColor = await localFunctions.getMeanColor(collab.thumbnail);
+      let collabColor;
+      if (typeof collab.color === "undefined") {
+        collabColor = await localFunctions.getMeanColor(collab.thumbnail);
+        await localFunctions.setCollabColor(collab.name, collabColor, collection);
+      } else {
+        collabColor = collab.color;
+      }
       const userInCollab = userCollabs.find(e => e.collabName === collab.name) ? true : false;
       let components = [];
       let embeds = [];
@@ -306,12 +312,14 @@ module.exports = {
 
       dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${collab.name}\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.`);
 
-      dashboardEmbed.addFields(
-        {
-          name: `‎`,
-          value: `${infoValue}`
-        }
-      )
+      if (infoValue.length !== 0) {
+        dashboardEmbed.addFields(
+          {
+            name: `‎`,
+            value: `${infoValue}`
+          }
+        )
+      }
 
 
       if (userId === '687004886922952755') {
