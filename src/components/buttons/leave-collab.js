@@ -23,7 +23,7 @@ module.exports = {
             const currentPick = currentCollab.collabPick.name;
             const modal = new ModalBuilder()
                 .setCustomId("leave-collab")
-                .setTitle(`Leaving ${collab.name}`);
+                .setTitle(`${collab.name}`);
 
             const pick = new TextInputBuilder()
                 .setCustomId('pick')
