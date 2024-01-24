@@ -14,7 +14,7 @@ module.exports = {
         const { collection: collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         const email = int.fields.getTextInputValue("email");
         
-        main: try {
+        try {
           let paymentData = await localFunctions.getPaymentInfo(email, collectionPayments);
           let userPendingAmount = await localFunctions.getPendingPaymentAmount(userId, collection);
           let currentTier = await localFunctions.getUserTier(userId, collection);

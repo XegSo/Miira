@@ -13,7 +13,7 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-        main: try {
+        try {
             let verificationCode = 0;
             let osu_user_full = [];
             if (fetchCache.size !== 0) {
