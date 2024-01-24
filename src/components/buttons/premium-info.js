@@ -24,7 +24,7 @@ module.exports = {
             )
             .setFooter({ text: 'Endless Mirage | Premium Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
 
-        mainComponents = new ActionRowBuilder().addComponents(
+        const mainComponents = new ActionRowBuilder().addComponents(
             new SelectMenuBuilder()
                 .setCustomId('premium-tiers')
                 .setPlaceholder('Check the detailed tiers.')

@@ -29,7 +29,7 @@ module.exports = {
             newCart = cartItems;
 
             if (cartItems.length) {
-                for (item of cartItems) {
+                for (let item of cartItems) {
                     switch (item.type) {
                         case 'Upgrade':
                             await int.editReply("You cannot add a tier renewal while having a tier upgrade in your cart.");
@@ -67,7 +67,7 @@ module.exports = {
 
             await localFunctions.setCart(userId, newCart, collection);
             addedToCartEmbed.setDescription(`**\`\`\`prolog\n🚀 Content added to your cart᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼᲼\`\`\`**${contentString}`); 
-            mainComponents = new ActionRowBuilder().addComponents(
+            const mainComponents = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('premium-info')
                     .setLabel('✒️ Continue Shopping')

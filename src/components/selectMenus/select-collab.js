@@ -224,6 +224,7 @@ module.exports = {
                 )
                 break;
               case 'early access':
+                let userPerks = await localFunctions.getPerks(userId, userCollection);
                 infoValue = "**Peak premium users are now picking!**";
                 if (typeof userPerks.find(e => e.name === 'Megacollab Early Access') !== "undefined" && collab.restriction === 'megacollab') {
                   infoValue = "**Thank you for purchasing early access!**";

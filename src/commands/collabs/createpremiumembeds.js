@@ -23,7 +23,7 @@ module.exports = {
         let priceString = '\u200B';
         let decayString = '';
 
-        for (tier of localConstants.premiumTiers) {
+        for (let tier of localConstants.premiumTiers) {
 
             if (tier.decay) {
                 decayString = "\n⚠️__***This tier decays.***__";
@@ -141,7 +141,7 @@ module.exports = {
                 .setStyle('Primary')
         )
 
-        for (embed of tierEmbeds) {
+        for (let embed of tierEmbeds) {
             await premiumChannel.send({
                 embeds: [embed],
                 components: [buyComponent]

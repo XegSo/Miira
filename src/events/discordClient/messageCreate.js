@@ -65,7 +65,7 @@ module.exports = {
                         let currentIndex = parseInt(jsonData.items[0].sheetIndex);
                         console.log(currentIndex);
                         let sheet;
-                        for (item of jsonData.items) {
+                        for (let item of jsonData.items) {
                             if (parseInt(item.sheetIndex) !== currentIndex) {
                                 initialization = false;
                                 console.log("Changes for a category have been pushed");

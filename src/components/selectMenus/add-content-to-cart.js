@@ -26,7 +26,7 @@ module.exports = {
                 break mainProcess; 
             }
 
-            mainComponents = new ActionRowBuilder().addComponents(
+            const mainComponents = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('premium-info')
                     .setLabel('✒️ Continue Shopping')
@@ -84,7 +84,7 @@ module.exports = {
 
             if (perksInChoices.length && userTier) {
                 let userTierInt = localFunctions.premiumToInteger(userTier.name);
-                for (perk of perksInChoices) {
+                for (let perk of perksInChoices) {
                     if (userTierInt >= perk.tier) {
                         let objIndex = perksInChoices.findIndex((obj => obj.name === perk.name));
                         let perkToRenew = perksInChoices.splice(objIndex, 1)[0];
@@ -98,7 +98,7 @@ module.exports = {
             }
 
             if (cartItems.length) {
-                for (item of cartItems) {
+                for (let item of cartItems) {
                     switch (item.type) {
                         case 'Tier':
                             if (typeof tierInChoices !== "undefined") {
@@ -111,7 +111,7 @@ module.exports = {
                                 }
                             }
                             if (perksInChoices.length) {
-                                for (perk of perksInChoices) {
+                                for (let perk of perksInChoices) {
                                     if (localFunctions.premiumToInteger(item.name) >= perk.tier) {
                                         await int.editReply({
                                             content: 'You cannot add a perk while having a tier that includes it in your cart. Please remove the tier of your cart first before adding.',
@@ -133,7 +133,7 @@ module.exports = {
                                 }
                             }
                             if (perksInChoices.length) {
-                                for (perk of perksInChoices) {
+                                for (let perk of perksInChoices) {
                                     if (localFunctions.premiumToInteger(item.name) >= perk.tier) {
                                         await int.editReply({
                                             content: 'You cannot add a perk while having a tier that includes it in your cart. Please remove the tier of your cart first before adding.',
@@ -144,7 +144,7 @@ module.exports = {
                                 }  
                             }
                             if (renewalsInChoices.length) {
-                                for (perk of renewalsInChoices) {
+                                for (let perk of renewalsInChoices) {
                                     if (localFunctions.premiumToInteger(item.name) >= perk.tier) {
                                         await int.editReply({
                                             content: 'You cannot add a perk renewal while having a tier that includes it in your cart. Please remove the tier of your cart first before adding.',
@@ -253,7 +253,7 @@ module.exports = {
                 Array.prototype.push.apply(newCart,renewalsInChoices);
             }
 
-            for (content of fullChoices) {
+            for (let content of fullChoices) {
                 contentString = contentString.concat("\n • ", `**Name:** ${content.name} \n   **Price:** ${content.price}$ \n **   Type:** ${content.type}\n`);
             }
             await localFunctions.setCart(userId, newCart, collection);

@@ -119,7 +119,7 @@ module.exports = {
             }
         )
 
-        buyComponent = new ActionRowBuilder().addComponents(
+        const buyComponent = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId('premium-buy')
                 .setLabel('⏏️ Purchase')
@@ -127,7 +127,7 @@ module.exports = {
 
         )
 
-        listComponent = new ActionRowBuilder().addComponents(
+        const listComponent = new ActionRowBuilder().addComponents(
             new SelectMenuBuilder()
                 .setCustomId('premium-tiers')
                 .setPlaceholder('Check more tiers.')
