@@ -418,7 +418,7 @@ module.exports = {
                         mapLength = mapLength - mapLength * 0.5;
                         bpm = bpm + bpm * 0.5;
                     } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
-                        mapLength = mapLength + mapLength * 1 / 3;
+                        mapLength = mapLength + Number(mapLength) / 3;
                         bpm = bpm - bpm * 0.25;
                     }
                     sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
@@ -452,7 +452,7 @@ module.exports = {
                         mapLength = mapLength - mapLength * 0.5;
                         bpm = bpm + bpm * 0.5;
                     } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
-                        mapLength = mapLength + mapLength * 1 / 3;
+                        mapLength = mapLength + Number(mapLength) / 3;
                         bpm = bpm - bpm * 0.25;
                     }
                     sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
@@ -500,7 +500,7 @@ module.exports = {
                         mapLength = mapLength - mapLength * 0.5;
                         bpm = bpm + bpm * 0.5;
                     } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
-                        mapLength = mapLength + mapLength * 1 / 3;
+                        mapLength = mapLength + Number(mapLength) / 3;
                         bpm = bpm - bpm * 0.25;
                     }
                     sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
@@ -534,7 +534,7 @@ module.exports = {
                         mapLength = mapLength - mapLength * 0.5;
                         bpm = bpm + bpm * 0.5;
                     } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
-                        mapLength = mapLength + mapLength * 1 / 3;
+                        mapLength = mapLength + Number(mapLength) / 3;
                         bpm = bpm - bpm * 0.25;
                     }
                     sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
