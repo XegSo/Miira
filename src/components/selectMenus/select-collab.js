@@ -18,10 +18,10 @@ module.exports = {
     const guildMember = guild.members.cache.get(userId);
     try {
       const userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
-      const userInCollab = userCollabs.find(e => e.collabName === collab.name) ? true : false;
       let userOsuData = await localFunctions.getOsuData(userId, userCollection);
       let collab = await localFunctions.getCollab(int.values[0], collection);
       let collabColor = await localFunctions.getMeanColor(collab.thumbnail);
+      const userInCollab = userCollabs.find(e => e.collabName === collab.name) ? true : false;
       let components = [];
       let embeds = [];
       let URLstring = '';
