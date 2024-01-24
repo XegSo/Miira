@@ -68,7 +68,7 @@ module.exports = {
                         for (let item of jsonData.items) {
                             if (parseInt(item.sheetIndex) !== currentIndex) {
                                 initialization = false;
-                                console.log(`Changes for a category have been pushed`);
+                                console.log("Changes for a category have been pushed");
                                 await sheet.saveUpdatedCells();
                             }
                             if (!initialization) {
@@ -95,7 +95,7 @@ module.exports = {
                             console.log(`Change registered for pick ${item.id}`)
                             if (parseInt(item.id) === fullCollab.user_cap) {
                                 await sheet.saveUpdatedCells();
-                                console.log(`Changes for a category have been pushed`);
+                                console.log("Changes for a category have been pushed");
                             }
                         }
                         message.reply('Pool uploaded to the database and spreadsheet succesfully!');
@@ -201,7 +201,7 @@ module.exports = {
                     // Combo has expired, reset combo data
                     comboData.messages = 1; // Reset the message count
                     comboData.lastMessageTime = currentTime;
-                    console.log(`User has lost its combo.`);
+                    console.log("User has lost its combo.");
                     tokensEarned = tokensEarnedNB;
                     console.log(`Tokens earned: ${tokensEarned}`);
                 }
@@ -211,7 +211,7 @@ module.exports = {
                     messages: 1,
                     lastMessageTime: currentTime,
                 });
-                console.log(`Starting this user's combo.`);
+                console.log("Starting this user's combo.");
                 tokensEarned = tokensEarnedNB;
                 console.log(`Tokens earned: ${tokensEarned}`);
             }

@@ -6,7 +6,7 @@ const { deleteCache } = require('../buttons/delete-collab');
 
 module.exports = {
     data: {
-        name: `delete-collab`
+        name: "delete-collab"
     },
     async execute(int, client) {
         await int.deferReply();

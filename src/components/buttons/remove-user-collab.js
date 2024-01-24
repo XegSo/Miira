@@ -21,7 +21,7 @@ module.exports = {
             return;
         }
         const modal = new ModalBuilder()
-            .setCustomId(`remove-user-collab`)
+            .setCustomId("remove-user-collab")
             .setTitle('Remove an user from the collab');
 
         const pick = new TextInputBuilder()

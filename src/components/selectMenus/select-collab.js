@@ -44,12 +44,12 @@ module.exports = {
       if (collab.user_cap !== 0) {
         extraString = `User Limit: ${collab.user_cap}\n`
       } else {
-        extraString = `Unlimited\n`
+        extraString = "Unlimited\n"
       }
 
       dashboardEmbed.addFields(
         {
-          name: `‎`,
+          name: "‎",
           value: `┌ Type: ${localFunctions.capitalizeFirstLetter(collab.type)}\n├ Topic: ${localFunctions.capitalizeFirstLetter(collab.topic)}\n└ Status: ${localFunctions.capitalizeFirstLetter(collab.status)}\n`,
           inline: true
         }
@@ -57,7 +57,7 @@ module.exports = {
 
       dashboardEmbed.addFields(
         {
-          name: `‎`,
+          name: "‎",
           value: `┌ Class: ${localFunctions.capitalizeFirstLetter(collab.restriction)}\n├ Opening date: <t:${parseInt(collab.opening)}:R>\n└ ${extraString}`,
           inline: true
         }
@@ -317,7 +317,7 @@ module.exports = {
       if (infoValue.length !== 0) {
         dashboardEmbed.addFields(
           {
-            name: `‎`,
+            name: "‎",
             value: `${infoValue}`
           }
         )

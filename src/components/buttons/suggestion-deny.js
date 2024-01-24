@@ -23,7 +23,7 @@ module.exports = {
         if (suggestion.status === 'Approved.' || suggestion.status === 'Denied.') return;
 
         const modal = new ModalBuilder()
-            .setCustomId(`suggestion-denial`)
+            .setCustomId("suggestion-denial")
             .setTitle('Suggestion denial');
                 
         const textInput = new TextInputBuilder()

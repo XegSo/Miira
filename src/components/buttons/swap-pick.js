@@ -24,12 +24,12 @@ module.exports = {
                     return await int.reply({ content: 'This collab is full! There is no character to swap with', ephemeral: true });
                 }
                 const modal = new ModalBuilder()
-                    .setCustomId(`swap-pick`)
+                    .setCustomId("swap-pick")
                     .setTitle(`${collab.name}`);
 
                 const pick = new TextInputBuilder()
                     .setCustomId('pick')
-                    .setLabel(`Type the ID of the character to swap.`)
+                    .setLabel("Type the ID of the character to swap.")
                     .setStyle(TextInputStyle.Short)
 
                 modal.addComponents(new ActionRowBuilder().addComponents(pick));

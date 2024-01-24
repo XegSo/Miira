@@ -6,7 +6,7 @@ const { editCache } = require('../buttons/change-texts');
 
 module.exports = {
     data: {
-        name: `change-texts`
+        name: "change-texts"
     },
     async execute(int, client) {
         await int.deferReply({ephemeral: true});

@@ -23,7 +23,7 @@ module.exports = {
           .setStyle('Success'),    
       )
       await int.editReply({
-        content: `Your cart has been updated.`,
+        content: "Your cart has been updated.",
         components: [messageComponents],
       });
     } finally {

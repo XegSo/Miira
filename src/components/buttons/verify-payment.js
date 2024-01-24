@@ -10,7 +10,7 @@ module.exports = {
     },
     async execute(int, client) {
         const modal = new ModalBuilder()
-            .setCustomId(`verify-paypal`)
+            .setCustomId("verify-paypal")
             .setTitle('Verify your Payment.');
 
         const email = new TextInputBuilder()

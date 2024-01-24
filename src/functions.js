@@ -104,11 +104,11 @@ module.exports = {
                     if (document.user_cap !== 0) {
                         extraString = `User Limit: ${document.user_cap}\n`
                     } else {
-                        extraString = `Unlimited\n`
+                        extraString = "Unlimited\n"
                     }
                     dashboardEmbed.addFields(
                         {
-                            name: `‎`,
+                            name: "‎",
                             value: `┌ Type: ${capitalizeFirstLetter(document.type)}\n├ Topic: ${capitalizeFirstLetter(document.topic)}\n└ Status: Open!\n`,
                             inline: true
                         }
@@ -116,7 +116,7 @@ module.exports = {
 
                     dashboardEmbed.addFields(
                         {
-                            name: `‎`,
+                            name: "‎",
                             value: `┌ Class: ${capitalizeFirstLetter(document.restriction)}\n├ Closing date: <t:${parseInt(document.closure)}:R>\n└ ${extraString}`,
                             inline: true
                         }
@@ -187,7 +187,7 @@ module.exports = {
         for (let item of pool) {
             if (parseInt(item.sheetIndex) !== currentIndex) {
                 initialization = false;
-                console.log(`Changes for a category have been pushed`);
+                console.log("Changes for a category have been pushed");
                 await sheet.saveUpdatedCells();
             }
             if (!initialization) {
@@ -214,7 +214,7 @@ module.exports = {
             console.log(`Change registered for pick ${item.id}`)
             if (parseInt(item.id) === collab.user_cap) {
                 await sheet.saveUpdatedCells();
-                console.log(`Changes for a category have been pushed`);
+                console.log("Changes for a category have been pushed");
             }
         }
     },
@@ -687,7 +687,7 @@ module.exports = {
             .setTimestamp();
         for (let i = 0; i < data.length; i++) {
             const user = data[i];
-            embed.addFields({ name: `\n`, value: `**${i + 1}**. <@${user.userId}> : $${MirageFormat.format(user.credits)} ₥` });
+            embed.addFields({ name: "\n", value: `**${i + 1}**. <@${user.userId}> : $${MirageFormat.format(user.credits)} ₥` });
         }
         return embed;
     },
@@ -701,7 +701,7 @@ module.exports = {
             .setTimestamp();
         for (let i = 0; i < data.length; i++) {
             const user = data[i];
-            embed.addFields({ name: `\n`, value: `**${i + 1}**. <@${user.userId}> : ${user.topCombo}` });
+            embed.addFields({ name: "\n", value: `**${i + 1}**. <@${user.userId}> : ${user.topCombo}` });
         }
         return embed;
     },
@@ -1782,11 +1782,11 @@ async function handleCollabOpenings(collection, client) {
                 if (document.user_cap !== 0) {
                     extraString = `User Limit: ${document.user_cap}\n`
                 } else {
-                    extraString = `Unlimited\n`
+                    extraString = "Unlimited\n"
                 }
                 dashboardEmbed.addFields(
                     {
-                        name: `‎`,
+                        name: "‎",
                         value: `┌ Type: ${capitalizeFirstLetter(document.type)}\n├ Topic: ${capitalizeFirstLetter(document.topic)}\n└ Status: Open!\n`,
                         inline: true
                     }
@@ -1794,7 +1794,7 @@ async function handleCollabOpenings(collection, client) {
 
                 dashboardEmbed.addFields(
                     {
-                        name: `‎`,
+                        name: "‎",
                         value: `┌ Class: ${capitalizeFirstLetter(document.restriction)}\n├ Closing date: <t:${parseInt(document.closure)}:R>\n└ ${extraString}`,
                         inline: true
                     }

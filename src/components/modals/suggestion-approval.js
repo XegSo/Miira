@@ -5,7 +5,7 @@ const localFunctions = require('../../functions');
 
 module.exports = {
     data: {
-        name: `suggestion-approval`
+        name: "suggestion-approval"
     },
     async execute (int, client) {
         await int.deferReply({ ephemeral: true });
@@ -48,7 +48,7 @@ module.exports = {
             const logEmbed = new EmbedBuilder()
               .setColor('#f26e6a')
               .setImage('https://puu.sh/JPffc/3c792e61c9.png')
-              .setAuthor({ name: `🟢 New suggestion approved.`, iconURL: suggestion.embed.data.author.icon_url })
+              .setAuthor({ name: "🟢 New suggestion approved.", iconURL: suggestion.embed.data.author.icon_url })
               .setThumbnail('https://puu.sh/JP9Iw/a365159d0e.png')
               .setDescription(`**Suggested by <@${suggestion.user}>\nApproved by <@${int.user.id}>**\n\n${suggestion.embed.data.description}\n\nDate: <t:${Math.floor(new Date(Date.now()) / 1000)}:F>.`)
             logChannel.send({ content: '', embeds: [logEmbed] });

@@ -6,7 +6,7 @@ const { connectToMongoDB } = require('../../mongo');
 
 module.exports = {
     data: {
-        name: `verify-paypal`
+        name: "verify-paypal"
     },
     async execute (int, client) {
         await int.deferReply({ ephemeral: true });
@@ -32,7 +32,7 @@ module.exports = {
               let allPerksForTier = [];
               let userCart = await localFunctions.getCart(userId, collection);
               const premiumLogEmbed = new EmbedBuilder()
-                    .setAuthor({ name: `✔️ A new premium purchase has been made.`})
+                    .setAuthor({ name: "✔️ A new premium purchase has been made."})
                     .setThumbnail(int.user.displayAvatarURL())
                     .setFooter({ text: 'Endless Mirage', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
@@ -42,7 +42,7 @@ module.exports = {
               for (let item of userCart) {
                 premiumLogEmbed.addFields(
                   {
-                      name: `᲼`,
+                      name: "᲼",
                       value: `**\`\`🔗 ${item.name}\`\`**\n ├ Type: ${item.type}\n └ Price: ${item.price}$`,
                   },
               ) 
