@@ -60,10 +60,11 @@ module.exports = {
 
             components = new ActionRowBuilder();
 
+            const userTier = await localFunctions.getTier(userId, userCollection);
+            let tier = 0;
+
             switch (fullCollab.status) {
                 case "early delivery":
-                    const userTier = await localFunctions.getTier(userId, userCollection);
-                    let tier = 0;
                     if (userTier) {
                         console.log(userTier);
                         tier = localFunctions.premiumToInteger(userTier.name);

@@ -174,7 +174,7 @@ module.exports = {
 
                 console.log(userTier.name);
 
-                if (userPerks && userPerks.length) {
+                if (userPerks?.length) {
                     let useMenu = new SelectMenuBuilder()
                         .setCustomId('use-perks')
                         .setPlaceholder('Use your perks.')

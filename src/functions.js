@@ -599,7 +599,7 @@ module.exports = {
             if (typeof obj === 'object' && !Array.isArray(obj)) {
                 let resultObj = {};
                 for (let field of fieldsToPreserve) {
-                    if (obj.hasOwnProperty(field)) {
+                    if (Object.prototype.hasOwnProperty.call(obj, field)) {
                         resultObj[field] = obj[field];
                     }
                 }

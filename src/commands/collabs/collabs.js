@@ -246,6 +246,7 @@ module.exports = {
                 const joinMenu = new SelectMenuBuilder()
                     .setCustomId('select-collab')
                     .setPlaceholder('Select a collab to join.')
+                const deluxeEntry = await localFunctions.getDeluxeEntry(userId, collection);
                 for (const collab of collabs) {
                     if (((collab.status !== "closed" && collab.status !== "on design") || userId == '687004886922952755') && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
                         switch (collab.restriction) {
@@ -256,7 +257,6 @@ module.exports = {
                                 }
                                 break;
                             case "deluxe":
-                                const deluxeEntry = await localFunctions.getDeluxeEntry(userId, collection);
                                 if (deluxeEntry || userId == '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     collabsToJoinCount++;
@@ -455,6 +455,7 @@ module.exports = {
                 const joinMenu = new SelectMenuBuilder()
                     .setCustomId('select-collab')
                     .setPlaceholder('Select a collab to join.')
+                const deluxeEntry = await localFunctions.getDeluxeEntry(userId, collection);
                 for (const collab of collabs) {
                     let user_cap = collab.user_cap;
                     let participants = collabs.participants ? collabs.participants.length : 0;
@@ -474,7 +475,6 @@ module.exports = {
                                 }
                                 break;
                             case "deluxe":
-                                const deluxeEntry = await localFunctions.getDeluxeEntry(userId, collection);
                                 if (deluxeEntry || userId == '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     osuEmbed.addFields(
