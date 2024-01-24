@@ -124,6 +124,7 @@ module.exports = {
                             .setLabel('⬇️ Download')
                             .setStyle('Primary'),
                     )
+                    break;
                 default:
                     if (fullCollab.status !== "full") {
                         components.addComponents(

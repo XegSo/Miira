@@ -459,7 +459,7 @@ module.exports = {
                     let user_cap = collab.user_cap;
                     let participants = collabs.participants ? collabs.participants.length : 0;
                     let slots = user_cap - participants;
-                    if (((collab.status !== "closed" && collab.status !== "on design") || userId == '687004886922952755') && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
+                    if (((collab.status !== "closed" && collab.status !== "on design" && collab.status !== "full") || userId == '687004886922952755') && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
                         switch (collab.restriction) {
                             case "staff":
                                 if (guildMember.roles.cache.has('961891383365500938') || userId == '687004886922952755') {

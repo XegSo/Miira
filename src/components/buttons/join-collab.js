@@ -28,6 +28,11 @@ module.exports = {
                 });
                 return;
             } else {
+                let allCollabs = await localFunctions.getCollabs(collabsCollection);
+                let verificationCollabs = allCollabs.find(e => e.status === "open" || e.status === "full" || e.status === "delivered" || e.status === "early access");
+                if (typeof userCollabData.find(e => verificationCollabs.find(c => c.name === e.name)) !== "undefined") {
+                    return await int.editReply('You are already participating in an active collab!');
+                }
                 if (typeof userCollabData.find(e => e.collabName === collabName) !== "undefined") {
                     await int.deferReply({ ephemeral: true });
                     await int.editReply({

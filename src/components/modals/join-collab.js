@@ -28,14 +28,9 @@ module.exports = {
                 let digits = pool[0].id.length;
                 const pick = localFunctions.padNumberWithZeros(parseInt(int.fields.getTextInputValue('pick')), digits);
                 let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
-                let allCollabs = await localFunctions.getCollabs(collection);
-                let verificationCollabs = allCollabs.find(e => e.status === "open" || e.status === "full" || e.status === "delivered" || e.status === "early access");
                 const itemInPool = pool.find((e) => e.id === pick);
                 if (typeof userCollabs.find(e => e.name === collab.name) !== "undefined") {
                     return await int.editReply('You are already participating in this collab!');
-                }
-                if (typeof userCollabs.find(e => verificationCollabs.find(c => c.name === e.name)) !== "undefined") {
-                    return await int.editReply('You are already participating in an active collab!');
                 }
                 if (typeof itemInPool === "undefined") {
                     return await int.editReply('Invalid character ID!');

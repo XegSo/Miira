@@ -234,6 +234,7 @@ module.exports = {
                       .setStyle('Success'),
                   )
                 }
+                break;
               case 'full':
                 infoValue = "**This collab is full! Wow!**";
                 break;
