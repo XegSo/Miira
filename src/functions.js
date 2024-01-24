@@ -90,6 +90,7 @@ module.exports = {
                 setTimeout(async () => {
                     const logChannel = guild.channels.cache.get(document.logChannel);
                     let embeds = [];
+                    let URLstring = '';
                     await collection.updateOne({ _id: document._id }, { $set: { status: 'open' } });
                     let collabColor = await getMeanColor(document.thumbnail);
                     const dashboardEmbed = new EmbedBuilder()
@@ -183,7 +184,7 @@ module.exports = {
         let initialization = false;
         let currentIndex = 0;
         let sheet;
-        for (item of pool) {
+        for (let item of pool) {
             if (parseInt(item.sheetIndex) !== currentIndex) {
                 initialization = false;
                 console.log(`Changes for a category have been pushed`);
@@ -353,7 +354,7 @@ module.exports = {
 
     calculateSkill: async function (userTop100, mode) {
         let skillsSum = [];
-        for (score of userTop100) {
+        for (let score of userTop100) {
             let beatmap = score.beatmap;
             let mods = score.mods;
             let circles = beatmap.count_circles;
@@ -505,7 +506,7 @@ module.exports = {
                         bpm = bpm - bpm * 0.25;
                     }
                     sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
-                    spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
+                    spe = 5 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
                     aim = (sta + acc) / 4 + (spe + rea) / 4;
                     break;
                 case "taiko":
@@ -539,14 +540,14 @@ module.exports = {
                         bpm = bpm - bpm * 0.25;
                     }
                     sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
-                    spe = 1 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
+                    spe = 5 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
                     rea = 4 / 5 * Math.exp(0.008 * bpm - 0.5) * scaledPP * srMultiplier * weight;
                     aim = (sta + acc) / 4 + (spe + rea) / 4;
                     break;
             }
             skillsSum = arraySum(skillsSum, [acc, rea, aim, spe, sta, pre])
         }
-        finalSkillsPrototipe = [];
+        let finalSkillsPrototipe = [];
         if (mode === "osu") {
             finalSkillsPrototipe = [
                 { skill: 'Accuracy', value: skillsSum[0] },
@@ -634,6 +635,7 @@ module.exports = {
         let newPerks = [];
         let foundRole = null;
         let foundTier = [];
+        let tierDetails;
         console.log('Executing insertion of perks');
         for (const numeral of localConstants.romanNumerals) { //find the fucker and assign it to the database
             const roleToFind = `Mirage ${numeral}`;
@@ -1753,7 +1755,6 @@ async function handleCollabOpenings(collection, client) {
     // Find documents with status "on design"
     const documents = await collection.find({ status: 'on design' }).toArray();
     const guild = client.guilds.cache.get(localConstants.guildId);
-
     // Get current Unix timestamp
     const currentTimestamp = Math.floor(Date.now() / 1000);
 
@@ -1767,6 +1768,7 @@ async function handleCollabOpenings(collection, client) {
             setTimeout(async () => {
                 const logChannel = guild.channels.cache.get(document.logChannel);
                 let embeds = [];
+                let URLstring = "";
                 await collection.updateOne({ _id: document._id }, { $set: { status: 'open' } });
                 let collabColor = await getMeanColor(document.thumbnail);
                 const dashboardEmbed = new EmbedBuilder()

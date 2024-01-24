@@ -6,7 +6,7 @@ module.exports = {
     async execute(member) {
         let memberUpdated = (await member.guild.members.fetch({ user: member.user.id, force: true }));
         const roles = memberUpdated.roles.cache.map(role => role.name);
-        badges = localFunctions.updateBadges(roles);
+        let badges = localFunctions.updateBadges(roles);
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         let userInventory = await localFunctions.getInventory(member.user.id,  collection) || [];
         let onUse = await localFunctions.getOnUse(member.user.id, collection);

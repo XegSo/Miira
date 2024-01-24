@@ -122,7 +122,7 @@ module.exports = {
                 textColor = "#FFFFFF";
             }
 
-            background = await Canvas.loadImage(`./assets/backgrounds/${backgroundName}.png`);
+            let background = await Canvas.loadImage(`./assets/backgrounds/${backgroundName}.png`);
             ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
             localFunctions.ctxText(canvas, ctx, textColor, int.user.username.split("").join(String.fromCharCode(8202)), 'start', 'Montserrat', 114, 'normal', 494, 120);

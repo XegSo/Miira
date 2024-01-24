@@ -25,7 +25,7 @@ module.exports = {
                         .setMinValues(1)
                         .setMaxValues(cartItems.length); 
                 let itemString = '';
-                for (item of cartItems) {
+                for (let item of cartItems) {
                     itemString = itemString.concat(`**\`\`🔗 ${item.name}\`\`**\n ├ Type: ${item.type}\n └ Price: ${item.price}$\n\n`)
                     totalCost = totalCost + item.price;
                     deleteMenu.addOptions({ label: item.name, value: item.name, description: `Cost: ${item.price}$` });

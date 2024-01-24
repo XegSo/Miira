@@ -95,7 +95,7 @@ module.exports = {
                     renewalString = renewalString.concat(`*\n                                                                                                        **\`\`\`prolog\n💵 Purchaseable perks\`\`\`**\n`)
                     buyEmbed.setDescription(`**Current Tier: ${dbTier.name}**\n${renewalString}`);
                 }
-                for (perk of purchaseablePerks) {
+                for (let perk of purchaseablePerks) {
                     buyEmbed.addFields(
                         {
                             name: ` `,

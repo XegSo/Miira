@@ -21,7 +21,7 @@ module.exports = {
             const lastUpdate = await localFunctions.getUserLastUpdate(userId, collection);
             const currentDate = new Date();
             if (!userOsu) {
-                components = new ActionRowBuilder().addComponents(
+                const components = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId('link-osu')
                         .setLabel('🔗 Link your osu! Account')

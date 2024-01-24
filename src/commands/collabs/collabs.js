@@ -144,7 +144,7 @@ module.exports = {
                 const lastUpdate = await localFunctions.getUserLastUpdate(userId, collection);
                 const currentDate = new Date();
                 if (!userOsu) {
-                    components = new ActionRowBuilder().addComponents(
+                    const components = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('link-osu')
                             .setLabel('🔗 Link your osu! Account')
@@ -341,7 +341,7 @@ module.exports = {
             try {
                 const userOsu = await localFunctions.getOsuData(userId, collection);
                 if (!userOsu) {
-                    components = new ActionRowBuilder().addComponents(
+                    const components = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('link-osu')
                             .setLabel('🔗 Link your osu! Account')
@@ -412,7 +412,7 @@ module.exports = {
             try {
                 const userOsu = await localFunctions.getOsuData(userId, collection);
                 if (!userOsu) {
-                    components = new ActionRowBuilder().addComponents(
+                    const components = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('link-osu')
                             .setLabel('🔗 Link your osu! Account')
@@ -580,7 +580,7 @@ module.exports = {
                     .setCustomId('select-collab')
                     .setPlaceholder('Select a collab to visualize.')
                 const allCollabs = await localFunctions.getCollabs(collection);
-                for (collab of allCollabs) {
+                for (let collab of allCollabs) {
                     collabsMenu.addOptions({ label: collab.name, value: collab.name });
                 }
                 const actionRow = new ActionRowBuilder().addComponents(collabsMenu);

@@ -39,7 +39,7 @@ module.exports = {
                     .setDescription(`**Total amount payed: ${userPendingAmount}$**\n**Purchase made by <@${userId}>**\n**Payment method: ${paymentData.type}**`)
                     .setTimestamp();
 
-              for (item of userCart) {
+              for (let item of userCart) {
                 premiumLogEmbed.addFields(
                   {
                       name: `᲼`,
@@ -49,10 +49,10 @@ module.exports = {
                 switch (item.type) {
                   case 'Tier':
                     allPerksForTier = await localFunctions.getFullPerksOfTierWNR(localFunctions.premiumToInteger(item.name));
-                    for (perk of allPerksForTier) {
+                    for (let perk of allPerksForTier) {
                       perksToAssign.push(perk);
                     }
-                    for (tier of localConstants.premiumTiers) {
+                    for (let tier of localConstants.premiumTiers) {
                       if (tier.name === item.name) {
                         await pendingMember.roles.add(tier.roleId);
                         await pendingMember.roles.add('743505566617436301');
@@ -67,12 +67,12 @@ module.exports = {
                   case 'Upgrade':
                     await pendingMember.roles.remove(currentTier.id);
                     allPerksForTier = await localFunctions.getFullPerksOfTierWNR(localFunctions.premiumToInteger(item.name));
-                    for (perk of allPerksForTier) {
+                    for (let perk of allPerksForTier) {
                       if (typeof userPerks.find((e) => e.name === perk.name) === "undefined") {
                         perksToAssign.push(perk);
                       }
                     }
-                    for (tier of localConstants.premiumTiers) {
+                    for (let tier of localConstants.premiumTiers) {
                       if (tier.name === item.name) {
                         await pendingMember.roles.add(tier.roleId);
                         break;
@@ -88,7 +88,7 @@ module.exports = {
                       break;   
                     } else if (item.class === "Tier") {
                       allPerksForTier = await localFunctions.getFullPerksOfTierWNR(localFunctions.premiumToInteger(item.name));
-                      for (perk of allPerksForTier) {
+                      for (let perk of allPerksForTier) {
                         perksToAssign.push(perk);
                       }
                     }    

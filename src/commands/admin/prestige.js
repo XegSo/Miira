@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const json = require('../../Schemas/Prestige.json');
+const localFunctions = require('../../functions');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -25,7 +26,7 @@ module.exports = {
                 continue;
                 }
 
-                const prestigeRole = getRoleIDByPrestige(obj.Prestige);
+                const prestigeRole = localFunctions.getRoleIDByPrestige(obj.Prestige);
                 const hasPrestigeRole = member.roles.cache.has(prestigeRole);
 
                 if (!hasPrestigeRole) {

@@ -16,7 +16,7 @@ module.exports = {
             const collabName = buttonCache.get(int.user.id).collab;
             if (!userOsuData) {
                 await int.deferReply({ ephemeral: true });
-                components = new ActionRowBuilder().addComponents(
+                const components = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId('link-osu')
                         .setLabel('🔗 Link your osu! Account')
