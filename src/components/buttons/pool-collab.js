@@ -1,6 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
-const localFunctions = require('../../functions');
-const { EmbedBuilder } = require('discord.js');
 const { collabCache } = require('../buttons/admin-collab');
 const poolCache = new Map();
 

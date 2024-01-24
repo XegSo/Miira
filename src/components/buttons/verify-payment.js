@@ -1,6 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
-const localFunctions = require('../../functions');
-const localConstants = require('../../constants');
 const { TextInputStyle } = require('discord.js');
 const { ModalBuilder, TextInputBuilder, ActionRowBuilder } = require('@discordjs/builders');
 

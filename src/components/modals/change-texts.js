@@ -1,6 +1,4 @@
-const path = require('path');
 const { connectToMongoDB } = require('../../mongo');
-const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const { editCache } = require('../buttons/change-texts');
 

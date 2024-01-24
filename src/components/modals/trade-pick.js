@@ -1,11 +1,8 @@
-const path = require('path');
 const { connectToMongoDB } = require('../../mongo');
-const { connectToSpreadsheet } = require('../../googleSheets');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
-const { SlashCommandBuilder, EmbedBuilder, TextInputStyle } = require('discord.js');
-const { ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
-const { tools } = require('osu-api-extended');
+const { EmbedBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
 const { tradeCache } = require('../buttons/trade-pick');
 
 module.exports = {

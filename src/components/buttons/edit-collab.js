@@ -1,7 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
-const localFunctions = require('../../functions');
-const { SlashCommandBuilder, EmbedBuilder, TextInputStyle } = require('discord.js');
-const { ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 const { collabCache } = require('./admin-collab');
 const editCache = new Map();
 
@@ -9,7 +5,7 @@ module.exports = {
     data: {
         name: 'edit-collab'
     },
-    async execute(int, client) {
+    async execute(int) {
         await int.deferReply();
         if (collabCache.size === 0) {
             int.editReply('Open the dashboard again. The collab hasn\'t been cached');

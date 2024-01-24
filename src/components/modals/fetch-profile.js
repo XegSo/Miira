@@ -1,10 +1,6 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
-const { SelectMenuBuilder, ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
-const path = require('path');
-const { v2, tools } = require('osu-api-extended');
-const { connectToMongoDB } = require('../../mongo');
-const localConstants = require('../../constants');
-const localFunctions = require('../../functions');
+const { EmbedBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
+const { v2 } = require('osu-api-extended');
 const fetchCache = new Map();
 
 module.exports = {

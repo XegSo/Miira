@@ -1,8 +1,8 @@
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
-const { SlashCommandBuilder, EmbedBuilder, TextInputStyle } = require('discord.js');
-const { ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
+const { EmbedBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
 
 module.exports = {
     data: {

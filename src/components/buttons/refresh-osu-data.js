@@ -1,15 +1,12 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, TextInputStyle } = require('discord.js');
-const { ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder, SelectMenuBuilder } = require('@discordjs/builders');
-const { v2, tools } = require('osu-api-extended');
+const { v2 } = require('osu-api-extended');
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
-const localConstants = require('../../constants');
 
 module.exports = {
     data: {
         name: 'refresh-osu-data'
     },
-    async execute(int, client) {
+    async execute(int) {
         const userId = int.user.id;
         await int.deferReply({ ephemeral: true });
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");

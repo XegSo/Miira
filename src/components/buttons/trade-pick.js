@@ -1,7 +1,7 @@
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
-const { SlashCommandBuilder, EmbedBuilder, TextInputStyle } = require('discord.js');
-const { ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
+const { TextInputStyle } = require('discord.js');
+const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 const { profileButtonCache } = require('./profile-pick');
 const { profileMenuCache } = require('../selectMenus/manage-collab');
 const tradeCache = new Map();

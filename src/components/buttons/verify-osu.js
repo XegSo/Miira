@@ -1,7 +1,7 @@
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
-const { SlashCommandBuilder, EmbedBuilder, TextInputStyle } = require('discord.js');
-const { ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
+const { EmbedBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
 const { fetchCache } = require('../modals/fetch-profile')
 const localConstants = require('../../constants');
 

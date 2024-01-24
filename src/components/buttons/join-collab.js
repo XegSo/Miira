@@ -1,6 +1,6 @@
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
-const { SlashCommandBuilder, EmbedBuilder, TextInputStyle } = require('discord.js');
+const { TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 const { buttonCache } = require('../selectMenus/select-collab');
 

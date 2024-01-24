@@ -1,5 +1,5 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, getUserAgentAppendix } = require('discord.js');
-const { SelectMenuBuilder, ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
+const { EmbedBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');

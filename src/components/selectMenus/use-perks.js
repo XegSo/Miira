@@ -1,4 +1,4 @@
-const { EmbedBuilder, TextInputStyle  } = require('discord.js');
+const { TextInputStyle  } = require('discord.js');
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 const { connectToMongoDB } = require('../../mongo');
 const localConstants = require('../../constants');

@@ -1,8 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, TextInputStyle } = require('discord.js');
-const { SelectMenuBuilder, ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
-const { connectToMongoDB } = require('../../mongo');
-const localFunctions = require('../../functions');
-const localConstants = require('../../constants');
+const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 const { collabCache } = require('./admin-collab');
 
 module.exports = {

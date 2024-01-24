@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const { connectToMongoDB } = require('../../mongo');
-const { registerFont } = require('canvas');
 const Canvas = require('canvas');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');

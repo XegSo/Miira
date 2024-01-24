@@ -8,9 +8,7 @@ const Vibrant = require('node-vibrant');
 const axios = require('axios');
 const sharp = require('sharp');
 const fs = require('fs');
-const { user } = require('osu-api-extended/dist/api/v1');
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, getUserAgentAppendix, AttachmentBuilder } = require('discord.js');
-const { SelectMenuBuilder, ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
+const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
 registerFont('./assets/fonts/Montserrat-Medium.ttf', {
     family: "Montserrat",
     weight: 'normal'

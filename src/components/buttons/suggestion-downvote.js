@@ -1,4 +1,4 @@
-const { EmbedBuilder} = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const localFunctions = require('../../functions');
 
 module.exports = {

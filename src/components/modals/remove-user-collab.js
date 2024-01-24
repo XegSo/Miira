@@ -1,5 +1,4 @@
-const path = require('path');
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const { connectToMongoDB } = require('../../mongo');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');

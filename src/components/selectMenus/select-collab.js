@@ -1,5 +1,5 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, getUserAgentAppendix, AttachmentBuilder } = require('discord.js');
-const { SelectMenuBuilder, ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
+const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
@@ -31,7 +31,7 @@ module.exports = {
       let components = [];
       let embeds = [];
       let URLstring = '';
-      const logoColored = await localFunctions.changeHueFromUrl(localConstants.mirageLogo, collabColor, `./assets/coloredLogos/logo-${collabColor}.png`);
+      await localFunctions.changeHueFromUrl(localConstants.mirageLogo, collabColor, `./assets/coloredLogos/logo-${collabColor}.png`);
       if (typeof collab.spreadsheetID !== "undefined") {
         URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})`
       }
@@ -337,42 +337,12 @@ module.exports = {
       embeds.push(dashboardEmbed);
 
       if (collab.designs.length !== 0) {
-        let i = 0;
-        let designName;
-
         for (const design in collab.designs) {
-          switch (design) {
-            case 'av':
-              designName = 'Avatar';
-              break;
-            case 'ba':
-              designName = 'Banner';
-              break;
-            case 'ca':
-              designName = 'Card';
-              break;
-            case 'he':
-              designName = "Header";
-              break;
-            case 'wa':
-              designName = "Wallpaper";
-              break;
-            case 'ov':
-              designName = "Overlay";
-              break;
-            case 'sk':
-              designName = "Skin";
-              break;
-            case 'po':
-              designName = "Poster";
-              break;
-          }
           let embed = new EmbedBuilder()
             .setURL('https://endlessmirage.net/')
             .setImage(collab.designs[design]);
 
           embeds.push(embed);
-          i++;
         }
       }
 

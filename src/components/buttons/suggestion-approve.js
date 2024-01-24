@@ -1,6 +1,5 @@
-const { EmbedBuilder, Events, Partials, TextInputStyle } = require('discord.js');
+const { TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 const SuggestionCache = new Map();
