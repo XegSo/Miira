@@ -164,7 +164,7 @@ module.exports = {
                         tokensEarned = tokensEarnedNB;
                     }
                     console.log(`Tokens earned with bonus: ${tokensEarned}`);
-                    if (20 < messageLength) {
+                    if (messageLength > 20) {
                         comboData.messages++; // Increment the number of messages in the combo
                         switch (comboData.messages) {
                             case 30:
