@@ -29,7 +29,8 @@ module.exports = {
                 return;
             } else {
                 let allCollabs = await localFunctions.getCollabs(collabsCollection);
-                let verificationCollabs = allCollabs.find(e => e.status === "open" || e.status === "full" || e.status === "delivered" || e.status === "early access");
+                let verificationCollabs = allCollabs.find(e => e.status === "open" || e.status === "full" || e.status === "delivered" || e.status === "early access" || e.status === "closed");
+                verificationCollabs = verificationCollabs || [];
                 if (typeof userCollabData.find(e => verificationCollabs.find(c => c.name === e.name)) !== "undefined") {
                     return await int.editReply('You are already participating in an active collab!');
                 }
