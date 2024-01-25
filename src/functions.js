@@ -711,6 +711,7 @@ module.exports = {
             case '6': return '963258579165524008';
             case '7': return '1071824409012219994';
             case '8': return '1146532857293045790';
+            case '9': return '1200147391765024859';
             default: return null; // Handle unknown prestige level
         }
     },
