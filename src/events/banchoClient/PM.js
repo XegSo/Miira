@@ -16,9 +16,15 @@ module.exports = {
             try {
                 console.log(message.user.ircUsername);
                 const query = await v2.site.search({ mode: "user", query: message.user.ircUsername });
-                const correctedUsername = query.user.data[0].username;
+                let correctedUsername = query.user.data[0].username;
                 console.log(correctedUsername);
-                const userDB = await localFunctions.getUserByOsuVerification(correctedUsername, collection);
+                let userDB = await localFunctions.getUserByOsuVerification(correctedUsername, collection);
+                let i = 1;
+                while (typeof userDB.verificationData === "undefined") {
+                    correctedUsername = query.user.data[i].username;
+                    userDB = await localFunctions.getUserByOsuVerification(correctedUsername, collection);
+                    i++;
+                }
                 console.log(userDB.verificationData.code);
                 if (userDB.verificationData && userDB.verificationData.code === parseInt(message.message)) {
                     const currentData = userDB.verificationData.user;
