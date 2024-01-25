@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, TextInputStyle } = require('discord.js');
+const { TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 const { collabCache } = require('./admin-collab');
 

@@ -52,6 +52,7 @@ module.exports = {
             .setDescription(`:white_check_mark: You have been untimed out in ${int.guild.name}. | Reason: ${reason}`)  
             
         await timeMember.send({ embeds: [dmEmbed] }).catch(err => {
+            console.log(err);
             return;
         });
         

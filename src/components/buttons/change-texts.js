@@ -11,7 +11,6 @@ module.exports = {
     },
     async execute(int, client) {
         const initializedMap = [profileButtonCache, profileMenuCache].find(map => map.size > 0);
-        const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         try {
             const collab = initializedMap.get(int.user.id).collab;
             const modal = new ModalBuilder()
@@ -54,8 +53,6 @@ module.exports = {
 
         } catch (e) {
             console.log(e);
-        } finally {
-            mongoClient.close();
         }
     },
     editCache: editCache

@@ -140,7 +140,7 @@ module.exports = {
             }
 
             const messageLength = localFunctions.removeURLsAndColons(message.content).length; // Clean and calculate the message length 
-            if (messageLength == 0) {
+            if (messageLength === 0) {
                 break messageCheck;
             }
             console.log(`User: ${message.author.tag}`);
@@ -159,7 +159,7 @@ module.exports = {
                     let comboBonus = comboData.messages;
                     comboData.lastMessageTime = currentTime;
                     tokensEarned = 20 * Math.log(Math.E, 4 * messageLength * -2.5) * (1.5 - (1.5 * (Math.E ** (-0.02 * (comboBonus + 1)))));
-                    if (tokensEarned === NaN) {
+                    if (isNaN(tokensEarned)) {
                         console.log('An issue in the token function has been encountered.')
                         tokensEarned = tokensEarnedNB;
                     }

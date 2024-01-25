@@ -101,9 +101,16 @@ module.exports = {
 
       let infoValue = "";
 
+      const deluxeEntry = await localFunctions.getDeluxeEntry(userId, userCollection);
+
       if (userInCollab) {
-        if (collab.restriction === "deluxe"/*&& user doesn't have extra mats purchased*/) {
-          /*add a button to purchase extra mats*/
+        if (collab.restriction === "deluxe" && typeof deluxeEntry.extra === "undefined") {
+          components.addComponents(
+            new ButtonBuilder()
+              .setCustomId('deluxe-extra')
+              .setLabel('💎 Extra mats')
+              .setStyle('Primary'),
+          )
         }
         components.addComponents(
           new ButtonBuilder()
@@ -168,7 +175,7 @@ module.exports = {
           case "deluxe":
             switch (collab.status) {
               case 'open':
-                if (false /*user has entry for the collab*/) {
+                if (deluxeEntry) {
                   infoValue = "**You have an entry ticket for a deluxe collab!**";
                   components.addComponents(
                     new ButtonBuilder()
@@ -187,14 +194,8 @@ module.exports = {
                 }
                 break;
               case 'on design':
-                if (false /*user has entry for the collab*/) {
+                if (deluxeEntry) {
                   infoValue = "**You have an entry ticket for a deluxe collab!**";
-                  components.addComponents(
-                    new ButtonBuilder()
-                      .setCustomId('join-collab')
-                      .setLabel('✅ Join')
-                      .setStyle('Success'),
-                  )
                 } else {
                   infoValue = "**To participate in this collab, you have to pay an entry fee**";
                   components.addComponents(

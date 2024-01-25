@@ -248,34 +248,34 @@ module.exports = {
                     .setPlaceholder('Select a collab to join.')
                 const deluxeEntry = await localFunctions.getDeluxeEntry(userId, collection);
                 for (const collab of collabs) {
-                    if (((collab.status !== "closed" && collab.status !== "on design") || userId == '687004886922952755') && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
+                    if (((collab.status !== "closed" && collab.status !== "on design") || userId === '687004886922952755') && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
                         switch (collab.restriction) {
                             case "staff":
-                                if (guildMember.roles.cache.has('961891383365500938') || userId == '687004886922952755') {
+                                if (guildMember.roles.cache.has('961891383365500938') || userId === '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     collabsToJoinCount++;
                                 }
                                 break;
                             case "deluxe":
-                                if (deluxeEntry || userId == '687004886922952755') {
+                                if (deluxeEntry || userId === '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     collabsToJoinCount++;
                                 }
                                 break;
                             case "megacollab":
-                                if ((collab.status === "early access" && typeof userPerks.find(e => e.name === "Megacollab Early Access")) || userId == '687004886922952755') {
+                                if ((collab.status === "early access" && typeof userPerks.find(e => e.name === "Megacollab Early Access")) || userId === '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     collabsToJoinCount++;
                                 }
                                 break;
                             case "prestige":
-                                if (typeof prestige !== "undefined" || userId == '687004886922952755') {
+                                if (typeof prestige !== "undefined" || userId === '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     collabsToJoinCount++;
                                 }
                                 break;
                             case "experimental":
-                                if (tier > 0 || prestigeLevel >= 4 || userId == '687004886922952755') {
+                                if (tier > 0 || prestigeLevel >= 4 || userId === '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     collabsToJoinCount++;
                                 }
@@ -460,10 +460,10 @@ module.exports = {
                     let user_cap = collab.user_cap;
                     let participants = collabs.participants ? collabs.participants.length : 0;
                     let slots = user_cap - participants;
-                    if (((collab.status !== "closed" && collab.status !== "on design" && collab.status !== "full") || userId == '687004886922952755') && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
+                    if (((collab.status !== "closed" && collab.status !== "on design" && collab.status !== "full") || userId === '687004886922952755') && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
                         switch (collab.restriction) {
                             case "staff":
-                                if (guildMember.roles.cache.has('961891383365500938') || userId == '687004886922952755') {
+                                if (guildMember.roles.cache.has('961891383365500938') || userId === '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     osuEmbed.addFields(
                                         {
@@ -475,7 +475,7 @@ module.exports = {
                                 }
                                 break;
                             case "deluxe":
-                                if (deluxeEntry || userId == '687004886922952755') {
+                                if (deluxeEntry || userId === '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     osuEmbed.addFields(
                                         {
@@ -487,7 +487,7 @@ module.exports = {
                                 }
                                 break;
                             case "megacollab":
-                                if ((collab.status === "early access" && typeof userPerks.find(e => e.name === "Megacollab Early Access")) || userId == '687004886922952755') {
+                                if ((collab.status === "early access" && typeof userPerks.find(e => e.name === "Megacollab Early Access")) || userId === '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     osuEmbed.addFields(
                                         {
@@ -499,7 +499,7 @@ module.exports = {
                                 }
                                 break;
                             case "prestige":
-                                if (typeof prestige !== "undefined" || userId == '687004886922952755') {
+                                if (typeof prestige !== "undefined" || userId === '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     osuEmbed.addFields(
                                         {
@@ -511,7 +511,7 @@ module.exports = {
                                 }
                                 break;
                             case "experimental":
-                                if (tier > 0 || prestigeLevel >= 4 || userId == '687004886922952755') {
+                                if (tier > 0 || prestigeLevel >= 4 || userId === '687004886922952755') {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     osuEmbed.addFields(
                                         {

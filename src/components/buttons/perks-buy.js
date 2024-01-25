@@ -13,10 +13,9 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         const userId = int.user.id;
-        var userTier = 0;
-        var arrayOfObjects = [];
-        var price = 0;
-        var buyComponents = null;
+        let userTier = 0;
+        let arrayOfObjects = [];
+        let buyComponents = null;
 
         let buyMenu = new SelectMenuBuilder()
             .setCustomId('add-content-to-cart')

@@ -1,7 +1,5 @@
 const { ActivityType } = require('discord.js');
 const localFunctions = require('../../functions');
-const { GoogleSpreadsheet } = require('google-spreadsheet');
-const atob = require('atob');
 
 module.exports = {
     name: 'ready',

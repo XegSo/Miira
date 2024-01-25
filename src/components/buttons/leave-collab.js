@@ -1,9 +1,7 @@
 const { TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
-const { v2, tools } = require('osu-api-extended');
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
-const localConstants = require('../../constants');
 const { profileButtonCache } = require('./profile-pick');
 const { profileMenuCache } = require('../selectMenus/manage-collab');
 const leaveCache = new Map();

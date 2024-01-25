@@ -59,6 +59,7 @@ module.exports = {
             .setDescription(`:white_check_mark: You have been timed out in ${int.guild.name}. You can check the status in the server. | Reason: ${reason}`)  
             
         await timeMember.send({ embeds: [dmEmbed] }).catch(err => {
+            console.log(err);
             return;
         });
         

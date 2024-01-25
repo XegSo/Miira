@@ -40,7 +40,9 @@ module.exports = {
             }
         } catch (e) {
             console.log(e);
-        } 
+        } finally {
+            mongoClientSpecial.close();
+        }
     },
     swapCache: swapCache
 }

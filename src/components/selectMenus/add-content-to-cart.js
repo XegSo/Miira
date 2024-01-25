@@ -21,7 +21,7 @@ module.exports = {
         const initializedMapIndex = [premiumBuyCache, perkCache, upgradeCache].findIndex(map => map.size > 0);
 
         mainProcess: try {
-            if (typeof initializedMap == "undefined") {
+            if (typeof initializedMap === "undefined") {
                 await int.editReply("This action cannot be performed. Open the shop dashboard again to proceed.");
                 break mainProcess; 
             }
@@ -240,7 +240,7 @@ module.exports = {
                 }
             }
 
-            if (typeof tierInChoices !== "undefined" && typeof upgradeInChoices == "undefined") {
+            if (typeof tierInChoices !== "undefined" && typeof upgradeInChoices === "undefined") {
                 newCart = newCart.filter(obj => obj.type !== "Tier");
                 newCart.push(tierInChoices);
             } else if (perksInChoices.length) {

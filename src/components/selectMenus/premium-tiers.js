@@ -9,7 +9,6 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        const userId = int.user.id;
         const tierName = int.values[0]; // Get the selected item from the dropdown
         const selectedTier = localConstants.premiumTiers.find((tier) => tier.name === tierName);
         if (!tierName || !selectedTier) return;

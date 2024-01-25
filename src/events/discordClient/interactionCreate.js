@@ -40,7 +40,7 @@ module.exports = {
             } catch (error) {
                 console.error(error);
             }
-        } else if (int.type == InteractionType.ModalSubmit) {
+        } else if (int.type === InteractionType.ModalSubmit) {
             const { modals } = client;
             const { customId } = int;
             const modal = modals.get(customId);

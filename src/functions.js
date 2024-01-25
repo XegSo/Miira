@@ -124,15 +124,12 @@ module.exports = {
                     dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' })
                     embeds.push(dashboardEmbed);
                     if (document.designs.length !== 0) {
-                        let i = 0;
-
                         for (const design in document.designs) {
                             let embed = new EmbedBuilder()
                                 .setURL('https://endlessmirage.net/')
                                 .setImage(document.designs[design]);
 
                             embeds.push(embed);
-                            i++;
                         }
                     }
                     const attachment = new AttachmentBuilder(document.thumbnail, {
@@ -155,7 +152,7 @@ module.exports = {
         });
     },
 
-    handleCollabClosures: async function (collection, client) {
+    handleCollabClosures: async function (collection /*,client*/) {
         // Find documents with status "on design"
         const documents = await collection.find({ status: { $in: ['open', 'full'] } }).toArray();
 
@@ -567,7 +564,7 @@ module.exports = {
         }
         const result = finalSkillsPrototipe.map((skill) => {
             const rankObj = localConstants.skillRanksByScore.find((rank) => skill.value >= rank.value);
-            const rank = rankObj ? rankObj.rank : 'F';
+            const rank = rankObj.rank || 'F';
 
             return {
                 skill: skill.skill,
@@ -739,12 +736,16 @@ module.exports = {
     },
 
     generateUniqueReferralCode: async function (userId, collection) {
-        while (true) {
+        let repeat = true;
+        while (repeat) {
             const newReferralCode = generateReferralCode();
             const existingUser = await collection.findOne({ referralCode: newReferralCode });
             if (!existingUser) {
                 await setReferralCode(userId, newReferralCode, collection);
+                repeat = false;
                 return newReferralCode;
+            } else {
+                repeat = true;
             }
         }
     },
@@ -906,7 +907,7 @@ module.exports = {
 
     resetPickStatus: async function (name, collection) {
         const query = { "name": name, "pool.items.status": 'picked' };
-        const updateResult = await collection.updateOne(
+        await collection.updateOne(
             query,
             { $set: { "pool.items.$[element].status": 'available' } },
             { arrayFilters: [{ "element.status": 'picked' }] }
@@ -914,7 +915,7 @@ module.exports = {
     },
 
     liquidateCollabFromUsers: async function (name, collection) {
-        const updateResult = await collection.updateMany(
+        await collection.updateMany(
             {},
             { $pull: { collabs: { collabName: name } } }
         );
@@ -1155,7 +1156,7 @@ module.exports = {
         }
     },
 
-    delCart: async function (userId, collection, item) {
+    delCart: async function (userId, collection) {
         try {
             await collection.updateOne({ _id: userId }, { $unset: { cart: "" } });
         } catch (e) {
@@ -1229,18 +1230,8 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { onUse } }, { upsert: true });
     },
 
-    getBoostEndTime: async function (userId, collection) {
-        const user = await collection.findOne({ _id: userId });
-        return user ? user.tokensBoostEndTime || null : null;
-    },
-
     setBoostEndTime: async function (userId, endTime, collection) {
         await collection.updateOne({ _id: userId }, { $set: { tokensBoostEndTime: endTime } }, { upsert: true });
-    },
-
-    getPermaBoost: async function (userId, collection) {
-        const user = await collection.findOne({ _id: userId });
-        return user ? user.tokensPermaBoost || false : false;
     },
 
     getPaymentInfo: async function (email, collection) {
@@ -1490,7 +1481,7 @@ module.exports = {
         let member = await guild.members.cache.find(member => member.id === "420711641596821504");
         await member.timeout(86400000, "Daily timeout for this user.");
         console.log('user timed out for 24 hours');
-        const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+        const { collection } = await connectToMongoDB("Collabs");
         await handleCollabClosures(collection, client);
         await handleCollabOpenings(collection, client);
         setTimeout(async () => {
@@ -1559,12 +1550,16 @@ async function getReferralCode(userId, collection) {
 }
 
 async function generateUniqueReferralCode(userId, collection) {
-    while (true) {
+    let repeat = true;
+    while (repeat) {
         const newReferralCode = generateReferralCode();
         const existingUser = await collection.findOne({ referralCode: newReferralCode });
         if (!existingUser) {
             await setReferralCode(userId, newReferralCode, collection);
+            repeat = false;
             return newReferralCode;
+        } else {
+            repeat = true;
         }
     }
 }
@@ -1639,7 +1634,7 @@ async function scheduleDailyDecay(client) {
     let member = await guild.members.cache.find(member => member.id === "420711641596821504");
     await member.timeout(86400000, "Daily timeout for this user.");
     console.log('user timed out for 24 hours');
-    const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+    const { collection } = await connectToMongoDB("Collabs");
     await handleCollabClosures(collection, client);
     await handleCollabOpenings(collection, client);
 
@@ -1802,15 +1797,12 @@ async function handleCollabOpenings(collection, client) {
                 dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' })
                 embeds.push(dashboardEmbed);
                 if (document.designs.length !== 0) {
-                    let i = 0;
-
                     for (const design in document.designs) {
                         let embed = new EmbedBuilder()
                             .setURL('https://endlessmirage.net/')
                             .setImage(document.designs[design]);
 
                         embeds.push(embed);
-                        i++;
                     }
                 }
                 const attachment = new AttachmentBuilder(document.thumbnail, {

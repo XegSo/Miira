@@ -11,8 +11,6 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
-        const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
         const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
         const userId = int.user.id;
         const guild = client.guilds.cache.get(localConstants.guildId);
@@ -106,8 +104,6 @@ module.exports = {
         } finally {
             tradeCache.delete(int.user.id);
             mongoClientSpecial.close();
-            mongoClient.close();
-            mongoClientUsers.close();
         }
     },
 };

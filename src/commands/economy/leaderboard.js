@@ -18,7 +18,7 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply();
         const leaderboardType = int.options.getString('choice');
-        if (leaderboardType === 'tokens' || leaderboardType == null) {
+        if (leaderboardType === 'tokens' || leaderboardType === null) {
             // Prepare the leaderboard data for the embed
             let leaderboardDataTokens = await localFunctions.updateLeaderboardData('tokens');
             const TopEmbed = new EmbedBuilder()
