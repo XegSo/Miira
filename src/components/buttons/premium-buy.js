@@ -36,7 +36,7 @@ module.exports = {
         main: try {
             let userTierDB = await localFunctions.getTier(userId, collection);
             if (!selectionTier.size) {
-                if (userTier.length === 0 && guildMember.roles.cache.has('743505566617436301')) {
+                if (userTierDB.length === 0 && guildMember.roles.cache.has('743505566617436301')) {
                     await localFunctions.assignPremium(int, userId, collection, guildMember);
                 }
                 if (messageId) {
