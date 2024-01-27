@@ -1078,7 +1078,7 @@ module.exports = {
 
     getUserByOsuVerification: async function (osuname, collection) {
         const user = await collection.findOne({ 'verificationData.user.username': osuname });
-        return user ? user || null : null;
+        return user ? user || [] : [];
     },
 
     verifyUserBancho: async function (osuname, osuData, collection) {
