@@ -1526,7 +1526,7 @@ module.exports = {
                         await setSubStatus(user._id, userCollection, 'unpaid');
                     }
                 }
-            } 
+            }
             users = users.filter(e => e.monthlyDonation.status === "unpaid");
             for (let user of users) {
                 let subData = user.monthlyDonation;
@@ -1750,6 +1750,7 @@ async function scheduleDailyDecay(client) {
             .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
         const subChannel = guild.channels.cache.get('865330150039093288');
         let users = await getSubbedUsers(userCollection);
+        console.log(users);
         if (currentDay === localConstants.startingSubDay) {
             let usersCheck = users.filter(e => e.monthlyDonation.status === "paid");
             for (let user of usersCheck) {
@@ -1759,9 +1760,8 @@ async function scheduleDailyDecay(client) {
                     await setSubStatus(user._id, userCollection, 'unpaid');
                 }
             }
-        } else {
-            users = users.filter(e => e.status === "unpaid");
         }
+        users = users.filter(e => e.monthlyDonation.status === "unpaid");
         for (let user of users) {
             let subData = user.monthlyDonation;
             let subMember = await guild.members.cache.find(member => member.id === user._id);
