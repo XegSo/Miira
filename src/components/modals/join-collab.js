@@ -40,7 +40,7 @@ module.exports = {
                 let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
                 if (guildMember.roles.cache.has('743505566617436301')) {
                     const userTier = await localFunctions.getUserTier(userId, userCollection);
-                    if (userTier.length === 0 && !guildMember.roles.cache.has('1150484454071091280')) {
+                    if (!userTier&& !guildMember.roles.cache.has('1150484454071091280')) {
                         let premiumDetails = await localFunctions.assignPremium(int, userId, userCollection, guildMember);
                         tier = localFunctions.premiumToInteger(premiumDetails[0].name);
                     } else {

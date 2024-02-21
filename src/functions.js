@@ -8,7 +8,8 @@ const Vibrant = require('node-vibrant');
 const axios = require('axios');
 const sharp = require('sharp');
 const fs = require('fs');
-const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
+const { ButtonBuilder, EmbedBuilder, AttachmentBuilder, ActionRowBuilder } = require('discord.js');
+const { Console } = require('console');
 registerFont('./assets/fonts/Montserrat-Medium.ttf', {
     family: "Montserrat",
     weight: 'normal'
@@ -832,6 +833,10 @@ module.exports = {
         await collection.updateOne({ name: collab, 'pool.items.id': id }, { $set: { 'pool.items.$.status': "picked" } }, { upsert: true });
     },
 
+    setSubStatus: async function (userId, collection, status) {
+        await collection.updateOne({ _id: userId }, { $set: { 'monthlyDonation.status': status } }, { upsert: true });
+    },
+
     unsetCollabParticipation: async function (collab, collection, id) {
         await collection.updateOne({ name: collab, 'pool.items.id': id }, { $set: { 'pool.items.$.status': "available" } }, { upsert: true });
     },
@@ -1091,6 +1096,15 @@ module.exports = {
 
     setUserTier: async function (userId, Tier, collection) {
         await collection.updateOne({ _id: userId }, { $set: { Tier } }, { upsert: true });
+    },
+
+    setUserMontlyPremium: async function (userId, monthlyDonation, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { monthlyDonation } }, { upsert: true });
+    },
+
+    getUserMontlyPremium: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.monthlyDonation || null : null;
     },
 
     setTopCombo: async function (userId, topCombo, collection) {
@@ -1412,6 +1426,12 @@ module.exports = {
         return request ? request || [] : [];
     },
 
+    getSubbedUsers: async function (collection) {
+        let subbedUsers = await collection.find({ 'monthlyDonation': { $exists: true } }).toArray();
+        subbedUsers = subbedUsers.filter(e => e.monthlyDonation.status !== "innactive");
+        return subbedUsers ? subbedUsers || [] : [];
+    },
+
     liquidateTradeRequest: async function (messageId, collection) {
         await collection.deleteOne({ _id: messageId });
     },
@@ -1470,7 +1490,13 @@ module.exports = {
 
     scheduleDailyDecay: async function (client) {
         const now = new Date();
+        const currentDay = now.getDate();
+        console.log(currentDay);
+        const currentMonth = now.getMonth() + 1;
+        const year = now.getFullYear();
+        const numberOfDaysInMonth = new Date(year, currentMonth, 0).getDate();
         const nextRun = new Date(now);
+        const { collection: userCollection } = await connectToMongoDB("OzenCollection");
 
         nextRun.setUTCHours(localConstants.dailyCheckHour, localConstants.dailyCheckMinute, 0, 0);
 
@@ -1481,6 +1507,79 @@ module.exports = {
         let guild = await client.guilds.fetch('630281137998004224');
         let member = await guild.members.cache.find(member => member.id === "420711641596821504");
         await member.timeout(86400000, "Daily timeout for this user.");
+
+        if (currentDay >= localConstants.startingSubDay && currentDay <= localConstants.finalSubDay) {
+            const formattedMonth = currentMonth.toString().padStart(2, '0');
+            let reminderEmbed = new EmbedBuilder()
+                .setColor('#f26e6a')
+                .setAuthor({ name: `Endless Mirage Subscription Reminder!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
+                .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+            const subChannel = guild.channels.cache.get('865330150039093288');
+            let users = await getSubbedUsers(userCollection);
+            console.log(users);
+            if (currentDay === localConstants.startingSubDay) {
+                let usersCheck = users.filter(e => e.monthlyDonation.status === "paid");
+                for (let user of usersCheck) {
+                    const parts = user.monthlyDonation.lastDate.split("/");
+                    const month = parseInt(parts[1], 10);
+                    if (month !== (currentMonth + 1)) {
+                        await setSubStatus(user._id, userCollection, 'unpaid');
+                    }
+                }
+            } 
+            users = users.filter(e => e.monthlyDonation.status === "unpaid");
+            for (let user of users) {
+                let subData = user.monthlyDonation;
+                let subMember = await guild.members.cache.find(member => member.id === user._id);
+                const startingDateParts = subData.startingDate.split("/");
+                const lastPaymentParts = subData.lastDate.split("/");
+
+                const startingDate = new Date(startingDateParts[2], startingDateParts[1] - 1, startingDateParts[0]);
+                const lastPayment = new Date(lastPaymentParts[2], lastPaymentParts[1] - 1, lastPaymentParts[0]);
+
+                const monthsDiff = (lastPayment.getFullYear() - startingDate.getFullYear()) * 12 + lastPayment.getMonth() - startingDate.getMonth();
+                reminderEmbed.addFields(
+                    {
+                        name: " ",
+                        value: `**\`\`\`prolog\n💵 Subscription Info\`\`\`**\n**Current Donated Amount:** ${subData.total}$\n**Starting Date:** ${subData.startingDate}\n**Last Payment:** ${subData.lastDate}\n**Total Months:** ${monthsDiff}\n\nPayment Window: ${localConstants.startingSubDay}/${formattedMonth}/${year} - ${localConstants.finalSubDay}/${formattedMonth}/${year}`,
+                    },
+                    {
+                        name: " ",
+                        value: `**\`\`\`prolog\n💵 Amount to Pay: ${subData.currentAmount}$\`\`\`**\n`,
+                    },
+                    {
+                        name: "‎",
+                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                    }
+                )
+                let renewComponents = new ActionRowBuilder().addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('sub-renew')
+                        .setLabel('💵 Renew')
+                        .setStyle('Success'),
+                    new ButtonBuilder()
+                        .setCustomId('sub-cancel')
+                        .setLabel('💵 Cancel')
+                        .setStyle('Danger'),
+                )
+                try {
+                    subMember.send({
+                        content: '',
+                        embeds: [reminderEmbed],
+                        components: [renewComponents],
+                    });
+                } catch (e) {
+                    console.log(e);
+                    subChannel.send({
+                        content: '',
+                        embeds: [reminderEmbed],
+                        components: [renewComponents],
+                    });
+                }
+            }
+        } else {
+            console.log(`Sub renewal scheduled in ${numberOfDaysInMonth - currentDay + 1} days.`)
+        }
         console.log('user timed out for 24 hours');
         const { collection } = await connectToMongoDB("Collabs");
         await handleCollabClosures(collection, client);
@@ -1625,8 +1724,16 @@ async function handleDailyDecay() {
 
 async function scheduleDailyDecay(client) {
     const now = new Date();
+    const currentDay = now.getDate();
+    console.log(currentDay);
+    const currentMonth = now.getMonth() + 1;
+    const year = now.getFullYear();
+    const numberOfDaysInMonth = new Date(year, currentMonth, 0).getDate();
     const nextRun = new Date(now);
+    const { collection: userCollection } = await connectToMongoDB("OzenCollection");
+
     nextRun.setUTCHours(localConstants.dailyCheckHour, localConstants.dailyCheckMinute, 0, 0);
+
     if (nextRun <= now) {
         nextRun.setUTCDate(nextRun.getUTCDate() + 1);
     }
@@ -1634,6 +1741,79 @@ async function scheduleDailyDecay(client) {
     let guild = await client.guilds.fetch('630281137998004224');
     let member = await guild.members.cache.find(member => member.id === "420711641596821504");
     await member.timeout(86400000, "Daily timeout for this user.");
+
+    if (currentDay >= localConstants.startingSubDay && currentDay <= localConstants.finalSubDay) {
+        const formattedMonth = currentMonth.toString().padStart(2, '0');
+        let reminderEmbed = new EmbedBuilder()
+            .setColor('#f26e6a')
+            .setAuthor({ name: `Endless Mirage Subscription Reminder!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
+            .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+        const subChannel = guild.channels.cache.get('865330150039093288');
+        let users = await getSubbedUsers(userCollection);
+        if (currentDay === localConstants.startingSubDay) {
+            let usersCheck = users.filter(e => e.monthlyDonation.status === "paid");
+            for (let user of usersCheck) {
+                const parts = user.monthlyDonation.lastDate.split("/");
+                const month = parseInt(parts[1], 10);
+                if (month !== (currentMonth + 1)) {
+                    await setSubStatus(user._id, userCollection, 'unpaid');
+                }
+            }
+        } else {
+            users = users.filter(e => e.status === "unpaid");
+        }
+        for (let user of users) {
+            let subData = user.monthlyDonation;
+            let subMember = await guild.members.cache.find(member => member.id === user._id);
+            const startingDateParts = subData.startingDate.split("/");
+            const lastPaymentParts = subData.lastDate.split("/");
+
+            const startingDate = new Date(startingDateParts[2], startingDateParts[1] - 1, startingDateParts[0]);
+            const lastPayment = new Date(lastPaymentParts[2], lastPaymentParts[1] - 1, lastPaymentParts[0]);
+
+            const monthsDiff = (lastPayment.getFullYear() - startingDate.getFullYear()) * 12 + lastPayment.getMonth() - startingDate.getMonth();
+            reminderEmbed.addFields(
+                {
+                    name: " ",
+                    value: `**\`\`\`prolog\n💵 Subscription Info\`\`\`**\n**Current Donated Amount:** ${subData.total}$\n**Starting Date:** ${subData.startingDate}\n**Last Payment:** ${subData.lastDate}\n**Total Months:** ${monthsDiff}\n\nPayment Window: ${localConstants.startingSubDay}/${formattedMonth}/${year} - ${localConstants.finalSubDay}/${formattedMonth}/${year}`,
+                },
+                {
+                    name: " ",
+                    value: `**\`\`\`prolog\n💵 Amount to Pay: ${subData.currentAmount}$\`\`\`**\n`,
+                },
+                {
+                    name: "‎",
+                    value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                }
+            )
+            let renewComponents = new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId('sub-renew')
+                    .setLabel('💵 Renew')
+                    .setStyle('Success'),
+                new ButtonBuilder()
+                    .setCustomId('sub-cancel')
+                    .setLabel('💵 Cancel')
+                    .setStyle('Danger'),
+            )
+            try {
+                subMember.send({
+                    content: '',
+                    embeds: [reminderEmbed],
+                    components: [renewComponents],
+                });
+            } catch (e) {
+                console.log(e);
+                subChannel.send({
+                    content: '',
+                    embeds: [reminderEmbed],
+                    components: [renewComponents],
+                });
+            }
+        }
+    } else {
+        console.log(`Sub renewal scheduled in ${numberOfDaysInMonth - currentDay + 1} days.`)
+    }
     console.log('user timed out for 24 hours');
     const { collection } = await connectToMongoDB("Collabs");
     await handleCollabClosures(collection, client);
@@ -1953,4 +2133,14 @@ async function getMeanColor(imageUrl) {
         console.error('Error:', error.message);
         return null;
     }
+}
+
+async function getSubbedUsers(collection) {
+    let subbedUsers = await collection.find({ 'monthlyDonation': { $exists: true } }).toArray();
+    subbedUsers = subbedUsers.filter(e => e.monthlyDonation.status !== "innactive");
+    return subbedUsers ? subbedUsers || [] : [];
+}
+
+async function setSubStatus(userId, collection, status) {
+    await collection.updateOne({ _id: userId }, { $set: { 'monthlyDonation.status': status } }, { upsert: true });
 }

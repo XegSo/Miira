@@ -125,7 +125,7 @@ module.exports = {
                 let premiumData = await localFunctions.getPremiumData(collectionSpecial);
                 let mainComponents = [];
                 let userTier = await localFunctions.getUserTier(userId, collection);
-                if (userTier.length === 0 && member.roles.cache.has('743505566617436301') && !member.roles.cache.has('1150484454071091280')) {
+                if (!userTier && member.roles.cache.has('743505566617436301') && !member.roles.cache.has('1150484454071091280')) {
                     console.log('Executing insertion of perks'); //this needs to be moved into functions
                     for (const numeral of localConstants.romanNumerals) { //find the fucker and assign it to the database
                         const roleToFind = `Mirage ${numeral}`;

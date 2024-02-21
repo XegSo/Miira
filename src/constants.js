@@ -641,7 +641,12 @@ const logChannelID = '1197205849572126861';
 const dailyCheckHour = 0; // Adjust this as needed
 const dailyCheckMinute = 0;
 
+const startingSubDay = 21; 
+const finalSubDay = 25;
+
 module.exports = {
+    startingSubDay,
+    finalSubDay,
     logChannelID,
     rolesLevel,
     staffUserIds,

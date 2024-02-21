@@ -21,12 +21,17 @@ module.exports = {
                 let userDB = await localFunctions.getUserByOsuVerification(correctedUsername, collection);
                 let i = 1;
                 while (typeof userDB.verificationData === "undefined") {
-                    correctedUsername = query.user.data[i].username;
-                    userDB = await localFunctions.getUserByOsuVerification(correctedUsername, collection);
-                    i++;
+                    try {
+                        correctedUsername = query.user.data[i].username;
+                        userDB = await localFunctions.getUserByOsuVerification(correctedUsername, collection);
+                        i++;
+                    } catch {
+                        console.log('User not found');
+                        return;
+                    }
                 }
                 console.log(userDB.verificationData.code);
-                if (userDB.verificationData && userDB.verificationData.code === parseInt(message.message)) {
+                if (userDB.verificationData.code === parseInt(message.message)) {
                     const currentData = userDB.verificationData.user;
                     console.log(userDB.verificationData.user);
                     await localFunctions.verifyUserBancho(correctedUsername, userDB.verificationData.user, collection);

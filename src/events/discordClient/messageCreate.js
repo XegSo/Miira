@@ -5,6 +5,7 @@ const localConstants = require('../../constants');
 const { poolCache } = require('../../components/buttons/pool-collab');
 const { editCache } = require('../../components/buttons/edit-collab');
 const { createCollabCache } = require('../../commands/collabs/collabs');
+const { monthlySupporterCache } = require('../../commands/admin/addmonthlysupporter');
 const userCooldowns = new Map();
 const userCombos = new Map();
 
@@ -135,6 +136,26 @@ module.exports = {
                         message.reply('Collab edited succesfully.')
                         editCache.delete(userId);
                         break messageCheck;
+                    }
+                }
+            }
+
+            if (monthlySupporterCache.size !== 0) {
+                if (monthlySupporterCache.get(userId).userId === userId && message.reference.messageId === monthlySupporterCache.get(userId).messageId && message.attachments.size > 0) {
+                    const attachment = message.attachments.first();
+                    if (attachment.name.endsWith('.json')) {
+                        const response = await fetch(attachment.url);
+                        const buffer = Buffer.from(await response.arrayBuffer());
+                        let jsonData = JSON.parse(buffer.toString());
+                        for (item of jsonData) {
+                            console.log(item);
+                            const premiumDiscordId = item.discordId
+                            delete item.name;
+                            delete item.discordId;
+                            await localFunctions.setUserMontlyPremium(premiumDiscordId, item, collection);
+                        }
+                        message.reply('User data pushed succesfully.');
+                        monthlySupporterCache.delete(userId);
                     }
                 }
             }
