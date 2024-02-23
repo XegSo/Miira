@@ -3,11 +3,11 @@ const { ModalBuilder, TextInputBuilder, ActionRowBuilder } = require('@discordjs
 
 module.exports = {
     data: {
-        name: 'verify-payment'
+        name: 'verify-payment-sub'
     },
     async execute(int, client) {
         const modal = new ModalBuilder()
-            .setCustomId("verify-paypal")
+            .setCustomId("verify-payment-sub")
             .setTitle('Verify your Payment.');
 
         const email = new TextInputBuilder()

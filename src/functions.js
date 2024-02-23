@@ -801,6 +801,11 @@ module.exports = {
         return user ? user.collabs || [] : [];
     },
 
+    getUser: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user || null : null;
+    },
+
     getUserLastUpdate: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.lastUpdateOsu || null : null;
@@ -835,6 +840,10 @@ module.exports = {
 
     setSubStatus: async function (userId, collection, status) {
         await collection.updateOne({ _id: userId }, { $set: { 'monthlyDonation.status': status } }, { upsert: true });
+    },
+
+    setSubAmount: async function (userId, collection, currentAmount) {
+        await collection.updateOne({ _id: userId }, { $set: { 'monthlyDonation.currentAmount': currentAmount } }, { upsert: true });
     },
 
     unsetCollabParticipation: async function (collab, collection, id) {
@@ -1163,6 +1172,10 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { cart } }, { upsert: true });
     },
 
+    setFullSubStatus: async function (userId, monthlyDonation, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { monthlyDonation } }, { upsert: true });
+    },
+
     delTier: async function (userId, collection) {
         try {
             await collection.updateOne({ _id: userId }, { $unset: { Tier: "" } });
@@ -1177,6 +1190,17 @@ module.exports = {
         } catch (e) {
             console.log(e);
         }
+    },
+
+    areAllContained: function (array1, array2) {
+        // Iterate through each object in array1
+        for (let obj1 of array1) {
+            // Check if the current object in array1 exists in array2
+            if (!array2.some(obj2 => isEqual(obj1, obj2))) {
+                return false; // If not found, return false
+            }
+        }
+        return true; // All objects found, return true
     },
 
     setPerks: async function (userId, perks, collection) {
@@ -1491,7 +1515,6 @@ module.exports = {
     scheduleDailyDecay: async function (client) {
         const now = new Date();
         const currentDay = now.getDate();
-        console.log(currentDay);
         const currentMonth = now.getMonth() + 1;
         const year = now.getFullYear();
         const numberOfDaysInMonth = new Date(year, currentMonth, 0).getDate();
@@ -1514,15 +1537,14 @@ module.exports = {
                 .setColor('#f26e6a')
                 .setAuthor({ name: `Endless Mirage Subscription Reminder!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
                 .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
-            const subChannel = guild.channels.cache.get('865330150039093288');
+            let subChannel = guild.channels.cache.get('865330150039093288');
             let users = await getSubbedUsers(userCollection);
-            console.log(users);
             if (currentDay === localConstants.startingSubDay) {
                 let usersCheck = users.filter(e => e.monthlyDonation.status === "paid");
                 for (let user of usersCheck) {
                     const parts = user.monthlyDonation.lastDate.split("/");
                     const month = parseInt(parts[1], 10);
-                    if (month !== (currentMonth + 1)) {
+                    if (month !== currentMonth) {
                         await setSubStatus(user._id, userCollection, 'unpaid');
                     }
                 }
@@ -1561,6 +1583,46 @@ module.exports = {
                         .setCustomId('sub-cancel')
                         .setLabel('💵 Cancel')
                         .setStyle('Danger'),
+                    new ButtonBuilder()
+                        .setCustomId('sub-change-amount')
+                        .setLabel('💵 Change your Monthly Amount')
+                        .setStyle('Primary'),
+                )
+                try {
+                    subMember.send({
+                        content: '',
+                        embeds: [reminderEmbed],
+                        components: [renewComponents],
+                    });
+                } catch (e) {
+                    console.log(e);
+                    subChannel.send({
+                        content: '',
+                        embeds: [reminderEmbed],
+                        components: [renewComponents],
+                    });
+                }
+            }
+        } else if (currentDay === localConstants.finalSubDay + 1) {
+            let users = await getSubbedUsers(userCollection);
+            let subChannel = guild.channels.cache.get('865330150039093288');
+            users = users.filter(e => e.monthlyDonation.status === "unpaid");
+            for (let user of users) {
+                let subMember = await guild.members.cache.find(member => member.id === user._id);
+                await setSubStatus(user._id, userCollection, 'innactive');
+                let reminderEmbed = new EmbedBuilder()
+                    .setColor('#f26e6a')
+                    .setAuthor({ name: `Your Endless Mirage subscription has been canceled!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
+                    .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                reminderEmbed.addFields(
+                    {
+                        name: " ",
+                        value: `**\`\`\`prolog\n💵 Subscription Info\`\`\`**\n**Current Donated Amount:** ${subData.total}$\n**Starting Date:** ${subData.startingDate}\n**Last Payment:** ${subData.lastDate}\n**Total Months:** ${monthsDiff}\n`,
+                    },
+                    {
+                        name: "‎",
+                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                    }
                 )
                 try {
                     subMember.send({
@@ -1725,7 +1787,6 @@ async function handleDailyDecay() {
 async function scheduleDailyDecay(client) {
     const now = new Date();
     const currentDay = now.getDate();
-    console.log(currentDay);
     const currentMonth = now.getMonth() + 1;
     const year = now.getFullYear();
     const numberOfDaysInMonth = new Date(year, currentMonth, 0).getDate();
@@ -1748,15 +1809,14 @@ async function scheduleDailyDecay(client) {
             .setColor('#f26e6a')
             .setAuthor({ name: `Endless Mirage Subscription Reminder!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
             .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
-        const subChannel = guild.channels.cache.get('865330150039093288');
+        let subChannel = guild.channels.cache.get('865330150039093288');
         let users = await getSubbedUsers(userCollection);
-        console.log(users);
         if (currentDay === localConstants.startingSubDay) {
             let usersCheck = users.filter(e => e.monthlyDonation.status === "paid");
             for (let user of usersCheck) {
                 const parts = user.monthlyDonation.lastDate.split("/");
                 const month = parseInt(parts[1], 10);
-                if (month !== (currentMonth + 1)) {
+                if (month !== currentMonth) {
                     await setSubStatus(user._id, userCollection, 'unpaid');
                 }
             }
@@ -1795,6 +1855,46 @@ async function scheduleDailyDecay(client) {
                     .setCustomId('sub-cancel')
                     .setLabel('💵 Cancel')
                     .setStyle('Danger'),
+                new ButtonBuilder()
+                    .setCustomId('sub-change-amount')
+                    .setLabel('💵 Change your Monthly Amount')
+                    .setStyle('Primary'),
+            )
+            try {
+                subMember.send({
+                    content: '',
+                    embeds: [reminderEmbed],
+                    components: [renewComponents],
+                });
+            } catch (e) {
+                console.log(e);
+                subChannel.send({
+                    content: '',
+                    embeds: [reminderEmbed],
+                    components: [renewComponents],
+                });
+            }
+        }
+    } else if (currentDay === localConstants.finalSubDay + 1) {
+        let users = await getSubbedUsers(userCollection);
+        let subChannel = guild.channels.cache.get('865330150039093288');
+        users = users.filter(e => e.monthlyDonation.status === "unpaid");
+        for (let user of users) {
+            let subMember = await guild.members.cache.find(member => member.id === user._id);
+            await setSubStatus(user._id, userCollection, 'innactive');
+            let reminderEmbed = new EmbedBuilder()
+                .setColor('#f26e6a')
+                .setAuthor({ name: `Your Endless Mirage subscription has been canceled!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
+                .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+            reminderEmbed.addFields(
+                {
+                    name: " ",
+                    value: `**\`\`\`prolog\n💵 Subscription Info\`\`\`**\n**Current Donated Amount:** ${subData.total}$\n**Starting Date:** ${subData.startingDate}\n**Last Payment:** ${subData.lastDate}\n**Total Months:** ${monthsDiff}\n`,
+                },
+                {
+                    name: "‎",
+                    value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                }
             )
             try {
                 subMember.send({
@@ -2143,4 +2243,18 @@ async function getSubbedUsers(collection) {
 
 async function setSubStatus(userId, collection, status) {
     await collection.updateOne({ _id: userId }, { $set: { 'monthlyDonation.status': status } }, { upsert: true });
+}
+
+function isEqual(obj1, obj2) {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+    if (keys1.length !== keys2.length) {
+        return false;
+    }
+    for (let key of keys1) {
+        if (obj1[key] !== obj2[key]) {
+            return false;
+        }
+    }
+    return true;
 }

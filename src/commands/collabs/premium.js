@@ -240,6 +240,35 @@ module.exports = {
                         );
                     }
 
+                    if (activeMonthlySupport) {
+                        const currentTier = localFunctions.premiumToInteger(userTier.name);
+                        let nextTier = 0;
+                        let fullNextTier;
+                        if (currentTier !== 7 && currentTier !== 10) {
+                            nextTier = currentTier + 1;
+                            fullNextTier = localConstants.premiumTiers[nextTier - 1];
+                            const totalSubAmount = parseInt(monthlySupportData.total);
+                            const monthlySubAmount = parseInt(monthlySupportData.currentAmount);
+                            const nextTierAmount = fullNextTier.cost;
+                            const pendingAmount = nextTierAmount - totalSubAmount;
+                            const monthsPending = Math.ceil(pendingAmount/monthlySubAmount);
+                            premiumEmbed.addFields(
+                                {
+                                    name: " ",
+                                    value: `**\`\`\`ml\n✅ Active subscription status!\`\`\`**\n\`\`❤️ Current Monthly Amount\`\`\n └ ${monthlySubAmount}$\n\n\`\`❤️ Time Pending for the Next Tier\`\`\n └ ${monthsPending} Month(s)!\n\n\`\`❤️ Amount Pending for the Next Tier\`\`\n └ ${pendingAmount}$\n\n*Your current subscription includes automatic renewal for all perks and free access to deluxe collabs.*\n*For more info about your subscription, use the manage button bellow!*`,
+                                },
+                            )
+                        } else {
+                            premiumEmbed.addFields(
+                                {
+                                    name: " ",
+                                    value: "**\`\`\`ml\n✅ Active subscription status!\`\`\`**\n**You're currently at the peak tier! Thank you for your incredible support!**\n\n*Your current subscription includes automatic renewal for all perks and free access to deluxe collabs.*\n*For more info about your subscription, use the manage button bellow!*",
+                                }
+                            )
+                        }
+
+                    }
+
                     try {
                         if (useMenu.options[0].data) {
                             const useComponents = new ActionRowBuilder().addComponents(useMenu);

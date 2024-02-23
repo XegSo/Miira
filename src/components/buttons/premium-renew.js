@@ -55,7 +55,7 @@ module.exports = {
                 }
             } 
             
-            if (localFunctions.compareArrays(fullPerksForTier, userPerks)) {
+            if (localFunctions.areAllContained(fullPerksForTier, userPerks)) {
                 await int.editReply("You can't renew when you have all the perks available for use dummy >.<");
                 break mainProcess;    
             }

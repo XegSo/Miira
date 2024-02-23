@@ -79,7 +79,7 @@ module.exports = {
                 buyEmbed.addFields(
                     {
                         name: " ",
-                        value: `**\`\`\`prolog\n💵 Payment for this month is Pending!\`\`\`**\nUse the payment button bellow to solve this!`,
+                        value: `**\`\`\`prolog\n💵 Payment for this month is Pending!\`\`\`**\nUse the renew button bellow to solve this!`,
                     }
                 )
                 buyComponents.addComponents(

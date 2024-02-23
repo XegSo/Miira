@@ -13,12 +13,12 @@ module.exports = {
     const { collection: collectionPayments, client: mongoClientPayments } = await connectToMongoDB("PD");
     const { collection: collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
     const email = int.fields.getTextInputValue("email");
+    const guild = client.guilds.cache.get(localConstants.guildId);
 
     try {
       let paymentData = await localFunctions.getPaymentInfo(email, collectionPayments);
       let userPendingAmount = await localFunctions.getPendingPaymentAmount(userId, collection);
       let currentTier = await localFunctions.getUserTier(userId, collection);
-      const guild = int.guild;
       if (paymentData.length !== 0) {
         if (userPendingAmount === parseInt(paymentData.amount)) {
           console.log('A new payment has been verified');
@@ -78,7 +78,7 @@ module.exports = {
                   }
                 }
                 currentTier.name = item.name;
-                localFunctions.setUserTier(userId, currentTier, collection);
+                await localFunctions.setUserTier(userId, currentTier, collection);
                 break;
               case 'Renewal':
                 if (item.class === "Perk") {
@@ -99,7 +99,7 @@ module.exports = {
           await int.editReply({
             content: 'Your payment has been verified! Thank you for your purchase, check your new status using /premium.'
           })
-          const premiumLogChannel = int.guild.channels.cache.get('1195256632318365746');
+          const premiumLogChannel = guild.channels.cache.get('1195256632318365746');
           premiumLogChannel.send({ content: '', embeds: [premiumLogEmbed] });
         } else {
           await int.editReply({
