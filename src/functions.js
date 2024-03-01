@@ -1533,10 +1533,6 @@ module.exports = {
 
         if (currentDay >= localConstants.startingSubDay && currentDay <= localConstants.finalSubDay) {
             const formattedMonth = currentMonth.toString().padStart(2, '0');
-            let reminderEmbed = new EmbedBuilder()
-                .setColor('#f26e6a')
-                .setAuthor({ name: `Endless Mirage Subscription Reminder!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
-                .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             let subChannel = guild.channels.cache.get('865330150039093288');
             let users = await getSubbedUsers(userCollection);
             if (currentDay === localConstants.startingSubDay) {
@@ -1551,15 +1547,19 @@ module.exports = {
             }
             users = users.filter(e => e.monthlyDonation.status === "unpaid");
             for (let user of users) {
+                let reminderEmbed = new EmbedBuilder()
+                    .setColor('#f26e6a')
+                    .setAuthor({ name: `Endless Mirage Subscription Reminder!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
+                    .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                 let subData = user.monthlyDonation;
                 let subMember = await guild.members.cache.find(member => member.id === user._id);
-                const startingDateParts = subData.startingDate.split("/");
-                const lastPaymentParts = subData.lastDate.split("/");
+                let startingDateParts = subData.startingDate.split("/");
+                let lastPaymentParts = subData.lastDate.split("/");
 
-                const startingDate = new Date(startingDateParts[2], startingDateParts[1] - 1, startingDateParts[0]);
-                const lastPayment = new Date(lastPaymentParts[2], lastPaymentParts[1] - 1, lastPaymentParts[0]);
+                let startingDate = new Date(startingDateParts[2], startingDateParts[1] - 1, startingDateParts[0]);
+                let lastPayment = new Date(lastPaymentParts[2], lastPaymentParts[1] - 1, lastPaymentParts[0]);
 
-                const monthsDiff = (lastPayment.getFullYear() - startingDate.getFullYear()) * 12 + lastPayment.getMonth() - startingDate.getMonth();
+                let monthsDiff = (lastPayment.getFullYear() - startingDate.getFullYear()) * 12 + lastPayment.getMonth() - startingDate.getMonth();
                 reminderEmbed.addFields(
                     {
                         name: " ",
@@ -1594,6 +1594,7 @@ module.exports = {
                         embeds: [reminderEmbed],
                         components: [renewComponents],
                     });
+                    console.log(`DM Sent to ${user._id}`);
                 } catch (e) {
                     console.log(e);
                     subChannel.send({
@@ -1601,7 +1602,9 @@ module.exports = {
                         embeds: [reminderEmbed],
                         components: [renewComponents],
                     });
+                    console.log(`DM Sent to ${user._id}`);
                 }
+                reminderEmbed = 0;
             }
         } else if (currentDay === localConstants.finalSubDay + 1) {
             let users = await getSubbedUsers(userCollection);
@@ -1630,6 +1633,7 @@ module.exports = {
                         embeds: [reminderEmbed],
                         components: [renewComponents],
                     });
+                    console.log(`DM Sent to ${user._id}`);
                 } catch (e) {
                     console.log(e);
                     subChannel.send({
@@ -1637,7 +1641,9 @@ module.exports = {
                         embeds: [reminderEmbed],
                         components: [renewComponents],
                     });
+                    console.log(`DM Sent to ${user._id}`);
                 }
+                reminderEmbed = 0;
             }
         } else {
             console.log(`Sub renewal scheduled in ${numberOfDaysInMonth - currentDay + 1} days.`)
@@ -1805,10 +1811,6 @@ async function scheduleDailyDecay(client) {
 
     if (currentDay >= localConstants.startingSubDay && currentDay <= localConstants.finalSubDay) {
         const formattedMonth = currentMonth.toString().padStart(2, '0');
-        let reminderEmbed = new EmbedBuilder()
-            .setColor('#f26e6a')
-            .setAuthor({ name: `Endless Mirage Subscription Reminder!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
-            .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
         let subChannel = guild.channels.cache.get('865330150039093288');
         let users = await getSubbedUsers(userCollection);
         if (currentDay === localConstants.startingSubDay) {
@@ -1823,15 +1825,19 @@ async function scheduleDailyDecay(client) {
         }
         users = users.filter(e => e.monthlyDonation.status === "unpaid");
         for (let user of users) {
+            let reminderEmbed = new EmbedBuilder()
+                .setColor('#f26e6a')
+                .setAuthor({ name: `Endless Mirage Subscription Reminder!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
+                .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             let subData = user.monthlyDonation;
             let subMember = await guild.members.cache.find(member => member.id === user._id);
-            const startingDateParts = subData.startingDate.split("/");
-            const lastPaymentParts = subData.lastDate.split("/");
+            let startingDateParts = subData.startingDate.split("/");
+            let lastPaymentParts = subData.lastDate.split("/");
 
-            const startingDate = new Date(startingDateParts[2], startingDateParts[1] - 1, startingDateParts[0]);
-            const lastPayment = new Date(lastPaymentParts[2], lastPaymentParts[1] - 1, lastPaymentParts[0]);
+            let startingDate = new Date(startingDateParts[2], startingDateParts[1] - 1, startingDateParts[0]);
+            let lastPayment = new Date(lastPaymentParts[2], lastPaymentParts[1] - 1, lastPaymentParts[0]);
 
-            const monthsDiff = (lastPayment.getFullYear() - startingDate.getFullYear()) * 12 + lastPayment.getMonth() - startingDate.getMonth();
+            let monthsDiff = (lastPayment.getFullYear() - startingDate.getFullYear()) * 12 + lastPayment.getMonth() - startingDate.getMonth();
             reminderEmbed.addFields(
                 {
                     name: " ",
@@ -1866,6 +1872,7 @@ async function scheduleDailyDecay(client) {
                     embeds: [reminderEmbed],
                     components: [renewComponents],
                 });
+                console.log(`DM Sent to ${user._id}`);
             } catch (e) {
                 console.log(e);
                 subChannel.send({
@@ -1873,7 +1880,9 @@ async function scheduleDailyDecay(client) {
                     embeds: [reminderEmbed],
                     components: [renewComponents],
                 });
+                console.log(`DM Sent to ${user._id}`);
             }
+            reminderEmbed = 0;
         }
     } else if (currentDay === localConstants.finalSubDay + 1) {
         let users = await getSubbedUsers(userCollection);
@@ -1902,6 +1911,7 @@ async function scheduleDailyDecay(client) {
                     embeds: [reminderEmbed],
                     components: [renewComponents],
                 });
+                console.log(`DM Sent to ${user._id}`);
             } catch (e) {
                 console.log(e);
                 subChannel.send({
@@ -1909,7 +1919,9 @@ async function scheduleDailyDecay(client) {
                     embeds: [reminderEmbed],
                     components: [renewComponents],
                 });
+                console.log(`DM Sent to ${user._id}`);
             }
+            reminderEmbed = 0;
         }
     } else {
         console.log(`Sub renewal scheduled in ${numberOfDaysInMonth - currentDay + 1} days.`)
