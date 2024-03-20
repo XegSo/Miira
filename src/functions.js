@@ -1528,8 +1528,8 @@ module.exports = {
         }
         const delay = nextRun - now;
         let guild = await client.guilds.fetch('630281137998004224');
-        let member = await guild.members.cache.find(member => member.id === "420711641596821504");
-        await member.timeout(86400000, "Daily timeout for this user.");
+        /*let member = await guild.members.cache.find(member => member.id === "420711641596821504");
+        await member.timeout(86400000, "Daily timeout for this user.");*/
 
         if (currentDay >= localConstants.startingSubDay && currentDay <= localConstants.finalSubDay) {
             const formattedMonth = currentMonth.toString().padStart(2, '0');
@@ -1654,7 +1654,7 @@ module.exports = {
         await handleCollabOpenings(collection, client);
         setTimeout(async () => {
             await handleDailyDecay();
-            await member.timeout(86400000, "Daily timeout for this user.");
+            /*await member.timeout(86400000, "Daily timeout for this user.");*/
             scheduleDailyDecay(client);
         }, delay);
     },
@@ -1806,8 +1806,8 @@ async function scheduleDailyDecay(client) {
     }
     const delay = nextRun - now;
     let guild = await client.guilds.fetch('630281137998004224');
-    let member = await guild.members.cache.find(member => member.id === "420711641596821504");
-    await member.timeout(86400000, "Daily timeout for this user.");
+    /*let member = await guild.members.cache.find(member => member.id === "420711641596821504");
+    await member.timeout(86400000, "Daily timeout for this user.");*/
 
     if (currentDay >= localConstants.startingSubDay && currentDay <= localConstants.finalSubDay) {
         const formattedMonth = currentMonth.toString().padStart(2, '0');
@@ -1933,7 +1933,7 @@ async function scheduleDailyDecay(client) {
 
     setTimeout(async () => {
         await handleDailyDecay();
-        await member.timeout(86040000, "Daily timeout for this user.");
+        /*await member.timeout(86040000, "Daily timeout for this user.");*/
         scheduleDailyDecay(client);
     }, delay);
 }
