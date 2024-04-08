@@ -1889,6 +1889,7 @@ async function scheduleDailyDecay(client) {
         let subChannel = guild.channels.cache.get('865330150039093288');
         users = users.filter(e => e.monthlyDonation.status === "unpaid");
         for (let user of users) {
+            let subData = user.monthlyDonation;
             let subMember = await guild.members.cache.find(member => member.id === user._id);
             await setSubStatus(user._id, userCollection, 'innactive');
             let reminderEmbed = new EmbedBuilder()
