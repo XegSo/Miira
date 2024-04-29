@@ -87,6 +87,7 @@ module.exports = {
             upgradeCache.set(int.user.id, {
                 choices: arrayOfObjects,
             });
+            console.log(upgradeCache);
         } finally {
             mongoClient.close();
         }
