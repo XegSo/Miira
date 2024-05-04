@@ -4,12 +4,15 @@ const { connectToMongoDB } = require('../../mongo');
 const Canvas = require('canvas');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
+const { UserRefreshClient } = require('google-auth-library');
+const { networksecurity_v1 } = require('googleapis');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('server')
     .setDescription('Server dashboard.')
     .addSubcommand((subcommand) => subcommand.setName("inventory").setDescription('Shows your current inventory where you can use your items.'))
+    .addSubcommand((subcommand) => subcommand.setName("daily").setDescription('Daily tokens!'))
     .addSubcommand((subcommand) =>
       subcommand.setName("leaderboard")
         .setDescription('Shows the top 10 users with more Credits.')
@@ -359,6 +362,49 @@ module.exports = {
         embeds: [BuyEmbed, shopEmbed],
         components: [actionRowOptions, actionRowShopClass],
       });
+    }
+    if (subcommand === "daily") {
+      await int.deferReply();
+      const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+      const currentDate = Date.now();
+      try {
+        let userArray = await localFunctions.getUserDaily(userId, collection);
+        const currentBalance = await localFunctions.getBalance(userId, collection);
+        let amountToEarn = 100;
+        let newBalance = currentBalance;
+        if (!userArray) {
+          userArray = {
+            streak: 0,
+            lastDate: currentDate,
+          };
+        }
+        const daysSinceLastMessage = (currentDate - userArray.lastDate) / (1000 * 60 * 60 * 24);
+        if (daysSinceLastMessage > 2 || daysSinceLastMessage === 0) {
+          const oldStreak = userArray.streak;
+          userArray.streak = 0;
+          userArray.lastDate = currentDate;
+          newBalance = currentBalance + amountToEarn;
+          await localFunctions.setUserDaily(userId, userArray, collection);
+          await localFunctions.setBalance(userId, newBalance, collection);
+          if (daysSinceLastMessage === 0) {
+            int.editReply(`Welcome to your first daily claim! You\'ve obtained ${amountToEarn} tokens and you\'ve started a new streak! You will obtain **30** extra tokens by every day you run this command! You will also have a time window of **24 hours** to run this command after one day passes. If you miss the window your streak will reset!`);
+          } else {
+            int.editReply(`Oh no! You\'ve obtained **${amountToEarn}** tokens and you\'ve restarted your streak! Your old streak was of ${oldStreak}. Good luck on this new run!`);
+          }
+        } else if (daysSinceLastMessage <= 2 && daysSinceLastMessage >= 1) {
+          amountToEarn = 100 + (30*(userArray.streak + 1));
+          userArray.streak = userArray.streak + 1;
+          userArray.lastDate = currentDate;
+          newBalance = currentBalance + amountToEarn;
+          await localFunctions.setUserDaily(userId, userArray, collection);
+          await localFunctions.setBalance(userId, newBalance, collection);
+          int.editReply(`Welcome back! You\'ve obtained **${amountToEarn}** tokens! Your current streak is of **${userArray.streak}**!.`);
+        } else {
+          int.editReply(`You cannot claim your daily bonus yet! Come back <t:${Math.floor(userArray.lastDate/1000 + 86400)}:R>`);
+        }
+      } finally {
+        mongoClient.close();
+      }
     }
   }
 }

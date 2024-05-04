@@ -806,6 +806,15 @@ module.exports = {
         return user ? user || null : null;
     },
 
+    getUserDaily: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.daily || null : null;
+    },
+
+    setUserDaily: async function (userId, daily, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { daily } }, { upsert: true });
+    },
+
     getUserLastUpdate: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.lastUpdateOsu || null : null;
