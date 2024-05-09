@@ -175,27 +175,70 @@ module.exports = {
         });
     },
 
+    getColumnRange: function (coordinate) {
+        // Extract the column letter(s) from the coordinate
+        let column = coordinate.match(/[A-Z]+/)[0];
+        // Extract the row number from the coordinate
+        let row = parseInt(coordinate.match(/[0-9]+/)[0]);
+
+        // Find the next column letter(s)
+        let nextColumn = "";
+        if (column.length === 1) {
+            // If the column is a single letter
+            if (column === 'Z') {
+                nextColumn = "AA";
+            } else {
+                nextColumn = String.fromCharCode(column.charCodeAt(0) + 1);
+            }
+        } else {
+            // If the column has multiple letters (e.g., AA, AB, etc.)
+            let lastLetter = column[column.length - 1];
+            let firstLetter = column[column.length - 2];
+            if (lastLetter === 'Z') {
+                let secondLastLetter = column[column.length - 2];
+                if (secondLastLetter === 'Z') {
+                    // If the column is ZZ
+                    let firstLetterCode = column.charCodeAt(0);
+                    nextColumn = String.fromCharCode(firstLetterCode + 1) + "A";
+                } else {
+                    // If the column is something like AZ, BZ, etc.
+                    nextColumn = firstLetter + 'AA';
+                }
+            } else {
+                nextColumn = firstLetter + String.fromCharCode(lastLetter.charCodeAt(0) + 1);
+            }
+        }
+
+        // Construct the column range
+        let columnRange = column + ":" + nextColumn;
+
+        return columnRange;
+    },
+
     setSheetFromZero: async function (collab, pool) {
         const doc = await connectToSpreadsheet(collab.spreadsheetID); //Spreadsheet update
         let initialization = false;
         let currentIndex = 0;
         let sheet;
+        let lastColumn = 0;
+        let lastSheetIndex = null;
         for (let item of pool) {
-            if (parseInt(item.sheetIndex) !== currentIndex) {
+            if (item.coordinate !== lastColumn && lastColumn !== 0) {
                 initialization = false;
-                console.log("Changes for a category have been pushed");
                 await sheet.saveUpdatedCells();
+                console.log("Changes for a series have been pushed");
             }
+            let originCoord = localFunctions.excelSheetCoordinateToRowCol(item.coordinate);
+            let mainRow = originCoord.row + (3 * parseInt(item.localId))
+            let mainCol = originCoord.col;
             if (!initialization) {
                 sheet = doc.sheetsByIndex[parseInt(item.sheetIndex)];
                 currentIndex = parseInt(item.sheetIndex);
+                lastSheetIndex = currentIndex;
                 initialization = true;
-                await sheet.loadCells();
+                await sheet.loadCells(`${localFunctions.getColumnRange(item.coordinate)}`);
                 console.log(`Sheet ${currentIndex} loaded.`)
             }
-            let originCoord = excelSheetCoordinateToRowCol(item.coordinate);
-            let mainRow = originCoord.row + (3 * parseInt(item.localId))
-            let mainCol = originCoord.col;
             let mainCell = sheet.getCell(mainRow, mainCol);
             mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
             mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10, link: { uri: item.imgURL } };
@@ -208,11 +251,11 @@ module.exports = {
             availabilityCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8, green: 0.8, blue: 0.8 } }, fontFamily: "Avenir", fontSize: 7 };
             availabilityCell.value = "Available";
             console.log(`Change registered for pick ${item.id}`)
-            if (parseInt(item.id) === collab.user_cap) {
-                await sheet.saveUpdatedCells();
-                console.log("Changes for a category have been pushed");
-            }
+            lastColumn = item.coordinate;
         }
+        await sheet.saveUpdatedCells();
+        message.reply('Pool uploaded to the database and spreadsheet succesfully!');
+        poolCache.delete(userId);
     },
 
     setParticipationOnSheet: async function (collab, pick, osuname) {

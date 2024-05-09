@@ -64,24 +64,27 @@ module.exports = {
                         const doc = await connectToSpreadsheet(fullCollab.spreadsheetID); //Spreadsheet update
                         let initialization = false;
                         let currentIndex = parseInt(jsonData.items[0].sheetIndex);
+                        let lastColumn = 0;
+                        let lastSheetIndex = null;
                         console.log(currentIndex);
                         let sheet;
                         for (let item of jsonData.items) {
-                            if (parseInt(item.sheetIndex) !== currentIndex) {
+                            if (item.coordinate !== lastColumn && lastColumn !== 0) {
                                 initialization = false;
-                                console.log("Changes for a category have been pushed");
                                 await sheet.saveUpdatedCells();
-                            }
-                            if (!initialization) {
-                                sheet = doc.sheetsByIndex[parseInt(item.sheetIndex)];
-                                currentIndex = parseInt(item.sheetIndex);
-                                initialization = true;
-                                await sheet.loadCells();
-                                console.log(`Sheet ${currentIndex} loaded.`)
+                                console.log("Changes for a series have been pushed");
                             }
                             let originCoord = localFunctions.excelSheetCoordinateToRowCol(item.coordinate);
                             let mainRow = originCoord.row + (3 * parseInt(item.localId))
                             let mainCol = originCoord.col;
+                            if (!initialization) {
+                                sheet = doc.sheetsByIndex[parseInt(item.sheetIndex)];
+                                currentIndex = parseInt(item.sheetIndex);
+                                lastSheetIndex = currentIndex;
+                                initialization = true;
+                                await sheet.loadCells(`${localFunctions.getColumnRange(item.coordinate)}`);
+                                console.log(`Sheet ${currentIndex} loaded.`)
+                            }
                             let mainCell = sheet.getCell(mainRow, mainCol);
                             mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
                             mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10, link: { uri: item.imgURL } };
@@ -94,11 +97,9 @@ module.exports = {
                             availabilityCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8, green: 0.8, blue: 0.8 } }, fontFamily: "Avenir", fontSize: 7 };
                             availabilityCell.value = "Available";
                             console.log(`Change registered for pick ${item.id}`)
-                            if (parseInt(item.id) === fullCollab.user_cap) {
-                                await sheet.saveUpdatedCells();
-                                console.log("Changes for a category have been pushed");
-                            }
+                            lastColumn = item.coordinate;
                         }
+                        await sheet.saveUpdatedCells();
                         message.reply('Pool uploaded to the database and spreadsheet succesfully!');
                         poolCache.delete(userId);
                         break messageCheck;
