@@ -496,6 +496,14 @@ module.exports = {
                                         }
                                     )
                                     collabsToJoinCount++;
+                                } else if (collab.status === "open") {
+                                    joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                    osuEmbed.addFields(
+                                        {
+                                            name: `${collab.name}`,
+                                            value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                        }
+                                    )
                                 }
                                 break;
                             case "prestige":
