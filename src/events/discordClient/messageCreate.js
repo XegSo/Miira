@@ -49,116 +49,120 @@ module.exports = {
         const globalBoostValue = globalBoost.multiplier;
 
         messageCheck: try {
-            if (poolCache.size !== 0) { //Pool upload for collabs
-                if (poolCache.get(userId).userId === userId && message.reference.messageId === poolCache.get(userId).messageId && message.attachments.size > 0) {
-                    const attachment = message.attachments.first();
-                    if (attachment.name.endsWith('.json')) {
-                        if (message.author.id !== "687004886922952755") return;
-                        const response = await fetch(attachment.url);
-                        const buffer = Buffer.from(await response.arrayBuffer());
-                        const jsonData = JSON.parse(buffer.toString());
-                        const collabName = poolCache.get(userId).collab;
-                        const fullCollab = await localFunctions.getCollab(collabName, collabCollection);
-                        await localFunctions.setCollabPool(collabName, jsonData, collabCollection);
+            try {
+                if (poolCache.size !== 0) { //Pool upload for collabs
+                    if (poolCache.get(userId).userId === userId && message.reference.messageId === poolCache.get(userId).messageId && message.attachments.size > 0) {
+                        const attachment = message.attachments.first();
+                        if (attachment.name.endsWith('.json')) {
+                            if (message.author.id !== "687004886922952755") return;
+                            const response = await fetch(attachment.url);
+                            const buffer = Buffer.from(await response.arrayBuffer());
+                            const jsonData = JSON.parse(buffer.toString());
+                            const collabName = poolCache.get(userId).collab;
+                            const fullCollab = await localFunctions.getCollab(collabName, collabCollection);
+                            await localFunctions.setCollabPool(collabName, jsonData, collabCollection);
 
-                        const doc = await connectToSpreadsheet(fullCollab.spreadsheetID); //Spreadsheet update
-                        let initialization = false;
-                        let currentIndex = parseInt(jsonData.items[0].sheetIndex);
-                        let lastColumn = 0;
-                        console.log(currentIndex);
-                        let sheet;
-                        for (let item of jsonData.items) {
-                            if (item.coordinate !== lastColumn && lastColumn !== 0) {
-                                initialization = false;
-                                await sheet.saveUpdatedCells();
-                                console.log("Changes for a series have been pushed");
+                            const doc = await connectToSpreadsheet(fullCollab.spreadsheetID); //Spreadsheet update
+                            let initialization = false;
+                            let currentIndex = parseInt(jsonData.items[0].sheetIndex);
+                            let lastColumn = 0;
+                            console.log(currentIndex);
+                            let sheet;
+                            for (let item of jsonData.items) {
+                                if (item.coordinate !== lastColumn && lastColumn !== 0) {
+                                    initialization = false;
+                                    await sheet.saveUpdatedCells();
+                                    console.log("Changes for a series have been pushed");
+                                }
+                                let originCoord = localFunctions.excelSheetCoordinateToRowCol(item.coordinate);
+                                let mainRow = originCoord.row + (3 * parseInt(item.localId))
+                                let mainCol = originCoord.col;
+                                if (!initialization) {
+                                    sheet = doc.sheetsByIndex[parseInt(item.sheetIndex)];
+                                    currentIndex = parseInt(item.sheetIndex);
+                                    lastSheetIndex = currentIndex;
+                                    initialization = true;
+                                    await sheet.loadCells(`${localFunctions.getColumnRange(item.coordinate)}`);
+                                    console.log(`Sheet ${currentIndex} loaded.`)
+                                }
+                                let mainCell = sheet.getCell(mainRow, mainCol);
+                                mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
+                                mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10, link: { uri: item.imgURL } };
+                                mainCell.value = item.name;
+                                let idCell = sheet.getCell(mainRow, mainCol + 1);
+                                idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
+                                idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10 };
+                                idCell.value = item.id;
+                                let availabilityCell = sheet.getCell(mainRow + 1, mainCol);
+                                availabilityCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8, green: 0.8, blue: 0.8 } }, fontFamily: "Avenir", fontSize: 7 };
+                                availabilityCell.value = "Available";
+                                console.log(`Change registered for pick ${item.id}`)
+                                lastColumn = item.coordinate;
                             }
-                            let originCoord = localFunctions.excelSheetCoordinateToRowCol(item.coordinate);
-                            let mainRow = originCoord.row + (3 * parseInt(item.localId))
-                            let mainCol = originCoord.col;
-                            if (!initialization) {
-                                sheet = doc.sheetsByIndex[parseInt(item.sheetIndex)];
-                                currentIndex = parseInt(item.sheetIndex);
-                                lastSheetIndex = currentIndex;
-                                initialization = true;
-                                await sheet.loadCells(`${localFunctions.getColumnRange(item.coordinate)}`);
-                                console.log(`Sheet ${currentIndex} loaded.`)
+                            await sheet.saveUpdatedCells();
+                            message.reply('Pool uploaded to the database and spreadsheet succesfully!');
+                            sheet.resetLocalCache();
+                            poolCache.delete(userId);
+                            break messageCheck;
+                        }
+                    }
+                }
+
+                if (createCollabCache.size !== 0) { //Collab Creation
+                    if (createCollabCache.get(userId).userId === userId && message.reference.messageId === createCollabCache.get(userId).messageId && message.attachments.size > 0) {
+                        const attachment = message.attachments.first();
+                        if (attachment.name.endsWith('.json')) {
+                            const response = await fetch(attachment.url);
+                            const buffer = Buffer.from(await response.arrayBuffer());
+                            let jsonData = JSON.parse(buffer.toString());
+                            jsonData.host = userId;
+                            jsonData.status = "on design";
+                            console.log(jsonData);
+                            await localFunctions.setCollab(jsonData, collabCollection);
+                            message.reply('New collab created succesfully in the database.')
+                            createCollabCache.delete(userId);
+                            break messageCheck;
+                        }
+                    }
+                }
+
+                if (editCache.size !== 0) { //Collab Editing
+                    if (editCache.get(userId).userId === userId && message.reference.messageId === editCache.get(userId).messageId && message.attachments.size > 0) {
+                        const attachment = message.attachments.first();
+                        if (attachment.name.endsWith('.json')) {
+                            const response = await fetch(attachment.url);
+                            const buffer = Buffer.from(await response.arrayBuffer());
+                            let jsonData = JSON.parse(buffer.toString());
+                            console.log(jsonData);
+                            await localFunctions.editCollab(editCache.get(userId).collab, jsonData, collabCollection);
+                            message.reply('Collab edited succesfully.')
+                            editCache.delete(userId);
+                            break messageCheck;
+                        }
+                    }
+                }
+
+                if (monthlySupporterCache.size !== 0) {
+                    if (monthlySupporterCache.get(userId).userId === userId && message.reference.messageId === monthlySupporterCache.get(userId).messageId && message.attachments.size > 0) {
+                        const attachment = message.attachments.first();
+                        if (attachment.name.endsWith('.json')) {
+                            const response = await fetch(attachment.url);
+                            const buffer = Buffer.from(await response.arrayBuffer());
+                            let jsonData = JSON.parse(buffer.toString());
+                            for (item of jsonData) {
+                                console.log(item);
+                                const premiumDiscordId = item.discordId
+                                delete item.name;
+                                delete item.discordId;
+                                await localFunctions.setUserMontlyPremium(premiumDiscordId, item, collection);
                             }
-                            let mainCell = sheet.getCell(mainRow, mainCol);
-                            mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
-                            mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10, link: { uri: item.imgURL } };
-                            mainCell.value = item.name;
-                            let idCell = sheet.getCell(mainRow, mainCol + 1);
-                            idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
-                            idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10 };
-                            idCell.value = item.id;
-                            let availabilityCell = sheet.getCell(mainRow + 1, mainCol);
-                            availabilityCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8, green: 0.8, blue: 0.8 } }, fontFamily: "Avenir", fontSize: 7 };
-                            availabilityCell.value = "Available";
-                            console.log(`Change registered for pick ${item.id}`)
-                            lastColumn = item.coordinate;
+                            message.reply('User data pushed succesfully.');
+                            monthlySupporterCache.delete(userId);
                         }
-                        await sheet.saveUpdatedCells();
-                        message.reply('Pool uploaded to the database and spreadsheet succesfully!');
-                        sheet.resetLocalCache();
-                        poolCache.delete(userId);
-                        break messageCheck;
                     }
                 }
-            }
-
-            if (createCollabCache.size !== 0) { //Collab Creation
-                if (createCollabCache.get(userId).userId === userId && message.reference.messageId === createCollabCache.get(userId).messageId && message.attachments.size > 0) {
-                    const attachment = message.attachments.first();
-                    if (attachment.name.endsWith('.json')) {
-                        const response = await fetch(attachment.url);
-                        const buffer = Buffer.from(await response.arrayBuffer());
-                        let jsonData = JSON.parse(buffer.toString());
-                        jsonData.host = userId;
-                        jsonData.status = "on design";
-                        console.log(jsonData);
-                        await localFunctions.setCollab(jsonData, collabCollection);
-                        message.reply('New collab created succesfully in the database.')
-                        createCollabCache.delete(userId);
-                        break messageCheck;
-                    }
-                }
-            }
-
-            if (editCache.size !== 0) { //Collab Editing
-                if (editCache.get(userId).userId === userId && message.reference.messageId === editCache.get(userId).messageId && message.attachments.size > 0) {
-                    const attachment = message.attachments.first();
-                    if (attachment.name.endsWith('.json')) {
-                        const response = await fetch(attachment.url);
-                        const buffer = Buffer.from(await response.arrayBuffer());
-                        let jsonData = JSON.parse(buffer.toString());
-                        console.log(jsonData);
-                        await localFunctions.editCollab(editCache.get(userId).collab, jsonData, collabCollection);
-                        message.reply('Collab edited succesfully.')
-                        editCache.delete(userId);
-                        break messageCheck;
-                    }
-                }
-            }
-
-            if (monthlySupporterCache.size !== 0) {
-                if (monthlySupporterCache.get(userId).userId === userId && message.reference.messageId === monthlySupporterCache.get(userId).messageId && message.attachments.size > 0) {
-                    const attachment = message.attachments.first();
-                    if (attachment.name.endsWith('.json')) {
-                        const response = await fetch(attachment.url);
-                        const buffer = Buffer.from(await response.arrayBuffer());
-                        let jsonData = JSON.parse(buffer.toString());
-                        for (item of jsonData) {
-                            console.log(item);
-                            const premiumDiscordId = item.discordId
-                            delete item.name;
-                            delete item.discordId;
-                            await localFunctions.setUserMontlyPremium(premiumDiscordId, item, collection);
-                        }
-                        message.reply('User data pushed succesfully.');
-                        monthlySupporterCache.delete(userId);
-                    }
-                }
+            } catch {
+                console.log('Cache Error');
             }
 
             const messageLength = localFunctions.removeURLsAndColons(message.content).length; // Clean and calculate the message length 
