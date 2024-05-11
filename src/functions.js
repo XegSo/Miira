@@ -138,7 +138,7 @@ module.exports = {
                     });
 
                     await logChannel.send({
-                        content: '',
+                        content: '<@854444817316577340>',
                         files: [attachment,
                             {
                                 attachment: `./assets/coloredLogos/logo-${collabColor}.png`,
@@ -2156,7 +2156,7 @@ async function handleCollabOpenings(collection, client) {
                 });
 
                 await logChannel.send({
-                    content: '',
+                    content: '<@854444817316577340>',
                     files: [attachment,
                         {
                             attachment: `./assets/coloredLogos/logo-${collabColor}.png`,
