@@ -10,7 +10,16 @@ module.exports = {
         name: 'change-texts'
     },
     async execute(int, client) {
-        const initializedMap = [profileButtonCache, profileMenuCache].find(map => map.size > 0);
+        let initializedMap;
+        if (profileMenuCache.size > 0) {
+            if (typeof profileMenuCache.get(int.user.id).collab !== "undefined") {
+                initializedMap = profileMenuCache;
+            }
+        } else if (profileButtonCache.size > 0) {
+            if (typeof profileButtonCache.get(int.user.id).collab !== "undefined") {
+                initializedMap = profileButtonCache;
+            }
+        }
         try {
             const collab = initializedMap.get(int.user.id).collab;
             const modal = new ModalBuilder()
@@ -53,6 +62,7 @@ module.exports = {
 
         } catch (e) {
             console.log(e);
+
         }
     },
     editCache: editCache

@@ -12,7 +12,16 @@ module.exports = {
     },
     async execute(int, client) {
         const userId = int.user.id;
-        const initializedMap = [profileButtonCache, profileMenuCache].find(map => map.size > 0);
+        let initializedMap;
+        if (profileMenuCache.size > 0) {
+            if (typeof profileMenuCache.get(int.user.id).collab !== "undefined") {
+                initializedMap = profileMenuCache;
+            }
+        } else if (profileButtonCache.size > 0) {
+            if (typeof profileButtonCache.get(int.user.id).collab !== "undefined") {
+                initializedMap = profileButtonCache;
+            }
+        }
         const collab = initializedMap.get(userId).collab;
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         try {

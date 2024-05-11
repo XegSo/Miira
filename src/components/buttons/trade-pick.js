@@ -11,7 +11,16 @@ module.exports = {
         name: 'trade-pick'
     },
     async execute(int, client) {
-        const initializedMap = [profileButtonCache, profileMenuCache].find(map => map.size > 0);
+        let initializedMap;
+        if (profileMenuCache.size > 0) {
+            if (typeof profileMenuCache.get(int.user.id).collab !== "undefined") {
+                initializedMap = profileMenuCache;
+            }
+        } else if (profileButtonCache.size > 0) {
+            if (typeof profileButtonCache.get(int.user.id).collab !== "undefined") {
+                initializedMap = profileButtonCache;
+            }
+        }
         const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
         try {
             const existingTradeRequest = await localFunctions.getTradeRequest(int.user.id, collectionSpecial);
@@ -37,6 +46,7 @@ module.exports = {
             }
         } catch (e) {
             console.log(e);
+            return await int.reply({ content: `This trade request failed due to cache issues, pleasy try again!`, ephemeral: true });
         } finally {
             mongoClientSpecial.close();
         }

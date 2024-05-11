@@ -156,7 +156,6 @@ module.exports = {
           )
       }
 
-
       profileMenuCache.set(int.user.id, {
         collab: fullCollab,
       })

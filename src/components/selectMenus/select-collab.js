@@ -347,10 +347,12 @@ module.exports = {
         }
       }
 
+      const fullCollab = await localFunctions.getCollab(collab.name, collection);
       buttonCache.set(int.user.id, {
         collab: collab.name,
         osuData: userOsuData,
-        userCollabData: userCollabs
+        userCollabData: userCollabs,
+        fullCollabData: fullCollab
       })
 
       const attachment = new AttachmentBuilder(collab.thumbnail, {

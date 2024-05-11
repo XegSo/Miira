@@ -17,8 +17,24 @@ module.exports = {
         const allMaps = [premiumBuyCache, perkCache, upgradeCache];
         const userId = int.user.id;
         const pendingItems = int.values;
-        const initializedMap = [premiumBuyCache, perkCache, upgradeCache].find(map => map.size > 0);
-        const initializedMapIndex = [premiumBuyCache, perkCache, upgradeCache].findIndex(map => map.size > 0);
+        let initializedMap;
+        let initializedMapIndex;
+        if (profileMenuCache.size > 0) {
+            if (typeof premiumBuyCache.get(int.user.id).collab !== "undefined") {
+                initializedMap = premiumBuyCache;
+                initializedMapIndex = 0;
+            }
+        } else if (profileButtonCache.size > 0) {
+            if (typeof perkCache.get(int.user.id).collab !== "undefined") {
+                initializedMap = perkCache;
+                initializedMapIndex = 1;
+            }
+        } else if (profileButtonCache.size > 0) {
+            if (typeof upgradeCache.get(int.user.id).collab !== "undefined") {
+                initializedMap = upgradeCache;
+                initializedMapIndex = 2;
+            }
+        }
 
         mainProcess: try {
             if (typeof initializedMap === "undefined") {

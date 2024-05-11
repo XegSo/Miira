@@ -14,7 +14,9 @@ module.exports = {
             const currentDate = new Date();
             let userOsu = await localFunctions.getOsuData(userId, collection);
             const userTop100 = await v2.scores.user.category(userOsu.osu_id, 'best', { mode: userOsu.playmode, limit: '100' });
-            await int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
+            if (typeof userTop100 !== "undefined") {
+                await int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
+            }
             const skills = await localFunctions.calculateSkill(userTop100, userOsu.playmode);
             let modsData = localFunctions.analyzeMods(userTop100);
             const filler = {
@@ -33,6 +35,43 @@ module.exports = {
             await localFunctions.verifyUserManual(int.user.id, userOsu, collection);
             await localFunctions.setUserLastUpdate(userId, currentDate, collection);
             await int.editReply(`<@${int.user.id}> Your analytics have been updated!`);
+        } catch (e) {
+            console.log(e);
+            await int.editReply('There was an error fetching your top 100 scores, probably because there isn\'t any play on your profile. If you think this is a mistake please contact the Owner.');
+            let userOsu = await localFunctions.getOsuData(userId, collection);
+            let finalSkillsPrototipe = [
+                { skill: 'Accuracy', value: 0 },
+                { skill: 'Reaction', value: 0 },
+                { skill: 'Aim', value: 0 },
+                { skill: 'Speed', value: 0 },
+                { skill: 'Stamina', value: 0 },
+                { skill: 'Precision', value: 0 },
+            ];
+            const skillDefaultData = finalSkillsPrototipe.map((skill) => {  
+                return {
+                    skill: skill.skill,
+                    rank: 'F',
+                    int: Math.round(skill.value),
+                };
+            });
+            let i = 0;
+            const filler = {
+                mod: "--",
+                percentage: "--"
+            }
+            let modsData = [
+                top4mods,
+                mostCommonModCombination,
+            ]
+            while (i < 4) {
+                modsData.top4Mods.push(filler);
+                i++;
+            }
+            modsData.mostCommonModCombination = "--";
+            userOsu.skillRanks = skillDefaultData;
+            userOsu.modsData = modsData;
+            await localFunctions.verifyUserManual(int.user.id, userOsu, collection);
+            await localFunctions.setUserLastUpdate(userId, currentDate, collection);
         } finally {
             mongoClient.close();
         }

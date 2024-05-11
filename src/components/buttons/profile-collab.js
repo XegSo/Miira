@@ -147,6 +147,8 @@ module.exports = {
                         case "megacollab":
                             if ((collab.status === "early access" && typeof userPerks.find(e => e.name === "Megacollab Early Access")) || userId === '687004886922952755') {
                                 joinMenu.addOptions({ label: collab.name, value: collab.name });
+                            } else if (collab.status === "open") {
+                                joinMenu.addOptions({ label: collab.name, value: collab.name });
                             }
                             collabsToJoinCount++;
                             break;

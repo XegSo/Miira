@@ -42,12 +42,12 @@ module.exports = {
                 )
         ),
     async execute(int, client) {
+        await int.deferReply({ ephemeral: true });
         const subcommand = int.options.getSubcommand();
         const userId = int.user.id;
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(userId);
         if (subcommand === "create") {
-            await int.deferReply();
             if (userId !== '687004886922952755') {
                 await int.editReply('You are not allowed to do this!');
                 return;
@@ -61,41 +61,19 @@ module.exports = {
         }
 
         if (subcommand === "link") {
-            const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-            try {
-                let userOsuData = await localFunctions.getOsuData(userId, collection);
-                if (userOsuData) {
-                    int.reply({ content: 'You already have your osu! account linked!', ephemeral: true });
-                    return;
-                }
-                const modal = new ModalBuilder()
-                    .setCustomId("fetch-profile")
-                    .setTitle('Link your osu! account');
-
-                const name = new TextInputBuilder()
-                    .setCustomId('name')
-                    .setLabel('Type your osu! name')
-                    .setStyle(TextInputStyle.Short)
-                    .setRequired(false);
-
-                const mode = new TextInputBuilder()
-                    .setCustomId('mode')
-                    .setLabel('Type your main gamemode')
-                    .setPlaceholder('osu | fruits | mania | taiko')
-                    .setStyle(TextInputStyle.Short)
-                    .setRequired(false);
-
-                modal.addComponents(new ActionRowBuilder().addComponents(name), new ActionRowBuilder().addComponents(mode));
-
-                await int.showModal(modal);
-
-            } finally {
-                mongoClient.close();
-            }
+            const components = new ActionRowBuilder().addComponents(
+                new ButtonBuilder()
+                    .setCustomId('link-osu')
+                    .setLabel('🔗 Link your osu! Account')
+                    .setStyle('Success'),
+            )
+            return await int.editReply({
+                content: 'Link your account using the button bellow.',
+                components: [components]
+            });
         }
 
         if (subcommand === "admin-link") {
-            await int.deferReply({ ephemeral: true });
             if (userId !== '687004886922952755') {
                 await int.editReply('You are not allowed to do this.');
                 return;
@@ -136,7 +114,6 @@ module.exports = {
         }
 
         if (subcommand === "profile") {
-            await int.deferReply({ ephemeral: true });
             const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
             const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
             try {
@@ -308,7 +285,7 @@ module.exports = {
                     const manageMenu = new SelectMenuBuilder()
                         .setCustomId('manage-collab')
                         .setPlaceholder('Select a collab to manage.')
-                    for (const currentCollab of collabData) {
+                    for (let currentCollab of collabData) {
                         manageMenu.addOptions({ label: currentCollab.collabName, value: currentCollab.collabName });
                     }
                     const manageMenuRow = new ActionRowBuilder().addComponents(manageMenu);
@@ -335,7 +312,6 @@ module.exports = {
         }
 
         if (subcommand === "manage") {
-            await int.deferReply({ ephemeral: true });
             const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
             const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
             try {
@@ -406,7 +382,6 @@ module.exports = {
         }
 
         if (subcommand === "join") {
-            await int.deferReply({ ephemeral: true });
             const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
             const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
             try {
@@ -504,6 +479,7 @@ module.exports = {
                                             value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
                                         }
                                     )
+                                    collabsToJoinCount++;
                                 }
                                 break;
                             case "prestige":
@@ -571,7 +547,6 @@ module.exports = {
         }
 
         if (subcommand === "info") {
-            await int.deferReply({ ephemeral: true });
             const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
             try {
                 const dashboardEmbed = new EmbedBuilder()

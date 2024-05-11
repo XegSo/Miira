@@ -227,7 +227,7 @@ module.exports = {
                 await sheet.saveUpdatedCells();
                 console.log("Changes for a series have been pushed");
             }
-            let originCoord = localFunctions.excelSheetCoordinateToRowCol(item.coordinate);
+            let originCoord = excelSheetCoordinateToRowCol(item.coordinate);
             let mainRow = originCoord.row + (3 * parseInt(item.localId))
             let mainCol = originCoord.col;
             if (!initialization) {
@@ -235,7 +235,7 @@ module.exports = {
                 currentIndex = parseInt(item.sheetIndex);
                 lastSheetIndex = currentIndex;
                 initialization = true;
-                await sheet.loadCells(`${localFunctions.getColumnRange(item.coordinate)}`);
+                await sheet.loadCells(`${getColumnRange(item.coordinate)}`);
                 console.log(`Sheet ${currentIndex} loaded.`)
             }
             let mainCell = sheet.getCell(mainRow, mainCol);
@@ -253,47 +253,58 @@ module.exports = {
             lastColumn = item.coordinate;
         }
         await sheet.saveUpdatedCells();
-        message.reply('Pool uploaded to the database and spreadsheet succesfully!');
-        await resetLocalCache();
+        sheet.resetLocalCache();
     },
 
     setParticipationOnSheet: async function (collab, pick, osuname) {
-        const doc = await connectToSpreadsheet(collab.spreadsheetID);
-        const sheet = doc.sheetsByIndex[parseInt(pick.sheetIndex)];
-        await sheet.loadCells();
-        const originCoord = excelSheetCoordinateToRowCol(pick.coordinate);
-        const mainRow = originCoord.row + (3 * parseInt(pick.localId))
-        const mainCol = originCoord.col;
-        const mainCell = sheet.getCell(mainRow, mainCol);
-        mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } } } };
-        mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } }, fontFamily: "Avenir", strikethrough: true, link: { uri: pick.imgURL } };
-        const idCell = sheet.getCell(mainRow, mainCol + 1);
-        idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } } } };
-        idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } }, fontFamily: "Avenir", strikethrough: true };
-        const infoCell = sheet.getCell(mainRow + 1, mainCol);
-        infoCell.value = `Picked by ${osuname} on ${new Date().toLocaleDateString('en-GB')}`;
-        await sheet.saveUpdatedCells();
+        try {
+            const doc = await connectToSpreadsheet(collab.spreadsheetID);
+            const sheet = doc.sheetsByIndex[parseInt(pick.sheetIndex)];
+            await sheet.loadCells(`${getColumnRange(pick.coordinate)}`);
+            const originCoord = excelSheetCoordinateToRowCol(pick.coordinate);
+            const mainRow = originCoord.row + (3 * parseInt(pick.localId))
+            const mainCol = originCoord.col;
+            const mainCell = sheet.getCell(mainRow, mainCol);
+            mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } } } };
+            mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } }, fontFamily: "Avenir", strikethrough: true, link: { uri: pick.imgURL } };
+            const idCell = sheet.getCell(mainRow, mainCol + 1);
+            idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } } } };
+            idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } }, fontFamily: "Avenir", strikethrough: true };
+            const infoCell = sheet.getCell(mainRow + 1, mainCol);
+            infoCell.value = `Picked by ${osuname} on ${new Date().toLocaleDateString('en-GB')}`;
+            await sheet.saveUpdatedCells();
+            sheet.resetLocalCache();
+        } catch (e) {
+            console.log('Error while setting data on the sheet');
+            console.log(e);
+        }
     },
 
     unsetParticipationOnSheet: async function (collab, pick) {
-        const doc = await connectToSpreadsheet(collab.spreadsheetID);
-        const sheet = doc.sheetsByIndex[parseInt(pick.sheetIndex)];
-        await sheet.loadCells();
-        let originCoord = excelSheetCoordinateToRowCol(pick.coordinate);
-        let mainRow = originCoord.row + (3 * parseInt(pick.localId))
-        let mainCol = originCoord.col;
-        let mainCell = sheet.getCell(mainRow, mainCol);
-        mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
-        mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10, link: { uri: pick.imgURL } };
-        mainCell.value = pick.name;
-        let idCell = sheet.getCell(mainRow, mainCol + 1);
-        idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
-        idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10 };
-        idCell.value = pick.id;
-        let availabilityCell = sheet.getCell(mainRow + 1, mainCol);
-        availabilityCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8, green: 0.8, blue: 0.8 } }, fontFamily: "Avenir", fontSize: 7 };
-        availabilityCell.value = "Available";
-        await sheet.saveUpdatedCells();
+        try {
+            const doc = await connectToSpreadsheet(collab.spreadsheetID);
+            const sheet = doc.sheetsByIndex[parseInt(pick.sheetIndex)];
+            await sheet.loadCells(`${getColumnRange(pick.coordinate)}`);
+            let originCoord = excelSheetCoordinateToRowCol(pick.coordinate);
+            let mainRow = originCoord.row + (3 * parseInt(pick.localId))
+            let mainCol = originCoord.col;
+            let mainCell = sheet.getCell(mainRow, mainCol);
+            mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
+            mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10, link: { uri: pick.imgURL } };
+            mainCell.value = pick.name;
+            let idCell = sheet.getCell(mainRow, mainCol + 1);
+            idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
+            idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10 };
+            idCell.value = pick.id;
+            let availabilityCell = sheet.getCell(mainRow + 1, mainCol);
+            availabilityCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8, green: 0.8, blue: 0.8 } }, fontFamily: "Avenir", fontSize: 7 };
+            availabilityCell.value = "Available";
+            await sheet.saveUpdatedCells();
+            sheet.resetLocalCache();
+        } catch (e) {
+            console.log('Error while setting data on the sheet');
+            console.log(e);
+        }
     },
 
     flattenObject: function (obj, parentKey = '') {
@@ -2321,3 +2332,44 @@ function isEqual(obj1, obj2) {
     }
     return true;
 }
+
+function getColumnRange(coordinate) {
+    // Extract the column letter(s) from the coordinate
+    let column = coordinate.match(/[A-Z]+/)[0];
+    // Extract the row number from the coordinate
+    let row = parseInt(coordinate.match(/[0-9]+/)[0]);
+
+    // Find the next column letter(s)
+    let nextColumn = "";
+    if (column.length === 1) {
+        // If the column is a single letter
+        if (column === 'Z') {
+            nextColumn = "AA";
+        } else {
+            nextColumn = String.fromCharCode(column.charCodeAt(0) + 1);
+        }
+    } else {
+        // If the column has multiple letters (e.g., AA, AB, etc.)
+        let lastLetter = column[column.length - 1];
+        let firstLetter = column[column.length - 2];
+        if (lastLetter === 'Z') {
+            let secondLastLetter = column[column.length - 2];
+            if (secondLastLetter === 'Z') {
+                // If the column is ZZ
+                let firstLetterCode = column.charCodeAt(0);
+                nextColumn = String.fromCharCode(firstLetterCode + 1) + "A";
+            } else {
+                // If the column is something like AZ, BZ, etc.
+                nextColumn = firstLetter + 'AA';
+            }
+        } else {
+            nextColumn = firstLetter + String.fromCharCode(lastLetter.charCodeAt(0) + 1);
+        }
+    }
+
+    // Construct the column range
+    let columnRange = column + ":" + nextColumn;
+
+    return columnRange;
+}
+
