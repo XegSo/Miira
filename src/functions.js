@@ -544,7 +544,7 @@ module.exports = {
                     } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
                         ar = ar - ar * 0.5;
                     }
-                    rea = Math.log(cs) / Math.log(12.5 - ar) * scaledPP * srMultiplier * weight;
+                    rea = Math.log(cs+1) / Math.log(12.5 - ar) * scaledPP * srMultiplier * weight;
                     pre = 1 / 2 * Math.exp(0.13 * cs * score.accuracy + 1) * scaledPP * srMultiplier * weight;
 
                     if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
