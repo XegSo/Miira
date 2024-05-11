@@ -91,9 +91,8 @@ module.exports = {
                     let embeds = [];
                     let URLstring = '';
                     await collection.updateOne({ _id: document._id }, { $set: { status: 'open' } });
-                    let collabColor = await getMeanColor(document.thumbnail);
                     const dashboardEmbed = new EmbedBuilder()
-                        .setColor(collabColor)
+                        .setColor(document.color)
                         .setURL('https://endlessmirage.net/')
                     if (typeof document.spreadsheetID !== "undefined") {
                         URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${document.spreadsheetID})`
@@ -138,10 +137,10 @@ module.exports = {
                     });
 
                     await logChannel.send({
-                        content: '<@854444817316577340>',
+                        content: '<@&854444817316577340>',
                         files: [attachment,
                             {
-                                attachment: `./assets/coloredLogos/logo-${collabColor}.png`,
+                                attachment: `./assets/coloredLogos/logo-${document.color}.png`,
                                 name: 'footer.png'
                             }
                         ],
@@ -2109,9 +2108,8 @@ async function handleCollabOpenings(collection, client) {
                 let embeds = [];
                 let URLstring = "";
                 await collection.updateOne({ _id: document._id }, { $set: { status: 'open' } });
-                let collabColor = await getMeanColor(document.thumbnail);
                 const dashboardEmbed = new EmbedBuilder()
-                    .setColor(collabColor)
+                    .setColor(document.color)
                     .setURL('https://endlessmirage.net/')
                 if (typeof document.spreadsheetID !== "undefined") {
                     URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${document.spreadsheetID})`
@@ -2156,10 +2154,10 @@ async function handleCollabOpenings(collection, client) {
                 });
 
                 await logChannel.send({
-                    content: '<@854444817316577340>',
+                    content: '<@&854444817316577340>',
                     files: [attachment,
                         {
-                            attachment: `./assets/coloredLogos/logo-${collabColor}.png`,
+                            attachment: `./assets/coloredLogos/logo-${document.color}.png`,
                             name: 'footer.png'
                         }
                     ],
