@@ -65,7 +65,6 @@ module.exports = {
                         let initialization = false;
                         let currentIndex = parseInt(jsonData.items[0].sheetIndex);
                         let lastColumn = 0;
-                        let lastSheetIndex = null;
                         console.log(currentIndex);
                         let sheet;
                         for (let item of jsonData.items) {
@@ -101,6 +100,7 @@ module.exports = {
                         }
                         await sheet.saveUpdatedCells();
                         message.reply('Pool uploaded to the database and spreadsheet succesfully!');
+                        sheet.resetLocalCache();
                         poolCache.delete(userId);
                         break messageCheck;
                     }

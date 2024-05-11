@@ -255,7 +255,7 @@ module.exports = {
         }
         await sheet.saveUpdatedCells();
         message.reply('Pool uploaded to the database and spreadsheet succesfully!');
-        poolCache.delete(userId);
+        await resetLocalCache();
     },
 
     setParticipationOnSheet: async function (collab, pick, osuname) {
