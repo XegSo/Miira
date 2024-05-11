@@ -461,7 +461,7 @@ module.exports = {
                     }
                     cs = Math.min(7, cs);
                     ar = Math.min(11, ar);
-                    rea = 2 * Math.log(cs) / Math.log(12.3 - ar) * scaledPP * srMultiplier * weight;
+                    rea = 2 * Math.log(cs+1) / Math.log(12.3 - ar) * scaledPP * srMultiplier * weight;
                     pre = 1 / 2 * Math.exp(0.12 * cs * score.accuracy + 1) * scaledPP * srMultiplier * weight;
 
 
@@ -617,8 +617,14 @@ module.exports = {
             ];
         }
         const result = finalSkillsPrototipe.map((skill) => {
+            console.log(skill);
             const rankObj = localConstants.skillRanksByScore.find((rank) => skill.value >= rank.value);
-            const rank = rankObj.rank || 'F';
+            let rank;
+            if (typeof rankObj.rank !== "undefined") {
+                rank = rankObj.rank;
+            } else {
+                rank = "F";
+            }
 
             return {
                 skill: skill.skill,

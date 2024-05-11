@@ -59,8 +59,10 @@ module.exports = {
                 mod: "--",
                 percentage: "--"
             }
+            let top4Mods = {};
+            let mostCommonModCombination;
             let modsData = [
-                top4mods,
+                top4Mods,
                 mostCommonModCombination,
             ]
             while (i < 4) {
