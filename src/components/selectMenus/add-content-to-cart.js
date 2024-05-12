@@ -20,19 +20,19 @@ module.exports = {
         let initializedMap;
         let initializedMapIndex;
         if (premiumBuyCache.size > 0) {
-            if (typeof premiumBuyCache.get(int.user.id).collab !== "undefined") {
+            if (typeof premiumBuyCache.get(int.user.id).choices !== "undefined") {
                 initializedMap = premiumBuyCache;
                 initializedMapIndex = 0;
             }
         } 
         if (perkCache.size > 0) {
-            if (typeof perkCache.get(int.user.id).collab !== "undefined") {
+            if (typeof perkCache.get(int.user.id).choices !== "undefined") {
                 initializedMap = perkCache;
                 initializedMapIndex = 1;
             }
         } 
         if (upgradeCache.size > 0) {
-            if (typeof upgradeCache.get(int.user.id).collab !== "undefined") {
+            if (typeof upgradeCache.get(int.user.id).choices !== "undefined") {
                 initializedMap = upgradeCache;
                 initializedMapIndex = 2;
             }
