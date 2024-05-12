@@ -24,12 +24,14 @@ module.exports = {
                 initializedMap = premiumBuyCache;
                 initializedMapIndex = 0;
             }
-        } else if (perkCache.size > 0) {
+        } 
+        if (perkCache.size > 0) {
             if (typeof perkCache.get(int.user.id).collab !== "undefined") {
                 initializedMap = perkCache;
                 initializedMapIndex = 1;
             }
-        } else if (upgradeCache.size > 0) {
+        } 
+        if (upgradeCache.size > 0) {
             if (typeof upgradeCache.get(int.user.id).collab !== "undefined") {
                 initializedMap = upgradeCache;
                 initializedMapIndex = 2;

@@ -15,7 +15,8 @@ module.exports = {
             if (typeof profileMenuCache.get(int.user.id).collab !== "undefined") {
                 initializedMap = profileMenuCache;
             }
-        } else if (profileButtonCache.size > 0) {
+        } 
+        if (profileButtonCache.size > 0) {
             if (typeof profileButtonCache.get(int.user.id).collab !== "undefined") {
                 initializedMap = profileButtonCache;
             }
