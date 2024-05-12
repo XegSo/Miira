@@ -103,7 +103,7 @@ module.exports = {
                     components.addComponents(
                         new ButtonBuilder()
                             .setLabel('⬇️ Download')
-                            .setURL(`${fullCollab.bucket}${fullParticipation.collabPick.id}.zip`)
+                            .setURL(`${fullCollab.bucket}${userCollab.collabPick.id}.zip`)
                             .setStyle('Link'),
                     )
                     break;

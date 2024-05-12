@@ -1,6 +1,5 @@
-const { EmbedBuilder } = require('discord.js');
+const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const { connectToMongoDB } = require('../../mongo');
-const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const { collabCache } = require('../buttons/admin-collab');
 
