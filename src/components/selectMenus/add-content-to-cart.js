@@ -19,17 +19,17 @@ module.exports = {
         const pendingItems = int.values;
         let initializedMap;
         let initializedMapIndex;
-        if (profileMenuCache.size > 0) {
+        if (premiumBuyCache.size > 0) {
             if (typeof premiumBuyCache.get(int.user.id).collab !== "undefined") {
                 initializedMap = premiumBuyCache;
                 initializedMapIndex = 0;
             }
-        } else if (profileButtonCache.size > 0) {
+        } else if (perkCache.size > 0) {
             if (typeof perkCache.get(int.user.id).collab !== "undefined") {
                 initializedMap = perkCache;
                 initializedMapIndex = 1;
             }
-        } else if (profileButtonCache.size > 0) {
+        } else if (upgradeCache.size > 0) {
             if (typeof upgradeCache.get(int.user.id).collab !== "undefined") {
                 initializedMap = upgradeCache;
                 initializedMapIndex = 2;
