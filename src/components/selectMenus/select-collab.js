@@ -104,7 +104,8 @@ module.exports = {
       const deluxeEntry = await localFunctions.getDeluxeEntry(userId, userCollection);
 
       if (userInCollab) {
-        if (collab.restriction === "deluxe" && typeof deluxeEntry.extra === "undefined") {
+        const fullParticipation = userCollabs.find(e => e.collabName === collab.name)
+        if (collab.restriction === "deluxe" && typeof deluxeEntry.extra !== "undefined") {
           components.addComponents(
             new ButtonBuilder()
               .setCustomId('deluxe-extra')
@@ -122,26 +123,26 @@ module.exports = {
           case 'delivered':
             components.addComponents(
               new ButtonBuilder()
-                .setCustomId('download-collab')
                 .setLabel('⬇️ Download')
-                .setStyle('Primary'),
+                .setURL(`${collab.bucket}${fullParticipation.collabPick.id}.zip`)
+                .setStyle('Link'),
             )
             break;
           case 'completed':
             components.addComponents(
               new ButtonBuilder()
-                .setCustomId('download-collab')
                 .setLabel('⬇️ Download')
-                .setStyle('Primary'),
+                .setURL(`${collab.bucket}${fullParticipation.collabPick.id}.zip`)
+                .setStyle('Link'),
             )
             break;
           case 'early delivery':
             if (tier >= 4) {
               components.addComponents(
                 new ButtonBuilder()
-                  .setCustomId('download-collab')
                   .setLabel('⬇️ Download')
-                  .setStyle('Primary'),
+                  .setURL(`${collab.bucket}${fullParticipation.collabPick.id}.zip`)
+                  .setStyle('Link'),
               )
             }
             break;

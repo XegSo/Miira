@@ -75,30 +75,18 @@ module.exports = {
                     if (tier >= 4) {
                         components.addComponents(
                             new ButtonBuilder()
-                                .setCustomId('download-collab')
                                 .setLabel('⬇️ Download')
-                                .setStyle('Primary'),
-                        )
-                        components.addComponents(
-                            new ButtonBuilder()
-                                .setCustomId('update-mats')
-                                .setLabel('💹 Update')
-                                .setStyle('Primary'),
+                                .setURL(`${fullCollab.bucket}${userCollab.collabPick.id}.zip`)
+                                .setStyle('Link'),
                         )
                     }
                     break;
                 case "delivered":
                     components.addComponents(
                         new ButtonBuilder()
-                            .setCustomId('download-collab')
                             .setLabel('⬇️ Download')
-                            .setStyle('Primary'),
-                    )
-                    components.addComponents(
-                        new ButtonBuilder()
-                            .setCustomId('update-mats')
-                            .setLabel('💹 Update')
-                            .setStyle('Primary'),
+                            .setURL(`${fullCollab.bucket}${userCollab.collabPick.id}.zip`)
+                            .setStyle('Link'),
                     )
                     break;
                 case "closed":
@@ -106,23 +94,17 @@ module.exports = {
                 case "completed":
                     components.addComponents(
                         new ButtonBuilder()
-                            .setCustomId('download-collab')
                             .setLabel('⬇️ Download')
-                            .setStyle('Primary'),
-                    )
-                    components.addComponents(
-                        new ButtonBuilder()
-                            .setCustomId('update-mats')
-                            .setLabel('💹 Update')
-                            .setStyle('Primary'),
+                            .setURL(`${fullCollab.bucket}${userCollab.collabPick.id}.zip`)
+                            .setStyle('Link'),
                     )
                     break;
                 case "archived":
                     components.addComponents(
                         new ButtonBuilder()
-                            .setCustomId('download-collab')
                             .setLabel('⬇️ Download')
-                            .setStyle('Primary'),
+                            .setURL(`${fullCollab.bucket}${fullParticipation.collabPick.id}.zip`)
+                            .setStyle('Link'),
                     )
                     break;
                 default:

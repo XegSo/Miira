@@ -95,6 +95,12 @@ module.exports = {
                             .setLabel('⛔️ Prune')
                             .setStyle('Danger'),
                     )
+                    extraComponents.addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('deliver-collab')
+                            .setLabel('⬆️ Deliver')
+                            .setStyle('Success'),
+                    )
                 }
             }
 

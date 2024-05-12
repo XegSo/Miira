@@ -1188,6 +1188,10 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { topCombo } }, { upsert: true });
     },
 
+    setCollabBucket: async function (collab, bucket, collection) {
+        await collection.updateOne({ name: collab }, { $set: { bucket } }, { upsert: true });
+    },
+
     getBoostEndTime: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.tokensBoostEndTime || null : null;
