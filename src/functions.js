@@ -1683,6 +1683,14 @@ module.exports = {
             let subChannel = guild.channels.cache.get('865330150039093288');
             users = users.filter(e => e.monthlyDonation.status === "unpaid");
             for (let user of users) {
+                let subData = user.monthlyDonation;
+                let startingDateParts = subData.startingDate.split("/");
+                let lastPaymentParts = subData.lastDate.split("/");
+
+                let startingDate = new Date(startingDateParts[2], startingDateParts[1] - 1, startingDateParts[0]);
+                let lastPayment = new Date(lastPaymentParts[2], lastPaymentParts[1] - 1, lastPaymentParts[0]);
+
+                let monthsDiff = (lastPayment.getFullYear() - startingDate.getFullYear()) * 12 + lastPayment.getMonth() - startingDate.getMonth();
                 let subMember = await guild.members.cache.find(member => member.id === user._id);
                 await setSubStatus(user._id, userCollection, 'innactive');
                 let reminderEmbed = new EmbedBuilder()
@@ -1703,7 +1711,6 @@ module.exports = {
                     subMember.send({
                         content: '',
                         embeds: [reminderEmbed],
-                        components: [renewComponents],
                     });
                     console.log(`DM Sent to ${user._id}`);
                 } catch (e) {
@@ -1711,7 +1718,6 @@ module.exports = {
                     subChannel.send({
                         content: '',
                         embeds: [reminderEmbed],
-                        components: [renewComponents],
                     });
                     console.log(`DM Sent to ${user._id}`);
                 }
@@ -1962,6 +1968,13 @@ async function scheduleDailyDecay(client) {
         users = users.filter(e => e.monthlyDonation.status === "unpaid");
         for (let user of users) {
             let subData = user.monthlyDonation;
+            let startingDateParts = subData.startingDate.split("/");
+            let lastPaymentParts = subData.lastDate.split("/");
+
+            let startingDate = new Date(startingDateParts[2], startingDateParts[1] - 1, startingDateParts[0]);
+            let lastPayment = new Date(lastPaymentParts[2], lastPaymentParts[1] - 1, lastPaymentParts[0]);
+
+            let monthsDiff = (lastPayment.getFullYear() - startingDate.getFullYear()) * 12 + lastPayment.getMonth() - startingDate.getMonth();
             let subMember = await guild.members.cache.find(member => member.id === user._id);
             await setSubStatus(user._id, userCollection, 'innactive');
             let reminderEmbed = new EmbedBuilder()
@@ -1982,7 +1995,6 @@ async function scheduleDailyDecay(client) {
                 subMember.send({
                     content: '',
                     embeds: [reminderEmbed],
-                    components: [renewComponents],
                 });
                 console.log(`DM Sent to ${user._id}`);
             } catch (e) {

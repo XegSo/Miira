@@ -80,7 +80,6 @@ module.exports = {
                                 if (!initialization) {
                                     sheet = doc.sheetsByIndex[parseInt(item.sheetIndex)];
                                     currentIndex = parseInt(item.sheetIndex);
-                                    lastSheetIndex = currentIndex;
                                     initialization = true;
                                     await sheet.loadCells(`${localFunctions.getColumnRange(item.coordinate)}`);
                                     console.log(`Sheet ${currentIndex} loaded.`)
@@ -149,7 +148,7 @@ module.exports = {
                             const response = await fetch(attachment.url);
                             const buffer = Buffer.from(await response.arrayBuffer());
                             let jsonData = JSON.parse(buffer.toString());
-                            for (item of jsonData) {
+                            for (let item of jsonData) {
                                 console.log(item);
                                 const premiumDiscordId = item.discordId
                                 delete item.name;
