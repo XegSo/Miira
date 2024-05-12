@@ -16,6 +16,7 @@ module.exports = {
         try {
             let collab = await localFunctions.getCollab(buttonCache.get(int.user.id).collab, collection)
             let components = [];
+            let extraComponents = [];
             let URLstring = '';
             if (typeof collab.spreadsheetID !== "undefined") {
                 URLstring = `  [Spreadsheet URL](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})\n`
@@ -81,7 +82,7 @@ module.exports = {
             }
 
             if (collab.status !== "on design") {
-                components.addComponents(
+                extraComponents = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId('export-collab')
                         .setLabel('⬇️ Export Data')
@@ -118,7 +119,7 @@ module.exports = {
             await int.editReply({
                 content: '',
                 embeds: [dashboardEmbed],
-                components: [components],
+                components: [components, extraComponents],
             });
 
         } catch (e) {
