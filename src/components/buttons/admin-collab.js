@@ -80,13 +80,21 @@ module.exports = {
                 }
             }
 
-            if (collab.status !== "closed" && collab.status !== "on design") {
+            if (collab.status !== "on design") {
                 components.addComponents(
                     new ButtonBuilder()
-                        .setCustomId('remove-user-collab')
-                        .setLabel('⛔️ Prune')
-                        .setStyle('Danger'),
+                        .setCustomId('export-collab')
+                        .setLabel('⬇️ Export Data')
+                        .setStyle('Success'),
                 )
+                if (collab.status !== "closed") {
+                    components.addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('remove-user-collab')
+                            .setLabel('⛔️ Prune')
+                            .setStyle('Danger'),
+                    )
+                }
             }
 
             components.addComponents(

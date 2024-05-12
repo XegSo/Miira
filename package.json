@@ -19,6 +19,7 @@
     "chalk": "4.1.2",
     "chroma-js": "^2.4.2",
     "color-diff": "^1.4.0",
+    "csv-writer": "^1.6.0",
     "discord.js": "14.13.0",
     "dotenv": "16.0.0",
     "get-random-values": "1.2.2",
