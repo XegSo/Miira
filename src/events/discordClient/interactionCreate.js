@@ -1,4 +1,6 @@
 const { InteractionType } = require('discord.js')
+const { connectToMongoDB } = require('../../mongo');
+const localFunctions = require('../../functions');
 
 module.exports = {
     name: 'interactionCreate',
@@ -10,7 +12,7 @@ module.exports = {
             if (!command) return;
 
             try {
-                await command.execute(int, client);     
+                await command.execute(int, client);
             } catch (error) {
                 console.error(error);
                 int.reply({
@@ -50,6 +52,35 @@ module.exports = {
                 await modal.execute(int, client);
             } catch (error) {
                 console.error(error);
+            }
+        } else if (int.isAutocomplete()) {
+            if (int.commandName === 'collabs') {
+                if (int.options.getSubcommand() === "quickjoin") {
+                    const focusedValue = int.options.getFocused();
+                    const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+                    try {
+                        const allCollabs = await localFunctions.getCollabs(collection);
+                        const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
+                        if (typeof openMegacollab === "undefined") {
+                            return;
+                        } else {
+                            const availablePicks = openMegacollab.pool.items.filter(i => i.status === "available");
+                            const filteredChoices = availablePicks.filter((pick) =>
+                                pick.name.toLowerCase().startsWith(focusedValue.toLowerCase())
+                            );
+                            const results = filteredChoices.map((choice) => {
+                                return {
+                                    name: `${choice.name} - ${choice.series}`,
+                                    value: choice.id
+                                }
+                            });
+
+                            int.respond(results.slice(0, 25)).catch(() => {});
+                        }
+                    } finally {
+                        mongoClient.close();
+                    }
+                }
             }
         }
     }

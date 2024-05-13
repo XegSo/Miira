@@ -11,7 +11,7 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         try {
-            const currentDate = Date().now;
+            const currentDate = Math.floor(new Date().getTime() / 1000);
             let userOsu = await localFunctions.getOsuData(userId, collection);
             const userTop100 = await v2.scores.user.category(userOsu.osu_id, 'best', { mode: userOsu.playmode, limit: '100' });
             if (typeof userTop100 !== "undefined") {

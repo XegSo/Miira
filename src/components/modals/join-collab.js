@@ -116,6 +116,7 @@ module.exports = {
 
                 userCollabs.push(profileData);
                 await localFunctions.setUserCollabs(userId, userCollabs, userCollection);
+                await int.editReply(`You've joined the collab succesfully! Pick: ${itemInPool.name}\nYour participation should appear on the spreadsheet shortly. If it is not the case, issue the \`\`/collabs manage\`\` command, select the megacollab and use the update spreadsheet button!`);
 
                 const joinEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | New Collab Participant', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
@@ -191,12 +192,10 @@ module.exports = {
                     .setColor('#f26e6a')
                     .setURL('https://endlessmirage.net/')
                 logChannel.send({ content: `<@${userId}>`, embeds: [joinEmbed, imageEmbed] });
-                await localFunctions.setParticipationOnSheet(collab, itemInPool, userOsuDataFull.username);
-                await int.editReply(`You've joined the collab! Pick: ${itemInPool.name}`);       
+                await localFunctions.setParticipationOnSheet(collab, itemInPool, userOsuDataFull.username);       
             }
         } catch (e) {
             console.log(e);
-            await int.editReply("An error has ocurred but the pick has been locked for you. Please retry the process, and if you encounter with any issue contact the owner <@687004886922952755>");
         } finally {
             mongoClient.close();
             mongoClientUsers.close();
