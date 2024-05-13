@@ -610,8 +610,7 @@ module.exports = {
             const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
             try {
                 const allCollabs = await localFunctions.getCollabs(collection);
-                const userCollabs = await localFunctions.getUserCollabs(int.user.id, collection);
-                const allUserCollabs = await localFunctions.getUserCollabs(int.user.id, collection);
+                const userCollabs = await localFunctions.getUserCollabs(int.user.id, userCollection);
                 if (typeof userCollabs.find(uc => allCollabs.find(c => c.name === uc.collabName)) !== "undefined") {
                     return await int.editReply('You\'re already participating on this collab! To edit your pick use the ``/collabs manage`` command.');
                 }
@@ -690,8 +689,8 @@ module.exports = {
                         tier: tier
                     }
 
-                    allUserCollabs.push(profileData);
-                    await localFunctions.setUserCollabs(userId, allUserCollabs, userCollection);
+                    userCollabs.push(profileData);
+                    await localFunctions.setUserCollabs(userId, userCollabs, userCollection);
                     await int.editReply(`You've joined the collab succesfully! Pick: ${fullPick.name}\nYour participation should appear on the spreadsheet shortly. If it is not the case, issue the \`\`/collabs manage\`\` command, select the megacollab and use the update spreadsheet button!`);
                     const logChannel = guild.channels.cache.get(localConstants.logChannelID);
                     const joinEmbed = new EmbedBuilder()
