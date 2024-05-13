@@ -20,7 +20,7 @@ module.exports = {
             const pick = new TextInputBuilder()
                 .setCustomId('pick')
                 .setLabel('Type the ID of your pick.')
-                .setPlaceholder('Only the number of the character you want to pick. Example: 1387')
+                .setPlaceholder('Only the ID of the character. Check spreadsheet.')
                 .setMaxLength(collabData.fieldRestrictions.av)
                 .setStyle(TextInputStyle.Short)
 

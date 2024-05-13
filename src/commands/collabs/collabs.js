@@ -46,7 +46,7 @@ module.exports = {
                 .setDescription('Join a collab in a quick way. (Megacollab only)')
                 .addStringOption(option =>
                     option.setName('pick')
-                        .setDescription('Pick ID or Name')
+                        .setDescription('Pick name')
                         .setRequired(true)
                         .setAutocomplete(true)
 
