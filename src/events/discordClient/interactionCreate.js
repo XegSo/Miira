@@ -55,7 +55,7 @@ module.exports = {
             }
         } else if (int.isAutocomplete()) {
             if (int.commandName === 'collabs') {
-                if (int.options.getSubcommand() === "quickjoin") {
+                if (int.options.getSubcommand() === "join") {
                     const focusedValue = int.options.getFocused();
                     const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
                     try {
@@ -65,6 +65,58 @@ module.exports = {
                             return;
                         } else {
                             const availablePicks = openMegacollab.pool.items.filter(i => i.status === "available");
+                            const filteredChoices = availablePicks.filter((pick) =>
+                                pick.name.toLowerCase().startsWith(focusedValue.toLowerCase())
+                            );
+                            const results = filteredChoices.map((choice) => {
+                                return {
+                                    name: `${choice.name} - ${choice.series}`,
+                                    value: choice.id
+                                }
+                            });
+
+                            int.respond(results.slice(0, 25)).catch(() => {});
+                        }
+                    } finally {
+                        mongoClient.close();
+                    }
+                }
+                if (int.options.getSubcommand() === "swap") {
+                    const focusedValue = int.options.getFocused();
+                    const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+                    try {
+                        const allCollabs = await localFunctions.getCollabs(collection);
+                        const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
+                        if (typeof openMegacollab === "undefined") {
+                            return;
+                        } else {
+                            const availablePicks = openMegacollab.pool.items.filter(i => i.status === "available");
+                            const filteredChoices = availablePicks.filter((pick) =>
+                                pick.name.toLowerCase().startsWith(focusedValue.toLowerCase())
+                            );
+                            const results = filteredChoices.map((choice) => {
+                                return {
+                                    name: `${choice.name} - ${choice.series}`,
+                                    value: choice.id
+                                }
+                            });
+
+                            int.respond(results.slice(0, 25)).catch(() => {});
+                        }
+                    } finally {
+                        mongoClient.close();
+                    }
+                }
+                if (int.options.getSubcommand() === "trade") {
+                    const focusedValue = int.options.getFocused();
+                    const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+                    try {
+                        const allCollabs = await localFunctions.getCollabs(collection);
+                        const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
+                        if (typeof openMegacollab === "undefined") {
+                            return;
+                        } else {
+                            const availablePicks = openMegacollab.pool.items.filter(i => i.status === "picked");
                             const filteredChoices = availablePicks.filter((pick) =>
                                 pick.name.toLowerCase().startsWith(focusedValue.toLowerCase())
                             );
