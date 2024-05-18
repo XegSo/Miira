@@ -3,7 +3,8 @@ const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
-const { tradeCache } = require('../buttons/trade-pick');
+const { profileButtonCache } = require('../buttons/profile-pick');
+const { profileMenuCache } = require('../selectMenus/manage-collab');
 
 module.exports = {
     data: {
@@ -11,13 +12,34 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
+        let initializedMap;
+        if (profileMenuCache.size > 0) {
+            if (typeof profileMenuCache.get(int.user.id).collab !== "undefined") {
+                initializedMap = profileMenuCache;
+            }
+        } 
+        if (profileButtonCache.size > 0) {
+            if (typeof profileButtonCache.get(int.user.id).collab !== "undefined") {
+                initializedMap = profileButtonCache;
+            }
+        }
         const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
         const userId = int.user.id;
         const guild = client.guilds.cache.get(localConstants.guildId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
         try {
-            const collab = tradeCache.get(int.user.id).collab;
+            const existingTradeRequest = await localFunctions.getTradeRequest(int.user.id, collectionSpecial);
+            if (existingTradeRequest.length !== 0) {
+                return await int.reply({ content: `You cannot request a trade when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
+            }
+            const collab = initializedMap.get(int.user.id).collab;
             if (collab.type === "pooled") {
+                switch (collab.status) {
+                    case 'closed':
+                    case 'delivered':
+                    case 'early delivery':
+                        return await int.editReply('You cannot trade your character at this collab state.');
+                }
                 let pool = collab.pool.items;
                 let digits = pool[0].id.length;
                 const pickRequested = localFunctions.padNumberWithZeros(parseInt(int.fields.getTextInputValue('pick')), digits);
@@ -85,7 +107,6 @@ module.exports = {
                 );
 
                 const message = await logChannel.send({ content: `<@${fullRequestedParticipation.discordId}>`, embeds: [swapEmbed], components: [components] });
-                console.log(message.id);
 
                 let tradeData = {
                     'requestedUser': fullRequestedParticipation,
@@ -102,7 +123,6 @@ module.exports = {
         } catch (e) {
             console.log(e);
         } finally {
-            tradeCache.delete(int.user.id);
             mongoClientSpecial.close();
         }
     },
