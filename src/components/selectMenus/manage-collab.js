@@ -22,6 +22,7 @@ module.exports = {
       let fullCollab = await localFunctions.getCollab(int.values[0], collection);
       let pick = userCollab.collabPick;
       let components = [];
+      let extraComponents = [];
       const dashboardEmbed = new EmbedBuilder()
         .setFooter({ text: "Endless Mirage | Collab Profile", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
         .setColor('#f26e6a')
@@ -63,7 +64,6 @@ module.exports = {
 
       components = new ActionRowBuilder();
 
-
       let tier = 0;
       const userTier = await localFunctions.getUserTier(userId, userCollection);
 
@@ -83,24 +83,15 @@ module.exports = {
                 .setURL(`${fullCollab.bucket}${userCollab.collabPick.id}.zip`)
                 .setStyle('Link'),
             )
+            await int.editReply({
+              content: '',
+              embeds: [dashboardEmbed, embed2],
+              components: [components],
+            });
           }
           break;
         case "delivered":
-          components.addComponents(
-            new ButtonBuilder()
-              .setLabel('⬇️ Download')
-              .setURL(`${fullCollab.bucket}${userCollab.collabPick.id}.zip`)
-              .setStyle('Link'),
-          )
-          break;
         case "completed":
-          components.addComponents(
-            new ButtonBuilder()
-              .setLabel('⬇️ Download')
-              .setURL(`${fullCollab.bucket}${userCollab.collabPick.id}.zip`)
-              .setStyle('Link'),
-          )
-          break;
         case "archived":
           components.addComponents(
             new ButtonBuilder()
@@ -108,8 +99,14 @@ module.exports = {
               .setURL(`${fullCollab.bucket}${userCollab.collabPick.id}.zip`)
               .setStyle('Link'),
           )
+          await int.editReply({
+            content: '',
+            embeds: [dashboardEmbed, embed2],
+            components: [components],
+          });
           break;
         default:
+          extraComponents = new ActionRowBuilder();
           if (fullCollab.status !== "full") {
             components.addComponents(
               new ButtonBuilder()
@@ -130,23 +127,37 @@ module.exports = {
               .setLabel('📝 Edit')
               .setStyle('Primary'),
           )
+          if (fullCollab.imageSwap) {
+            components.addComponents(
+              new ButtonBuilder()
+                .setCustomId('swap-image')
+                .setLabel('🎨 Image')
+                .setStyle('Primary'),
+            )
+          }
           components.addComponents(
             new ButtonBuilder()
               .setCustomId('leave-collab')
               .setLabel('🛫 Leave')
               .setStyle('Danger'),
           )
+          extraComponents.addComponents(
+            new ButtonBuilder()
+              .setCustomId('update-sheet')
+              .setLabel('📰 Update Spreadsheet')
+              .setStyle('Success'),
+          )
+          await int.editReply({
+            content: '',
+            embeds: [dashboardEmbed, embed2],
+            components: [components, extraComponents],
+          });
       }
 
       profileMenuCache.set(int.user.id, {
         collab: fullCollab,
       })
 
-      await int.editReply({
-        content: '',
-        embeds: [dashboardEmbed, embed2],
-        components: [components],
-      });
     } catch (e) {
       console.log(e)
       await int.editReply('Something went wrong...')

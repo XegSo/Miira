@@ -640,13 +640,15 @@ module.exports = {
                 try {
                     const allCollabs = await localFunctions.getCollabs(collection);
                     const userCollabs = await localFunctions.getUserCollabs(int.user.id, userCollection);
-                    if (typeof userCollabs.find(uc => allCollabs.find(c => c.name === uc.collabName)) !== "undefined") {
-                        return await int.editReply('You\'re already participating on this collab! To edit your pick use the ``/collabs manage`` command.');
-                    }
                     const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
                     if (typeof openMegacollab === "undefined") {
                         await int.editReply('There is no open megacollabs at the moment...')
                     } else {
+                        try {
+                            if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) !== "undefined") {
+                                return await int.editReply('You\'re already participating on this collab! To edit your pick use the ``/collabs manage`` command.');
+                            }
+                        } catch {}
                         const availablePicks = openMegacollab.pool.items.filter(i => i.status === "available");
                         const pick = int.options.getString('pick');
                         console.log(pick);
@@ -812,6 +814,7 @@ module.exports = {
                 const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
                 const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
                 try {
+                    const userCollabs = await localFunctions.getUserCollabs(int.user.id, userCollection);
                     const existingTradeRequest = await localFunctions.getTradeRequest(int.user.id, collectionSpecial);
                     if (existingTradeRequest.length !== 0) {
                         return await int.reply({ content: `You cannot swap your pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
@@ -821,6 +824,13 @@ module.exports = {
                     if (typeof openMegacollab === "undefined") {
                         await int.editReply('There is no open megacollabs at the moment...')
                     } else {
+                        try {
+                            if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === "undefined") {
+                                return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                            }
+                        } catch {
+                            return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                        }
                         const collab = openMegacollab;
                         if (collab.type === "pooled") {
                             switch (collab.status) {
@@ -829,6 +839,8 @@ module.exports = {
                                 case 'closed':
                                 case 'delivered':
                                 case 'early delivery':
+                                case 'completed':
+                                case 'archived':
                                     return await int.editReply('You cannot swap your character at this collab state.');
                             }
 
@@ -850,9 +862,6 @@ module.exports = {
                             await localFunctions.setCollabParticipation(collab.name, collection, pick);
                             await localFunctions.editCollabParticipantPickOnCollab(collab.name, userId, newPickFull, collection);
                             await localFunctions.editCollabParticipantPickOnUser(userId, collab.name, newPickFull, userCollection);
-                            await localFunctions.unsetParticipationOnSheet(collab, currentPick);
-                            await localFunctions.setParticipationOnSheet(collab, newPickFull, userOsuDataFull.username);
-
 
                             const swapEmbed = new EmbedBuilder()
                                 .setFooter({ text: 'Endless Mirage | New Character Swap', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
@@ -891,11 +900,12 @@ module.exports = {
                                 )
                             logChannel.send({ content: `<@${userId}>`, embeds: [swapEmbed] });
                             await int.editReply(`You've swaped your pick! New pick: ${newPickFull.name}`);
+                            await localFunctions.unsetParticipationOnSheet(collab, currentPick);
+                            await localFunctions.setParticipationOnSheet(collab, newPickFull, userOsuDataFull.username);
                         }
                     }
                 } catch (e) {
                     console.log(e);
-                    await int.editReply(`Something went wrong...`);
                 } finally {
                     mongoClient.close();
                     mongoClientUsers.close();
@@ -904,9 +914,11 @@ module.exports = {
             }
 
             if (subcommand == "trade") {
+                const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
                 const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
                 const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
                 try {
+                    const userCollabs = await localFunctions.getUserCollabs(int.user.id, userCollection);
                     const existingTradeRequest = await localFunctions.getTradeRequest(int.user.id, collectionSpecial);
                     if (existingTradeRequest.length !== 0) {
                         return await int.reply({ content: `You cannot request a trade when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
@@ -916,12 +928,21 @@ module.exports = {
                     if (typeof openMegacollab === "undefined") {
                         await int.editReply('There is no open megacollabs at the moment...')
                     } else {
+                        try {
+                            if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === "undefined") {
+                                return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                            }
+                        } catch {
+                            return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                        }
                         const collab = openMegacollab;
                         if (collab.type === "pooled") {
                             switch (collab.status) {
                                 case 'closed':
                                 case 'delivered':
                                 case 'early delivery':
+                                case 'completed':
+                                case 'archived':
                                     return await int.editReply('You cannot trade your character at this collab state.');
                             }
                             let pool = collab.pool.items;
@@ -934,16 +955,16 @@ module.exports = {
                                 return await int.editReply('This character is available! You can swap your pick without trading.');
                             }
                             const pickRequested = newPickFull.id;
-            
+
                             let participants = collab.participants;
                             const fullTraderParticipation = participants.find((e) => e.discordId === userId);
                             if (fullTraderParticipation.id === pickRequested) {
                                 return await int.editReply('You cannot trade to yourself silly!');
                             }
-            
+
                             const fullRequestedParticipation = participants.find((e) => e.id === pickRequested);
-            
-            
+
+
                             const swapEmbed = new EmbedBuilder()
                                 .setFooter({ text: 'Endless Mirage | New Trade Request', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                                 .setColor('#f26e6a')
@@ -978,7 +999,7 @@ module.exports = {
                                         value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
                                     }
                                 )
-            
+
                             const components = new ActionRowBuilder().addComponents(
                                 new ButtonBuilder()
                                     .setCustomId('accept-trade')
@@ -989,9 +1010,9 @@ module.exports = {
                                     .setLabel('Reject')
                                     .setStyle('Danger'),
                             );
-            
+
                             const message = await logChannel.send({ content: `<@${fullRequestedParticipation.discordId}>`, embeds: [swapEmbed], components: [components] });
-            
+
                             let tradeData = {
                                 'requestedUser': fullRequestedParticipation,
                                 'traderUser': fullTraderParticipation,
@@ -999,9 +1020,9 @@ module.exports = {
                                 'messageUrl': message.url,
                                 'collabName': collab.name
                             }
-            
+
                             await localFunctions.updateTradeRequest(tradeData, collectionSpecial);
-            
+
                             await int.editReply(`New trade request created in <#${localConstants.logChannelID}>`);
                         }
                     }
@@ -1009,6 +1030,7 @@ module.exports = {
                     console.log(e);
                 } finally {
                     mongoClientSpecial.close();
+                    mongoClientUsers.close();
                     mongoClient.close();
                 }
             }

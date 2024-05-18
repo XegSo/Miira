@@ -121,13 +121,7 @@ module.exports = {
         )
         switch (collab.status) {
           case 'delivered':
-            components.addComponents(
-              new ButtonBuilder()
-                .setLabel('⬇️ Download')
-                .setURL(`${collab.bucket}${fullParticipation.collabPick.id}.zip`)
-                .setStyle('Link'),
-            )
-            break;
+          case 'archived':
           case 'completed':
             components.addComponents(
               new ButtonBuilder()
@@ -227,9 +221,9 @@ module.exports = {
                 )
                 break;
               case 'early access':
-                infoValue = "**Peak premium users are now picking!**";
-                if (typeof userPerks.find(e => e.name === 'Megacollab Early Access') !== "undefined" && collab.restriction === 'megacollab') {
-                  infoValue = "**Thank you for purchasing early access!**";
+                infoValue = "**Peak premium users, peak prestige users and admins are now picking!**";
+                if (typeof userPerks.find(e => e.name === 'Megacollab Early Access') !== "undefined" || prestigeLevel >= 8 || guildMember.roles.cache.has('630636502187114496')/*admin*/ || guildMember.roles.cache.has('834962043735638016')/*special donator*/|| guildMember.roles.cache.has('962251481669574666')/*contributor*/) {
+                  infoValue = "**You have early access!**";
                   components.addComponents(
                     new ButtonBuilder()
                       .setCustomId('join-collab')

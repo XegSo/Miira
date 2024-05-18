@@ -73,7 +73,7 @@ module.exports = {
 
     handleCollabOpenings: async function (collection, client) {
         // Find documents with status "on design"
-        const documents = await collection.find({ status: 'on design' }).toArray();
+        const documents = await collection.find({ status: { $in: ['on design', 'early access'] } }).toArray();
         const guild = client.guilds.cache.get(localConstants.guildId);
 
         // Get current Unix timestamp
@@ -81,10 +81,10 @@ module.exports = {
 
         // Iterate over documents and set interval for each
         documents.forEach(document => {
-            const remainingTime = document.opening - currentTimestamp;
+            const remainingTimePublic = document.opening - currentTimestamp;
 
-            if (remainingTime > 0) {
-                console.log(`Handling ${document.name} opening in ${remainingTime / 60 / 60} hours`);
+            if (remainingTimePublic > 0) {
+                console.log(`Handling ${document.name} public opening in ${remainingTimePublic / 60 / 60} hours`);
                 // Set interval to update status when time has passed
                 setTimeout(async () => {
                     const logChannel = guild.channels.cache.get(document.logChannel);
@@ -146,8 +146,78 @@ module.exports = {
                         ],
                         embeds: embeds,
                     })
-                    console.log(`${document.name} was opened`);
-                }, remainingTime * 1000); // Convert seconds to milliseconds
+                    console.log(`${document.name} was opened for the public.`);
+                }, remainingTimePublic * 1000); // Convert seconds to milliseconds
+            }
+
+            if (document.restriction === "megacollab") {
+                const remainingTimeEarly = document.early_access - currentTimestamp;
+                if (remainingTimeEarly > 0) {
+                    console.log(`Handling ${document.name} early access in ${remainingTimeEarly / 60 / 60} hours`);
+                    // Set interval to update status when time has passed
+                    setTimeout(async () => {
+                        const logChannel = guild.channels.cache.get(document.logChannel);
+                        let embeds = [];
+                        let URLstring = '';
+                        await collection.updateOne({ _id: document._id }, { $set: { status: 'early access' } });
+                        const dashboardEmbed = new EmbedBuilder()
+                            .setColor(document.color)
+                            .setURL('https://endlessmirage.net/')
+                        if (typeof document.spreadsheetID !== "undefined") {
+                            URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${document.spreadsheetID})`
+                        }
+                        let extraString = '';
+
+                        if (document.user_cap !== 0) {
+                            extraString = `User Limit: ${document.user_cap}\n`
+                        } else {
+                            extraString = "Unlimited\n"
+                        }
+                        dashboardEmbed.addFields(
+                            {
+                                name: "‎",
+                                value: `┌ Type: ${capitalizeFirstLetter(document.type)}\n├ Topic: ${capitalizeFirstLetter(document.topic)}\n└ Status: Early Access\n`,
+                                inline: true
+                            }
+                        );
+
+                        dashboardEmbed.addFields(
+                            {
+                                name: "‎",
+                                value: `┌ Class: ${capitalizeFirstLetter(document.restriction)}\n├ Closing date: <t:${parseInt(document.closure)}:R>\n└ ${extraString}`,
+                                inline: true
+                            }
+                        );
+
+                        dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${document.name} is now in early access phase!\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.\nTo join, issue the command \`\`/collabs join\`\`!`);
+                        dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' })
+                        embeds.push(dashboardEmbed);
+                        if (document.designs.length !== 0) {
+                            for (const design in document.designs) {
+                                let embed = new EmbedBuilder()
+                                    .setURL('https://endlessmirage.net/')
+                                    .setImage(document.designs[design]);
+
+                                embeds.push(embed);
+                            }
+                        }
+                        const attachment = new AttachmentBuilder(document.thumbnail, {
+                            name: "thumbnail.png"
+                        });
+
+                        await logChannel.send({
+                            content: '',
+                            files: [attachment,
+                                {
+                                    attachment: `./assets/coloredLogos/logo-${document.color}.png`,
+                                    name: 'footer.png'
+                                }
+                            ],
+                            embeds: embeds,
+                        })
+                        console.log(`${document.name} was opened in early access.`);
+                    }, remainingTimeEarly * 1000); // Convert seconds to milliseconds
+                }
             }
         });
     },
@@ -824,6 +894,23 @@ module.exports = {
         return referralCode;
     },
 
+    isPNGURL: async function(url) {
+        // Common image file extensions
+        if (!url.toLowerCase().endsWith('.png')) {
+            return false;
+        }
+      
+        // Fetch the URL and check the Content-Type
+        try {
+          const response = await fetch(url, { method: 'HEAD' });
+          const contentType = response.headers.get('content-type');
+          return contentType && contentType === 'image/png';
+        } catch (error) {
+          console.error('Error fetching the URL:', error);
+          return false;
+        }
+    },
+
     // Helper functions for interacting with MongoDB
 
     setCollab: async function (collab, collection) {
@@ -1490,6 +1577,20 @@ module.exports = {
 
     },
 
+    updateImageRequest: async function (messageId, type, user, imgURL, status, embed, collab) {
+        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+        try {
+            await collectionSpecial.updateOne({ _id: messageId }, { $set: { type, user, imgURL, status, embed, collab } }, { upsert: true });
+        } catch (error) {
+            console.error('Error sending image request:', error);
+            return null;
+        } finally {
+            if (mongoClient) {
+                mongoClient.close();
+            }
+        }
+    },
+
     updateSuggestion: async function (messageId, user, status, embed, upvotes, downvotes, voters) {
         if (!voters) {
             let suggestion = await getSuggestion(messageId);
@@ -1560,6 +1661,35 @@ module.exports = {
         try {
             const messageEmbed = await collectionSpecial.findOne({ _id: messageId });
             return messageEmbed ? messageEmbed || [] : [];
+        } finally {
+            if (mongoClient) {
+                mongoClient.close();
+            }
+        }
+    },
+
+    getImageRequestByUser: async function (userId) {
+        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+        try {
+            let imageRequest = await collectionSpecial.find({ user: userId }).toArray();
+            imageRequest = imageRequest.filter(r => r.type === "image change");
+            if (imageRequest.length > 0) {
+                return imageRequest;
+            } else {
+                return false;
+            }
+        } finally {
+            if (mongoClient) {
+                mongoClient.close();
+            }
+        }
+    },
+
+    getImageRequestByMessage: async function (messageId) {
+        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+        try {
+            const imageRequest = await collectionSpecial.findOne({ _id: messageId });
+            return imageRequest ? imageRequest || false : false;
         } finally {
             if (mongoClient) {
                 mongoClient.close();
@@ -1726,7 +1856,7 @@ module.exports = {
         } else {
             console.log(`Sub renewal scheduled in ${numberOfDaysInMonth - currentDay + 1} days.`)
         }
-        console.log('user timed out for 24 hours');
+        /*console.log('user timed out for 24 hours');*/
         const { collection } = await connectToMongoDB("Collabs");
         await handleCollabClosures(collection, client);
         await handleCollabOpenings(collection, client);
@@ -2011,7 +2141,7 @@ async function scheduleDailyDecay(client) {
     } else {
         console.log(`Sub renewal scheduled in ${numberOfDaysInMonth - currentDay + 1} days.`)
     }
-    console.log('user timed out for 24 hours');
+    /*console.log('user timed out for 24 hours');*/
     const { collection } = await connectToMongoDB("Collabs");
     await handleCollabClosures(collection, client);
     await handleCollabOpenings(collection, client);
@@ -2124,22 +2254,23 @@ function excelSheetCoordinateToRowCol(coordinate) {
 
 async function handleCollabOpenings(collection, client) {
     // Find documents with status "on design"
-    const documents = await collection.find({ status: 'on design' }).toArray();
+    const documents = await collection.find({ status: { $in: ['on design', 'early access'] } }).toArray();
     const guild = client.guilds.cache.get(localConstants.guildId);
+
     // Get current Unix timestamp
     const currentTimestamp = Math.floor(Date.now() / 1000);
 
     // Iterate over documents and set interval for each
     documents.forEach(document => {
-        const remainingTime = document.opening - currentTimestamp;
+        const remainingTimePublic = document.opening - currentTimestamp;
 
-        if (remainingTime > 0) {
-            console.log(`Handling ${document.name} opening in ${remainingTime / 60 / 60} hours`);
+        if (remainingTimePublic > 0) {
+            console.log(`Handling ${document.name} public opening in ${remainingTimePublic / 60 / 60} hours`);
             // Set interval to update status when time has passed
             setTimeout(async () => {
                 const logChannel = guild.channels.cache.get(document.logChannel);
                 let embeds = [];
-                let URLstring = "";
+                let URLstring = '';
                 await collection.updateOne({ _id: document._id }, { $set: { status: 'open' } });
                 const dashboardEmbed = new EmbedBuilder()
                     .setColor(document.color)
@@ -2196,8 +2327,78 @@ async function handleCollabOpenings(collection, client) {
                     ],
                     embeds: embeds,
                 })
-                console.log(`${document.name} was opened`);
-            }, remainingTime * 1000); // Convert seconds to milliseconds
+                console.log(`${document.name} was opened for the public.`);
+            }, remainingTimePublic * 1000); // Convert seconds to milliseconds
+        }
+
+        if (document.restriction === "megacollab") {
+            const remainingTimeEarly = document.early_access - currentTimestamp;
+            if (remainingTimeEarly > 0) {
+                console.log(`Handling ${document.name} early access in ${remainingTimeEarly / 60 / 60} hours`);
+                // Set interval to update status when time has passed
+                setTimeout(async () => {
+                    const logChannel = guild.channels.cache.get(document.logChannel);
+                    let embeds = [];
+                    let URLstring = '';
+                    await collection.updateOne({ _id: document._id }, { $set: { status: 'early access' } });
+                    const dashboardEmbed = new EmbedBuilder()
+                        .setColor(document.color)
+                        .setURL('https://endlessmirage.net/')
+                    if (typeof document.spreadsheetID !== "undefined") {
+                        URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${document.spreadsheetID})`
+                    }
+                    let extraString = '';
+
+                    if (document.user_cap !== 0) {
+                        extraString = `User Limit: ${document.user_cap}\n`
+                    } else {
+                        extraString = "Unlimited\n"
+                    }
+                    dashboardEmbed.addFields(
+                        {
+                            name: "‎",
+                            value: `┌ Type: ${capitalizeFirstLetter(document.type)}\n├ Topic: ${capitalizeFirstLetter(document.topic)}\n└ Status: Early Access\n`,
+                            inline: true
+                        }
+                    );
+
+                    dashboardEmbed.addFields(
+                        {
+                            name: "‎",
+                            value: `┌ Class: ${capitalizeFirstLetter(document.restriction)}\n├ Closing date: <t:${parseInt(document.closure)}:R>\n└ ${extraString}`,
+                            inline: true
+                        }
+                    );
+
+                    dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${document.name} is now in early access phase!\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.\nTo join, issue the command \`\`/collabs join\`\`!`);
+                    dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' })
+                    embeds.push(dashboardEmbed);
+                    if (document.designs.length !== 0) {
+                        for (const design in document.designs) {
+                            let embed = new EmbedBuilder()
+                                .setURL('https://endlessmirage.net/')
+                                .setImage(document.designs[design]);
+
+                            embeds.push(embed);
+                        }
+                    }
+                    const attachment = new AttachmentBuilder(document.thumbnail, {
+                        name: "thumbnail.png"
+                    });
+
+                    await logChannel.send({
+                        content: '',
+                        files: [attachment,
+                            {
+                                attachment: `./assets/coloredLogos/logo-${document.color}.png`,
+                                name: 'footer.png'
+                            }
+                        ],
+                        embeds: embeds,
+                    })
+                    console.log(`${document.name} was opened in early access.`);
+                }, remainingTimeEarly * 1000); // Convert seconds to milliseconds
+            }
         }
     });
 }

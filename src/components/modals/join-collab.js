@@ -41,9 +41,7 @@ module.exports = {
                 if (typeof userCollabData.find(e => verificationCollabs.find(c => c.name === e.name)) !== "undefined") {
                     return await int.editReply('You are already participating in an active collab!');
                 }
-            } catch {
-                console.log('Something went fucky wucky');
-            }
+            } catch {}
             if (typeof userCollabData.find(e => e.collabName === collab.name) !== "undefined") {
                 return await int.editReply({
                     content: 'You are already participating in this collab. To edit your data, manage your participation in your collabs profile.',

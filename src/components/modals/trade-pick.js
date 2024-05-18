@@ -17,7 +17,7 @@ module.exports = {
             if (typeof profileMenuCache.get(int.user.id).collab !== "undefined") {
                 initializedMap = profileMenuCache;
             }
-        } 
+        }
         if (profileButtonCache.size > 0) {
             if (typeof profileButtonCache.get(int.user.id).collab !== "undefined") {
                 initializedMap = profileButtonCache;
@@ -38,6 +38,8 @@ module.exports = {
                     case 'closed':
                     case 'delivered':
                     case 'early delivery':
+                    case 'completed':
+                    case 'archived':
                         return await int.editReply('You cannot trade your character at this collab state.');
                 }
                 let pool = collab.pool.items;

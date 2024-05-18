@@ -42,6 +42,8 @@ module.exports = {
                     case 'closed':
                     case 'delivered':
                     case 'early delivery':
+                    case 'completed':
+                    case 'archived':
                         return await int.editReply('You cannot swap your character at this collab state.');
                 }
 
@@ -63,9 +65,6 @@ module.exports = {
                 await localFunctions.setCollabParticipation(collab.name, collection, pick);
                 await localFunctions.editCollabParticipantPickOnCollab(collab.name, userId, newPickFull, collection);
                 await localFunctions.editCollabParticipantPickOnUser(userId, collab.name, newPickFull, userCollection);
-                await localFunctions.unsetParticipationOnSheet(collab, currentPick);
-                await localFunctions.setParticipationOnSheet(collab, newPickFull, userOsuDataFull.username);
-
 
                 const swapEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | New Character Swap', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
@@ -104,10 +103,11 @@ module.exports = {
                     )
                 logChannel.send({ content: `<@${userId}>`, embeds: [swapEmbed] });
                 await int.editReply(`You've swaped your pick! New pick: ${newPickFull.name}`);
+                await localFunctions.unsetParticipationOnSheet(collab, currentPick);
+                await localFunctions.setParticipationOnSheet(collab, newPickFull, userOsuDataFull.username);
             }
         } catch (e) {
             console.log(e);
-            await int.editReply(`Cache error. Retry this action from the beggining.`);
         } finally {
             mongoClient.close();
             mongoClientUsers.close();

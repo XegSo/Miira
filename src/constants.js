@@ -626,6 +626,7 @@ const MirageFormat = Intl.NumberFormat('en-US', {
 });
 
 const suggestionChannelID = '880953549561954314';
+const imageSwapChannelID = '1241221376833228800';
 
 const botId = '959278677789663302';
 const guildId = "630281137998004224"
@@ -674,5 +675,6 @@ module.exports = {
     necesaryFieldsTop100,
     skillRanksByScore,
     prestigeRolesIDs,
-    mirageLogo
+    mirageLogo,
+    imageSwapChannelID
 };
