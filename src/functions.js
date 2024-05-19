@@ -431,22 +431,27 @@ module.exports = {
         return ar1.map((el, index) => el + ar2[index] || el);
     },
 
-    analyzeMods: function (scores) { //Function made by TunnelBlick
+    analyzeMods: async function (scores) { //Function made by TunnelBlick
         const modCount = {};
         const modCombinationCount = {};
 
         let totalMods = 0;
 
-        scores.forEach(score => {
-            const currentMods = score.mods.length === 0 ? ['NM'] : score.mods;
+        await scores.forEach(async (score) => {
+            let currentMods = score.mods.length === 1 ? [{ acronym: 'NM'}] : score.mods;
+            currentMods = currentMods.filter(e => e.acronym !== 'CL');
+            console.log(currentMods);
 
-            currentMods.forEach(mod => {
-                modCount[mod] = (modCount[mod] || 0) + 1;
+            await currentMods.forEach(async (mod) => {
+                if (mod.acronym !== "CL") {
+                    modCount[mod.acronym] = (modCount[mod.acronym] || 0) + 1;
+                }
             });
 
             totalMods += currentMods.length;
 
-            const modCombination = currentMods.join("");
+            currentMods.sort((a, b) => a.acronym.localeCompare(b.acronym));
+            const modCombination = currentMods.map(obj => obj.acronym).join('');
             modCombinationCount[modCombination] = (modCombinationCount[modCombination] || 0) + 1;
         });
 
@@ -503,30 +508,30 @@ module.exports = {
                     } else {
                         adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
                     }
-                    if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
                         od = Math.max(10, od + od * 0.4);
-                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
                         od = od - od * 0.5;
                     }
                     odMS = -6 * od + 79.5
-                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
                         odMS /= 1.5;
-                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
                         odMS /= 0.75;
                     }
                     odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
                     acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
 
-                    if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
                         cs = cs + cs * 0.3;
-                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
                         cs = cs - cs * 0.5;
                     }
-                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
                         ar = ar + ar * 0.148;
-                    } else if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
                         ar = ar + ar * 0.4;
-                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
                         ar = ar - ar * 0.5;
                     }
                     cs = Math.min(7, cs);
@@ -535,10 +540,10 @@ module.exports = {
                     pre = 1 / 2 * Math.exp(0.12 * cs * score.accuracy + 1) * scaledPP * srMultiplier * weight;
 
 
-                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
                         mapLength = mapLength - mapLength * 0.5;
                         bpm = bpm + bpm * 0.5;
-                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
                         mapLength = mapLength + Number(mapLength) / 3;
                         bpm = bpm - bpm * 0.25;
                     }
@@ -553,15 +558,15 @@ module.exports = {
                     } else {
                         adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
                     }
-                    if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
                         od = Math.max(10, od + od * 0.4);
-                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
                         od = od - od * 0.5;
                     }
                     odMS = -6 * od + 79.5
-                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
                         odMS /= 1.5;
-                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
                         odMS /= 0.75;
                     }
                     odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
@@ -569,10 +574,10 @@ module.exports = {
 
                     pre = 2 * scaledPP * srMultiplier * odValue * weight;
 
-                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
                         mapLength = mapLength - mapLength * 0.5;
                         bpm = bpm + bpm * 0.5;
-                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
                         mapLength = mapLength + Number(mapLength) / 3;
                         bpm = bpm - bpm * 0.25;
                     }
@@ -588,39 +593,39 @@ module.exports = {
                         adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
                         adjustedAcc /= 2.5;
                     }
-                    if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
                         od = Math.max(10, od + od * 0.4);
-                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
                         od = od - od * 0.5;
                     }
                     odMS = -6 * od + 79.5
-                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
                         odMS /= 1.5;
-                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
                         odMS /= 0.75;
                     }
                     odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
                     acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
 
-                    if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
                         cs = cs + cs * 0.3;
-                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
                         cs = cs - cs * 0.5;
                     }
-                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
                         ar = ar + ar * 0.148;
-                    } else if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
                         ar = ar + ar * 0.4;
-                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
                         ar = ar - ar * 0.5;
                     }
                     rea = Math.log(cs+1) / Math.log(12.5 - ar) * scaledPP * srMultiplier * weight;
                     pre = 1 / 2 * Math.exp(0.13 * cs * score.accuracy + 1) * scaledPP * srMultiplier * weight;
 
-                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
                         mapLength = mapLength - mapLength * 0.5;
                         bpm = bpm + bpm * 0.5;
-                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
                         mapLength = mapLength + Number(mapLength) / 3;
                         bpm = bpm - bpm * 0.25;
                     }
@@ -635,15 +640,15 @@ module.exports = {
                         adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
                         adjustedAcc /= 2.5;
                     }
-                    if (typeof mods.find(e => e === 'HR') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
                         od = Math.max(10, od + od * 0.4);
-                    } else if (typeof mods.find(e => e === 'EZ') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
                         od = od - od * 0.5;
                     }
                     odMS = -6 * od + 79.5
-                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
                         odMS /= 1.5;
-                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
                         odMS /= 0.75;
                     }
                     odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
@@ -651,10 +656,10 @@ module.exports = {
 
                     pre = scaledPP * srMultiplier * odValue * weight;
 
-                    if (typeof mods.find(e => e === 'DT' || e === 'NC') !== "undefined") {
+                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
                         mapLength = mapLength - mapLength * 0.5;
                         bpm = bpm + bpm * 0.5;
-                    } else if (typeof mods.find(e => e === 'HT') !== "undefined") {
+                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
                         mapLength = mapLength + Number(mapLength) / 3;
                         bpm = bpm - bpm * 0.25;
                     }

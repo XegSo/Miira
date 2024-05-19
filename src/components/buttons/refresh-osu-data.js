@@ -14,11 +14,14 @@ module.exports = {
             const currentDate = Math.floor(new Date().getTime() / 1000);
             let userOsu = await localFunctions.getOsuData(userId, collection);
             const userTop100 = await v2.scores.user.category(userOsu.osu_id, 'best', { mode: userOsu.playmode, limit: '100' });
+            console.log(userTop100[0]);
             if (typeof userTop100 !== "undefined") {
                 await int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
+            } else if (typeof userTop100 === "undefined" || !userTop100) {
+                return await int.editReply('There was an error fetching your top 100 scores...');
             }
             const skills = await localFunctions.calculateSkill(userTop100, userOsu.playmode);
-            let modsData = localFunctions.analyzeMods(userTop100);
+            let modsData = await localFunctions.analyzeMods(userTop100);
             const filler = {
                 mod: "--",
                 percentage: "--"
@@ -59,16 +62,16 @@ module.exports = {
                 mod: "--",
                 percentage: "--"
             }
-            let top4Mods = {};
+            let top4Mods = [];
             let mostCommonModCombination;
+            while (i < 4) {
+                top4Mods.push(filler);
+                i++;
+            }
             let modsData = [
                 top4Mods,
                 mostCommonModCombination,
             ]
-            while (i < 4) {
-                modsData.top4Mods.push(filler);
-                i++;
-            }
             modsData.mostCommonModCombination = "--";
             userOsu.skillRanks = skillDefaultData;
             userOsu.modsData = modsData;

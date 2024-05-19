@@ -144,7 +144,8 @@ module.exports = {
                 const userTop100 = await v2.scores.user.category(user.id, 'best', { mode: int.options.getString('gamemode'), limit: '100' });
                 await int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
                 const skills = await localFunctions.calculateSkill(userTop100, int.options.getString('gamemode'));
-                let modsData = localFunctions.analyzeMods(userTop100);
+                let modsData = await localFunctions.analyzeMods(userTop100);
+                console.log(modsData);
                 const filler = {
                     mod: "--",
                     percentage: "--"
@@ -172,7 +173,7 @@ module.exports = {
             try {
                 const userOsu = await localFunctions.getOsuData(userId, collection);
                 const lastUpdate = await localFunctions.getUserLastUpdate(userId, collection);
-                const currentDate = new Date();
+                const currentDate = Math.floor(Date.now()/1000);
                 if (!userOsu) {
                     const components = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
@@ -236,7 +237,7 @@ module.exports = {
                         },
                         {
                             name: "‎",
-                            value: `┌ Top 1 Mod: **${userOsu.modsData.top4Mods[0].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[0].percentage)}%**\n├ Top 2 Mod: **${userOsu.modsData.top4Mods[1].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[1].percentage)}%**\n├ Top 3 Mod: **${userOsu.modsData.top4Mods[2].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[2].percentage)}%**\n├ Top 4 Mod: **${userOsu.modsData.top4Mods[3].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[3].percentage)}%**\n└ Most used combination: **${userOsu.modsData.mostCommonModCombination.combination}**`,
+                            value: `┌ Top 1 Mod: **${userOsu.modsData.top4Mods[0].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[0].percentage) ? Math.round(userOsu.modsData.top4Mods[0].percentage) : userOsu.modsData.top4Mods[0].percentage}%**\n├ Top 2 Mod: **${userOsu.modsData.top4Mods[1].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[1].percentage) ? Math.round(userOsu.modsData.top4Mods[1].percentage) : userOsu.modsData.top4Mods[1].percentage}%**\n├ Top 3 Mod: **${userOsu.modsData.top4Mods[2].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[2].percentage) ? Math.round(userOsu.modsData.top4Mods[2].percentage) : userOsu.modsData.top4Mods[2].percentage}%**\n├ Top 4 Mod: **${userOsu.modsData.top4Mods[3].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[3].percentage) ? Math.round(userOsu.modsData.top4Mods[3].percentage) : userOsu.modsData.top4Mods[3].percentage}%**\n└ Most used combination: **${userOsu.modsData.mostCommonModCombination.combination}**`,
                             inline: true
                         }
                     )
@@ -265,7 +266,7 @@ module.exports = {
                     )
                     osuEmbed.addFields(
                         {
-                            name: `*You can update your analytics <t:${Math.floor(lastUpdate.getTime() / 1000 + 604800)}:R>.*`,
+                            name: `*You can update your analytics <t:${Math.floor(lastUpdate + 604800)}:R>.*`,
                             value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
                         }
                     )
