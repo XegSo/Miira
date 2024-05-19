@@ -440,7 +440,6 @@ module.exports = {
         await scores.forEach(async (score) => {
             let currentMods = score.mods.length === 1 ? [{ acronym: 'NM'}] : score.mods;
             currentMods = currentMods.filter(e => e.acronym !== 'CL');
-            console.log(currentMods);
 
             await currentMods.forEach(async (mod) => {
                 if (mod.acronym !== "CL") {

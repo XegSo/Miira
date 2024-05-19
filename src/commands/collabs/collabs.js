@@ -145,7 +145,6 @@ module.exports = {
                 await int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
                 const skills = await localFunctions.calculateSkill(userTop100, int.options.getString('gamemode'));
                 let modsData = await localFunctions.analyzeMods(userTop100);
-                console.log(modsData);
                 const filler = {
                     mod: "--",
                     percentage: "--"
