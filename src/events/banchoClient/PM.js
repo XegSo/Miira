@@ -40,7 +40,7 @@ module.exports = {
                     await message.user.sendMessage('You\'ve succesfully linked your osu! account! You can now join a collab in our discord server. Currently a background calculation for your analytics is running. It might take a minute or two.');
                     const userTop100 = await v2.scores.user.category(currentData.osu_id, 'best', {mode: currentData.playmode, limit: '100'});
                     const skills = await localFunctions.calculateSkill(userTop100, currentData.playmode);
-                    const modsData = localFunctions.analyzeMods(userTop100);
+                    const modsData = await localFunctions.analyzeMods(userTop100);
                     const filler = {
                         mod: "--",
                         percentage: "--"
