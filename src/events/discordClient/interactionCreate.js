@@ -133,6 +133,32 @@ module.exports = {
                         mongoClient.close();
                     }
                 }
+                if (int.options.getSubcommand() === "check") {
+                    const focusedValue = int.options.getFocused();
+                    const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+                    try {
+                        const allCollabs = await localFunctions.getCollabs(collection);
+                        const openMegacollab = allCollabs.find(c => c.restriction === "megacollab");
+                        if (typeof openMegacollab === "undefined") {
+                            return;
+                        } else {
+                            const picks = openMegacollab.pool.items;
+                            const filteredChoices = picks.filter((pick) =>
+                                pick.name.toLowerCase().startsWith(focusedValue.toLowerCase())
+                            );
+                            const results = filteredChoices.map((choice) => {
+                                return {
+                                    name: `${choice.name} - ${choice.series}`,
+                                    value: choice.id
+                                }
+                            });
+
+                            int.respond(results.slice(0, 25)).catch(() => {});
+                        }
+                    } finally {
+                        mongoClient.close();
+                    }
+                }
             }
         }
     }

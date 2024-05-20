@@ -4,7 +4,9 @@ const { v2, tools } = require('osu-api-extended');
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
+const { parse } = require('dotenv');
 const createCollabCache = new Map();
+const claimCache = new Map();
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -91,6 +93,16 @@ module.exports = {
                                 .setAutocomplete(true)
                         )
                 )
+                .addSubcommand((subcommand) =>
+                    subcommand.setName("check")
+                        .setDescription('Check a character status. (Megacollab only)')
+                        .addStringOption(option =>
+                            option.setName('pick')
+                                .setDescription('Pick name')
+                                .setRequired(true)
+                                .setAutocomplete(true)
+                        )
+                )
         ),
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
@@ -172,7 +184,7 @@ module.exports = {
             try {
                 const userOsu = await localFunctions.getOsuData(userId, collection);
                 const lastUpdate = await localFunctions.getUserLastUpdate(userId, collection);
-                const currentDate = Math.floor(Date.now()/1000);
+                const currentDate = Math.floor(Date.now() / 1000);
                 if (!userOsu) {
                     const components = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
@@ -278,7 +290,7 @@ module.exports = {
                     .setPlaceholder('Select a collab to join.')
                 const deluxeEntry = await localFunctions.getDeluxeEntry(userId, collection);
                 for (const collab of collabs) {
-                    if (((collab.status !== "closed" && collab.status !== "on design") || userId === '687004886922952755') && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
+                    if (((collab.status !== "closed" && collab.status !== "on design")) && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
                         switch (collab.restriction) {
                             case "staff":
                                 if (guildMember.roles.cache.has('961891383365500938') || userId === '687004886922952755') {
@@ -350,7 +362,7 @@ module.exports = {
                             components: [buttons, manageMenuRow]
                         })
                     } else {
-                        osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you can join some collab!*`);
+                        osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you can join to some collab(s)!*`);
                         await int.editReply({
                             content: '',
                             embeds: [osuEmbed],
@@ -453,7 +465,7 @@ module.exports = {
                     return;
                 }
                 const collabData = await localFunctions.getUserCollabs(userId, collection);
-                const collabs = await localFunctions.getCollabs(collabCollection);
+                let collabs = await localFunctions.getCollabs(collabCollection);
 
                 let tier = 0;
                 let prestigeLevel = 0;
@@ -488,7 +500,7 @@ module.exports = {
                     let user_cap = collab.user_cap;
                     let participants = collabs.participants ? collabs.participants.length : 0;
                     let slots = user_cap - participants;
-                    if (((collab.status !== "closed" && collab.status !== "on design" && collab.status !== "full") || userId === '687004886922952755') && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
+                    if (((collab.status !== "closed" && collab.status !== "on design" && collab.status !== "full")) && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
                         switch (collab.restriction) {
                             case "staff":
                                 if (guildMember.roles.cache.has('961891383365500938') || userId === '687004886922952755') {
@@ -648,7 +660,7 @@ module.exports = {
                             if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) !== "undefined") {
                                 return await int.editReply('You\'re already participating on this collab! To edit your pick use the ``/collabs manage`` command.');
                             }
-                        } catch {}
+                        } catch { }
                         const availablePicks = openMegacollab.pool.items.filter(i => i.status === "available");
                         const pick = int.options.getString('pick');
                         console.log(pick);
@@ -1034,7 +1046,117 @@ module.exports = {
                     mongoClient.close();
                 }
             }
+
+            if (subcommand == "check") {
+                const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
+                const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+                try {
+                    const allCollabs = await localFunctions.getCollabs(collection);
+                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access"));
+                    if (typeof openMegacollab === "undefined") {
+                        await int.editReply('There is no open megacollabs at the moment...')
+                    } else {
+                        const pickId = int.options.getString('pick');
+                        const pool = openMegacollab.pool.items;
+                        const pick = pool.find(i => i.id === pickId);
+                        if (typeof pick === "undefined") return await int.editReply('Something went wrong...');
+                        if (pick.status === "picked") {
+                            const pickOwner = openMegacollab.participants.find(u => parseInt(u.id) === parseInt(pickId));
+                            const pickEmbed = new EmbedBuilder()
+                                .setFooter({ text: "Endless Mirage | Megacollab Picks", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                                .setColor('#f26e6a')
+                                .setURL('https://endlessmirage.net/')
+                                .setDescription(`**\`\`\`\n🏐 ${openMegacollab.name}\`\`\`**\n**Picked by: <@${pickOwner.discordId}>**\n**Joined <t:${pickOwner.joinDate}:R>**`)
+                                .addFields(
+                                    {
+                                        name: "‎",
+                                        value: `┌ Pick: ${pick.name}\n└ ID: ${pick.id}`,
+                                        inline: true
+                                    },
+                                    {
+                                        name: "‎",
+                                        value: `┌ Series: ${pick.series}\n└ Category: ${pick.category}`,
+                                        inline: true
+                                    },
+                                    {
+                                        name: "‎",
+                                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>",
+                                    },
+                                    {
+                                        name: "‎",
+                                        value: `┌ Avatar Text: **${pickOwner.av_text}**\n├ Card Text: **${pickOwner.ca_text}**\n└ Card Quote: **${pickOwner.ca_quote ? pickOwner.ca_quote : "None"}**`,
+                                    },
+                                    {
+                                        name: "‎",
+                                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>",
+                                    },
+                                )
+
+                            const embed2 = new EmbedBuilder()
+                                .setImage(pick.imgURL)
+                                .setURL('https://endlessmirage.net/')
+
+                            await int.editReply({
+                                content: '',
+                                embeds: [pickEmbed, embed2],
+                            });
+                        } else {
+                            const pickEmbed = new EmbedBuilder()
+                                .setFooter({ text: "Endless Mirage | Megacollab Picks", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                                .setColor('#f26e6a')
+                                .setURL('https://endlessmirage.net/')
+                                .setDescription(`**\`\`\`\n🏐 ${openMegacollab.name}\`\`\`**\n**This character hasn't been picked yet!**`)
+                                .addFields(
+                                    {
+                                        name: "‎",
+                                        value: `┌ Pick: ${pick.name}\n└ ID: ${pick.id}`,
+                                        inline: true
+                                    },
+                                    {
+                                        name: "‎",
+                                        value: `┌ Series: ${pick.series}\n└ Category: ${pick.category}`,
+                                        inline: true
+                                    },
+                                    {
+                                        name: "‎",
+                                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>",
+                                    },
+                                )
+
+                            const embed2 = new EmbedBuilder()
+                                .setImage(pick.imgURL)
+                                .setURL('https://endlessmirage.net/')
+                            
+                            const components = new ActionRowBuilder();
+
+                            components.addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('claim-pick')
+                                    .setLabel('🔑 Claim')
+                                    .setStyle('Success'),
+                            )
+
+                            claimCache.set(int.user.id, {
+                                collab: openMegacollab,
+                                pick: pick
+                            })
+
+                            await int.editReply({
+                                content: '',
+                                embeds: [pickEmbed, embed2],
+                                components: [components]
+                            });
+                        }
+                    }
+                } catch (e) {
+                    console.log(e);
+                } finally {
+                    mongoClientUsers.close();
+                    mongoClient.close();
+                }
+            }
         }
     },
-    createCollabCache: createCollabCache
+    createCollabCache: createCollabCache,
+    claimCache: claimCache
 }

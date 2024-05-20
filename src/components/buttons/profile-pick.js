@@ -23,10 +23,12 @@ module.exports = {
             let fullCollab = await localFunctions.getCollab(buttonCache.get(userId).collab, collection);
             let pick = userCollab.collabPick;
             let components = [];
+            let extraComponents = [];
             const dashboardEmbed = new EmbedBuilder()
                 .setFooter({ text: "Endless Mirage | Collab Profile", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                 .setColor('#f26e6a')
                 .setDescription(`**\`\`\`\n🏐 ${userCollab.collabName}\`\`\`**\n**Joined <t:${userCollab.joinDate}:R>**`)
+                .setURL('https://endlessmirage.net/')
                 .addFields(
                     {
                         name: "‎",
@@ -55,7 +57,10 @@ module.exports = {
                         value: `Check the __**[Spreadsheet](https://docs.google.com/spreadsheets/d/${fullCollab.spreadsheetID})**__ for full collab information.`
                     }
                 )
+
+            const embed2 = new EmbedBuilder()
                 .setImage(pick.imgURL)
+                .setURL('https://endlessmirage.net/')
 
 
             components = new ActionRowBuilder();
@@ -79,26 +84,15 @@ module.exports = {
                                 .setURL(`${fullCollab.bucket}${userCollab.collabPick.id}.zip`)
                                 .setStyle('Link'),
                         )
+                        await int.editReply({
+                            content: '',
+                            embeds: [dashboardEmbed, embed2],
+                            components: [components],
+                        });
                     }
                     break;
                 case "delivered":
-                    components.addComponents(
-                        new ButtonBuilder()
-                            .setLabel('⬇️ Download')
-                            .setURL(`${fullCollab.bucket}${userCollab.collabPick.id}.zip`)
-                            .setStyle('Link'),
-                    )
-                    break;
-                case "closed":
-                    break;
                 case "completed":
-                    components.addComponents(
-                        new ButtonBuilder()
-                            .setLabel('⬇️ Download')
-                            .setURL(`${fullCollab.bucket}${userCollab.collabPick.id}.zip`)
-                            .setStyle('Link'),
-                    )
-                    break;
                 case "archived":
                     components.addComponents(
                         new ButtonBuilder()
@@ -106,34 +100,91 @@ module.exports = {
                             .setURL(`${fullCollab.bucket}${userCollab.collabPick.id}.zip`)
                             .setStyle('Link'),
                     )
+                    await int.editReply({
+                        content: '',
+                        embeds: [dashboardEmbed, embed2],
+                        components: [components],
+                    });
                     break;
                 default:
-                    if (fullCollab.status !== "full") {
+                    if (fullCollab.type === "pooled") {
+                        extraComponents = new ActionRowBuilder();
+                        if (fullCollab.status !== "full") {
+                            components.addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('swap-pick')
+                                    .setLabel('🔁 Swap')
+                                    .setStyle('Primary'),
+                            )
+                        }
                         components.addComponents(
                             new ButtonBuilder()
-                                .setCustomId('swap-pick')
-                                .setLabel('🔁 Swap')
+                                .setCustomId('trade-pick')
+                                .setLabel('🔀 Trade')
                                 .setStyle('Primary'),
                         )
+                        extraComponents.addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('update-sheet')
+                                .setLabel('📰 Update Spreadsheet')
+                                .setStyle('Success'),
+                            new ButtonBuilder()
+                                .setCustomId('check-pick')
+                                .setLabel('🔮 Check a Character')
+                                .setStyle('Success'),
+                        )
+                        components.addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('change-texts')
+                                .setLabel('📝 Edit')
+                                .setStyle('Primary'),
+                        )
+                        if (fullCollab.imageSwap) {
+                            components.addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('swap-image')
+                                    .setLabel('🎨 Image')
+                                    .setStyle('Primary'),
+                            )
+                        }
+                        components.addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('leave-collab')
+                                .setLabel('🛫 Leave')
+                                .setStyle('Danger'),
+                        )
+                        await int.editReply({
+                            content: '',
+                            embeds: [dashboardEmbed, embed2],
+                            components: [components, extraComponents],
+                        });
+                    } else {
+                        components.addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('change-texts')
+                                .setLabel('📝 Edit')
+                                .setStyle('Primary'),
+                        )
+                        if (fullCollab.imageSwap) {
+                            components.addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('swap-image')
+                                    .setLabel('🎨 Image')
+                                    .setStyle('Primary'),
+                            )
+                        }
+                        components.addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('leave-collab')
+                                .setLabel('🛫 Leave')
+                                .setStyle('Danger'),
+                        )
+                        await int.editReply({
+                            content: '',
+                            embeds: [dashboardEmbed, embed2],
+                            components: [components],
+                        });
                     }
-                    components.addComponents(
-                        new ButtonBuilder()
-                            .setCustomId('trade-pick')
-                            .setLabel('🔀 Trade')
-                            .setStyle('Primary'),
-                    )
-                    components.addComponents(
-                        new ButtonBuilder()
-                            .setCustomId('change-texts')
-                            .setLabel('📝 Edit')
-                            .setStyle('Primary'),
-                    )
-                    components.addComponents(
-                        new ButtonBuilder()
-                            .setCustomId('leave-collab')
-                            .setLabel('🛫 Leave')
-                            .setStyle('Danger'),
-                    )
             }
 
 
@@ -141,11 +192,6 @@ module.exports = {
                 collab: fullCollab,
             })
 
-            await int.editReply({
-                content: '',
-                embeds: [dashboardEmbed],
-                components: [components],
-            });
         } catch (e) {
             console.log(e)
             await int.editReply('Something went wrong...')

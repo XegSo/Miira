@@ -106,52 +106,84 @@ module.exports = {
           });
           break;
         default:
-          extraComponents = new ActionRowBuilder();
-          if (fullCollab.status !== "full") {
+          if (fullCollab.type === "pooled") {
+            extraComponents = new ActionRowBuilder();
+            if (fullCollab.status !== "full") {
+              components.addComponents(
+                new ButtonBuilder()
+                  .setCustomId('swap-pick')
+                  .setLabel('🔁 Swap')
+                  .setStyle('Primary'),
+              )
+            }
             components.addComponents(
               new ButtonBuilder()
-                .setCustomId('swap-pick')
-                .setLabel('🔁 Swap')
+                .setCustomId('trade-pick')
+                .setLabel('🔀 Trade')
                 .setStyle('Primary'),
             )
-          }
-          components.addComponents(
-            new ButtonBuilder()
-              .setCustomId('trade-pick')
-              .setLabel('🔀 Trade')
-              .setStyle('Primary'),
-          )
-          components.addComponents(
-            new ButtonBuilder()
-              .setCustomId('change-texts')
-              .setLabel('📝 Edit')
-              .setStyle('Primary'),
-          )
-          if (fullCollab.imageSwap) {
+            extraComponents.addComponents(
+              new ButtonBuilder()
+                .setCustomId('update-sheet')
+                .setLabel('📰 Update Spreadsheet')
+                .setStyle('Success'),
+              new ButtonBuilder()
+                .setCustomId('check-pick')
+                .setLabel('🔮 Check a Character')
+                .setStyle('Success'),
+            )
             components.addComponents(
               new ButtonBuilder()
-                .setCustomId('swap-image')
-                .setLabel('🎨 Image')
+                .setCustomId('change-texts')
+                .setLabel('📝 Edit')
                 .setStyle('Primary'),
             )
+            if (fullCollab.imageSwap) {
+              components.addComponents(
+                new ButtonBuilder()
+                  .setCustomId('swap-image')
+                  .setLabel('🎨 Image')
+                  .setStyle('Primary'),
+              )
+            }
+            components.addComponents(
+              new ButtonBuilder()
+                .setCustomId('leave-collab')
+                .setLabel('🛫 Leave')
+                .setStyle('Danger'),
+            )
+            await int.editReply({
+              content: '',
+              embeds: [dashboardEmbed, embed2],
+              components: [components, extraComponents],
+            });
+          } else {
+            components.addComponents(
+              new ButtonBuilder()
+                .setCustomId('change-texts')
+                .setLabel('📝 Edit')
+                .setStyle('Primary'),
+            )
+            if (fullCollab.imageSwap) {
+              components.addComponents(
+                new ButtonBuilder()
+                  .setCustomId('swap-image')
+                  .setLabel('🎨 Image')
+                  .setStyle('Primary'),
+              )
+            }
+            components.addComponents(
+              new ButtonBuilder()
+                .setCustomId('leave-collab')
+                .setLabel('🛫 Leave')
+                .setStyle('Danger'),
+            )
+            await int.editReply({
+              content: '',
+              embeds: [dashboardEmbed, embed2],
+              components: [components],
+            });
           }
-          components.addComponents(
-            new ButtonBuilder()
-              .setCustomId('leave-collab')
-              .setLabel('🛫 Leave')
-              .setStyle('Danger'),
-          )
-          extraComponents.addComponents(
-            new ButtonBuilder()
-              .setCustomId('update-sheet')
-              .setLabel('📰 Update Spreadsheet')
-              .setStyle('Success'),
-          )
-          await int.editReply({
-            content: '',
-            embeds: [dashboardEmbed, embed2],
-            components: [components, extraComponents],
-          });
       }
 
       profileMenuCache.set(int.user.id, {
