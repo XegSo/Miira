@@ -14,7 +14,6 @@ module.exports = {
             const currentDate = Math.floor(new Date().getTime() / 1000);
             let userOsu = await localFunctions.getOsuData(userId, collection);
             const userTop100 = await v2.scores.user.category(userOsu.osu_id, 'best', { mode: userOsu.playmode, limit: '100' });
-            console.log(userTop100[0]);
             if (typeof userTop100 !== "undefined") {
                 await int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
             } else if (typeof userTop100 === "undefined" || !userTop100) {
@@ -35,6 +34,14 @@ module.exports = {
             }
             userOsu.skillRanks = skills;
             userOsu.modsData = modsData;
+            const newUserData = await v2.user.details(userOsu.osu_id, userOsu.playmode);
+            userOsu.country_code = newUserData.country_code;
+            userOsu.is_supporter = newUserData.is_supporter;
+            userOsu.follower_count = newUserData.follower_count;
+            userOsu.rank_highest = newUserData.rank_highest;
+            userOsu.statistics = newUserData.statistics;
+            userOsu.cover_url = newUserData.cover_url;
+
             await localFunctions.verifyUserManual(int.user.id, userOsu, collection);
             await localFunctions.setUserLastUpdate(userId, currentDate, collection);
             await int.editReply(`<@${int.user.id}> Your analytics have been updated!`);
