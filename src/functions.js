@@ -1346,6 +1346,10 @@ module.exports = {
         await collection.updateOne({ _id: userId }, { $set: { inventory } }, { upsert: true });
     },
 
+    setLockSystem: async function (collabName, lockSystem, collection) {
+        await collection.updateOne({ name: collabName }, { $set: { lockSystem } }, { upsert: true });
+    },
+
     getPerks: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.perks || [] : [];

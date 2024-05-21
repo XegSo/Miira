@@ -14,8 +14,6 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
-        const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
-        const userId = int.user.id;
         let initializedMap;
         if (profileMenuCache.size > 0) {
             if (typeof profileMenuCache.get(int.user.id).collab !== "undefined") {
@@ -128,7 +126,6 @@ module.exports = {
             console.log(e);
         } finally {
             mongoClient.close();
-            mongoClientSpecial.close();
         }
     },
     claimCache: claimCache
