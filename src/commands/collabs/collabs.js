@@ -683,6 +683,36 @@ module.exports = {
                             return await int.editReply('This character got picked while you were selecting...');
                         }
 
+                        if (typeof openMegacollab.lockSystem !== "undefined") { /*Prevents ratelimit*/
+                            if (typeof openMegacollab.lockSystem.current === "undefined") { /*System startup from first pick*/
+                                const current = {
+                                    participations: 0,
+                                    time: 0,
+                                    lastParticipant: 0
+                                }
+                                openMegacollab.lockSystem.current = current;
+                                console.log('Starting up lock system...');
+                                await localFunctions.setLockSystem(openMegacollab.name, openMegacollab.lockSystem, collection);
+                            } else { /*Allows or denys the entry*/
+                                if (openMegacollab.lockSystem.current.participations >= openMegacollab.lockSystem.users && currentDate < (openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60)) {
+                                    console.log('Attempt to join the collab while locked!');
+                                    return await int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60}:R>`);
+                                }
+                                console.log(currentDate);
+                                console.log(currentDate + openMegacollab.lockSystem.timeout * 60);
+                                console.log(openMegacollab.lockSystem.current.time);
+                                if (((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 600)) || (currentDate + openMegacollab.lockSystem.timeout * 60) >= openMegacollab.lockSystem.current.time) && openMegacollab.lockSystem.current.time !== 0) { /*Reset the system if over 10m have passed and no one has joined, or if the timeout has passed*/
+                                    const current = {
+                                        participations: 0,
+                                        time: 0
+                                    }
+                                    openMegacollab.lockSystem.current = current;
+                                    await localFunctions.setLockSystem(openMegacollab.name, openMegacollab.lockSystem, collection);
+                                    console.log('Resetting lock system...');
+                                }
+                            }
+                        }
+
                         await localFunctions.setCollabParticipation(openMegacollab.name, collection, pick);
                         let prestigeLevel = 0;
                         let tier = 0;
@@ -811,6 +841,15 @@ module.exports = {
                             .setURL('https://endlessmirage.net/')
 
                         logChannel.send({ content: `<@${userId}>`, embeds: [joinEmbed, imageEmbed] });
+                        if (typeof openMegacollab.lockSystem !== "undefined") { /*Prevents ratelimit*/
+                            openMegacollab.lockSystem.current.participations = openMegacollab.lockSystem.current.participations + 1;
+                            openMegacollab.lockSystem.current.lastParticipant = Math.floor(new Date().getTime() / 1000);
+                            if (openMegacollab.lockSystem.current.participations === openMegacollab.lockSystem.users) {
+                                openMegacollab.lockSystem.current.time = Math.floor(new Date().getTime() / 1000);
+                                console.log('Locking the collab...');
+                            }
+                            await localFunctions.setLockSystem(openMegacollab.name, openMegacollab.lockSystem, collection);
+                        }
                         await localFunctions.setParticipationOnSheet(openMegacollab, fullPick, userOsuDataFull.username);
                     }
                 } catch (e) {
@@ -1126,7 +1165,7 @@ module.exports = {
                             const embed2 = new EmbedBuilder()
                                 .setImage(pick.imgURL)
                                 .setURL('https://endlessmirage.net/')
-                            
+
                             const components = new ActionRowBuilder();
 
                             components.addComponents(
