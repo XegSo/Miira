@@ -31,37 +31,43 @@ module.exports = {
     if (alreadySuggested) return await int.editReply('You already have a request under review!');
     let status = 'Pending';
     let collab = initializedMap.get(int.user.id).collab;
+    let pick = await collab.participants.find(p => p.discordId === int.user.id.toString());
     let imageSwapEmbed = new EmbedBuilder()
-    .setFooter({ text: "Endless Mirage | Image Request", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+      .setFooter({ text: "Endless Mirage | Image Request", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
       .setColor('#f26e6a')
       .setImage(imageURL)
       .setTimestamp()
-      .setTitle(`\`\`\`🏐 New image swap request!\`\`\``)
+      .setURL('https://endlessmirage.net/')
+      .setDescription(`**\`\`\`🏐 New image swap request!\`\`\`**`)
       .addFields(
         {
-            name: "‎",
-            value: `┌ **User**: <@${int.user.id}>\n└ **Collab**: ${collab.name}`,
-        },
-    )
+          name: '‎',
+          value: `┌ **User**: <@${int.user.id}>\n└ **Collab**: ${collab.name}\n\n┌ **Pick Name**: ${pick.name}\n└ **Pick Series**: ${pick.series}\n\n‎                  New Image‎                                          Old Image`
+        }
+      )
+
+    let oldImageEmbed = new EmbedBuilder()
+      .setImage(pick.imgURL)
+      .setURL('https://endlessmirage.net/')
 
     const message = await requestChannel.send({
-      embeds: [imageSwapEmbed],
+      embeds: [imageSwapEmbed, oldImageEmbed],
       components: [
         new ActionRowBuilder().addComponents(
           new ButtonBuilder()
             .setCustomId('swap-image-approve')
-            .setLabel('✅ Approve')
+            .setLabel('Approve')
             .setStyle('Success'),
           new ButtonBuilder()
             .setCustomId('swap-image-deny')
-            .setLabel('❎ Deny')
+            .setLabel('Deny')
             .setStyle('Danger'),
         ),
       ],
       ephemeral: true,
     });
 
-    await localFunctions.updateImageRequest(message.id, type, int.user.id, imageURL, status, imageSwapEmbed, collab);
+    await localFunctions.updateImageRequest(message.id, type, int.user.id, imageURL, pick.imgURL, status, imageSwapEmbed, collab.name, pick.id);
     await int.editReply({ content: 'Your request has been sent successfully', ephemeral: true });
   },
 };

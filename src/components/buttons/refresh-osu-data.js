@@ -10,6 +10,7 @@ module.exports = {
         const userId = int.user.id;
         await int.deferReply({ ephemeral: true });
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+        const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
         try {
             const currentDate = Math.floor(new Date().getTime() / 1000);
             let userOsu = await localFunctions.getOsuData(userId, collection);
@@ -44,6 +45,9 @@ module.exports = {
 
             await localFunctions.verifyUserManual(int.user.id, userOsu, collection);
             await localFunctions.setUserLastUpdate(userId, currentDate, collection);
+            let userOsuDataFull = await localFunctions.getOsuData(userId, collection);
+            userOsuDataFull = localFunctions.flattenObject(userOsuDataFull);
+            await localFunctions.editCollabUserOsuData(int.user.id, userOsuDataFull, collabCollection);
             await int.editReply(`<@${int.user.id}> Your analytics have been updated!`);
         } catch (e) {
             console.log(e);
@@ -86,6 +90,7 @@ module.exports = {
             await localFunctions.setUserLastUpdate(userId, currentDate, collection);
         } finally {
             mongoClient.close();
+            mongoClientCollabs.close();
         }
     },
 };

@@ -438,7 +438,7 @@ module.exports = {
         let totalMods = 0;
 
         await scores.forEach(async (score) => {
-            let currentMods = score.mods.length === 1 ? [{ acronym: 'NM'}] : score.mods;
+            let currentMods = score.mods.length === 1 ? [{ acronym: 'NM' }] : score.mods;
             currentMods = currentMods.filter(e => e.acronym !== 'CL');
 
             await currentMods.forEach(async (mod) => {
@@ -535,7 +535,7 @@ module.exports = {
                     }
                     cs = Math.min(7, cs);
                     ar = Math.min(11, ar);
-                    rea = 2 * Math.log(cs+1) / Math.log(12.3 - ar) * scaledPP * srMultiplier * weight;
+                    rea = 2 * Math.log(cs + 1) / Math.log(12.3 - ar) * scaledPP * srMultiplier * weight;
                     pre = 1 / 2 * Math.exp(0.12 * cs * score.accuracy + 1) * scaledPP * srMultiplier * weight;
 
 
@@ -618,7 +618,7 @@ module.exports = {
                     } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
                         ar = ar - ar * 0.5;
                     }
-                    rea = Math.log(cs+1) / Math.log(12.5 - ar) * scaledPP * srMultiplier * weight;
+                    rea = Math.log(cs + 1) / Math.log(12.5 - ar) * scaledPP * srMultiplier * weight;
                     pre = 1 / 2 * Math.exp(0.13 * cs * score.accuracy + 1) * scaledPP * srMultiplier * weight;
 
                     if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
@@ -898,20 +898,20 @@ module.exports = {
         return referralCode;
     },
 
-    isPNGURL: async function(url) {
+    isPNGURL: async function (url) {
         // Common image file extensions
         if (!url.toLowerCase().endsWith('.png')) {
             return false;
         }
-      
+
         // Fetch the URL and check the Content-Type
         try {
-          const response = await fetch(url, { method: 'HEAD' });
-          const contentType = response.headers.get('content-type');
-          return contentType && contentType === 'image/png';
+            const response = await fetch(url, { method: 'HEAD' });
+            const contentType = response.headers.get('content-type');
+            return contentType && contentType === 'image/png';
         } catch (error) {
-          console.error('Error fetching the URL:', error);
-          return false;
+            console.error('Error fetching the URL:', error);
+            return false;
         }
     },
 
@@ -1025,6 +1025,24 @@ module.exports = {
         }, { upsert: true });
     },
 
+    editPickImage: async function (pickId, userId, collabName, collabCollection, userCollection, newURL) {
+        await collabCollection.updateOne({ name: collabName, 'participants.id': pickId }, {
+            $set: {
+                'participants.$.imgURL': newURL,
+            }
+        }, { upsert: true });
+        await collabCollection.updateOne({ name: collabName, 'pool.items.id': pickId }, {
+            $set: {
+                'pool.items.$.imgURL': newURL,
+            }
+        }, { upsert: true });
+        await userCollection.updateOne({ _id: userId, 'collabs.collabName': collabName }, {
+            $set: {
+                'collabs.$.collabPick.imgURL': newURL,
+            }
+        }, { upsert: true });
+    },
+
     editParticipationFields: async function (userId, collabName, av_text, ca_text, ca_quote, collection) {
         await collection.updateOne({ _id: userId, 'collabs.collabName': collabName }, {
             $set: {
@@ -1043,6 +1061,18 @@ module.exports = {
                 'participants.$.ca_quote': ca_quote
             }
         }, { upsert: true });
+    },
+
+    editCollabUserOsuData: async function (discordId, osuData, collection) {
+        const update = {};
+        for (const key in osuData) {
+            update[`participants.$[elem].${key}`] = osuData[key];
+        }
+        const result = await collection.updateMany(
+            { "participants.discordId": discordId },
+            { $set: update },
+            { arrayFilters: [{ "elem.discordId": discordId }] }
+        );
     },
 
     editCollabParticipantPickOnUser: async function (userId, collabName, newPick, collection) {
@@ -1581,12 +1611,26 @@ module.exports = {
 
     },
 
-    updateImageRequest: async function (messageId, type, user, imgURL, status, embed, collab) {
+    updateImageRequest: async function (messageId, type, user, imgURL, oldImgURL, status, embed, collab, pickId) {
         const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
         try {
-            await collectionSpecial.updateOne({ _id: messageId }, { $set: { type, user, imgURL, status, embed, collab } }, { upsert: true });
+            await collectionSpecial.updateOne({ _id: messageId }, { $set: { type, user, imgURL, oldImgURL, status, embed, collab, pickId } }, { upsert: true });
         } catch (error) {
             console.error('Error sending image request:', error);
+            return null;
+        } finally {
+            if (mongoClient) {
+                mongoClient.close();
+            }
+        }
+    },
+
+    liquidateImageRequest: async function (messageId) {
+        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+        try {
+            await collectionSpecial.deleteOne({ _id: messageId });
+        } catch (error) {
+            console.error('Error liquidating suggestion:', error);
             return null;
         } finally {
             if (mongoClient) {

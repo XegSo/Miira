@@ -1,4 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
 const { TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 const { profileButtonCache } = require('./profile-pick');
