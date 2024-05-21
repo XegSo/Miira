@@ -83,7 +83,7 @@ module.exports = {
                         console.log(currentDate);
                         console.log(currentDate + collab.lockSystem.timeout * 60);
                         console.log(collab.lockSystem.current.time);
-                        if (((currentDate > (collab.lockSystem.current.lastParticipant + 600)) || (currentDate + collab.lockSystem.timeout * 60) >= collab.lockSystem.current.time) && collab.lockSystem.current.time !== 0) { /*Reset the system if over 10m have passed and no one has joined, or if the timeout has passed*/
+                        if (((currentDate > (collab.lockSystem.current.lastParticipant + 120)) || (currentDate + collab.lockSystem.timeout * 60) >= collab.lockSystem.current.time) && collab.lockSystem.current.time !== 0) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
                             const current = {
                                 participations: 0,
                                 time: 0

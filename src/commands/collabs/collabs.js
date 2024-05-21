@@ -701,7 +701,7 @@ module.exports = {
                                 console.log(currentDate);
                                 console.log(currentDate + openMegacollab.lockSystem.timeout * 60);
                                 console.log(openMegacollab.lockSystem.current.time);
-                                if (((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 600)) || (currentDate + openMegacollab.lockSystem.timeout * 60) >= openMegacollab.lockSystem.current.time) && openMegacollab.lockSystem.current.time !== 0) { /*Reset the system if over 10m have passed and no one has joined, or if the timeout has passed*/
+                                if (((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 120)) || (currentDate + openMegacollab.lockSystem.timeout * 60) >= openMegacollab.lockSystem.current.time) && openMegacollab.lockSystem.current.time !== 0) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
                                     const current = {
                                         participations: 0,
                                         time: 0
