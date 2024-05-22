@@ -28,6 +28,10 @@ module.exports = {
                 {
                     name: request.embed.data.fields[0].name,
                     value: request.embed.data.fields[0].value
+                },
+                {
+                    name: request.embed.data.fields[1].name,
+                    value: request.embed.data.fields[1].value
                 }
             )
 

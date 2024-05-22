@@ -899,16 +899,31 @@ module.exports = {
     },
 
     isPNGURL: async function (url) {
-        // Common image file extensions
-        if (!url.toLowerCase().endsWith('.png')) {
-            return false;
-        }
-
-        // Fetch the URL and check the Content-Type
         try {
-            const response = await fetch(url, { method: 'HEAD' });
-            const contentType = response.headers.get('content-type');
-            return contentType && contentType === 'image/png';
+            const response = await fetch(url);
+    
+            // Check if the HTTP status is OK (200)
+            if (!response.ok) {
+                return false;
+            }
+    
+            // Check if the content type is 'image/png'
+            const contentType = response.headers.get('Content-Type');
+            if (contentType !== 'image/png') {
+                return false;
+            }
+    
+            const buffer = await response.arrayBuffer();
+            const view = new DataView(buffer);
+            
+            const pngSignature = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+            for (let i = 0; i < pngSignature.length; i++) {
+                if (view.getUint8(i) !== pngSignature[i]) {
+                    return false;
+                }
+            }
+    
+            return true;
         } catch (error) {
             console.error('Error fetching the URL:', error);
             return false;
