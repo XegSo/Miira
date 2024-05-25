@@ -41,14 +41,14 @@ module.exports = {
                     return await int.editReply('You are already participating in an active collab!');
                 }
             } catch { }
+
+
+            let collab = await localFunctions.getCollab(joinCache.get(int.user.id).collab, collection);
             if (typeof userCollabData.find(e => e.collabName === collab.name) !== "undefined") {
                 return await int.editReply({
                     content: 'You are already participating in this collab. To edit your data, manage your participation in your collabs profile.',
                 });
             }
-
-
-            let collab = await localFunctions.getCollab(joinCache.get(int.user.id).collab, collection);
             let participants = collab ? collab.participants || [] : [];
             const currentDate = Math.floor(new Date().getTime() / 1000);
             let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);

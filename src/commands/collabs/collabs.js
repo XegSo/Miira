@@ -698,6 +698,9 @@ module.exports = {
                                 components: [components]
                             });
                         }
+                        if (int.options.getString('av_text').length > openMegacollab.fieldRestrictions.av) return await int.editReply(`The character limit for the avatar is of ${openMegacollab.fieldRestrictions.av} characters!`);
+                        if (int.options.getString('ca_text').length > openMegacollab.fieldRestrictions.ca) return await int.editReply(`The character limit for the banner is of ${openMegacollab.fieldRestrictions.ca} characters!`);
+                        if (int.options.getString('ca_quote').length > openMegacollab.fieldRestrictions.ca_quote) return await int.editReply(`The character limit for the quote is of ${openMegacollab.fieldRestrictions.ca_quote} characters!`);
 
                         if (typeof openMegacollab.lockSystem !== "undefined") { /*Prevents ratelimit*/
                             if (typeof openMegacollab.lockSystem.current === "undefined") { /*System startup from first pick*/

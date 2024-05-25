@@ -11,12 +11,12 @@ module.exports = {
     async execute(int, client) {
         let initializedMap;
         if (profileMenuCache.size > 0) {
-            if (typeof profileMenuCache.get(int.user.id).collab !== "undefined") {
+            if (typeof profileMenuCache.get(int.user.id) !== "undefined") {
                 initializedMap = profileMenuCache;
             }
         } 
         if (profileButtonCache.size > 0) {
-            if (typeof profileButtonCache.get(int.user.id).collab !== "undefined") {
+            if (typeof profileButtonCache.get(int.user.id) !== "undefined") {
                 initializedMap = profileButtonCache;
             }
         }
