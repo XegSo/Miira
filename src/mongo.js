@@ -14,7 +14,6 @@ async function connectToMongoDB(setCollection) {
 
   try {
       await client.connect();
-      console.log(`Connected to MongoDB: Ozen | ${setCollection}`);
       const db = client.db("Ozen");
       const collection = db.collection(setCollection);
       return { client, db, collection };
