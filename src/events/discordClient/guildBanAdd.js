@@ -10,10 +10,12 @@ module.exports = {
         const collabLogChannel = guild.channels.cache.get(localConstants.logChannelID);
         const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+        const { collection: blacklistCollection, client: mongoClientBlacklist } = await connectToMongoDB("Blacklist");
         try {
             let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
             if (typeof userCollabs === "undefined") return;
-            console.log(`User ${user.tag} with id ${userId} has left the server while on collabs.`);
+            console.log(`User ${user.tag} with id ${userId} has been banned while on collabs.`);
+            await localFunctions.setBlacklist(userId, "Banned", blacklistCollection);
             for (let userCollab of userCollabs) {
                 let collab = await localFunctions.getCollab(userCollab.collabName, collection);
                 if (collab.status !== "closed" && collab.status !== "delivered" && collab.status !== "archived" && collab.status !== "completed") {
@@ -21,19 +23,20 @@ module.exports = {
                     await localFunctions.setUserCollabs(userId, userCollabs, userCollection);
                     await localFunctions.unsetCollabParticipation(collab.name, collection, userCollab.collabPick.id);
                     await localFunctions.removeCollabParticipant(collab.name, collection, userId);
-                    await localFunctions.unsetParticipationOnSheet(collab, pickFull);
+                    await localFunctions.unsetParticipationOnSheet(collab, userCollab.collabPick);
                     const leaveEmbed = new EmbedBuilder()
                         .setFooter({ text: 'Endless Mirage | New Character Available', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                         .setColor('#f26e6a')
                         .setDescription(`**\`\`\`ml\n🎫 New Character Available!\`\`\`**                                                                                                        **${collab.name}**\nName:${userCollab.collabPick.name}\nID: ${userCollab.collabPick.id}`)
-                        .setImage(pickFull.imgURL)
-                    logChannel.send({ content: `User <@${userId}> has been banned.`, embeds: [leaveEmbed] });
+                        .setImage(userCollab.collabPick.imgURL)
+                    collabLogChannel.send({ content: `User <@${userId}> has been banned.`, embeds: [leaveEmbed] });
                 }
-                collabLogChannel.log(`Participation removed from ${userCollab.collabName}`);
+                console.log(`Participation removed from ${userCollab.collabName}`);
             }
         } finally {
             mongoClientUsers.close()
             mongoClient.close()
+            mongoClientBlacklist.close();
         }
     }
 }

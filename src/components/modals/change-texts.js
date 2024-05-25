@@ -1,6 +1,8 @@
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
+const localConstants = require('../../constants');
 const { editCache } = require('../buttons/change-texts');
+const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
     data: {
@@ -12,6 +14,7 @@ module.exports = {
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
         const collabName = editCache.get(int.user.id).collab;
+        const guild = client.guilds.cache.get(localConstants.guildId);
         const userLogChannel = guild.channels.cache.get(localConstants.userActionsLogChannelID);
         try {
             const userCollab = await localFunctions.getUserCollab(int.user.id, collection, collabName);

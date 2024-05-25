@@ -59,7 +59,7 @@ module.exports = {
                             const buffer = Buffer.from(await response.arrayBuffer());
                             const jsonData = JSON.parse(buffer.toString());
                             const fullCollab = poolCache.get(userId).collab;
-                            await localFunctions.setCollabPool(collabName, jsonData, collabCollection);
+                            await localFunctions.setCollabPool(fullCollab.name, jsonData, collabCollection);
 
                             const doc = await connectToSpreadsheet(fullCollab.spreadsheetID); //Spreadsheet update
                             let initialization = false;

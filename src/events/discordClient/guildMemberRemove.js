@@ -21,15 +21,15 @@ module.exports = {
                     await localFunctions.setUserCollabs(userId, userCollabs, userCollection);
                     await localFunctions.unsetCollabParticipation(collab.name, collection, userCollab.collabPick.id);
                     await localFunctions.removeCollabParticipant(collab.name, collection, userId);
-                    await localFunctions.unsetParticipationOnSheet(collab, pickFull);
+                    await localFunctions.unsetParticipationOnSheet(collab, userCollab.collabPick);
                     const leaveEmbed = new EmbedBuilder()
                         .setFooter({ text: 'Endless Mirage | New Character Available', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                         .setColor('#f26e6a')
                         .setDescription(`**\`\`\`ml\n🎫 New Character Available!\`\`\`**                                                                                                        **${collab.name}**\nName:${userCollab.collabPick.name}\nID: ${userCollab.collabPick.id}`)
-                        .setImage(pickFull.imgURL)
-                    logChannel.send({ content: `User <@${userId}> has left the server.`, embeds: [leaveEmbed] });
+                        .setImage(userCollab.collabPick.imgURL)
+                        collabLogChannel.send({ content: `User <@${userId}> has left the server.`, embeds: [leaveEmbed] });
                 }
-                collabLogChannel.log(`Participation removed from ${userCollab.collabName}`);
+                console.log(`Participation removed from ${userCollab.collabName}`);
             }
         } finally {
             mongoClientUsers.close()
