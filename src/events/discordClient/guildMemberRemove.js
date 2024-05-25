@@ -12,7 +12,7 @@ module.exports = {
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         try {
             let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
-            if (typeof userCollabs === "undefined") return;
+            if (typeof userCollabs === "undefined" || userCollabs.length === 0) return;
             console.log(`User ${member.user.tag} with id ${userId} has left the server while on collabs.`);
             for (let userCollab of userCollabs) {
                 let collab = await localFunctions.getCollab(userCollab.collabName, collection);

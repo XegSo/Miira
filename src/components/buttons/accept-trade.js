@@ -41,12 +41,6 @@ module.exports = {
                     await localFunctions.editCollabParticipantPickOnUser(traderUser.discordId, collab.name, newTraderPick, userCollection);
                     await localFunctions.editCollabParticipantPickOnCollab(collab.name, requestedUser.discordId, newRequestedUserPick, collection);
                     await localFunctions.editCollabParticipantPickOnUser(requestedUser.discordId, collab.name, newRequestedUserPick, userCollection);
-
-                    await localFunctions.unsetParticipationOnSheet(collab, newTraderPick);
-                    await localFunctions.unsetParticipationOnSheet(collab, newRequestedUserPick);
-
-                    await localFunctions.setParticipationOnSheet(collab, newTraderPick, traderOsuDataFull.username);
-                    await localFunctions.setParticipationOnSheet(collab, newRequestedUserPick, requestedUserOsuDataFull.username);
         
                     console.log('A trade has been completed.');
 
@@ -101,6 +95,47 @@ module.exports = {
                     tradeEmbed.setDescription(`**\`\`\`js\n🎫 Accepted Request\`\`\`**                                                                                                        **${existingTradeRequest.collabName}**`)
                     logChannel.messages.fetch(existingTradeRequest._id).then(msg => msg.edit({embeds: [tradeEmbed], components: [components]}));
                     await localFunctions.liquidateTradeRequest(existingTradeRequest._id, collectionSpecial);
+
+                    while (true) {
+                        try {
+                            await localFunctions.unsetParticipationOnSheet(collab, newTraderPick);
+                            console.log('Parcitipation unset');
+                            break;
+                        } catch {
+                            console.log('Sheet update failed, retring in 2 minutes...');
+                            await localFunctions.delay(2*60*1000);
+                        }
+                    }
+                    while (true) {
+                        try {
+                            await localFunctions.setParticipationOnSheet(collab, newTraderPick, traderOsuDataFull.username);
+                            console.log('New pick set!');
+                            break;
+                        } catch {
+                            console.log('Sheet update failed, retring in 2 minutes...');
+                            await localFunctions.delay(2*60*1000);
+                        }
+                    }
+                    while (true) {
+                        try {
+                            await localFunctions.unsetParticipationOnSheet(collab, newRequestedUserPick);
+                            console.log('Parcitipation unset');
+                            break;
+                        } catch {
+                            console.log('Sheet update failed, retring in 2 minutes...');
+                            await localFunctions.delay(2*60*1000);
+                        }
+                    }
+                    while (true) {
+                        try {
+                            await localFunctions.setParticipationOnSheet(collab, newRequestedUserPick, requestedUserOsuDataFull.username);
+                            console.log('New pick set!');
+                            break;
+                        } catch {
+                            console.log('Sheet update failed, retring in 2 minutes...');
+                            await localFunctions.delay(2*60*1000);
+                        }
+                    }
                 }
             } 
 

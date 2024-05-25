@@ -13,7 +13,7 @@ module.exports = {
         const { collection: blacklistCollection, client: mongoClientBlacklist } = await connectToMongoDB("Blacklist");
         try {
             let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
-            if (typeof userCollabs === "undefined") return;
+            if (typeof userCollabs === "undefined" || userCollabs.length === 0) return;
             console.log(`User ${user.tag} with id ${userId} has been banned while on collabs.`);
             await localFunctions.setBlacklist(userId, "Banned", blacklistCollection);
             for (let userCollab of userCollabs) {

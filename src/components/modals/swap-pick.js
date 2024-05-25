@@ -103,8 +103,26 @@ module.exports = {
                     )
                 logChannel.send({ content: `<@${userId}>`, embeds: [swapEmbed] });
                 await int.editReply(`You've swaped your pick! New pick: ${newPickFull.name}`);
-                await localFunctions.unsetParticipationOnSheet(collab, currentPick);
-                await localFunctions.setParticipationOnSheet(collab, newPickFull, userOsuDataFull.username);
+                while (true) {
+                    try {
+                        await localFunctions.unsetParticipationOnSheet(collab, currentPick);
+                        console.log('Parcitipation unset');
+                        break;
+                    } catch {
+                        console.log('Sheet update failed, retring in 2 minutes...');
+                        await localFunctions.delay(2*60*1000);
+                    }
+                }
+                while (true) {
+                    try {
+                        await localFunctions.setParticipationOnSheet(collab, newPickFull, userOsuDataFull.username);
+                        console.log('New pick set!');
+                        break;
+                    } catch {
+                        console.log('Sheet update failed, retring in 2 minutes...');
+                        await localFunctions.delay(2*60*1000);
+                    }
+                }
             }
         } catch (e) {
             console.log(e);

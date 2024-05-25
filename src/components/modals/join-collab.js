@@ -235,7 +235,17 @@ module.exports = {
                     }
                     await localFunctions.setLockSystem(collab.name, collab.lockSystem, collabsCollection);
                 }
-                await localFunctions.setParticipationOnSheet(collab, itemInPool, userOsuDataFull.username);
+
+                while (true) {
+                    try {
+                        await localFunctions.setParticipationOnSheet(collab, itemInPool, userOsuDataFull.username);
+                        console.log('Sheet update done!');
+                        break;
+                    } catch {
+                        console.log('Sheet update failed, retring in 2 minutes...');
+                        await localFunctions.delay(2*60*1000);
+                    }
+                }
             }
         } catch (e) {
             console.log(e);

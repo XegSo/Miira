@@ -1058,6 +1058,10 @@ module.exports = {
         }, { upsert: true });
     },
 
+    delay: function (ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    },
+
     editParticipationFields: async function (userId, collabName, av_text, ca_text, ca_quote, collection) {
         await collection.updateOne({ _id: userId, 'collabs.collabName': collabName }, {
             $set: {

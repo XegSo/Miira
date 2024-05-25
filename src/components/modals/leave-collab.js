@@ -40,14 +40,22 @@ module.exports = {
                     .setImage(pick.imgURL)
                     .setURL('https://endlessmirage.net/')
                 logChannel.send({ embeds: [leaveEmbed, embed2] });
+                await int.editReply("You've left the collab succesfully.");
 
-                await localFunctions.unsetParticipationOnSheet(fullCollab, itemInPool);
+                while (true) {
+                    try {
+                        await localFunctions.unsetParticipationOnSheet(fullCollab, itemInPool);
+                        console.log('Parcitipation unset');
+                        break;
+                    } catch {
+                        console.log('Sheet update failed, retring in 2 minutes...');
+                        await localFunctions.delay(2*60*1000);
+                    }
+                }
 
                 if (fullCollab.status === "full") {
                     await localFunctions.setCollabStatus(fullCollab.name, "open", collection);
                 }
-
-                await int.editReply("You've left the collab succesfully.");
             }
         } catch (e) {
             console.log(e);

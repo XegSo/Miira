@@ -124,10 +124,6 @@ module.exports = {
             )
             extraComponents.addComponents(
               new ButtonBuilder()
-                .setCustomId('update-sheet')
-                .setLabel('📰 Update Spreadsheet')
-                .setStyle('Success'),
-              new ButtonBuilder()
                 .setCustomId('check-pick')
                 .setLabel('🔮 Check a Character')
                 .setStyle('Success'),
