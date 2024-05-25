@@ -5,21 +5,15 @@ const joinCache = new Map();
 
 module.exports = {
     data: {
-        name: 'join-collab'
+        name: 'join-collab-random'
     },
     async execute(int, client) {
         try {
             const collabName = buttonCache.get(int.user.id).collab;
             const collabData = buttonCache.get(int.user.id).fullCollabData;
             const modal = new ModalBuilder()
-                .setCustomId("join-collab")
+                .setCustomId("join-collab-random")
                 .setTitle(`${collabName}`);
-
-            const pick = new TextInputBuilder()
-                .setCustomId('pick')
-                .setLabel('Type the ID of your pick.')
-                .setPlaceholder('Only the ID of the character. Check spreadsheet.')
-                .setStyle(TextInputStyle.Short)
 
             const av_text = new TextInputBuilder()
                 .setCustomId('av_text')
@@ -46,7 +40,7 @@ module.exports = {
                 .setStyle(TextInputStyle.Short)
                 .setRequired(false);
 
-            modal.addComponents(new ActionRowBuilder().addComponents(pick), new ActionRowBuilder().addComponents(av_text), new ActionRowBuilder().addComponents(ca_text), new ActionRowBuilder().addComponents(ca_quote));
+            modal.addComponents(new ActionRowBuilder().addComponents(av_text), new ActionRowBuilder().addComponents(ca_text), new ActionRowBuilder().addComponents(ca_quote));
 
             await int.showModal(modal);
 

@@ -58,8 +58,7 @@ module.exports = {
                             const response = await fetch(attachment.url);
                             const buffer = Buffer.from(await response.arrayBuffer());
                             const jsonData = JSON.parse(buffer.toString());
-                            const collabName = poolCache.get(userId).collab;
-                            const fullCollab = await localFunctions.getCollab(collabName, collabCollection);
+                            const fullCollab = poolCache.get(userId).collab;
                             await localFunctions.setCollabPool(collabName, jsonData, collabCollection);
 
                             const doc = await connectToSpreadsheet(fullCollab.spreadsheetID); //Spreadsheet update
@@ -133,7 +132,7 @@ module.exports = {
                             const buffer = Buffer.from(await response.arrayBuffer());
                             let jsonData = JSON.parse(buffer.toString());
                             console.log(jsonData);
-                            await localFunctions.editCollab(editCache.get(userId).collab, jsonData, collabCollection);
+                            await localFunctions.editCollab(editCache.get(userId).collab.name, jsonData, collabCollection);
                             message.reply('Collab edited succesfully.')
                             editCache.delete(userId);
                             break messageCheck;
@@ -169,10 +168,8 @@ module.exports = {
                 break messageCheck;
             }
             console.log(`User: ${message.author.tag}`);
-            console.log(`Message length: ${messageLength}`);
             let tokensEarned;
             let tokensEarnedNB = (0.1 * messageLength) / (0.5 + (0.00004 * (messageLength ** 2))) * (1.5 - (1.5 * (Math.E ** (-0.2))));
-            console.log(`Tokens earned without bonus: ${tokensEarnedNB}`);
 
             // Check if the user has an active combo
             if (userCombos.has(userId)) {
@@ -188,7 +185,6 @@ module.exports = {
                         console.log('An issue in the token function has been encountered.')
                         tokensEarned = tokensEarnedNB;
                     }
-                    console.log(`Tokens earned with bonus: ${tokensEarned}`);
                     if (messageLength > 20) {
                         comboData.messages++; // Increment the number of messages in the combo
                         switch (comboData.messages) {
@@ -226,9 +222,7 @@ module.exports = {
                     // Combo has expired, reset combo data
                     comboData.messages = 1; // Reset the message count
                     comboData.lastMessageTime = currentTime;
-                    console.log("User has lost its combo.");
                     tokensEarned = tokensEarnedNB;
-                    console.log(`Tokens earned: ${tokensEarned}`);
                 }
             } else {
                 // User doesn't have an active combo, start a new one
@@ -236,9 +230,7 @@ module.exports = {
                     messages: 1,
                     lastMessageTime: currentTime,
                 });
-                console.log("Starting this user's combo.");
                 tokensEarned = tokensEarnedNB;
-                console.log(`Tokens earned: ${tokensEarned}`);
             }
 
             const currentBalance = await localFunctions.getBalance(userId, collection); // Fetch user's balance from the database
@@ -274,51 +266,39 @@ module.exports = {
             if (boostEndTime && currentTime < boostEndTime) {
                 // Apply a 2x boost to tokens earned
                 tokensEarned *= 2;
-                console.log(`Tokens earned with active boost: ${tokensEarned}`);
             }
 
             const PermaBoost = await localFunctions.getPermaBoost(userId, collection); // Fetch perma boost status from the database
             if (PermaBoost) {
                 tokensEarned *= 2;
-                console.log(`Tokens earned with active PERMA boost: ${tokensEarned}`);
             }
 
             const lastMessageDate = await localFunctions.getLastMessageDate(userId, collection); // Fetch the last message date for the user from the database
 
             if (typeof lastMessageDate === "undefined") {
                 tokensEarned += 100;
-                console.log('First message of the user in the server since the system was created, assigning 100 tokens bonus.');
                 message.react('868437778004836372');
             }
 
             if (globalBoostEndTime) {
-                if (globalBoostEndTime < currentTime) {
-                    console.log('Current global Boost has expired! Not applying.');
-                } else {
+                if (globalBoostEndTime >= currentTime) {
                     tokensEarned *= globalBoostValue;
                     console.log(`Tokens earned with active Global boost: ${tokensEarned}`);
                 }
             }
 
             if (!lastMessageDate || lastMessageDate < startOfDay.getTime()) {
-                // It's the user's first message, give them an extra 20 tokens
                 tokensEarned += 80;
-                console.log('First message of the user, assigning 80 tokens bonus.');
                 message.react('💸');
             }
 
-
-            //Update user's balance in the database
             const newBalance = currentBalance + tokensEarned;
             await localFunctions.setBalance(userId, newBalance, collection);
 
-            // Store the date of the message in the database
             await localFunctions.setLastMessageDate(userId, currentTime, collection);
 
-            // Set cooldown
             userCooldowns.set(userId, currentTime);
 
-            // Log activity (optional)
             console.log(`${message.author.tag} earned ${tokensEarned} Mirage Tokens.\n`);
         } catch (e) {
             console.log(e);

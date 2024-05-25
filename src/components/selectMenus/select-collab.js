@@ -14,10 +14,12 @@ module.exports = {
     const userId = int.user.id;
     const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
     const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
+    const { collection: blacklistCollection, client: mongoClientBlacklist } = await connectToMongoDB("Blacklist");
     const guild = client.guilds.cache.get(localConstants.guildId);
     const guildMember = guild.members.cache.get(userId);
     try {
       const userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
+      const userInBlacklist = await localFunctions.getBlacklist(userId, blacklistCollection);
       let userOsuData = await localFunctions.getOsuData(userId, userCollection);
       let collab = await localFunctions.getCollab(int.values[0], collection);
       let collabColor;
@@ -92,10 +94,9 @@ module.exports = {
       }
       const userTier = await localFunctions.getUserTier(userId, userCollection);
       if (userTier) {
-        console.log(userTier);
         tier = localFunctions.premiumToInteger(userTier.name);
       } else if (guildMember.roles.cache.has('743505566617436301')) {
-        let premiumDetails = await localFunctions.assignPremium(int, userId, userCollection, guildMember);
+        let premiumDetails = await localFunctions.assignPremium(userId, userCollection, guildMember);
         tier = localFunctions.premiumToInteger(premiumDetails[0].name);
       }
 
@@ -103,210 +104,232 @@ module.exports = {
 
       const deluxeEntry = await localFunctions.getDeluxeEntry(userId, userCollection);
 
-      if (userInCollab) {
-        const fullParticipation = userCollabs.find(e => e.collabName === collab.name)
-        if (collab.restriction === "deluxe" && typeof deluxeEntry.extra !== "undefined") {
-          components.addComponents(
-            new ButtonBuilder()
-              .setCustomId('deluxe-extra')
-              .setLabel('💎 Extra mats')
-              .setStyle('Primary'),
-          )
-        }
-        components.addComponents(
-          new ButtonBuilder()
-            .setCustomId('profile-pick')
-            .setLabel('🛅 Collab Profile')
-            .setStyle('Primary'),
-        )
-        switch (collab.status) {
-          case 'delivered':
-          case 'archived':
-          case 'completed':
+      if (!userInBlacklist) {
+        if (userInCollab) {
+          const fullParticipation = userCollabs.find(e => e.collabName === collab.name)
+          if (collab.restriction === "deluxe" && typeof deluxeEntry.extra !== "undefined") {
             components.addComponents(
               new ButtonBuilder()
-                .setLabel('⬇️ Download')
-                .setURL(`${collab.bucket}${fullParticipation.collabPick.id}.zip`)
-                .setStyle('Link'),
+                .setCustomId('deluxe-extra')
+                .setLabel('💎 Extra mats')
+                .setStyle('Primary'),
             )
-            break;
-          case 'early delivery':
-            if (tier >= 4) {
+          }
+          components.addComponents(
+            new ButtonBuilder()
+              .setCustomId('profile-pick')
+              .setLabel('🛅 Collab Profile')
+              .setStyle('Primary'),
+          )
+          switch (collab.status) {
+            case 'delivered':
+            case 'archived':
+            case 'completed':
               components.addComponents(
                 new ButtonBuilder()
                   .setLabel('⬇️ Download')
                   .setURL(`${collab.bucket}${fullParticipation.collabPick.id}.zip`)
                   .setStyle('Link'),
               )
-            }
-            break;
+              break;
+            case 'early delivery':
+              if (tier >= 4) {
+                components.addComponents(
+                  new ButtonBuilder()
+                    .setLabel('⬇️ Download')
+                    .setURL(`${collab.bucket}${fullParticipation.collabPick.id}.zip`)
+                    .setStyle('Link'),
+                )
+              }
+              break;
+          }
+        } else {
+          let userPerks = await localFunctions.getPerks(userId, userCollection);
+          switch (collab.restriction) {
+            case "staff":
+              switch (collab.status) {
+                case 'open':
+                  if (guildMember.roles.cache.has('961891383365500938')) {
+                    infoValue = "**As a Staff member, you can participate in this collab!**"
+                    components.addComponents(
+                      new ButtonBuilder()
+                        .setCustomId('join-collab')
+                        .setLabel('✅ Join')
+                        .setStyle('Success'),
+                    )
+                  } else {
+                    infoValue = "**This collab is hosted for staff only!**"
+                  }
+                  break;
+                case 'full':
+                  infoValue = "**This collab is full!**"
+                  break;
+                default:
+                  infoValue = "**This collab is hosted for staff only!**"
+                  break;
+              }
+              break;
+            case "deluxe":
+              switch (collab.status) {
+                case 'open':
+                  if (deluxeEntry) {
+                    infoValue = "**You have an entry ticket for a deluxe collab!**";
+                    components.addComponents(
+                      new ButtonBuilder()
+                        .setCustomId('join-collab')
+                        .setLabel('✅ Join')
+                        .setStyle('Success'),
+                    )
+                  } else {
+                    infoValue = "**To participate in this collab, you have to pay an entry fee**";
+                    components.addComponents(
+                      new ButtonBuilder()
+                        .setCustomId('deluxe-collab-entry')
+                        .setLabel('⚙️ Buy Entry')
+                        .setStyle('Success'),
+                    )
+                  }
+                  break;
+                case 'on design':
+                  if (deluxeEntry) {
+                    infoValue = "**You have an entry ticket for a deluxe collab!**";
+                  } else {
+                    infoValue = "**To participate in this collab, you have to pay an entry fee**";
+                    components.addComponents(
+                      new ButtonBuilder()
+                        .setCustomId('deluxe-collab-entry')
+                        .setLabel('⚙️ Buy Entry')
+                        .setStyle('Success'),
+                    )
+                  }
+                  break;
+                case 'full':
+                  infoValue = "**This collab is full!**";
+                  break;
+                default:
+                  infoValue = "**This is a paid entry collab! To participate, you can buy an entry when this collab is on design or open."
+                  break;
+              }
+              break;
+            case "megacollab":
+              switch (collab.status) {
+                case 'open':
+                  infoValue = "**Join for free to this massive osu! project!**";
+                  components.addComponents(
+                    new ButtonBuilder()
+                      .setCustomId('join-collab')
+                      .setLabel('✅ Join')
+                      .setStyle('Success'),
+                  )
+                  components.addComponents(
+                    new ButtonBuilder()
+                      .setCustomId('join-collab-random')
+                      .setLabel('✅ Join Random')
+                      .setStyle('Success'),
+                  )
+                  break;
+                case 'early access':
+                  infoValue = "**Peak premium users, peak prestige users and admins are now picking!**";
+                  if (typeof userPerks.find(e => e.name === 'Megacollab Early Access') !== "undefined" || prestigeLevel >= 8 || guildMember.roles.cache.has('630636502187114496')/*admin*/ || guildMember.roles.cache.has('834962043735638016')/*special donator*/|| guildMember.roles.cache.has('962251481669574666')/*contributor*/) {
+                    infoValue = "**You have early access!**";
+                    components.addComponents(
+                      new ButtonBuilder()
+                        .setCustomId('join-collab')
+                        .setLabel('✅ Join')
+                        .setStyle('Success'),
+                    )
+                    components.addComponents(
+                      new ButtonBuilder()
+                        .setCustomId('join-collab-random')
+                        .setLabel('✅ Join Random')
+                        .setStyle('Success'),
+                    )
+                  }
+                  break;
+                case 'full':
+                  infoValue = "**This collab is full! Wow!**";
+                  break;
+                default:
+                  infoValue = "**Massive collab hosted for free!** Endless Mirage have the history of hosting massive user collaborations since 2018 and we don't seem to be stopping anytime soon!";
+                  break;
+              }
+              break;
+            case "prestige":
+              switch (collab.status) {
+                case 'open':
+                  if (prestigeLevel >= 4) {
+                    infoValue = "**You're able to participate in this collab!**";
+                    components.addComponents(
+                      new ButtonBuilder()
+                        .setCustomId('join-collab')
+                        .setLabel('✅ Join')
+                        .setStyle('Success'),
+                    )
+                  } else {
+                    infoValue = "**Collab only for prestige 4+ users!**";
+                  }
+                  break;
+                case 'full':
+                  infoValue = "**This collab is full!**";
+                  break;
+                default:
+                  infoValue = "**Collab only for prestige 4+ users!**";
+                  break;
+              }
+              break;
+            case "experimental":
+              switch (collab.status) {
+                case 'open':
+                  if (prestigeLevel >= 4 || tier >= 1) {
+                    infoValue = "**You're able to participate in this collab!**";
+                    components.addComponents(
+                      new ButtonBuilder()
+                        .setCustomId('join-collab')
+                        .setLabel('✅ Join')
+                        .setStyle('Success'),
+                    )
+                  } else {
+                    infoValue = "**This collab is a experiment. Only prestige 4+ and premium can join!**";
+                  }
+                  break;
+                case 'full':
+                  infoValue = "**This collab is full!**";
+                  break;
+                default:
+                  infoValue = "**This collab is a experiment. Only prestige 4+ and premium can join!**";
+                  break;
+              }
+              break;
+            case "none":
+              switch (collab.status) {
+                case 'open':
+                  infoValue = "**You're able to participate in this collab!**";
+                  components.addComponents(
+                    new ButtonBuilder()
+                      .setCustomId('join-collab')
+                      .setLabel('✅ Join')
+                      .setStyle('Success'),
+                  )
+                  break;
+                case 'full':
+                  infoValue = "**This collab is full!**";
+                  break;
+                default:
+                  infoValue = "**There is no restrictions for this collab! How awewsome**";
+                  break;
+              }
+              break;
+          }
         }
       } else {
-        let userPerks = await localFunctions.getPerks(userId, userCollection);
-        switch (collab.restriction) {
-          case "staff":
-            switch (collab.status) {
-              case 'open':
-                if (guildMember.roles.cache.has('961891383365500938')) {
-                  infoValue = "**As a Staff member, you can participate in this collab!**"
-                  components.addComponents(
-                    new ButtonBuilder()
-                      .setCustomId('join-collab')
-                      .setLabel('✅ Join')
-                      .setStyle('Success'),
-                  )
-                } else {
-                  infoValue = "**This collab is hosted for staff only!**"
-                }
-                break;
-              case 'full':
-                infoValue = "**This collab is full!**"
-                break;
-              default:
-                infoValue = "**This collab is hosted for staff only!**"
-                break;
-            }
-            break;
-          case "deluxe":
-            switch (collab.status) {
-              case 'open':
-                if (deluxeEntry) {
-                  infoValue = "**You have an entry ticket for a deluxe collab!**";
-                  components.addComponents(
-                    new ButtonBuilder()
-                      .setCustomId('join-collab')
-                      .setLabel('✅ Join')
-                      .setStyle('Success'),
-                  )
-                } else {
-                  infoValue = "**To participate in this collab, you have to pay an entry fee**";
-                  components.addComponents(
-                    new ButtonBuilder()
-                      .setCustomId('deluxe-collab-entry')
-                      .setLabel('⚙️ Buy Entry')
-                      .setStyle('Success'),
-                  )
-                }
-                break;
-              case 'on design':
-                if (deluxeEntry) {
-                  infoValue = "**You have an entry ticket for a deluxe collab!**";
-                } else {
-                  infoValue = "**To participate in this collab, you have to pay an entry fee**";
-                  components.addComponents(
-                    new ButtonBuilder()
-                      .setCustomId('deluxe-collab-entry')
-                      .setLabel('⚙️ Buy Entry')
-                      .setStyle('Success'),
-                  )
-                }
-                break;
-              case 'full':
-                infoValue = "**This collab is full!**";
-                break;
-              default:
-                infoValue = "**This is a paid entry collab! To participate, you can buy an entry when this collab is on design or open."
-                break;
-            }
-            break;
-          case "megacollab":
-            switch (collab.status) {
-              case 'open':
-                infoValue = "**Join for free to this massive osu! project!**";
-                components.addComponents(
-                  new ButtonBuilder()
-                    .setCustomId('join-collab')
-                    .setLabel('✅ Join')
-                    .setStyle('Success'),
-                )
-                break;
-              case 'early access':
-                infoValue = "**Peak premium users, peak prestige users and admins are now picking!**";
-                if (typeof userPerks.find(e => e.name === 'Megacollab Early Access') !== "undefined" || prestigeLevel >= 8 || guildMember.roles.cache.has('630636502187114496')/*admin*/ || guildMember.roles.cache.has('834962043735638016')/*special donator*/|| guildMember.roles.cache.has('962251481669574666')/*contributor*/) {
-                  infoValue = "**You have early access!**";
-                  components.addComponents(
-                    new ButtonBuilder()
-                      .setCustomId('join-collab')
-                      .setLabel('✅ Join')
-                      .setStyle('Success'),
-                  )
-                }
-                break;
-              case 'full':
-                infoValue = "**This collab is full! Wow!**";
-                break;
-              default:
-                infoValue = "**Massive collab hosted for free!** Endless Mirage have the history of hosting massive user collaborations since 2018 and we don't seem to be stopping anytime soon!";
-                break;
-            }
-            break;
-          case "prestige":
-            switch (collab.status) {
-              case 'open':
-                if (prestigeLevel >= 4) {
-                  infoValue = "**You're able to participate in this collab!**";
-                  components.addComponents(
-                    new ButtonBuilder()
-                      .setCustomId('join-collab')
-                      .setLabel('✅ Join')
-                      .setStyle('Success'),
-                  )
-                } else {
-                  infoValue = "**Collab only for prestige 4+ users!**";
-                }
-                break;
-              case 'full':
-                infoValue = "**This collab is full!**";
-                break;
-              default:
-                infoValue = "**Collab only for prestige 4+ users!**";
-                break;
-            }
-            break;
-          case "experimental":
-            switch (collab.status) {
-              case 'open':
-                if (prestigeLevel >= 4 || tier >= 1) {
-                  infoValue = "**You're able to participate in this collab!**";
-                  components.addComponents(
-                    new ButtonBuilder()
-                      .setCustomId('join-collab')
-                      .setLabel('✅ Join')
-                      .setStyle('Success'),
-                  )
-                } else {
-                  infoValue = "**This collab is a experiment. Only prestige 4+ and premium can join!**";
-                }
-                break;
-              case 'full':
-                infoValue = "**This collab is full!**";
-                break;
-              default:
-                infoValue = "**This collab is a experiment. Only prestige 4+ and premium can join!**";
-                break;
-            }
-            break;
-          case "none":
-            switch (collab.status) {
-              case 'open':
-                infoValue = "**You're able to participate in this collab!**";
-                components.addComponents(
-                  new ButtonBuilder()
-                    .setCustomId('join-collab')
-                    .setLabel('✅ Join')
-                    .setStyle('Success'),
-                )
-                break;
-              case 'full':
-                infoValue = "**This collab is full!**";
-                break;
-              default:
-                infoValue = "**There is no restrictions for this collab! How awewsome**";
-                break;
-            }
-            break;
-        }
+        components.addComponents(
+          new ButtonBuilder()
+            .setCustomId('blacklist-appeal')
+            .setLabel('⚫️ Appeal your Blacklist')
+            .setStyle('Secondary'),
+        )
       }
+
 
       dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${collab.name}\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.`);
 
@@ -320,7 +343,7 @@ module.exports = {
       }
 
 
-      if (userId === '687004886922952755') {
+      if (userId === collab.host || guildMember.roles.cache.has('630636502187114496')) {
         components.addComponents(
           new ButtonBuilder()
             .setCustomId('admin-collab')
@@ -372,6 +395,7 @@ module.exports = {
     } finally {
       mongoClient.close();
       mongoClientUsers.close();
+      mongoClientBlacklist.close();
     }
   },
   buttonCache: buttonCache

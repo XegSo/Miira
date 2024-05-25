@@ -50,17 +50,23 @@ module.exports = {
               case 'Tier':
                 allPerksForTier = await localFunctions.getFullPerksOfTierWNR(localFunctions.premiumToInteger(item.name));
                 for (let perk of allPerksForTier) {
-                  perksToAssign.push(perk);
+                  if (typeof userPerks.find((e) => e.name === perk.name) === "undefined") {
+                    perksToAssign.push(perk);
+                  }
                 }
                 for (let tier of localConstants.premiumTiers) {
                   if (tier.name === item.name) {
                     await pendingMember.roles.add(tier.roleId);
                     await pendingMember.roles.add('743505566617436301');
+                    await localFunctions.assignPremium(userId, pendingMember, collection);
                     break;
                   }
                 }
                 break;
               case 'Perk':
+                if (userPerks.length !== 0) {
+                  perksToAssign = userPerks;
+                }
                 perksToAssign.push(fullPerk);
                 break;
               case 'Upgrade':
@@ -88,7 +94,9 @@ module.exports = {
                 } else if (item.class === "Tier") {
                   allPerksForTier = await localFunctions.getFullPerksOfTierWNR(localFunctions.premiumToInteger(item.name));
                   for (let perk of allPerksForTier) {
-                    perksToAssign.push(perk);
+                    if (typeof userPerks.find((e) => e.name === perk.name) === "undefined") {
+                      perksToAssign.push(perk);
+                    }
                   }
                 }
             }

@@ -19,7 +19,7 @@ module.exports = {
         const guildMember = guild.members.cache.get(userId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
         try {
-            const collab = await localFunctions.getCollab(joinCache.get(int.user.id).collab, collection);
+            let collab = await localFunctions.getCollab(joinCache.get(int.user.id).collab, collection);
             let userOsuData = joinCache.get(int.user.id).osuData
             if (!userOsuData) {
                 const components = new ActionRowBuilder().addComponents(
@@ -54,15 +54,12 @@ module.exports = {
                 const pick = localFunctions.padNumberWithZeros(parseInt(int.fields.getTextInputValue('pick')), digits);
                 const currentDate = Math.floor(new Date().getTime() / 1000);
                 let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
-                const itemInPool = pool.find((e) => e.id === pick);
+                let itemInPool = pool.find((e) => e.id === pick);
                 if (typeof userCollabs.find(e => e.name === collab.name) !== "undefined") {
                     return await int.editReply('You are already participating in this collab!');
                 }
                 if (typeof itemInPool === "undefined") {
                     return await int.editReply('Invalid character ID!');
-                }
-                if (itemInPool.status === "picked") {
-                    return await int.editReply('This character has been picked already by someone else!');
                 }
 
                 if (typeof collab.lockSystem !== "undefined") { /*Prevents ratelimit*/
@@ -95,7 +92,15 @@ module.exports = {
                     }
                 }
 
+                collab = await localFunctions.getCollab(joinCache.get(int.user.id).collab, collection);
+                itemInPool = collab.pool.find((e) => e.id === pick);
+
+                if (itemInPool.status === "picked") {
+                    return await int.editReply('This character has been picked already by someone else!');
+                }
+
                 await localFunctions.setCollabParticipation(collab.name, collection, pick);
+                
                 let prestigeLevel = 0;
                 let tier = 0;
                 let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));

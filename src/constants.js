@@ -20,6 +20,8 @@ const staffUserIds = [
     '969663617828020224'
 ];
 
+const collabAdminsRoleID = '630636502187114496';
+
 const unnecesaryFieldsOsu = [
     'default_group',
     'is_active',
@@ -627,6 +629,8 @@ const MirageFormat = Intl.NumberFormat('en-US', {
 
 const suggestionChannelID = '880953549561954314';
 const imageSwapChannelID = '1241221376833228800';
+const auditLogChannelID = "1243646608176840846";
+const userActionsLogChannelID = "1243692051347017848";
 
 const botId = '959278677789663302';
 const guildId = "630281137998004224"
@@ -646,6 +650,8 @@ const startingSubDay = 1;
 const finalSubDay = 5;
 
 module.exports = {
+    userActionsLogChannelID,
+    auditLogChannelID,
     startingSubDay,
     finalSubDay,
     logChannelID,
@@ -676,5 +682,6 @@ module.exports = {
     skillRanksByScore,
     prestigeRolesIDs,
     mirageLogo,
-    imageSwapChannelID
+    imageSwapChannelID,
+    collabAdminsRoleID
 };

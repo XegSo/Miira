@@ -50,7 +50,7 @@ module.exports = {
                 console.log(userTier);
                 tier = localFunctions.premiumToInteger(userTier.name);
             } else if (guildMember.roles.cache.has('743505566617436301')) {
-                let premiumDetails = await localFunctions.assignPremium(int, userId, collection, guildMember);
+                let premiumDetails = await localFunctions.assignPremium(userId, collection, guildMember);
                 tier = localFunctions.premiumToInteger(premiumDetails[0].name);
             }
 

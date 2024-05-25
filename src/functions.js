@@ -760,7 +760,7 @@ module.exports = {
         return str.charAt(0).toUpperCase() + str.slice(1);
     },
 
-    assignPremium: async function (int, userId, collection, guildMember) {
+    assignPremium: async function (userId, collection, guildMember) {
         let newPerks = [];
         let foundRole = null;
         let foundTier = [];
@@ -901,28 +901,28 @@ module.exports = {
     isPNGURL: async function (url) {
         try {
             const response = await fetch(url);
-    
+
             // Check if the HTTP status is OK (200)
             if (!response.ok) {
                 return false;
             }
-    
+
             // Check if the content type is 'image/png'
             const contentType = response.headers.get('Content-Type');
             if (contentType !== 'image/png') {
                 return false;
             }
-    
+
             const buffer = await response.arrayBuffer();
             const view = new DataView(buffer);
-            
+
             const pngSignature = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
             for (let i = 0; i < pngSignature.length; i++) {
                 if (view.getUint8(i) !== pngSignature[i]) {
                     return false;
                 }
             }
-    
+
             return true;
         } catch (error) {
             console.error('Error fetching the URL:', error);
@@ -1124,6 +1124,15 @@ module.exports = {
         }
     },
 
+    liquidateUserCollabs: async function (userId, collection) {
+        try {
+            await collection.updateOne({ _id: userId }, { $unset: { collabs: 1 } });
+        } catch (error) {
+            console.error('Error liquidating the collabs for the user:', error);
+            return null;
+        }
+    },
+
     resetPickStatus: async function (name, collection) {
         const query = { "name": name, "pool.items.status": 'picked' };
         await collection.updateOne(
@@ -1274,6 +1283,15 @@ module.exports = {
         return badges;
     },
 
+
+    setBlacklist: async function (userId, reason, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { reason } }, { upsert: true });
+    },
+
+    getBlacklist: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user || false : false;
+    },
 
     setBadges: async function (userId, badges, collection) {
         await collection.updateOne({ _id: userId }, { $set: { badges } }, { upsert: true });
@@ -1605,15 +1623,13 @@ module.exports = {
         let Tperks = [];
         for (let i = 0; i < localConstants.premiumTiers.length; i++) {
             let tier = localConstants.premiumTiers[i];
+            if (tier.id === limit + 1) break;
             for (let j = 0; j < tier.perks.length; j++) {
                 let perk = tier.perks[j];
                 Tperks.push(perk);
                 if (tier.id > limit) {
                     break;
                 }
-            }
-            if (tier.id > limit) {
-                break;
             }
         }
         return Tperks;
