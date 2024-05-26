@@ -341,7 +341,7 @@ module.exports = {
             idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } } } };
             idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } }, fontFamily: "Avenir", strikethrough: true };
             const infoCell = sheet.getCell(mainRow + 1, mainCol);
-            infoCell.value = `Picked by ${osuname} on ${new Date().toLocaleDateString('en-GB')}`;
+            infoCell.value = `Picked by ${osuname} on ${new Date().toLocaleDateString('en-GB', { timeZone: 'UTC', hour12: false })}`;
             await sheet.saveUpdatedCells();
             sheet.resetLocalCache();
         } catch (e) {
