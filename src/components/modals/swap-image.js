@@ -22,7 +22,8 @@ module.exports = {
         initializedMap = profileButtonCache;
       }
     }
-    const requestChannel = int.guild.channels.cache.get(localConstants.imageSwapChannelID);
+    const guild = client.guilds.cache.get(localConstants.guildId);
+    const requestChannel = guild.channels.cache.get(localConstants.imageSwapChannelID);
     let type = 'image change'
     const imageURL = int.fields.getTextInputValue("imageURL");
     const isPNG = await localFunctions.isPNGURL(imageURL);
