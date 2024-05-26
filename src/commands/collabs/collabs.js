@@ -683,8 +683,7 @@ module.exports = {
                                 return await int.editReply('You\'re already participating on this collab! To edit your pick use the ``/collabs manage`` command.');
                             }
                         } catch { }
-                        const pick = int.options.getString('pick');
-                        console.log(pick);
+                        let pick = int.options.getString('pick');
                         const userOsuDataFull = await localFunctions.getOsuData(int.user.id, userCollection);
                         if (!userOsuDataFull) {
                             const components = new ActionRowBuilder().addComponents(
@@ -733,9 +732,16 @@ module.exports = {
                                 }
                             }
                         }
-
+                        let fullPick;
+                        console.log(pick);
                         openMegacollab = await localFunctions.getCollab(openMegacollab.name, collection);
-                        let fullPick = await openMegacollab.pool.items.find(i => i.id === pick);
+                        if (typeof pick === 'string' && /^\d+$/.test(pick)) {
+                            fullPick = await openMegacollab.pool.items.find(i => i.id === pick);
+                        } else {
+                            pick.split('-')[0].trim();
+                            fullPick = await openMegacollab.pool.items.find(i => i.name === pick);
+                        }
+                        console.log(fullPick.id);
                         if (fullPick.status === "picked") {
                             return await int.editReply('This character got picked while you were selecting...');
                         }
