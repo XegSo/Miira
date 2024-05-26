@@ -17,7 +17,7 @@ module.exports = {
         if (!guildMember.roles.cache.has(localConstants.collabAdminsRoleID) && collab.host !== userId) return await int.editReply(`You're not allowed to do this!`);
         let digits = collab.pool.items[0].id.length;
         const typedPick = localFunctions.padNumberWithZeros(parseInt(int.fields.getTextInputValue('pick')), digits);
-        const pick = collab.pool.items.find((e) => e.id === typedPick);
+        const pick = await collab.pool.items.find((e) => e.id === typedPick);
         if (typeof pick === "undefined") {
             return await int.editReply('Invalid character ID!');
         }

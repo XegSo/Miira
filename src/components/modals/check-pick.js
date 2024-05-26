@@ -29,7 +29,7 @@ module.exports = {
             collab = await localFunctions.getCollab(collab.name, collection);
             let digits = collab.pool.items[0].id.length;
             const typedPick = localFunctions.padNumberWithZeros(parseInt(int.fields.getTextInputValue('pick')), digits);
-            const pick = collab.pool.items.find((e) => e.id === typedPick);
+            const pick = await collab.pool.items.find((e) => e.id === typedPick);
             if (typeof pick === "undefined") {
                 return await int.editReply('Invalid character ID!');
             }

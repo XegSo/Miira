@@ -735,7 +735,7 @@ module.exports = {
                         }
 
                         openMegacollab = await localFunctions.getCollab(openMegacollab.name, collection);
-                        let fullPick = openMegacollab.pool.items.find(i => i.id === pick);
+                        let fullPick = await openMegacollab.pool.items.find(i => i.id === pick);
                         if (fullPick.status === "picked") {
                             return await int.editReply('This character got picked while you were selecting...');
                         }

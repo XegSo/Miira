@@ -93,7 +93,7 @@ module.exports = {
                 }
 
                 collab = await localFunctions.getCollab(joinCache.get(int.user.id).collab, collection);
-                itemInPool = collab.pool.items.find((e) => e.id === pick);
+                itemInPool = await collab.pool.items.find((e) => e.id === pick);
 
                 if (itemInPool.status === "picked") {
                     return await int.editReply('This character has been picked already by someone else!');
