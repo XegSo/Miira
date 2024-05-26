@@ -738,7 +738,7 @@ module.exports = {
                         if (typeof pick === 'string' && /^\d+$/.test(pick)) {
                             fullPick = await openMegacollab.pool.items.find(i => i.id === pick);
                         } else {
-                            pick.split('-')[0].trim();
+                            pick = pick.split('-')[0].trim();
                             fullPick = await openMegacollab.pool.items.find(i => i.name === pick);
                         }
                         console.log(fullPick.id);
@@ -1190,7 +1190,6 @@ module.exports = {
                                 return await int.editReply('This character has already been picked!');
                             }
                             const pick = newPickFull.id;
-                            const userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
                             const userCollab = userCollabs.find(e => e.collabName === collab.name);
                             const currentPick = pool.find((e) => e.id === userCollab.collabPick.id);
                             const userOsuDataFull = await localFunctions.getOsuData(userId, userCollection);
