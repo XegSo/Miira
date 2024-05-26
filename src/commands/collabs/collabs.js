@@ -58,17 +58,17 @@ module.exports = {
 
                         )
                         .addStringOption(option =>
-                            option.setName('av_text')
+                            option.setName('avatar_text')
                                 .setDescription('Text for the avatar')
                                 .setRequired(true)
                         )
                         .addStringOption(option =>
-                            option.setName('ca_text')
+                            option.setName('banner_text')
                                 .setDescription('Text for the banner')
                                 .setRequired(true)
                         )
                         .addStringOption(option =>
-                            option.setName('ca_quote')
+                            option.setName('banner_quote')
                                 .setDescription('Quote for the banner')
                         )
                 )
@@ -76,17 +76,17 @@ module.exports = {
                     subcommand.setName("join-random")
                         .setDescription('Join a collab in a quick way, with a random pick. (Megacollab only)')
                         .addStringOption(option =>
-                            option.setName('av_text')
+                            option.setName('avatar_text')
                                 .setDescription('Text for the avatar')
                                 .setRequired(true)
                         )
                         .addStringOption(option =>
-                            option.setName('ca_text')
+                            option.setName('banner_text')
                                 .setDescription('Text for the banner')
                                 .setRequired(true)
                         )
                         .addStringOption(option =>
-                            option.setName('ca_quote')
+                            option.setName('banner_quote')
                                 .setDescription('Quote for the banner')
                         )
                 )
@@ -698,10 +698,10 @@ module.exports = {
                                 components: [components]
                             });
                         }
-                        if (int.options.getString('av_text').length > openMegacollab.fieldRestrictions.av) return await int.editReply(`The character limit for the avatar is of ${openMegacollab.fieldRestrictions.av} characters!`);
-                        if (int.options.getString('ca_text').length > openMegacollab.fieldRestrictions.ca) return await int.editReply(`The character limit for the banner is of ${openMegacollab.fieldRestrictions.ca} characters!`);
-                        if (int.options.getString('ca_quote') !== null) {
-                            if (int.options.getString('ca_quote').length > openMegacollab.fieldRestrictions.ca_quote) return await int.editReply(`The character limit for the quote is of ${openMegacollab.fieldRestrictions.ca_quote} characters!`);
+                        if (int.options.getString('avatar_text').length > openMegacollab.fieldRestrictions.av) return await int.editReply(`The character limit for the avatar is of ${openMegacollab.fieldRestrictions.av} characters!`);
+                        if (int.options.getString('banner_text').length > openMegacollab.fieldRestrictions.ca) return await int.editReply(`The character limit for the banner is of ${openMegacollab.fieldRestrictions.ca} characters!`);
+                        if (int.options.getString('banner_quote') !== null) {
+                            if (int.options.getString('banner_quote').length > openMegacollab.fieldRestrictions.ca_quote) return await int.editReply(`The character limit for the quote is of ${openMegacollab.fieldRestrictions.ca_quote} characters!`);
                         }
 
                         if (typeof openMegacollab.lockSystem !== "undefined") { /*Prevents ratelimit*/
@@ -764,9 +764,9 @@ module.exports = {
                             discordId: userId,
                             discordTag: int.user.tag,
                             joinDate: currentDate,
-                            av_text: int.options.getString('av_text'),
-                            ca_text: int.options.getString('ca_text'),
-                            ca_quote: int.options.getString('ca_quote') ? int.options.getString('ca_quote') : "",
+                            av_text: int.options.getString('avatar_text'),
+                            ca_text: int.options.getString('banner_text'),
+                            ca_quote: int.options.getString('banner_quote') ? int.options.getString('banner_quote') : "",
                             prestige: prestigeLevel,
                             tier: tier,
                             bump_imune: tier ? true : false
@@ -781,9 +781,9 @@ module.exports = {
                             collabName: openMegacollab.name,
                             collabPick: fullPick,
                             joinDate: currentDate,
-                            av_text: int.options.getString('av_text'),
-                            ca_text: int.options.getString('ca_text'),
-                            ca_quote: int.options.getString('ca_quote') ? int.options.getString('ca_quote') : "",
+                            av_text: int.options.getString('avatar_text'),
+                            ca_text: int.options.getString('banner_text'),
+                            ca_quote: int.options.getString('banner_quote') ? int.options.getString('banner_quote') : "",
                             prestige: prestigeLevel,
                             tier: tier
                         }
@@ -930,6 +930,11 @@ module.exports = {
                                 components: [components]
                             });
                         }
+                        if (int.options.getString('avatar_text').length > openMegacollab.fieldRestrictions.av) return await int.editReply(`The character limit for the avatar is of ${openMegacollab.fieldRestrictions.av} characters!`);
+                        if (int.options.getString('banner_text').length > openMegacollab.fieldRestrictions.ca) return await int.editReply(`The character limit for the banner is of ${openMegacollab.fieldRestrictions.ca} characters!`);
+                        if (int.options.getString('banner_quote') !== null) {
+                            if (int.options.getString('banner_quote').length > openMegacollab.fieldRestrictions.ca_quote) return await int.editReply(`The character limit for the quote is of ${openMegacollab.fieldRestrictions.ca_quote} characters!`);
+                        }
 
                         if (typeof openMegacollab.lockSystem !== "undefined") { /*Prevents ratelimit*/
                             if (typeof openMegacollab.lockSystem.current === "undefined") { /*System startup from first pick*/
@@ -1000,9 +1005,9 @@ module.exports = {
                             discordId: userId,
                             discordTag: int.user.tag,
                             joinDate: currentDate,
-                            av_text: int.options.getString('av_text'),
-                            ca_text: int.options.getString('ca_text'),
-                            ca_quote: int.options.getString('ca_quote') ? int.options.getString('ca_quote') : "",
+                            av_text: int.options.getString('avatar_text'),
+                            ca_text: int.options.getString('banner_text'),
+                            ca_quote: int.options.getString('banner_quote') ? int.options.getString('banner_quote') : "",
                             prestige: prestigeLevel,
                             tier: tier,
                             bump_imune: tier ? true : false
@@ -1017,9 +1022,9 @@ module.exports = {
                             collabName: openMegacollab.name,
                             collabPick: fullPick,
                             joinDate: currentDate,
-                            av_text: int.options.getString('av_text'),
-                            ca_text: int.options.getString('ca_text'),
-                            ca_quote: int.options.getString('ca_quote') ? int.options.getString('ca_quote') : "",
+                            av_text: int.options.getString('avatar_text'),
+                            ca_text: int.options.getString('banner_text'),
+                            ca_quote: int.options.getString('banner_quote') ? int.options.getString('banner_quote') : "",
                             prestige: prestigeLevel,
                             tier: tier
                         }
