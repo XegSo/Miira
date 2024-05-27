@@ -19,7 +19,7 @@ module.exports = {
         try {
             const userOsu = await localFunctions.getOsuData(userId, collection);
             const lastUpdate = await localFunctions.getUserLastUpdate(userId, collection);
-            const currentDate = new Date();
+            const currentDate = Math.floor(Date.now() / 1000);
             if (!userOsu) {
                 const components = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
