@@ -19,7 +19,7 @@ module.exports = {
             }
             const toVerify = fields.filter(i => i.type === "url");
             if (typeof toVerify !== "undefined") {
-                for (let imageField of toVerify) {
+                for (const imageField of toVerify) {
                     let check = await localFunctions.isPNGURL(replies[imageField.name])
                     if (!check) return await int.editReply('One or more provided URLs are not a valid PNG...');
                 }

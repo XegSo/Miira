@@ -1884,7 +1884,7 @@ module.exports = {
             for (let user of users) {
                 let subData = user.monthlyDonation;
                 if (typeof subData.lastMessageDate !== "undefined") {
-                    if (subData.lastMessageSent + 86300 >= Math.floor(new Date().getTime() / 1000)) return;
+                    if (subData.lastMessageSent + 86300 >= Math.floor(new Date().getTime() / 1000)) continue;
                 }
                 let reminderEmbed = new EmbedBuilder()
                     .setColor('#f26e6a')
@@ -2173,7 +2173,7 @@ async function scheduleDailyDecay(client) {
         for (let user of users) {
             let subData = user.monthlyDonation;
             if (typeof subData.lastMessageDate !== "undefined") {
-                if (subData.lastMessageSent + 86300 >= Math.floor(new Date().getTime() / 1000)) return;
+                if (subData.lastMessageSent + 86300 >= Math.floor(new Date().getTime() / 1000)) continue;
             }
             let reminderEmbed = new EmbedBuilder()
                 .setColor('#f26e6a')
