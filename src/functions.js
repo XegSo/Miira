@@ -1943,7 +1943,7 @@ module.exports = {
                     });
                     console.log(`DM Sent to ${user._id}`);
                 }
-                await setFullSubStatus(user._id, userSubData, userCollection);
+                await setFullSubStatus(user._id, subData, userCollection);
                 reminderEmbed = 0;
             }
         } else if (currentDay === localConstants.finalSubDay + 1) {
@@ -2232,7 +2232,7 @@ async function scheduleDailyDecay(client) {
                 });
                 console.log(`DM Sent to ${user._id}`);
             }
-            await setFullSubStatus(user._id, userSubData, userCollection);
+            await setFullSubStatus(user._id, subData, userCollection);
             reminderEmbed = 0;
         }
     } else if (currentDay === localConstants.finalSubDay + 1) {
