@@ -1883,7 +1883,7 @@ module.exports = {
             users = users.filter(e => e.monthlyDonation.status === "unpaid");
             for (let user of users) {
                 let subData = user.monthlyDonation;
-                if (typeof subData.lastMessageDate !== "undefined") {
+                if (typeof subData.lastMessageSent !== "undefined") {
                     if (subData.lastMessageSent + 86300 >= Math.floor(new Date().getTime() / 1000)) continue;
                 }
                 let reminderEmbed = new EmbedBuilder()
@@ -2172,7 +2172,7 @@ async function scheduleDailyDecay(client) {
         users = users.filter(e => e.monthlyDonation.status === "unpaid");
         for (let user of users) {
             let subData = user.monthlyDonation;
-            if (typeof subData.lastMessageDate !== "undefined") {
+            if (typeof subData.lastMessageSent !== "undefined") {
                 if (subData.lastMessageSent + 86300 >= Math.floor(new Date().getTime() / 1000)) continue;
             }
             let reminderEmbed = new EmbedBuilder()
