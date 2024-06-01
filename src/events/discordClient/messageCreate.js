@@ -159,8 +159,8 @@ module.exports = {
                         }
                     }
                 }
-            } catch {
-                console.log('Cache Error');
+            } catch (e) {
+                console.log(e);
             }
 
             const messageLength = localFunctions.removeURLsAndColons(message.content).length; // Clean and calculate the message length 

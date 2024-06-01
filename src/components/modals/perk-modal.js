@@ -1,5 +1,4 @@
-const { userCache } = require('../../components/selectMenus/use-perks');
-const path = require('path');
+const { perkCache } = require('../../components/selectMenus/use-perks');
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 
@@ -9,54 +8,31 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        let jsonPath = '';
-        let newObj = [];
-        const osuName = int.fields.getTextInputValue("osuName");
-        const osuURL = int.fields.getTextInputValue("osuURL");
-        const perk = userCache.get(int.user.id).perk;
-        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+        const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+        const cache = perkCache.get(int.user.id);
+        const perk = cache.perk
         try {
-            let pendingPerks = await localFunctions.getPendingPerks(int.user.id, collection);
-            if (perk === "Premium Avatar") {
-                jsonPath = path.join(__dirname, '..', '..', '..', 'data', 'avatars.json');
-                const avText = int.fields.getTextInputValue("avText");
-                const avImageURL = int.fields.getTextInputValue("avImageURL");
-                newObj = { discordId: int.user.id, osuname: osuName, profileURL: osuURL, avatarText: avText, image: avImageURL }
-                localFunctions.createPerksJSON(jsonPath, newObj);
-            } else if (perk === "Premium Cover") {
-                jsonPath = path.join(__dirname, '..', '..', '..', 'data', 'covers.json');
-                const coverText = int.fields.getTextInputValue("coverText");
-                const coverImageURL = int.fields.getTextInputValue("coverImageURL");
-                newObj = { discordId: int.user.id, osuname: osuName, profileURL: osuURL, coverText: coverText, image: coverImageURL }
-                localFunctions.createPerksJSON(jsonPath, newObj);
-            } else if (perk === "Premium Animated Banner") {
-                //TBD
-            } else if (perk === "Premium Forum Signature") {
-                //TBD
-            } else if (perk === "Premium Animated Stream Overlay") {
-                jsonPath = path.join(__dirname, '..', '..', '..', 'data', 'overlays.json');
-                const overlayText = int.fields.getTextInputValue("overlayText");
-                const overlayImageURL = int.fields.getTextInputValue("overlayImageURL");
-                newObj = { discordId: int.user.id, osuname: osuName, profileURL: osuURL, overlayText: overlayText, image: overlayImageURL }
-                localFunctions.createPerksJSON(jsonPath, newObj);
-            } else if (perk === "Premium Desktop Wallpaper") {
-                //TBD
-            } else if (perk === "Premium Collab Poster") {
-                //TBD
-            } else if (perk === "Megacollab Themed osu! skin") {
-                jsonPath = path.join(__dirname, '..', '..', '..', 'data', 'skins.json');
-                const skinText = int.fields.getTextInputValue("skinText");
-                const skinImageURL = int.fields.getTextInputValue("skinImageURL");
-                newObj = { discordId: int.user.id, osuname: osuName, profileURL: osuURL, skinText: skinText, image: skinImageURL }
-                localFunctions.createPerksJSON(jsonPath, newObj);
-            } else if (perk === "Extra Collab Materials") {
-                //TBD
+            let replies = {};
+            let fields = perk.fields;
+            for (let field of fields) {
+                replies[field.name] = int.fields.getTextInputValue(field.name);
             }
-            await localFunctions.setPendingPerks(int.user.id, pendingPerks, perk, collection);
-            await int.editReply('Your request was submited succesfully.');
+            const toVerify = fields.filter(i => i.type === "url");
+            if (typeof toVerify !== "undefined") {
+                for (imageField of toVerify) {
+                    let check = await localFunctions.isPNGURL(replies[imageField.name])
+                    if (!check) return await int.editReply('One or more provided URLs are not a valid PNG...');
+                }
+            }
+            replies.userId = int.user.id;
+            replies.perk = perk.name;
+            console.log(replies);
+            await localFunctions.addPerkIntoCollab(cache.collabName, collection, perk.name, replies, int.user.id);
+            int.editReply('Your entry has been submitted! Use ``/collabs perks`` to manage all of your entries.');
+            
         } finally {
             mongoClient.close();
-            userCache.delete(int.user.id);
+            perkCache.delete(int.user.id);
         }
     },
 };

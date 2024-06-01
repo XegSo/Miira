@@ -924,8 +924,7 @@ module.exports = {
             }
 
             return true;
-        } catch (error) {
-            console.error('Error fetching the URL:', error);
+        } catch {
             return false;
         }
     },
@@ -934,6 +933,25 @@ module.exports = {
 
     setCollab: async function (collab, collection) {
         await collection.insertOne(collab);
+    },
+
+    addPerkIntoCollab: async function (collab, collection, perkName, entry, userId){
+
+        await collection.updateOne(
+            { name: collab }, 
+            { 
+                $push: { [`perks.toExport.${perkName}`]: entry }
+            },
+            { upsert: true }
+        );
+
+        await collection.updateOne(
+            { name: collab }, 
+            { 
+                $set: { [`perks.users.${userId}.${perkName}`]: entry }
+            },
+            { upsert: true }
+        );
     },
 
     setCollabTexts: async function (collab, fieldRestrictions, collection) {
@@ -1001,6 +1019,11 @@ module.exports = {
     getCollab: async function (name, collection) {
         const collab = await collection.findOne({ name: name });
         return collab ? collab || null : null;
+    },
+
+    getCollabPerks: async function (name, collection) {
+        const collab = await collection.findOne({ name: name });
+        return collab ? collab.perks || [] : [];
     },
 
     getCollabParticipants: async function (name, collection) {
@@ -1137,13 +1160,35 @@ module.exports = {
         }
     },
 
-    resetPickStatus: async function (name, collection) {
-        const query = { "name": name, "pool.items.status": 'picked' };
-        await collection.updateOne(
-            query,
-            { $set: { "pool.items.$[element].status": 'available' } },
-            { arrayFilters: [{ "element.status": 'picked' }] }
-        );
+    resetPick: async function (name, collection) {
+        const document = await collection.findOne({ "name": name });
+
+        if (!document) {
+            throw new Error('Document not found');
+        }
+
+        const bucket = document.bucket;
+        const items = document.pool.items;
+
+        const bulkOperations = items
+            .map(item => {
+                const newImgURL = `https://storage.googleapis.com/${bucket}/${item.id}.png`;
+                return {
+                    updateOne: {
+                        filter: { "name": name, "pool.items.id": item.id },
+                        update: {
+                            $set: {
+                                "pool.items.$.status": 'available',
+                                "pool.items.$.imgURL": newImgURL
+                            }
+                        }
+                    }
+                };
+            });
+
+        if (bulkOperations.length > 0) {
+            await collection.bulkWrite(bulkOperations);
+        }
     },
 
     liquidateCollabFromUsers: async function (name, collection) {
@@ -1804,6 +1849,7 @@ module.exports = {
     scheduleDailyDecay: async function (client) {
         const now = new Date();
         const currentDay = now.getDate();
+        console.log(currentDay);
         const currentMonth = now.getMonth() + 1;
         const year = now.getFullYear();
         const numberOfDaysInMonth = new Date(year, currentMonth, 0).getDate();
@@ -1836,12 +1882,16 @@ module.exports = {
             }
             users = users.filter(e => e.monthlyDonation.status === "unpaid");
             for (let user of users) {
+                let subData = user.monthlyDonation;
+                if (typeof subData.lastMessageDate !== "undefined") {
+                    if (subData.lastMessageSent + 86300 >= Math.floor(new Date().getTime() / 1000)) return;
+                }
                 let reminderEmbed = new EmbedBuilder()
                     .setColor('#f26e6a')
                     .setAuthor({ name: `Endless Mirage Subscription Reminder!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
                     .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
-                let subData = user.monthlyDonation;
                 let subMember = await guild.members.cache.find(member => member.id === user._id);
+                subData.lastMessageSent = Math.floor(new Date().getTime() / 1000);
                 let startingDateParts = subData.startingDate.split("/");
                 let lastPaymentParts = subData.lastDate.split("/");
 
@@ -1893,6 +1943,7 @@ module.exports = {
                     });
                     console.log(`DM Sent to ${user._id}`);
                 }
+                await setFullSubStatus(user._id, userSubData, userCollection);
                 reminderEmbed = 0;
             }
         } else if (currentDay === localConstants.finalSubDay + 1) {
@@ -2120,12 +2171,16 @@ async function scheduleDailyDecay(client) {
         }
         users = users.filter(e => e.monthlyDonation.status === "unpaid");
         for (let user of users) {
+            let subData = user.monthlyDonation;
+            if (typeof subData.lastMessageDate !== "undefined") {
+                if (subData.lastMessageSent + 86300 >= Math.floor(new Date().getTime() / 1000)) return;
+            }
             let reminderEmbed = new EmbedBuilder()
                 .setColor('#f26e6a')
                 .setAuthor({ name: `Endless Mirage Subscription Reminder!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
                 .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
-            let subData = user.monthlyDonation;
             let subMember = await guild.members.cache.find(member => member.id === user._id);
+            subData.lastMessageSent = Math.floor(new Date().getTime() / 1000);
             let startingDateParts = subData.startingDate.split("/");
             let lastPaymentParts = subData.lastDate.split("/");
 
@@ -2177,6 +2232,7 @@ async function scheduleDailyDecay(client) {
                 });
                 console.log(`DM Sent to ${user._id}`);
             }
+            await setFullSubStatus(user._id, userSubData, userCollection);
             reminderEmbed = 0;
         }
     } else if (currentDay === localConstants.finalSubDay + 1) {
@@ -2683,3 +2739,6 @@ function getColumnRange(coordinate) {
     return columnRange;
 }
 
+async function setFullSubStatus(userId, monthlyDonation, collection) {
+    await collection.updateOne({ _id: userId }, { $set: { monthlyDonation } }, { upsert: true });
+}

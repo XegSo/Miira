@@ -12,7 +12,7 @@ module.exports = {
         await int.deferReply();
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         try {
-            const collab = await localFunctions.getCollab(collabCache.get(int.user.id).collab, collection);
+            const collab = await localFunctions.getCollab(collabCache.get(int.user.id).collab.name, collection);
             if (collab.host !== int.user.id) {
                 int.editReply('You are not allowed to do this.');
                 return;
@@ -21,7 +21,7 @@ module.exports = {
                 int.editReply('Open the dashboard again. The collab hasn\'t been cached');
                 return;
             }
-            const collabParticipants = await localFunctions.getCollabParticipants(collabCache.get(int.user.id).collab, collection);
+            const collabParticipants = await localFunctions.getCollabParticipants(collabCache.get(int.user.id).collab.name, collection);
             const headers = Object.keys(collabParticipants[0]);
             const csvStringifier = createObjectCsvStringifier({
                 header: headers.map(header => ({ id: header, title: header }))

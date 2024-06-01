@@ -448,6 +448,14 @@ const premiumPerks = [
         singleUse: true,
         collabDependant: true,
         tier: 1,
+        fields: [
+            {
+                title: "Name Text",
+                placeholder: "Typically your username.",
+                name: "av_name",
+                type: "text"
+            },
+        ]
     },
     {
         name: "Premium Cover",
@@ -459,6 +467,20 @@ const premiumPerks = [
         singleUse: true,
         collabDependant: true,
         tier: 1,
+        fields: [
+            {
+                title: "Name Text",
+                placeholder: "Typically your username.",
+                name: "co_name",
+                type: "text"
+            },
+            {
+                title: "Quote Text",
+                placeholder: "A quote for your Cover.",
+                name: "co_quote",
+                type: "text"
+            },
+        ]
     },
     {
         name: "Premium Animated Banner",
@@ -470,6 +492,20 @@ const premiumPerks = [
         singleUse: true,
         collabDependant: true,
         tier: 2,
+        fields: [
+            {
+                title: "Name Text",
+                placeholder: "Typically your username.",
+                name: "ca_name",
+                type: "text"
+            },
+            {
+                title: "Quote Text",
+                placeholder: "A quote for your Banner.",
+                name: "ca_quote",
+                type: "text"
+            },
+        ]
     },
     {
         name: "Premium Forum Signature",
@@ -481,6 +517,20 @@ const premiumPerks = [
         singleUse: true,
         collabDependant: true,
         tier: 2,
+        fields: [
+            {
+                title: "Name Text",
+                placeholder: "Typically your username.",
+                name: "si_name",
+                type: "text"
+            },
+            {
+                title: "Quote Text",
+                placeholder: "A quote for your Signature.",
+                name: "si_quote",
+                type: "text"
+            },
+        ]
     },
     {
         name: "Premium Animated Stream Overlay",
@@ -492,6 +542,32 @@ const premiumPerks = [
         singleUse: true,
         collabDependant: true,
         tier: 3,
+        fields: [
+            {
+                title: "Name Text",
+                placeholder: "The text that will appear in the name field.",
+                name: "ov_name",
+                type: "text"
+            },
+            {
+                title: "Quote Text",
+                placeholder: "A quote for your Overlay.",
+                name: "ov_quote",
+                type: "text"
+            },
+            {
+                title: "Character Main Image URL",
+                placeholder: "Transparent with no cuts.",
+                name: "ov_img_main",
+                type: "url"
+            },
+            {
+                title: "Character Accent Image URL",
+                placeholder: "Can have a background.",
+                name: "ov_img_accent",
+                type: "url"
+            },
+        ]
     },
     {
         name: "Premium Desktop Wallpaper",
@@ -503,6 +579,32 @@ const premiumPerks = [
         singleUse: true,
         collabDependant: true,
         tier: 3,
+        fields: [
+            {
+                title: "Name Text",
+                placeholder: "The text that will appear in the name field.",
+                name: "wa_name",
+                type: "text"
+            },
+            {
+                title: "Quote Text",
+                placeholder: "A quote for your Wallpaper.",
+                name: "wa_quote",
+                type: "text"
+            },
+            {
+                title: "Character Main Image URL",
+                placeholder: "Transparent with no cuts.",
+                name: "wa_img_main",
+                type: "url"
+            },
+            {
+                title: "Character Accent Image URL",
+                placeholder: "Can have a background.",
+                name: "wa_img_accent",
+                type: "url"
+            },
+        ]
     },
     {
         name: "Premium Collab Poster",
@@ -514,6 +616,26 @@ const premiumPerks = [
         singleUse: true,
         collabDependant: true,
         tier: 3,
+        fields: [
+            {
+                title: "Quote Text",
+                placeholder: "A quote for your poster.",
+                name: "po_quote",
+                type: "text"
+            },
+            {
+                title: "Character Main Image URL",
+                placeholder: "Transparent with no cuts.",
+                name: "po_img_main",
+                type: "url"
+            },
+            {
+                title: "Character Accent Image URL",
+                placeholder: "Can have a background.",
+                name: "po_img_accent",
+                type: "url"
+            },
+        ]
     },
     {
         name: "Early Collab Delivery",
@@ -535,6 +657,32 @@ const premiumPerks = [
         singleUse: true,
         collabDependant: true,
         tier: 5,
+        fields: [
+            {
+                title: "Name Text",
+                placeholder: "The text that will appear in the name field.",
+                name: "sk_name",
+                type: "text"
+            },
+            {
+                title: "Quote Text",
+                placeholder: "A quote for your skin.",
+                name: "sk_quote",
+                type: "text"
+            },
+            {
+                title: "Character Main Image URL",
+                placeholder: "Transparent with no cuts.",
+                name: "sk_img_main",
+                type: "url"
+            },
+            {
+                title: "Character Accent Image URL",
+                placeholder: "Can have a background.",
+                name: "sk_img_accent",
+                type: "url"
+            },
+        ]
     },
     {
         name: "Extra Collab Materials",
@@ -546,6 +694,38 @@ const premiumPerks = [
         singleUse: true,
         collabDependant: true,
         tier: 5,
+        fields: [
+            {
+                title: "Avatar Text",
+                placeholder: "Typically your name.",
+                name: "av_name",
+                type: "text"
+            },
+            {
+                title: "Banner Text",
+                placeholder: "Typically your name.",
+                name: "ca_name",
+                type: "text"
+            },
+            {
+                title: "Banner Quote",
+                placeholder: "Quote for your banner.",
+                name: "ca_quote",
+                type: "text"
+            },
+            {
+                title: "Avatar Image URL",
+                placeholder: "Transparent PNG only.",
+                name: "av_img",
+                type: "url"
+            },
+            {
+                title: "Banner Image URL",
+                placeholder: "Transparent PNG only.",
+                name: "ca_img",
+                type: "url"
+            }
+        ]
     },
     {
         name: "Megacollab Early Access",

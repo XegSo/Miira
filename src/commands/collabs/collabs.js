@@ -272,7 +272,7 @@ module.exports = {
                     )
                 }
                 console.log(currentDate - lastUpdate)
-                if (!lastUpdate || (currentDate - lastUpdate) > 7 * 24 * 60 * 60 * 1000) {
+                if (!lastUpdate || (currentDate - lastUpdate) > 604800) {
                     buttons = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setLabel('🔄 Update your data')
@@ -545,7 +545,7 @@ module.exports = {
                                 }
                                 break;
                             case "megacollab":
-                                if ((collab.status === "early access" && typeof userPerks.find(e => e.name === "Megacollab Early Access")) || userId === '687004886922952755') {
+                                if ((collab.status === "early access" && typeof userPerks.find(e => e.name === "Megacollab Early Access")) || guildMember.roles.cache.has('630636502187114496')/*admin*/ || guildMember.roles.cache.has('834962043735638016')/*special donator*/|| guildMember.roles.cache.has('962251481669574666')/*contributor*/) {
                                     joinMenu.addOptions({ label: collab.name, value: collab.name });
                                     osuEmbed.addFields(
                                         {
