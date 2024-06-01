@@ -40,7 +40,7 @@ module.exports = {
                 .setTitle('Claim your perk!');
 
             let modalField;
-            for (requiredField of fullPerk.fields) {
+            for (let requiredField of fullPerk.fields) {
                 if (requiredField.type === "text") {
                     let res = currentRestrictions[requiredField.name];
                     modalField = new TextInputBuilder()
