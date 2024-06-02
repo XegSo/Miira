@@ -935,23 +935,40 @@ module.exports = {
         await collection.insertOne(collab);
     },
 
-    addPerkIntoCollab: async function (collab, collection, perkName, entry, userId){
-
+    addPerkIntoCollab: async function (collab, collection, perkName, entry, userId) {
+        let protoEntry = entry;
         await collection.updateOne(
-            { name: collab }, 
-            { 
-                $push: { [`perks.toExport.${perkName}`]: entry }
+            { name: collab },
+            {
+                $push: { [`perks.toExport.${perkName}`]: protoEntry }
             },
             { upsert: true }
         );
-
+        protoEntry.collabName = collab;
         await collection.updateOne(
-            { name: collab }, 
-            { 
-                $set: { [`perks.users.${userId}.${perkName}`]: entry }
+            { name: collab },
+            {
+                $push: { [`perks.users`]: protoEntry }
             },
             { upsert: true }
         );
+    },
+
+    getUserPerksAllCollabs: async function (collection, userId) {
+        const pipeline = [
+            { $unwind: "$perks.users" },
+            { $match: { [`perks.users.userId`]: userId } },
+            {
+                $group: {
+                    _id: null,
+                    users: { $push: "$perks.users" }
+                }
+            },
+            { $project: { _id: 0, users: 1 } }
+        ];
+
+        const result = await collection.aggregate(pipeline).toArray();
+        return result.length > 0 ? result[0].users : [];
     },
 
     setCollabTexts: async function (collab, fieldRestrictions, collection) {

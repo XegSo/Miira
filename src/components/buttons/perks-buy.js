@@ -38,15 +38,21 @@ module.exports = {
             let purchaseablePerks = [];
             let i = false;
             if (typeof dbTier !== "undefined") {
-                userTier = localFunctions.premiumToInteger(dbTier.name);
-                fullTier = localConstants.premiumTiers.find((e) => e.name === dbTier.name);
-                renewalString = `*Renewal Price for all perks: ${fullTier.generalRenewalPrice ? fullTier.generalRenewalPrice : 'You are on the peak tier! Your renewal price is 0'}$`
-                allPossiblePerks = await localFunctions.getFullPerksOfTier(userTier);
-                userPerksNR = userPerks.filter((e) => e.renewalPrice !== null);
-                if (typeof allPossiblePerks.find((e) => userPerks.find((p) => p.name === e.name)) === "undefined" && typeof dbTier !== "undefined") {
-                    buyMenu.addOptions({ label: fullTier.name, value: fullTier.name, description: `Renewal cost: ${fullTier.generalRenewalPrice}$` });
-                    arrayOfObjects.push({ name: fullTier.name, type: "Renewal", price: fullTier.generalRenewalPrice, tier: fullTier.id, class: 'Tier' });
-                }  
+                if (dbTier.length !== 0) {
+                    userTier = localFunctions.premiumToInteger(dbTier.name);
+                    fullTier = localConstants.premiumTiers.find((e) => e.name === dbTier.name);
+                    renewalString = `*Renewal Price for all perks: ${fullTier.generalRenewalPrice ? fullTier.generalRenewalPrice : 'You are on the peak tier! Your renewal price is 0'}$`
+                    allPossiblePerks = await localFunctions.getFullPerksOfTier(userTier);
+                    userPerksNR = userPerks.filter((e) => e.renewalPrice !== null);
+                    if (typeof allPossiblePerks.find((e) => userPerks.find((p) => p.name === e.name)) === "undefined" && typeof dbTier !== "undefined") {
+                        buyMenu.addOptions({ label: fullTier.name, value: fullTier.name, description: `Renewal cost: ${fullTier.generalRenewalPrice}$` });
+                        arrayOfObjects.push({ name: fullTier.name, type: "Renewal", price: fullTier.generalRenewalPrice, tier: fullTier.id, class: 'Tier' });
+                    } 
+                } else {
+                    userTier = 0
+                    dbTier = {name: 'None!'}
+                    renewalString = "Renewal of all perks is not possible with the current premium status."
+                }
             } else {
                 userTier = 0
                 dbTier = {name: 'None!'}

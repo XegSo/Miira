@@ -26,8 +26,11 @@ module.exports = {
             }
             replies.userId = int.user.id;
             replies.perk = perk.name;
+            const perkName = perk.name.replace(/ /g, "-");
+            replies.downloadURL = `https://storage.googleapis.com/${cache.collab.bucket}/${perkName}-${int.user.id}.png`;
+            replies.status = "unclaimed";
             console.log(replies);
-            await localFunctions.addPerkIntoCollab(cache.collabName, collection, perk.name, replies, int.user.id);
+            await localFunctions.addPerkIntoCollab(cache.collab.name, collection, perk.name, replies, int.user.id);
             int.editReply('Your entry has been submitted! Use ``/collabs perks`` to manage all of your entries.');
             
         } finally {

@@ -67,9 +67,11 @@ module.exports = {
 
             perkCache.set(int.user.id, {
                 perk: fullPerk,
-                collabName: openMegacollab.name
+                collab: openMegacollab
             });
 
+        } catch {
+            await int.reply({ content: 'Try this interaction again... this took more than 3 seconds for some reason', ephemeral: true });
         } finally {
             mongoClientCollabs.close();
         }
