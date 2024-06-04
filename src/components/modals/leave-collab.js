@@ -3,7 +3,6 @@ const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const { EmbedBuilder } = require('discord.js');
 const { leaveCache } = require('../buttons/leave-collab');
-const { content } = require('googleapis/build/src/apis/content');
 
 module.exports = {
     data: {
