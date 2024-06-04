@@ -52,11 +52,15 @@ async function processUserEntry(userEntry, collection, collabName) {
     let participantDiscordId = "0";
     if (participantDiscordId !== userEntry.userId) {
         const pData = await localFunctions.getCollabParticipant(collabName, userEntry.userId, collection);
-        participantDiscordId = pData.discordId;
-        delete pData.discordId;
-        delete pData.av_text;
-        delete pData.ca_text;
-        delete pData.ca_quote;
-        Object.assign(userEntry, pData);
+        if (typeof pData !== "undefined") {
+            participantDiscordId = pData.discordId;
+            delete pData.discordId;
+            delete pData.av_text;
+            delete pData.ca_text;
+            delete pData.ca_quote;
+            Object.assign(userEntry, pData);
+        } else {
+            console.log('An user has been found with claimed perks but not in the collab.');
+        }
     }
 }

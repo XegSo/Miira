@@ -3,6 +3,7 @@ const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const { EmbedBuilder } = require('discord.js');
 const { leaveCache } = require('../buttons/leave-collab');
+const { content } = require('googleapis/build/src/apis/content');
 
 module.exports = {
     data: {
@@ -25,11 +26,29 @@ module.exports = {
                 let pick = collab.collabPick;
                 let pool = fullCollab.pool.items;
                 const itemInPool = pool.find((e) => e.id === pick.id);
+
+                const userPerks = await localFunctions.getCollabPerksOfUser(collab.collabName, collection, userId);
+                if (typeof userPerks !== "undefined") {
+                    for (const perk of userPerks) {
+                        await localFunctions.liquidatePerkEntry(userId, collab.collabName, perk.perk, collection);
+                    }
+                }
+
                 let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
                 await localFunctions.unsetCollabParticipation(collab.collabName, collection, pick.id);
                 userCollabs = userCollabs.filter(e => e.collabName !== collab.collabName);
                 await localFunctions.setUserCollabs(userId, userCollabs, userCollection);
                 await localFunctions.removeCollabParticipant(collab.collabName, collection, userId);
+
+                let contentString = "";
+                const snipes = await localFunctions.getCollabSnipes(collab.collabName, collection, pick.id);
+                if (typeof snipes !== "undefined") {
+                    for (const snipe of snipes) {
+                        contentString = contentString.concat('', `<@${snipe.userId}>`);
+                        await localFunctions.removeCollabSnipe(collab.collabName, collection, snipe.userId);
+                    }
+                }
+
                 const leaveEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | New Character Available', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
@@ -39,7 +58,7 @@ module.exports = {
                 const embed2 = new EmbedBuilder()
                     .setImage(pick.imgURL)
                     .setURL('https://endlessmirage.net/')
-                logChannel.send({ embeds: [leaveEmbed, embed2] });
+                logChannel.send({ content: contentString, embeds: [leaveEmbed, embed2] });
                 await int.editReply("You've left the collab succesfully.");
 
                 while (true) {

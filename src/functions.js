@@ -1065,6 +1065,15 @@ module.exports = {
         return collab ? collab.perks || [] : [];
     },
 
+    getCollabPerksOfUser: async function (name, collection, userId) {
+        const collab = await collection.findOne({ name: name });
+        if (typeof collab.perks !== "undefined") {
+            return collab.perks.users.filter(p => p.userId === userId);
+        } else {
+            return undefined;
+        }
+    },
+
     getCollabParticipants: async function (name, collection) {
         const collab = await collection.findOne({ name: name });
         return collab ? collab.participants || [] : [];
@@ -1073,9 +1082,9 @@ module.exports = {
     getCollabParticipant: async function (name, userId, collection) {
         const collab = await collection.findOne({ name: name });
         if (typeof collab.participants !== "undefined") {
-            return collab.participants.find(p => p.discordId === userId)
+            return collab.participants.find(p => p.discordId === userId);
         } else {
-            return null;
+            return undefined;
         }
     },
 
@@ -1097,6 +1106,24 @@ module.exports = {
 
     addCollabParticipant: async function (collab, collection, newUser) {
         await collection.updateOne({ name: collab }, { $push: { participants: newUser } }, { upsert: true });
+    },
+
+    addCollabSnipe: async function (collab, collection, snipe) {
+        await collection.updateOne({ name: collab }, { $push: { snipes: snipe } }, { upsert: true });
+    },
+
+    removeCollabSnipe: async function (collab, collection, user) {
+        await collection.updateOne({ name: collab }, { $pull: { snipes: { userId: user } } }, { upsert: true });
+    },
+
+    getCollabSnipes: async function (name, collection, pick) {
+        const collab = await collection.findOne({ name: name });
+        if (typeof collab.snipes !== "undefined") {
+            console.log(collab.snipes);
+            return collab.snipes.filter(s => s.pick === pick);
+        } else {
+            return undefined;
+        }
     },
 
     editCollabParticipantPickOnCollab: async function (collab, discordId, newPick, collection) {

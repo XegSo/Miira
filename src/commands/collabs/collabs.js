@@ -1837,6 +1837,15 @@ module.exports = {
                             await localFunctions.editCollabParticipantPickOnCollab(collab.name, userId, newPickFull, collection);
                             await localFunctions.editCollabParticipantPickOnUser(userId, collab.name, newPickFull, userCollection);
 
+                            let contentString = "";
+                            const snipes = await localFunctions.getCollabSnipes(collab.name, collection, currentPick.id);
+                            if (typeof snipes !== "undefined") {
+                                for (const snipe of snipes) {
+                                    contentString = contentString.concat('', `<@${snipe.userId}>`);
+                                    await localFunctions.removeCollabSnipe(collab.name, collection, snipe.userId);
+                                }
+                            }
+
                             const swapEmbed = new EmbedBuilder()
                                 .setFooter({ text: 'Endless Mirage | New Character Swap', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                                 .setColor('#f26e6a')
@@ -1872,7 +1881,7 @@ module.exports = {
                                         value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
                                     },
                                 )
-                            logChannel.send({ content: `<@${userId}>`, embeds: [swapEmbed] });
+                            logChannel.send({ content: `<@${userId}>${contentString}`, embeds: [swapEmbed] });
                             await int.editReply(`You've swaped your pick! New pick: ${newPickFull.name}`);
                             while (true) {
                                 try {
@@ -2325,6 +2334,54 @@ module.exports = {
                     mongoClient.close();
                 }
                 return;
+            }
+
+            if (subcommand === "snipe") {
+                const pick = int.options.getString('pick');
+                const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+                const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
+                const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
+                try {
+                    const userCollabs = await localFunctions.getUserCollabs(int.user.id, userCollection);
+                    const existingTradeRequest = await localFunctions.getTradeRequest(int.user.id, collectionSpecial);
+                    if (existingTradeRequest.length !== 0) {
+                        return await int.reply({ content: `You cannot snipe a pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
+                    }
+                    const allCollabs = await localFunctions.getCollabs(collection);
+                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
+                    if (typeof openMegacollab === "undefined") {
+                        await int.editReply('There is no open megacollabs at the moment...')
+                    } else {
+                        try {
+                            if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === "undefined") {
+                                return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                            }
+                        } catch {
+                            return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                        }
+                        const newPickFull = openMegacollab.pool.items.find(i => i.id === pick);
+                        if (newPickFull.status === "available") {
+                            return await int.editReply('This character is available! You can swap your pick.');
+                        }
+                        const pickRequested = newPickFull.id;
+
+                        let participants = openMegacollab.participants;
+                        const fullTraderParticipation = participants.find((e) => e.discordId === userId);
+                        if (fullTraderParticipation.id === pickRequested) {
+                            return await int.editReply('You cannot snipe yourself silly!');
+                        }
+                        const snipe = {
+                            pick: pick,
+                            userId: int.user.id
+                        }
+                        await localFunctions.addCollabSnipe(openMegacollab.name, collection, snipe);
+                        await int.editReply('A notification if this pick becomes available will be sent to you! If the character becomes available and it gets picked by someone else, your would need to run this command again to get another notification.');
+                    }
+                } finally {
+                    mongoClient.close();
+                    mongoClientUsers.close();
+                    mongoClientSpecial.close();
+                }
             }
         }
     },

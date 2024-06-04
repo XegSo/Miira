@@ -211,17 +211,17 @@ module.exports = {
                     const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
                     try {
                         const allCollabs = await localFunctions.getCollabs(collection);
-                        const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
+                        const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status !== "delivered" || c.status !== "archived" || c.status !== "completed"));
                         if (typeof openMegacollab === "undefined") {
                             return;
                         } else {
-                            const availablePicks = openMegacollab.pool.items.filter(i => i.status === "picked");
-                            const filteredChoices = availablePicks.filter((pick) =>
+                            const pickedPicks = openMegacollab.participants;
+                            const filteredChoices = pickedPicks.filter((pick) =>
                                 pick.name.toLowerCase().startsWith(focusedValue.toLowerCase())
                             );
                             const results = filteredChoices.map((choice) => {
                                 return {
-                                    name: `${choice.name} - ${choice.series}`,
+                                    name: `${choice.name} - ${choice.series} - Picked by: ${choice.username}`,
                                     value: choice.id
                                 }
                             });
