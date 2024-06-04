@@ -1,40 +1,27 @@
 const { TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
-const { connectToMongoDB } = require('../../mongo');
+const { managePerkCache } = require('../selectMenus/manage-perks');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const perkCache = new Map();
+const { connectToMongoDB } = require('../../mongo');
 
 module.exports = {
     data: {
-        name: 'use-perks'
+        name: 'perk-edit'
     },
     async execute(int, client) {
+        const collabName = managePerkCache.get(int.user.id).collabName;
         const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
-        const selectedPerk = int.values[0];
-        console.log(selectedPerk);
-        const fullPerk = localConstants.premiumPerks.find(p => p.name === selectedPerk);
+        const perkName = managePerkCache.get(int.user.id).perkName;
+        const fullPerk = localConstants.premiumPerks.find(p => p.name === perkName);
         try {
-            if (selectedPerk === "Custom Endless Mirage Hoodie" || selectedPerk === "Host your own Megacollab") return await int.reply({ content: 'To claim this perk, please DM the host!', ephemeral: true });
-            const allCollabs = await localFunctions.getCollabs(collabCollection);
-            let openMegacollab = allCollabs.find(c => c.restriction === "megacollab" /*&& c.status === "open"*/);
-            if (typeof openMegacollab === "undefined") return await int.reply({ content: 'There is no open megacollabs at the moment...', ephemeral: true })
-            if (selectedPerk === "Collab Early Access") {
-                if (openMegacollab.status === "early access") {
-                    await int.reply({ content: 'You can claim this perk now! Join the collab using ``/collabs join``', ephemeral: true });
-                } else if (openMegacollab.status === "open") {
-                    await int.reply({ content: 'The early access for the current megacollab already has passed! You will be able to claim this perk in the next megacollab.', ephemeral: true });
-                }
-                return;
-            }
-            if (typeof openMegacollab.participants === "undefined") return await int.reply({ content: 'You have to be participating in the current megacollab to be able to claim perks!', ephemeral: true });
-            if (typeof openMegacollab.participants.find(p => p.discordId === int.user.id) === "undefined") return await int.reply({ content: 'You have to be participating in the current megacollab to be able to claim perks!', ephemeral: true });
-            const fieldRestrictions = openMegacollab.fieldRestrictions.premium_perks;
-            const currentRestrictions = fieldRestrictions[selectedPerk];
+            const fullCollab = await localFunctions.getCollab(collabName, collabCollection);
+            const fieldRestrictions = fullCollab.fieldRestrictions.premium_perks;
+            const currentRestrictions = fieldRestrictions[perkName];
             const modal = new ModalBuilder()
-                .setCustomId("perk-modal")
+                .setCustomId("perk-edit")
                 .setTitle('Claim your perk!');
-
             let modalField;
             for (const requiredField of fullPerk.fields) {
                 if (requiredField.type === "text") {
@@ -58,14 +45,11 @@ module.exports = {
                 modal.addComponents(new ActionRowBuilder().addComponents(modalField));
                 modalField = "";
             }
-
             await int.showModal(modal);
-
             perkCache.set(int.user.id, {
                 perk: fullPerk,
-                collab: openMegacollab
+                collab: fullCollab
             });
-
         } catch {
             await int.reply({ content: 'Try this interaction again... this took more than 3 seconds for some reason', ephemeral: true });
         } finally {

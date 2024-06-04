@@ -22,9 +22,24 @@ registerFont('./assets/fonts/Montserrat-MediumItalic.ttf', {
     family: "Montserrat",
     style: "medium italic"
 });
+const XLSX = require('xlsx');
 
 
 module.exports = {
+
+    createExcelBuffer: function (toExport) {
+        const workbook = XLSX.utils.book_new();
+    
+        Object.keys(toExport).forEach(sheetName => {
+            const data = toExport[sheetName];
+            const worksheet = XLSX.utils.json_to_sheet(data);
+            XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+        });
+    
+        // Convert the workbook to a buffer
+        const excelBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+        return excelBuffer;
+    },
 
     changeHueFromUrl: async function (imageUrl, targetColor, outputPath) {
         try {
@@ -935,7 +950,7 @@ module.exports = {
         await collection.insertOne(collab);
     },
 
-    addPerkIntoCollab: async function (collab, collection, perkName, entry, userId) {
+    addPerkIntoCollab: async function (collab, collection, perkName, entry) {
         let protoEntry = entry;
         await collection.updateOne(
             { name: collab },
@@ -952,6 +967,13 @@ module.exports = {
             },
             { upsert: true }
         );
+    },
+
+    transformPropertyName: function (propName) {
+        return propName
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
     },
 
     getUserPerksAllCollabs: async function (collection, userId) {
@@ -1046,6 +1068,15 @@ module.exports = {
     getCollabParticipants: async function (name, collection) {
         const collab = await collection.findOne({ name: name });
         return collab ? collab.participants || [] : [];
+    },
+
+    getCollabParticipant: async function (name, userId, collection) {
+        const collab = await collection.findOne({ name: name });
+        if (typeof collab.participants !== "undefined") {
+            return collab.participants.find(p => p.discordId === userId)
+        } else {
+            return null;
+        }
     },
 
     setCollabParticipation: async function (collab, collection, id) {
@@ -1189,7 +1220,7 @@ module.exports = {
 
         const bulkOperations = items
             .map(item => {
-                const newImgURL = `https://storage.googleapis.com/${bucket}/${item.id}.png`;
+                const newImgURL = `https://storage.googleapis.com/${bucket}/${item.id}.webp`;
                 return {
                     updateOne: {
                         filter: { "name": name, "pool.items.id": item.id },
@@ -1794,6 +1825,15 @@ module.exports = {
                 mongoClient.close();
             }
         }
+    },
+
+    liquidatePerkEntry: async function (userId, collabName, perk, collection) {
+        await collection.updateOne({ name: collabName }, {
+            $pull: {
+                [`perks.toExport.${perk}`]: { userId },
+                'perks.users': { userId, perk }
+            }
+        });
     },
 
     liquidatePaymentData: async function (email, collection) {

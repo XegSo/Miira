@@ -1,10 +1,10 @@
-const { perkCache } = require('../../components/selectMenus/use-perks');
+const { perkCache } = require('../../components/buttons/perk-edit');
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 
 module.exports = {
     data: {
-        name: "perk-modal"
+        name: "perk-edit"
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
@@ -29,8 +29,9 @@ module.exports = {
             const perkName = perk.name.replace(/ /g, "-");
             replies.downloadURL = `https://storage.googleapis.com/${cache.collab.bucket}/${perkName}-${int.user.id}.png`;
             replies.status = "unclaimed";
+            await localFunctions.liquidatePerkEntry(int.user.id, cache.collab.name, perk.name, collection);
             await localFunctions.addPerkIntoCollab(cache.collab.name, collection, perk.name, replies, int.user.id);
-            int.editReply('Your entry has been submitted! Use ``/collabs perks`` to manage all of your entries.');
+            int.editReply('Your entry has been edited.');
             
         } finally {
             mongoClient.close();

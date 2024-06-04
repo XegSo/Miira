@@ -85,6 +85,14 @@ module.exports = {
                             .setLabel('⬇️ Export')
                             .setStyle('Success'),
                     )
+                    if (typeof collab.perks !== "undefined") {
+                        extraComponents.addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('export-collab-perks')
+                                .setLabel('⬇️ Perks')
+                                .setStyle('Success'),
+                        )
+                    }
                     extraComponents.addComponents(
                         new ButtonBuilder()
                             .setCustomId('deliver-collab')

@@ -522,7 +522,7 @@ module.exports = {
                     let user_cap = collab.user_cap;
                     let participants = collabs.participants ? collabs.participants.length : 0;
                     let slots = user_cap - participants;
-                    if (((collab.status !== "closed" && collab.status !== "on design" && collab.status !== "full")) && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
+                    if ((((collab.status !== "closed" && collab.status !== "on design" && collab.status !== "full")) && typeof collabData.find(e => e.collabName === collab.name) === "undefined") || userId === '687004886922952755') {
                         switch (collab.restriction) {
                             case "staff":
                                 if (guildMember.roles.cache.has('961891383365500938') || userId === '687004886922952755') {
@@ -679,7 +679,6 @@ module.exports = {
             try {
                 let userPerks = await localFunctions.getPerks(userId, userCollection);
                 let submittedPerks = await localFunctions.getUserPerksAllCollabs(collabCollection, userId);
-                console.log(submittedPerks);
                 const component = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId('perks-buy')
@@ -689,7 +688,7 @@ module.exports = {
                 if (submittedPerks.length === 0 && userPerks.length !== 0) {
                     let useMenu = new SelectMenuBuilder()
                         .setCustomId('use-perks')
-                        .setPlaceholder('Manage your perks.')
+                        .setPlaceholder('Use your perks.')
                     for (const perk of userPerks) {
                         useMenu.addOptions({ label: perk.name, value: perk.name, description: perk.description });
                     }
@@ -725,12 +724,11 @@ module.exports = {
                         .setPlaceholder('Manage your perks.');
 
                     for (const perk of submittedPerks) {
-                        perkMenu.addOptions({ label: perk.perk, value: perk.perk, description: perk.collabName });
+                        perkMenu.addOptions({ label: perk.perk, value: `${perk.perk}-${perk.collabName}`, description: perk.collabName });
                         perksEmbed.addFields(
                             {
                                 name: "‎",
-                                value: `\`\`✒️ ${perk.perk}\`\`\n **└** *Used on the ${perk.collabName}*`,
-                                inline: true,
+                                value: `\`\`✒️ ${perk.perk}\`\`\n **└** *Used on the ${perk.collabName}*`
                             }
                         )
                     }

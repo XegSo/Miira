@@ -251,6 +251,20 @@ module.exports = {
                   break;
                 default:
                   infoValue = "**Massive collab hosted for free!** Endless Mirage have the history of hosting massive user collaborations since 2018 and we don't seem to be stopping anytime soon!";
+                  if (int.user.id === '687004886922952755') {
+                    components.addComponents(
+                      new ButtonBuilder()
+                        .setCustomId('join-collab')
+                        .setLabel('✅ Join')
+                        .setStyle('Success'),
+                    )
+                    components.addComponents(
+                      new ButtonBuilder()
+                        .setCustomId('join-collab-random')
+                        .setLabel('✅ Join Random')
+                        .setStyle('Success'),
+                    )
+                  }
                   break;
               }
               break;
