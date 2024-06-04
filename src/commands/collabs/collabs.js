@@ -184,7 +184,8 @@ module.exports = {
         }
 
         if (subcommand === "feedback") {
-            return await int.editReply('This command is WIP!');
+            await int.editReply('This command is WIP!');
+            return;
         }
 
         if (subcommand === "link") {

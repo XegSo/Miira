@@ -2,6 +2,7 @@ const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
+const localConstants = require('../../constants');
 const { buttonCache } = require('../selectMenus/select-collab');
 const collabCache = new Map();
 
@@ -10,8 +11,10 @@ module.exports = {
         name: 'admin-collab'
     },
     async execute(int, client) {
-        if (!guildMember.roles.cache.has('630636502187114496')) return;
         await int.deferReply({ ephemeral: true });
+        const guild = client.guilds.cache.get(localConstants.guildId);
+        const guildMember = guild.members.cache.get(userId);
+        if (!guildMember.roles.cache.has('630636502187114496')) return;
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         try {
             let collab = await localFunctions.getCollab(buttonCache.get(int.user.id).collab, collection)
