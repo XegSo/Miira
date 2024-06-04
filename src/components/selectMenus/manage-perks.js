@@ -86,6 +86,7 @@ module.exports = {
                         embeds: [perksEmbed],
                         components: [component],
                     });
+                    break;
                 default:
                     await int.editReply({
                         content: '',

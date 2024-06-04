@@ -17,7 +17,7 @@ module.exports = {
                 await localFunctions.liquidatePerkEntry(int.user.id, collabName, perkName, collection);
 
                 await int.editReply('Your entry has been removed.');
-                deleteCache.delete(int.user.id);
+                managePerkCache.delete(int.user.id);
             } else {
                 await int.editReply('Verification for removal failed.');
                 return;

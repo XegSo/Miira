@@ -7,6 +7,8 @@ const localConstants = require('../../constants');
 const { parse } = require('dotenv');
 const createCollabCache = new Map();
 const claimCache = new Map();
+const userCheckCache = new Map();
+const adminCache = new Map();
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -20,31 +22,7 @@ module.exports = {
         .addSubcommand((subcommand) => subcommand.setName("link").setDescription('Link your osu! account.'))
         .addSubcommand((subcommand) => subcommand.setName("premium").setDescription('All regarding premium status.'))
         .addSubcommand((subcommand) => subcommand.setName("perks").setDescription('Manage your megacollab perks.'))
-        .addSubcommand((subcommand) =>
-            subcommand.setName("admin-link")
-                .setDescription('(Admin Only) Links an account instantly.')
-                .addStringOption(option =>
-                    option.setName('discordid')
-                        .setDescription('User discord id')
-                        .setRequired(true)
-                )
-                .addStringOption(option =>
-                    option.setName('osuid')
-                        .setDescription('User osu id')
-                        .setRequired(true)
-                )
-                .addStringOption(option =>
-                    option.setName('gamemode')
-                        .setDescription('osu! main gamemode')
-                        .setRequired(true)
-                        .addChoices(
-                            { name: 'osu', value: 'osu' },
-                            { name: 'mania', value: 'mania' },
-                            { name: 'fruits', value: 'fruits' },
-                            { name: 'taiko', value: 'taiko' },
-                        )
-                )
-        )
+        .addSubcommand((subcommand) => subcommand.setName("feedback").setDescription('Send a feedback comment for the staff.'))
         .addSubcommandGroup((subcommandGroup) =>
             subcommandGroup
                 .setName('quick')
@@ -114,13 +92,73 @@ module.exports = {
                         )
                 )
                 .addSubcommand((subcommand) =>
-                    subcommand.setName("check")
+                    subcommand.setName("pick-check")
                         .setDescription('Check a character status. (Megacollab only)')
                         .addStringOption(option =>
                             option.setName('pick')
                                 .setDescription('Pick name')
                                 .setRequired(true)
                                 .setAutocomplete(true)
+                        )
+                )
+                .addSubcommand((subcommand) =>
+                    subcommand.setName("user-check")
+                        .setDescription('Check the participation of an user. (Megacollab only)')
+                        .addStringOption(option =>
+                            option.setName('user')
+                                .setDescription('Discord username')
+                                .setRequired(true)
+                                .setAutocomplete(true)
+                        )
+                )
+                .addSubcommand((subcommand) =>
+                    subcommand.setName("snipe")
+                        .setDescription('Get a notification if a pick gets available. (Megacollab only)')
+                        .addStringOption(option =>
+                            option.setName('pick')
+                                .setDescription('Pick name')
+                                .setRequired(true)
+                                .setAutocomplete(true)
+                        )
+                )
+        )
+        .addSubcommandGroup((subcommandGroup) =>
+            subcommandGroup
+                .setName('admin')
+                .setDescription('Admin commands.')
+                .addSubcommand((subcommand) =>
+                    subcommand.setName("manage")
+                        .setDescription('Open the collabs Admin Collabs Dashboard. (Admin only)')
+                        .addStringOption(option =>
+                            option.setName('collab')
+                                .setDescription('Collab name')
+                                .setRequired(true)
+                                .setAutocomplete(true)
+                        )
+                )
+                .addSubcommand((subcommand) =>
+                    subcommand.setName("link")
+                        .setDescription('Links an account instantly. (Admin Only)')
+                        .addStringOption(option =>
+                            option.setName('discordid')
+                                .setDescription('User discord id')
+                                .setRequired(true)
+                        )
+                        .addStringOption(option =>
+                            option.setName('osuid')
+                                .setDescription('User osu id')
+                                .setRequired(true)
+                        )
+                        .addStringOption(option =>
+                            option.setName('gamemode')
+                                .setDescription('osu! main gamemode')
+                                .setRequired(true)
+                                .addChoices(
+                                    { name: 'osu', value: 'osu' },
+                                    { name: 'mania', value: 'mania' },
+                                    { name: 'fruits', value: 'fruits' },
+                                    { name: 'taiko', value: 'taiko' },
+                                )
                         )
                 )
         ),
@@ -145,6 +183,10 @@ module.exports = {
             })
         }
 
+        if (subcommand === "feedback") {
+            return await int.editReply('This command is WIP!');
+        }
+
         if (subcommand === "link") {
             const components = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
@@ -156,46 +198,6 @@ module.exports = {
                 content: 'Link your account using the button bellow.',
                 components: [components]
             });
-        }
-
-        if (subcommand === "admin-link") {
-            if (userId !== '687004886922952755') {
-                await int.editReply('You are not allowed to do this.');
-                return;
-            }
-            const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-            const user = await v2.user.details(int.options.getString('osuid'), int.options.getString('gamemode'));
-            if (typeof user === "undefined") {
-                await int.editReply('User not found...');
-                return;
-            }
-            try {
-                const userFiltered = localFunctions.removeFields(user, localConstants.unnecesaryFieldsOsu);
-                userFiltered.osu_id = userFiltered.id;
-                delete userFiltered.id;
-                const userTop100 = await v2.scores.user.category(user.id, 'best', { mode: int.options.getString('gamemode'), limit: '100' });
-                await int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
-                const skills = await localFunctions.calculateSkill(userTop100, int.options.getString('gamemode'));
-                let modsData = await localFunctions.analyzeMods(userTop100);
-                const filler = {
-                    mod: "--",
-                    percentage: "--"
-                }
-                let i = 0;
-                while (i < 4) {
-                    if (typeof modsData.top4Mods[i] === "undefined") {
-                        modsData.top4Mods.push(filler);
-                    }
-                    i++;
-                }
-                userFiltered.skillRanks = skills;
-                userFiltered.modsData = modsData;
-                await localFunctions.verifyUserManual(int.options.getString('discordid'), userFiltered, collection);
-                await int.editReply(`<@${int.user.id}> User linked succesfully.`);
-            } finally {
-                mongoClient.close();
-            }
-            return;
         }
 
         if (subcommand === "profile") {
@@ -397,7 +399,7 @@ module.exports = {
             return;
         }
 
-        if (subcommand === "manage") {
+        if (subcommand === "manage" && subcommandGroup !== "admin") {
             const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
             const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
             try {
@@ -1105,6 +1107,196 @@ module.exports = {
                 }
             }
             return;
+        }
+
+        if (subcommandGroup === "admin") {
+            if (subcommand === "link") {
+                if (!guildMember.roles.cache.has('630636502187114496')) {
+                    await int.editReply('You are not allowed to do this.');
+                    return;
+                }
+                const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+                const user = await v2.user.details(int.options.getString('osuid'), int.options.getString('gamemode'));
+                if (typeof user === "undefined") {
+                    await int.editReply('User not found...');
+                    return;
+                }
+                try {
+                    const userFiltered = localFunctions.removeFields(user, localConstants.unnecesaryFieldsOsu);
+                    userFiltered.osu_id = userFiltered.id;
+                    delete userFiltered.id;
+                    const userTop100 = await v2.scores.user.category(user.id, 'best', { mode: int.options.getString('gamemode'), limit: '100' });
+                    await int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
+                    const skills = await localFunctions.calculateSkill(userTop100, int.options.getString('gamemode'));
+                    let modsData = await localFunctions.analyzeMods(userTop100);
+                    const filler = {
+                        mod: "--",
+                        percentage: "--"
+                    }
+                    let i = 0;
+                    while (i < 4) {
+                        if (typeof modsData.top4Mods[i] === "undefined") {
+                            modsData.top4Mods.push(filler);
+                        }
+                        i++;
+                    }
+                    userFiltered.skillRanks = skills;
+                    userFiltered.modsData = modsData;
+                    await localFunctions.verifyUserManual(int.options.getString('discordid'), userFiltered, collection);
+                    await int.editReply(`<@${int.user.id}> User linked succesfully.`);
+                } finally {
+                    mongoClient.close();
+                }
+                return;
+            }
+            if (subcommand === "manage") {
+                if (!guildMember.roles.cache.has('630636502187114496')) {
+                    await int.editReply('You are not allowed to do this.');
+                    return;
+                }
+                const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+                try {
+                    let collab = await localFunctions.getCollab(int.options.getString('collab'), collection)
+                    let components = [];
+                    let extraComponents = [];
+                    let URLstring = '';
+                    if (typeof collab.spreadsheetID !== "undefined") {
+                        URLstring = `  [Spreadsheet URL](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})\n`
+                    }
+                    const dashboardEmbed = new EmbedBuilder()
+                        .setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                        .setColor('#f26e6a')
+                        .setDescription(`**\`\`\`ml\n🧱 Endless Mirage | Admin Collabs Dashboard\`\`\`**\n**${collab.name}**\n${URLstring}`);
+
+                    let extraString = '';
+
+                    if (collab.user_cap !== 0) {
+                        extraString = `User Limit: ${collab.user_cap}\n`
+                    } else {
+                        extraString = "Unlimited\n"
+                    }
+
+                    dashboardEmbed.addFields(
+                        {
+                            name: "‎",
+                            value: `┌ Type: ${localFunctions.capitalizeFirstLetter(collab.type)}\n├ Topic: ${localFunctions.capitalizeFirstLetter(collab.topic)}\n└ Status: ${localFunctions.capitalizeFirstLetter(collab.status)}\n`,
+                            inline: true
+                        }
+                    );
+
+                    dashboardEmbed.addFields(
+                        {
+                            name: "‎",
+                            value: `┌ Class: ${localFunctions.capitalizeFirstLetter(collab.restriction)}\n├ Opening date: <t:${parseInt(collab.opening)}:R>\n└ ${extraString}`,
+                            inline: true
+                        }
+                    );
+
+                    dashboardEmbed.addFields(
+                        {
+                            name: "‎",
+                            value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                        }
+                    )
+
+                    if (int.user.id === collab.host) {
+                        components = new ActionRowBuilder().addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('edit-collab')
+                                .setLabel('✏️ Edit')
+                                .setStyle('Primary'),
+                        )
+                        if (collab.type === "pooled") {
+                            components.addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('pool-collab')
+                                    .setLabel('📁 Pool')
+                                    .setStyle('Primary'),
+                            )
+                            components.addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('manage-pick-collab')
+                                    .setLabel('🔩 Picks')
+                                    .setStyle('Primary'),
+                            )
+                        }
+
+                        components.addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('reset-collab')
+                                .setLabel('🔁 Reset')
+                                .setStyle('Danger'),
+                        )
+
+                        components.addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('delete-collab')
+                                .setLabel('🚮 Delete')
+                                .setStyle('Danger'),
+                        )
+
+                        if (collab.status !== "on design" || int.user.id === "687004886922952755") {
+                            extraComponents = new ActionRowBuilder().addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('export-collab')
+                                    .setLabel('⬇️ Export')
+                                    .setStyle('Success'),
+                            )
+                            if (typeof collab.perks !== "undefined") {
+                                extraComponents.addComponents(
+                                    new ButtonBuilder()
+                                        .setCustomId('export-collab-perks')
+                                        .setLabel('⬇️ Perks')
+                                        .setStyle('Success'),
+                                )
+                            }
+                            extraComponents.addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('deliver-collab')
+                                    .setLabel('⬆️ Deliver')
+                                    .setStyle('Success'),
+                            )
+                            await int.editReply({
+                                content: '',
+                                embeds: [dashboardEmbed],
+                                components: [components, extraComponents],
+                            });
+                        } else {
+                            await int.editReply({
+                                content: '',
+                                embeds: [dashboardEmbed],
+                                components: [components]
+                            });
+                        }
+
+                    } else {
+                        components.addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('manage-pick-collab')
+                                .setLabel('🔩 Picks')
+                                .setStyle('Primary'),
+                        )
+                        if (collab.status !== "on design") {
+                            extraComponents = new ActionRowBuilder().addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('export-collab')
+                                    .setLabel('⬇️ Export')
+                                    .setStyle('Success'),
+                            )
+                        }
+                    }
+
+                    adminCache.set(int.user.id, {
+                        collab: collab,
+                    })
+
+                } catch (e) {
+                    console.log(e)
+                    await int.editReply('Something went wrong...')
+                } finally {
+                    mongoClient.close();
+                }
+            }
         }
 
         if (subcommandGroup === "quick") {
@@ -1836,12 +2028,11 @@ module.exports = {
                 return;
             }
 
-            if (subcommand == "check") {
-                const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
+            if (subcommand == "pick-check") {
                 const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
                 try {
                     const allCollabs = await localFunctions.getCollabs(collection);
-                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access"));
+                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
                     if (typeof openMegacollab === "undefined") {
                         await int.editReply('There is no open megacollabs at the moment...')
                     } else {
@@ -1885,10 +2076,63 @@ module.exports = {
                                 .setImage(pick.imgURL)
                                 .setURL('https://endlessmirage.net/')
 
-                            await int.editReply({
-                                content: '',
-                                embeds: [pickEmbed, embed2],
-                            });
+                            const components = new ActionRowBuilder();
+
+                            components.addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('snipe-pick')
+                                    .setLabel('🔔 Snipe')
+                                    .setStyle('Success'),
+                                new ButtonBuilder()
+                                    .setCustomId('trade-user')
+                                    .setLabel('🔁 Trade')
+                                    .setStyle('Success'),
+                                new ButtonBuilder()
+                                    .setCustomId('report-user')
+                                    .setLabel('📢 Report')
+                                    .setStyle('Danger'),
+                            )
+
+                            if (guildMember.roles.cache.has('630636502187114496')) {
+                                const adminComponents = new ActionRowBuilder();
+
+                                adminComponents.addComponents(
+                                    new ButtonBuilder()
+                                        .setCustomId('remove-user-collab-admin')
+                                        .setLabel('⛔️ Remove')
+                                        .setStyle('Danger'),
+                                )
+
+                                adminComponents.addComponents(
+                                    new ButtonBuilder()
+                                        .setCustomId('blacklist-user-collab-admin')
+                                        .setLabel('⛔️ Blacklist')
+                                        .setStyle('Danger'),
+                                )
+
+                                adminComponents.addComponents(
+                                    new ButtonBuilder()
+                                        .setCustomId('edit-fields-user-collab-admin')
+                                        .setLabel('🔄 Edit Fields')
+                                        .setStyle('Primary'),
+                                )
+                                await int.editReply({
+                                    content: '',
+                                    embeds: [pickEmbed, embed2],
+                                    components: [components, adminComponents]
+                                });
+                            } else {
+                                await int.editReply({
+                                    content: '',
+                                    embeds: [pickEmbed, embed2],
+                                    components: [components]
+                                });
+                            }
+                            userCheckCache.set(int.user.id, {
+                                collab: openMegacollab,
+                                pick: pick,
+                                participation: pickOwner
+                            })
                         } else {
                             const pickEmbed = new EmbedBuilder()
                                 .setFooter({ text: "Endless Mirage | Megacollab Picks", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
@@ -1925,22 +2169,158 @@ module.exports = {
                                     .setStyle('Success'),
                             )
 
+                            if (guildMember.roles.cache.has('630636502187114496')) {
+                                const adminComponents = new ActionRowBuilder();
+                                adminComponents.addComponents(
+                                    new ButtonBuilder()
+                                        .setCustomId('edit-pick-collab-admin')
+                                        .setLabel('➰ Edit Pick')
+                                        .setStyle('Primary'),
+                                )
+
+                                await int.editReply({
+                                    content: '',
+                                    embeds: [pickEmbed, embed2],
+                                    components: [adminComponents, components]
+                                });
+
+                            } else {
+                                await int.editReply({
+                                    content: '',
+                                    embeds: [pickEmbed, embed2],
+                                    components: [components]
+                                });
+                            }
+
                             claimCache.set(int.user.id, {
                                 collab: openMegacollab,
                                 pick: pick
                             })
+                        }
+                    }
+                } catch (e) {
+                    console.log(e);
+                } finally {
+                    mongoClient.close();
+                }
+                return;
+            }
 
+            if (subcommand == "user-check") {
+                const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+                try {
+                    const allCollabs = await localFunctions.getCollabs(collection);
+                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
+                    if (typeof openMegacollab === "undefined") {
+                        await int.editReply('There is no open megacollabs at the moment...')
+                    } else {
+                        const pick = int.options.getString('user');
+                        const participants = openMegacollab.participants;
+                        const user = participants.find(i => i.discordId === pick);
+                        const updatedPick = openMegacollab.pool.items.find(i => i.id === user.id);
+                        if (typeof user === "undefined") return await int.editReply('Something went wrong...');
+                        const pickEmbed = new EmbedBuilder()
+                            .setFooter({ text: "Endless Mirage | Megacollab Picks", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                            .setColor('#f26e6a')
+                            .setURL('https://endlessmirage.net/')
+                            .setDescription(`**\`\`\`\n🏐 ${openMegacollab.name}\`\`\`**\n**Picked by: <@${user.discordId}>**\n**Joined <t:${user.joinDate}:R>**`)
+                            .addFields(
+                                {
+                                    name: "‎",
+                                    value: `┌ Pick: ${user.name}\n└ ID: ${user.id}`,
+                                    inline: true
+                                },
+                                {
+                                    name: "‎",
+                                    value: `┌ Series: ${user.series}\n└ Category: ${user.category}`,
+                                    inline: true
+                                },
+                                {
+                                    name: "‎",
+                                    value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>",
+                                },
+                                {
+                                    name: "‎",
+                                    value: `┌ Avatar Text: **${user.av_text}**\n├ Card Text: **${user.ca_text}**\n└ Card Quote: **${user.ca_quote ? user.ca_quote : "None"}**`,
+                                },
+                                {
+                                    name: "‎",
+                                    value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>",
+                                },
+                            )
+
+                        const embed2 = new EmbedBuilder()
+                            .setImage(updatedPick.imgURL)
+                            .setURL('https://endlessmirage.net/')
+
+                        const components = new ActionRowBuilder();
+
+                        components.addComponents(
+                            new ButtonBuilder()
+                                .setCustomId('snipe-pick')
+                                .setLabel('🔔 Snipe')
+                                .setStyle('Success'),
+                            new ButtonBuilder()
+                                .setCustomId('trade-user')
+                                .setLabel('🔁 Trade')
+                                .setStyle('Success'),
+                            new ButtonBuilder()
+                                .setCustomId('report-user')
+                                .setLabel('📢 Report')
+                                .setStyle('Danger'),
+                        )
+
+                        if (guildMember.roles.cache.has('630636502187114496')) {
+                            const adminComponents = new ActionRowBuilder();
+
+                            adminComponents.addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('remove-user-collab-admin')
+                                    .setLabel('⛔️ Remove')
+                                    .setStyle('Danger'),
+                            )
+
+                            adminComponents.addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('blacklist-user-collab-admin')
+                                    .setLabel('⛔️ Blacklist')
+                                    .setStyle('Danger'),
+                            )
+
+                            adminComponents.addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('edit-fields-user-collab-admin')
+                                    .setLabel('🔄 Edit Fields')
+                                    .setStyle('Primary'),
+                            )
+
+                            adminComponents.addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('edit-pick-collab-admin')
+                                    .setLabel('➰ Edit Pick')
+                                    .setStyle('Primary'),
+                            )
+                            await int.editReply({
+                                content: '',
+                                embeds: [pickEmbed, embed2],
+                                components: [components, adminComponents]
+                            });
+                        } else {
                             await int.editReply({
                                 content: '',
                                 embeds: [pickEmbed, embed2],
                                 components: [components]
                             });
                         }
+                        userCheckCache.set(int.user.id, {
+                            collab: openMegacollab,
+                            pick: updatedPick,
+                            participation: user
+                        })
                     }
                 } catch (e) {
                     console.log(e);
                 } finally {
-                    mongoClientUsers.close();
                     mongoClient.close();
                 }
                 return;
@@ -1948,5 +2328,7 @@ module.exports = {
         }
     },
     createCollabCache: createCollabCache,
-    claimCache: claimCache
+    claimCache: claimCache,
+    userCheckCache: userCheckCache,
+    adminCache: adminCache
 }

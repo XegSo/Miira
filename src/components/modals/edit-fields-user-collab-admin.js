@@ -3,6 +3,7 @@ const { connectToMongoDB } = require('../../mongo');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const { collabCache } = require('./manage-pick-collab');
+const { userCheckCache } = require('../../commands/collabs/collabs');
 
 module.exports = {
     data: {
@@ -10,14 +11,25 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
+        let initializedMap;
+        if (collabCache.size > 0) {
+            if (typeof collabCache.get(int.user.id) !== "undefined") {
+                initializedMap = collabCache;
+            }
+        }
+        if (userCheckCache.size > 0) {
+            if (typeof userCheckCache.get(int.user.id) !== "undefined") {
+                initializedMap = userCheckCache;
+            }
+        }
         let editString = '';
         let textEdits = false;
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
-        const collab = collabCache.get(int.user.id).collab;
+        const collab = initializedMap.get(int.user.id).collab;
         const collabName = collab.name;
         const guild = client.guilds.cache.get(localConstants.guildId);
-        const participation = collabCache.get(int.user.id).participation;
+        const participation = initializedMap.get(int.user.id).participation;
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
         const auditChannel = guild.channels.cache.get(localConstants.auditLogChannelID);
         try {

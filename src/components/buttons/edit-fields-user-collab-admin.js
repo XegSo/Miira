@@ -1,6 +1,7 @@
 const { TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 const { collabCache } = require('../modals/manage-pick-collab');
+const { userCheckCache } = require('../../commands/collabs/collabs');
 
 
 module.exports = {
@@ -8,8 +9,19 @@ module.exports = {
         name: 'edit-fields-user-collab-admin'
     },
     async execute(int, client) {
-        const collab = collabCache.get(int.user.id).collab;
-        const participation = collabCache.get(int.user.id).participation;
+        let initializedMap;
+        if (collabCache.size > 0) {
+            if (typeof collabCache.get(int.user.id) !== "undefined") {
+                initializedMap = collabCache;
+            }
+        }
+        if (userCheckCache.size > 0) {
+            if (typeof userCheckCache.get(int.user.id) !== "undefined") {
+                initializedMap = userCheckCache;
+            }
+        }
+        const collab = initializedMap.get(int.user.id).collab;
+        const participation = initializedMap.get(int.user.id).participation;
         const modal = new ModalBuilder()
             .setCustomId("edit-fields-user-collab-admin")
             .setTitle('Edit the fields of an user in the collab.');

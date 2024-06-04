@@ -3,6 +3,8 @@ const localFunctions = require('../../functions');
 const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
 const { collabCache } = require('../buttons/admin-collab');
+const { adminCache }= require('../../commands/collabs/collabs');
+const manageCache = new Map();
 
 module.exports = {
     data: {
@@ -10,10 +12,24 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
+        let initializedMap;
+        if (collabCache.size > 0) {
+            if (typeof collabCache.get(int.user.id) !== "undefined") {
+                initializedMap = collabCache;
+            }
+        }
+        if (adminCache.size > 0) {
+            if (typeof adminCache.get(int.user.id) !== "undefined") {
+                initializedMap = adminCache;
+            }
+        }
+        manageCache.set(int.user.id, {
+            collab: initializedMap.get(int.user.id).collab
+        })
         const userId = int.user.id;
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(userId);
-        let collab = collabCache.get(int.user.id).collab;
+        let collab = initializedMap.get(int.user.id).collab;
         if (!guildMember.roles.cache.has(localConstants.collabAdminsRoleID) && collab.host !== userId) return await int.editReply(`You're not allowed to do this!`);
         let digits = collab.pool.items[0].id.length;
         const typedPick = localFunctions.padNumberWithZeros(parseInt(int.fields.getTextInputValue('pick')), digits);
@@ -76,6 +92,13 @@ module.exports = {
                     .setStyle('Primary'),
             )
 
+            components.addComponents(
+                new ButtonBuilder()
+                    .setCustomId('edit-pick-collab-admin')
+                    .setLabel('➰ Edit Pick')
+                    .setStyle('Danger'),
+            )
+
 
             const embed2 = new EmbedBuilder()
                 .setImage(pick.imgURL)
@@ -87,7 +110,7 @@ module.exports = {
                 components: [components]
             });
 
-            collabCache.set(int.user.id, {
+            initializedMap.set(int.user.id, {
                 collab: collab,
                 pick: pick,
                 participation: pickOwner
@@ -122,17 +145,23 @@ module.exports = {
 
             const components = new ActionRowBuilder();
 
+            components.addComponents(
+                new ButtonBuilder()
+                    .setCustomId('edit-pick-collab-admin')
+                    .setLabel('➰ Edit Pick')
+                    .setStyle('Danger'),
+            )
             await int.editReply({
                 content: '',
                 embeds: [pickEmbed, embed2],
                 components: [components]
             });
 
-            collabCache.set(int.user.id, {
+            initializedMap.set(int.user.id, {
                 collab: collab,
                 pick: pick
             })
         }
     },
-    collabCache: collabCache
+    collabCache: manageCache
 };

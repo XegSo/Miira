@@ -2,6 +2,7 @@ const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const { AttachmentBuilder } = require('discord.js');
 const { collabCache } = require('./admin-collab');
+const { adminCache } = require('../../commands/collabs/collabs');
 const { createObjectCsvStringifier } = require('csv-writer');
 
 module.exports = {
@@ -17,11 +18,20 @@ module.exports = {
                 int.editReply('You are not allowed to do this.');
                 return;
             }
-            if (collabCache.size === 0) {
-                int.editReply('Open the dashboard again. The collab hasn\'t been cached');
-                return;
+
+            let initializedMap;
+            if (collabCache.size > 0) {
+                if (typeof collabCache.get(int.user.id) !== "undefined") {
+                    initializedMap = collabCache;
+                }
             }
-            const collabParticipants = await localFunctions.getCollabParticipants(collabCache.get(int.user.id).collab.name, collection);
+            if (adminCache.size > 0) {
+                if (typeof adminCache.get(int.user.id) !== "undefined") {
+                    initializedMap = adminCache;
+                }
+            }
+
+            const collabParticipants = await localFunctions.getCollabParticipants(initializedMap.get(int.user.id).collab.name, collection);
             const headers = Object.keys(collabParticipants[0]);
             const csvStringifier = createObjectCsvStringifier({
                 header: headers.map(header => ({ id: header, title: header }))

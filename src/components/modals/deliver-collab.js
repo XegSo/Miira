@@ -2,6 +2,7 @@ const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const { collabCache } = require('../buttons/admin-collab');
+const { adminCache }= require('../../commands/collabs/collabs');
 
 module.exports = {
     data: {
@@ -10,8 +11,19 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+        let initializedMap;
+        if (collabCache.size > 0) {
+            if (typeof collabCache.get(int.user.id) !== "undefined") {
+                initializedMap = collabCache;
+            }
+        }
+        if (adminCache.size > 0) {
+            if (typeof adminCache.get(int.user.id) !== "undefined") {
+                initializedMap = adminCache;
+            }
+        }
         try {
-            const collab = collabCache.get(int.user.id).collab;
+            const collab = initializedMap.get(int.user.id).collab;
             const fullCollab = await localFunctions.getCollab(collab, collection);
             const logChannel = fullCollab.logChannel;
             let ping = "";

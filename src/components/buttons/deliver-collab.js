@@ -1,19 +1,27 @@
 const { TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 const { collabCache } = require('./admin-collab');
+const { adminCache }= require('../../commands/collabs/collabs');
 
 module.exports = {
     data: {
         name: 'deliver-collab'
     },
     async execute(int, client) {
-        const collab = collabCache.get(int.user.id).collab
+        let initializedMap;
+        if (collabCache.size > 0) {
+            if (typeof collabCache.get(int.user.id) !== "undefined") {
+                initializedMap = collabCache;
+            }
+        }
+        if (adminCache.size > 0) {
+            if (typeof adminCache.get(int.user.id) !== "undefined") {
+                initializedMap = adminCache;
+            }
+        }
+        const collab = initializedMap.get(int.user.id).collab
         if (collab.host !== int.user.id) {
             int.reply('You are not allowed to do this.');
-            return;
-        }
-        if (collabCache.size === 0) {
-            int.reply('Open the dashboard again. The collab hasn\'t been cached');
             return;
         }
         const modal = new ModalBuilder()

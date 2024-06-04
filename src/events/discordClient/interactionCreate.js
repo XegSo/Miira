@@ -81,6 +81,26 @@ module.exports = {
                         mongoClient.close();
                     }
                 }
+                if (int.options.getSubcommand() === "manage") {
+                    const focusedValue = int.options.getFocused();
+                    const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+                    try {
+                        const allCollabs = await localFunctions.getCollabs(collection);
+                        const filteredChoices = allCollabs.filter((collab) =>
+                            collab.name.toLowerCase().startsWith(focusedValue.toLowerCase())
+                        );
+                        const results = filteredChoices.map((choice) => {
+                            return {
+                                name: `${choice.name}`,
+                                value: choice.name
+                            }
+                        });
+
+                        int.respond(results.slice(0, 25)).catch(() => {});
+                    } finally {
+                        mongoClient.close();
+                    }
+                }
                 if (int.options.getSubcommand() === "swap") {
                     const focusedValue = int.options.getFocused();
                     const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
@@ -133,7 +153,7 @@ module.exports = {
                         mongoClient.close();
                     }
                 }
-                if (int.options.getSubcommand() === "check") {
+                if (int.options.getSubcommand() === "pick-check") {
                     const focusedValue = int.options.getFocused();
                     const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
                     try {
@@ -144,6 +164,59 @@ module.exports = {
                         } else {
                             const picks = openMegacollab.pool.items;
                             const filteredChoices = picks.filter((pick) =>
+                                pick.name.toLowerCase().startsWith(focusedValue.toLowerCase())
+                            );
+                            const results = filteredChoices.map((choice) => {
+                                return {
+                                    name: `${choice.name} - ${choice.series}`,
+                                    value: choice.id
+                                }
+                            });
+
+                            int.respond(results.slice(0, 25)).catch(() => {});
+                        }
+                    } finally {
+                        mongoClient.close();
+                    }
+                }
+                if (int.options.getSubcommand() === "user-check") {
+                    const focusedValue = int.options.getFocused();
+                    const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+                    try {
+                        const allCollabs = await localFunctions.getCollabs(collection);
+                        const openMegacollab = allCollabs.find(c => c.restriction === "megacollab");
+                        if (typeof openMegacollab === "undefined") {
+                            return;
+                        } else {
+                            if (typeof openMegacollab.participants === "undefined") return;
+                            const participants = openMegacollab.participants;
+                            const filteredChoices = participants.filter((user) =>
+                                user.discordTag.toLowerCase().startsWith(focusedValue.toLowerCase())
+                            );
+                            const results = filteredChoices.map((choice) => {
+                                return {
+                                    name: `${choice.discordTag} - ${choice.name} - ${choice.series}`,
+                                    value: choice.discordId
+                                }
+                            });
+
+                            int.respond(results.slice(0, 25)).catch(() => {});
+                        }
+                    } finally {
+                        mongoClient.close();
+                    }
+                }
+                if (int.options.getSubcommand() === "snipe") {
+                    const focusedValue = int.options.getFocused();
+                    const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+                    try {
+                        const allCollabs = await localFunctions.getCollabs(collection);
+                        const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
+                        if (typeof openMegacollab === "undefined") {
+                            return;
+                        } else {
+                            const availablePicks = openMegacollab.pool.items.filter(i => i.status === "picked");
+                            const filteredChoices = availablePicks.filter((pick) =>
                                 pick.name.toLowerCase().startsWith(focusedValue.toLowerCase())
                             );
                             const results = filteredChoices.map((choice) => {

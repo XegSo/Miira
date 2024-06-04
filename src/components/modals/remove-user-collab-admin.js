@@ -3,12 +3,24 @@ const { connectToMongoDB } = require('../../mongo');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const { collabCache } = require('./manage-pick-collab');
+const { userCheckCache } = require('../../commands/collabs/collabs');
 
 module.exports = {
     data: {
         name: "remove-user-collab-admin"
     },
     async execute(int, client) {
+        let initializedMap;
+        if (collabCache.size > 0) {
+            if (typeof collabCache.get(int.user.id) !== "undefined") {
+                initializedMap = collabCache;
+            }
+        }
+        if (userCheckCache.size > 0) {
+            if (typeof userCheckCache.get(int.user.id) !== "undefined") {
+                initializedMap = userCheckCache;
+            }
+        }
         await int.deferReply({ephemeral: true});
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
@@ -17,8 +29,8 @@ module.exports = {
         const auditChannel = guild.channels.cache.get(localConstants.auditLogChannelID);
 
         try {
-            const collab = collabCache.get(int.user.id).collab;
-            const pickFull = collabCache.get(int.user.id).pick;
+            const collab = initializedMap.get(int.user.id).collab;
+            const pickFull = initializedMap.get(int.user.id).pick;
             let participants = collab.participants;
             const id = pickFull.id;
             const fullParticipation = participants.find((e) => e.id === id);

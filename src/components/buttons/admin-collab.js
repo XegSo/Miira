@@ -10,7 +10,7 @@ module.exports = {
         name: 'admin-collab'
     },
     async execute(int, client) {
-        if (int.user.id !== '687004886922952755') return;
+        if (!guildMember.roles.cache.has('630636502187114496')) return;
         await int.deferReply({ ephemeral: true });
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         try {
@@ -78,7 +78,22 @@ module.exports = {
                             .setStyle('Primary'),
                     )
                 }
-                if (collab.status !== "on design") {
+
+                components.addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('reset-collab')
+                        .setLabel('🔁 Reset')
+                        .setStyle('Danger'),
+                )
+
+                components.addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('delete-collab')
+                        .setLabel('🚮 Delete')
+                        .setStyle('Danger'),
+                )
+
+                if (collab.status !== "on design" || int.user.id === "687004886922952755") {
                     extraComponents = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('export-collab')
@@ -99,28 +114,19 @@ module.exports = {
                             .setLabel('⬆️ Deliver')
                             .setStyle('Success'),
                     )
+                    await int.editReply({
+                        content: '',
+                        embeds: [dashboardEmbed],
+                        components: [components, extraComponents],
+                    });
+                } else {
+                    await int.editReply({
+                        content: '',
+                        embeds: [dashboardEmbed],
+                        components: [components]
+                    });
                 }
-    
-                components.addComponents(
-                    new ButtonBuilder()
-                        .setCustomId('reset-collab')
-                        .setLabel('🔁 Reset')
-                        .setStyle('Danger'),
-                )
-    
-                components.addComponents(
-                    new ButtonBuilder()
-                        .setCustomId('delete-collab')
-                        .setLabel('🚮 Delete')
-                        .setStyle('Danger'),
-                )
 
-    
-                await int.editReply({
-                    content: '',
-                    embeds: [dashboardEmbed],
-                    components: [components, extraComponents],
-                });
             } else {
                 components.addComponents(
                     new ButtonBuilder()
