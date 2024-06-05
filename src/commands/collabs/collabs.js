@@ -1440,7 +1440,7 @@ module.exports = {
                             .setColor('#f26e6a')
                             .setURL('https://endlessmirage.net/')
                             .setThumbnail(userOsuDataFull.avatar_url)
-                            .setAuthor({ name: `New Participation on the ${collab.name}!`, iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                            .setAuthor({ name: `New Participation on the ${openMegacollab.name}!`, iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                             .addFields(
                                 {
                                     name: "‎",
@@ -1686,7 +1686,7 @@ module.exports = {
                             .setColor('#f26e6a')
                             .setURL('https://endlessmirage.net/')
                             .setThumbnail(userOsuDataFull.avatar_url)
-                            .setAuthor({ name: `New Participation on the ${collab.name}!`, iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                            .setAuthor({ name: `New Participation on the ${openMegacollab.name}!`, iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                             .addFields(
                                 {
                                     name: "‎",
