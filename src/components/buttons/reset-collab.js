@@ -9,12 +9,6 @@ module.exports = {
         name: 'reset-collab'
     },
     async execute(int, client) {
-        const collab = collabCache.get(int.user.id).collab
-        if (collab.host !== int.user.id) {
-            int.reply('You are not allowed to do this.');
-            return;
-        }
-        
         let initializedMap;
         if (collabCache.size > 0) {
             if (typeof collabCache.get(int.user.id) !== "undefined") {
@@ -25,6 +19,12 @@ module.exports = {
             if (typeof adminCache.get(int.user.id) !== "undefined") {
                 initializedMap = adminCache;
             }
+        }
+
+        const collab = initializedMap.get(int.user.id).collab
+        if (collab.host !== int.user.id) {
+            int.reply('You are not allowed to do this.');
+            return;
         }
 
         const modal = new ModalBuilder()

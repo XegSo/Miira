@@ -96,7 +96,7 @@ module.exports = {
                 new ButtonBuilder()
                     .setCustomId('edit-pick-collab-admin')
                     .setLabel('➰ Edit Pick')
-                    .setStyle('Danger'),
+                    .setStyle('Primary'),
             )
 
 

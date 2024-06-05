@@ -4,7 +4,8 @@ const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
 const { profileButtonCache } = require('../buttons/profile-pick');
 const { profileMenuCache } = require('../selectMenus/manage-collab');
-const claimCache = new Map();
+const claimCacheModal = new Map();
+const userCheckCacheModal = new Map();
 
 module.exports = {
     data: {
@@ -69,10 +70,34 @@ module.exports = {
                     .setImage(pick.imgURL)
                     .setURL('https://endlessmirage.net/')
 
+                const components = new ActionRowBuilder();
+
+                components.addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('snipe-pick')
+                        .setLabel('🔔 Snipe')
+                        .setStyle('Success'),
+                    new ButtonBuilder()
+                        .setCustomId('trade-user')
+                        .setLabel('🔁 Trade')
+                        .setStyle('Success'),
+                    new ButtonBuilder()
+                        .setCustomId('report-user')
+                        .setLabel('📢 Report')
+                        .setStyle('Danger'),
+                )
+
                 await int.editReply({
                     content: '',
                     embeds: [pickEmbed, embed2],
+                    components: [components]
                 });
+
+                userCheckCacheModal.set(int.user.id, {
+                    collab: collab,
+                    pick: pick,
+                    participation: pickOwner
+                })
             } else {
                 const pickEmbed = new EmbedBuilder()
                     .setFooter({ text: "Endless Mirage | Megacollab Picks", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
@@ -99,7 +124,7 @@ module.exports = {
                 const embed2 = new EmbedBuilder()
                     .setImage(pick.imgURL)
                     .setURL('https://endlessmirage.net/')
-                
+
                 const components = new ActionRowBuilder();
 
                 components.addComponents(
@@ -109,7 +134,7 @@ module.exports = {
                         .setStyle('Success'),
                 )
 
-                claimCache.set(int.user.id, {
+                claimCacheModal.set(int.user.id, {
                     collab: collab,
                     pick: pick
                 })
@@ -127,5 +152,6 @@ module.exports = {
             mongoClient.close();
         }
     },
-    claimCache: claimCache
+    claimCacheModal: claimCacheModal,
+    userCheckCacheModal: userCheckCacheModal
 };

@@ -1,6 +1,7 @@
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const { userCheckCache } = require('../../commands/collabs/collabs');
+const { userCheckCacheModal } = require('../modals/check-pick');
 
 
 module.exports = {
@@ -13,9 +14,20 @@ module.exports = {
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
         const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
+        let initializedMap;
+        if (userCheckCache.size > 0) {
+            if (typeof userCheckCache.get(int.user.id) !== "undefined") {
+                initializedMap = userCheckCache;
+            }
+        }
+        if (userCheckCacheModal.size > 0) {
+            if (typeof userCheckCacheModal.get(int.user.id) !== "undefined") {
+                initializedMap = userCheckCacheModal;
+            }
+        }
         try {
-            const collab = userCheckCache.get(userId).collab;
-            const pick = userCheckCache.get(userId).pick;
+            const collab = initializedMap.get(userId).collab;
+            const pick = initializedMap.get(userId).pick;
             const userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
             const existingTradeRequest = await localFunctions.getTradeRequest(userId, collectionSpecial);
             if (existingTradeRequest.length !== 0) {

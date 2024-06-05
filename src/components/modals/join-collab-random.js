@@ -153,17 +153,21 @@ module.exports = {
 
             userCollabs.push(profileData);
             await localFunctions.setUserCollabs(userId, userCollabs, userCollection);
-            await int.editReply(`You've joined the collab succesfully! Pick: ${itemInPool.name}\nYour participation should appear on the spreadsheet shortly. If it is not the case, issue the \`\`/collabs manage\`\` command, select the megacollab and use the update spreadsheet button!`);
+            await int.editReply(`You've joined the collab succesfully! Pick: ${itemInPool.name}\nYour participation should appear on the spreadsheet shortly. Use the command \`\`/collabs manage\`\` to manage your participation!`);
 
             const joinEmbed = new EmbedBuilder()
                 .setFooter({ text: 'Endless Mirage | New Collab Participant', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                 .setColor('#f26e6a')
                 .setURL('https://endlessmirage.net/')
                 .setThumbnail(userOsuDataFull.avatar_url)
-                .setDescription(`**\`\`\`ml\n🎫 New Collab Participation!\`\`\`**                                                                                    **${collab.name}**`)
+                .setAuthor({ name: `New Participation on the ${collab.name}!`, iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                 .addFields(
                     {
-                        name: "osu! info",
+                        name: "‎",
+                        value: `**\`\`\`ml\n🎫 osu! Info\`\`\`**                                                                                    `
+                    },
+                    {
+                        name: "‎",
                         value: `┌ User: **${userOsuDataFull.username}**\n├ Country: **${userOsuDataFull.country_code}**\n├ Rank: **#${userOsuDataFull.statistics.global_rank}**\n├ Peak: **#${userOsuDataFull.rank_highest.rank}**\n└ Mode: **${userOsuDataFull.playmode}**`,
                         inline: true
                     },
@@ -171,16 +175,16 @@ module.exports = {
                         name: "‎",
                         value: `┌ PP: **${userOsuDataFull.statistics.pp}pp**\n├ Level: **${userOsuDataFull.statistics.level.current}**\n├ Playcount: **${userOsuDataFull.statistics.play_count}**\n├ Playtime: **${Math.floor(userOsuDataFull.statistics.play_time / 3600)}h **\n└ Followers: **${userOsuDataFull.follower_count}**`,
                         inline: true
-                    },
-                    {
-                        name: "‎",
-                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
                     }
                 )
             try {
                 joinEmbed.addFields(
                     {
-                        name: "Analytics",
+                        name: "‎",
+                        value: `**\`\`\`ml\n🧊 Account Analytics\`\`\`**                                                                                    `
+                    },
+                    {
+                        name: "‎",
                         value: `┌ ACC: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[0].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[0].int : "..."}**\n├ REA: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[1].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[1].int : "..."}**\n├ ${userOsuDataFull.skillRanks[2].skill === "Aim" ? "AIM" : "CON"}: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[2].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[2].int : "..."}**\n├ SPD: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[3].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[3].int : "..."}**\n├ STA: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[4].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[4].int : "..."}**\n└ PRE: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[5].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[5].int : "..."}**`,
                         inline: true
                     },
@@ -188,28 +192,28 @@ module.exports = {
                         name: "‎",
                         value: `┌ Top 1 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[0].mod : "..."}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[0].percentage) : "..."}%**\n├ Top 2 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[1].mod : "..."}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[1].percentage) : "..."}%**\n├ Top 3 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[2].mod : "..."}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[2].percentage) : "..."}%**\n├ Top 4 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[3].mod : "..."}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[3].percentage) : "..."}%**\n└ Combination: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.mostCommonModCombination.combination : "..."}**`,
                         inline: true
-                    },
-                    {
-                        name: "‎",
-                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
-                    },
+                    }
                 )
             } catch {
                 joinEmbed.addFields(
                     {
-                        name: "Analytics",
-                        value: `There was some error trying to get your analytics... Please try updaging them on your collabs profile command.`,
-                        inline: true
+                        name: "‎",
+                        value: `**\`\`\`ml\n🧊 Account Analytics\`\`\`**                                                                                    `
                     },
                     {
                         name: "‎",
-                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                        value: `There was some error trying to get your analytics... Please try updaging them on your collabs profile command.`,
+                        inline: true
                     },
                 )
             }
             joinEmbed.addFields(
                 {
-                    name: "General info",
+                    name: "‎",
+                    value: `**\`\`\`ml\n📀 Participation Data\`\`\`**                                                                                    `
+                },
+                {
+                    name: "‎",
                     value: `┌ Pick ID: **${itemInPool.id}**\n├ Name: **${itemInPool.name}**\n└ Series: **${itemInPool.series}**`,
                     inline: true
                 },
@@ -246,7 +250,7 @@ module.exports = {
                     break;
                 } catch {
                     console.log('Sheet update failed, retring in 2 minutes...');
-                    await localFunctions.delay(2*60*1000);
+                    await localFunctions.delay(2 * 60 * 1000);
                 }
             }
 

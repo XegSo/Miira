@@ -2,105 +2,87 @@ const { connectToMongoDB } = require('../../mongo');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const { EmbedBuilder } = require('discord.js');
-const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
-const { joinCache } = require('../buttons/join-collab');
+const { claimCache } = require('../../commands/collabs/collabs');
+const { claimCacheModal } = require('../modals/check-pick');
+
 
 module.exports = {
     data: {
-        name: "join-collab"
+        name: 'claim-pick'
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
+        const userId = int.user.id;
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
-        const { collection: collabsCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
-        const userId = int.user.id;
+        const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(userId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
+        const currentDate = Math.floor(new Date().getTime() / 1000);
+        let initializedMap;
+        if (claimCache.size > 0) {
+            if (typeof claimCache.get(int.user.id) !== "undefined") {
+                initializedMap = claimCache;
+            }
+        }
+        if (claimCacheModal.size > 0) {
+            if (typeof claimCacheModal.get(int.user.id) !== "undefined") {
+                initializedMap = claimCacheModal;
+            }
+        }
         try {
-            let collab = await localFunctions.getCollab(joinCache.get(int.user.id).collab, collection);
-            let userOsuData = joinCache.get(int.user.id).osuData
-            if (!userOsuData) {
-                const components = new ActionRowBuilder().addComponents(
-                    new ButtonBuilder()
-                        .setCustomId('link-osu')
-                        .setLabel('🔗 Link your osu! Account')
-                        .setStyle('Success'),
-                )
-                return await int.editReply({
-                    content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
-                    components: [components]
-                });
+            const userOsuDataFull = await localFunctions.getOsuData(userId, userCollection);
+            let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
+            let collab = initializedMap.get(userId).collab;
+            if (collab.status !== "open" && userId !== "687004886922952755") return await int.editReply('You cannot perform this action when the collab is not open.')
+            const pick = initializedMap.get(userId).pick.id;
+            const existingTradeRequest = await localFunctions.getTradeRequest(userId, collectionSpecial);
+            if (existingTradeRequest.length !== 0) {
+                return await int.reply({ content: `You cannot claim a pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
             }
-            let userCollabData = joinCache.get(int.user.id).userCollabData;
-            let allCollabs = await localFunctions.getCollabs(collabsCollection);
-            let verificationCollabs = allCollabs.find(e => e.status === "open" || e.status === "full" || e.status === "delivered" || e.status === "early access" || e.status === "closed");
-            verificationCollabs = verificationCollabs || [];
-            try {
-                if (typeof userCollabData.find(e => verificationCollabs.find(c => c.name === e.name)) !== "undefined") {
-                    return await int.editReply('You are already participating in an active collab!');
-                }
-            } catch { }
-            if (typeof userCollabData.find(e => e.collabName === collab.name) !== "undefined") {
-                return await int.editReply({
-                    content: 'You are already participating in this collab. To edit your data, manage your participation in your collabs profile.',
-                });
-            }
-            if (collab.type === "pooled") {
-                let participants = collab ? collab.participants || [] : [];
-                let pool = collab.pool.items;
-                let digits = pool[0].id.length;
-                const pick = localFunctions.padNumberWithZeros(parseInt(int.fields.getTextInputValue('pick')), digits);
-                const currentDate = Math.floor(new Date().getTime() / 1000);
-                let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
-                let itemInPool = pool.find((e) => e.id === pick);
-                if (typeof userCollabs.find(e => e.name === collab.name) !== "undefined") {
-                    return await int.editReply('You are already participating in this collab!');
-                }
-                if (typeof itemInPool === "undefined") {
-                    return await int.editReply('Invalid character ID!');
-                }
 
-                if (typeof collab.lockSystem !== "undefined") { /*Prevents ratelimit*/
-                    if (typeof collab.lockSystem.current === "undefined") { /*System startup from first pick*/
-                        const current = {
-                            participations: 0,
-                            time: 0,
-                            lastParticipant: 0
-                        }
-                        collab.lockSystem.current = current;
-                        console.log('Starting up lock system...');
-                        await localFunctions.setLockSystem(collab.name, collab.lockSystem, collabsCollection);
-                    } else { /*Allows or denys the entry*/
-                        if (collab.lockSystem.current.participations >= collab.lockSystem.users && currentDate < (collab.lockSystem.current.time + collab.lockSystem.timeout * 60)) {
-                            console.log('Attempt to join the collab while locked!');
-                            return await int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${collab.lockSystem.current.time + collab.lockSystem.timeout * 60}:R>`);
-                        }
-                        console.log(currentDate);
-                        console.log(currentDate + collab.lockSystem.timeout * 60);
-                        console.log(collab.lockSystem.current.time);
-                        if (((currentDate > (collab.lockSystem.current.lastParticipant + 120)) || (currentDate + collab.lockSystem.timeout * 60) >= collab.lockSystem.current.time) && collab.lockSystem.current.time !== 0) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
-                            const current = {
-                                participations: 0,
-                                time: 0
-                            }
-                            collab.lockSystem.current = current;
-                            await localFunctions.setLockSystem(collab.name, collab.lockSystem, collabsCollection);
-                            console.log('Resetting lock system...');
-                        }
+            const newPickFull = collab.pool.items.find(i => i.id === pick);
+            if (newPickFull.status === "picked") {
+                return await int.editReply('This character has just been picked! Try running the command again and requesting a trade.');
+            }
+
+            let participants = collab.participants ? collab.participants : [];
+            const participation = participants.find((e) => e.discordId === userId);
+
+            if (typeof participation === "undefined") {
+                let userOsuData = await localFunctions.getOsuData(userId, userCollection);
+                if (!userOsuData) {
+                    const components = new ActionRowBuilder().addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('link-osu')
+                            .setLabel('🔗 Link your osu! Account')
+                            .setStyle('Success'),
+                    )
+                    return await int.editReply({
+                        content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
+                        components: [components]
+                    });
+                }
+                let userCollabData = await localFunctions.getUserCollabs(userId, userCollection);
+                let allCollabs = await localFunctions.getCollabs(collection);
+                let verificationCollabs = allCollabs.find(e => e.status === "open" || e.status === "full" || e.status === "delivered" || e.status === "early access" || e.status === "closed");
+                verificationCollabs = verificationCollabs || [];
+                try {
+                    if (typeof userCollabData.find(e => verificationCollabs.find(c => c.name === e.name)) !== "undefined") {
+                        return await int.editReply('You are already participating in an active collab!');
                     }
-                }
+                } catch { }
 
-                collab = await localFunctions.getCollab(joinCache.get(int.user.id).collab, collection);
-                itemInPool = await collab.pool.items.find((e) => e.id === pick);
+                collab = await localFunctions.getCollab(initializedMap.get(int.user.id).collab.name, collection);
+                const itemInPool = await collab.pool.items.find((e) => e.id === pick);
 
                 if (itemInPool.status === "picked") {
                     return await int.editReply('This character has been picked already by someone else!');
                 }
 
                 await localFunctions.setCollabParticipation(collab.name, collection, pick);
-                
+
                 let prestigeLevel = 0;
                 let tier = 0;
                 let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
@@ -119,15 +101,14 @@ module.exports = {
                     prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
                     console.log(prestigeLevel);
                 }
-                const userOsuDataFull = await localFunctions.getOsuData(userId, userCollection);
-                let userOsuData = localFunctions.flattenObject(userOsuDataFull);
+                userOsuData = localFunctions.flattenObject(userOsuData);
                 const userParticipant = {
                     discordId: userId,
                     discordTag: int.user.tag,
                     joinDate: currentDate,
-                    av_text: int.fields.getTextInputValue('av_text'),
-                    ca_text: int.fields.getTextInputValue('ca_text'),
-                    ca_quote: int.fields.getTextInputValue('ca_quote').length ? int.fields.getTextInputValue('ca_quote') : "",
+                    av_text: "-",
+                    ca_text: "-",
+                    ca_quote: "-",
                     prestige: prestigeLevel,
                     tier: tier,
                     bump_imune: tier ? true : false
@@ -141,16 +122,16 @@ module.exports = {
                     collabName: collab.name,
                     collabPick: itemInPool,
                     joinDate: currentDate,
-                    av_text: int.fields.getTextInputValue('av_text'),
-                    ca_text: int.fields.getTextInputValue('ca_text'),
-                    ca_quote: int.fields.getTextInputValue('ca_quote').length ? int.fields.getTextInputValue('ca_quote') : "",
+                    av_text: "-",
+                    ca_text: "-",
+                    ca_quote: "-",
                     prestige: prestigeLevel,
                     tier: tier
                 }
 
                 userCollabs.push(profileData);
                 await localFunctions.setUserCollabs(userId, userCollabs, userCollection);
-                await int.editReply(`You've joined the collab succesfully! Pick: ${itemInPool.name}\nYour participation should appear on the spreadsheet shortly. Use the command \`\`/collabs manage\`\` to manage your participation!`);
+                await int.editReply(`You've joined the collab succesfully! Pick: ${itemInPool.name}\nYour participation should appear on the spreadsheet shortly. \n\n**Important**\nYou need to edit your current fields for your materials! Use the command \`\`/collabs manage\`\` to do so.`);
 
                 const joinEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | New Collab Participant', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
@@ -230,15 +211,6 @@ module.exports = {
                     .setColor('#f26e6a')
                     .setURL('https://endlessmirage.net/')
                 logChannel.send({ content: `<@${userId}>`, embeds: [joinEmbed, imageEmbed] });
-                if (typeof collab.lockSystem !== "undefined") { /*Prevents ratelimit*/
-                    collab.lockSystem.current.participations = collab.lockSystem.current.participations + 1;
-                    collab.lockSystem.current.lastParticipant = Math.floor(new Date().getTime() / 1000);
-                    if (collab.lockSystem.current.participations === collab.lockSystem.users) {
-                        collab.lockSystem.current.time = Math.floor(new Date().getTime() / 1000);
-                        console.log('Locking the collab...');
-                    }
-                    await localFunctions.setLockSystem(collab.name, collab.lockSystem, collabsCollection);
-                }
 
                 while (true) {
                     try {
@@ -247,17 +219,84 @@ module.exports = {
                         break;
                     } catch {
                         console.log('Sheet update failed, retring in 2 minutes...');
-                        await localFunctions.delay(2*60*1000);
+                        await localFunctions.delay(2 * 60 * 1000);
+                    }
+                }
+            } else {
+                collab = await localFunctions.getCollab(initializedMap.get(int.user.id).collab.name, collection);
+                const currentPick = collab.pool.items.find((e) => e.id === participation.id);
+                await localFunctions.unsetCollabParticipation(collab.name, collection, currentPick.id);
+                await localFunctions.setCollabParticipation(collab.name, collection, pick);
+                await localFunctions.editCollabParticipantPickOnCollab(collab.name, userId, newPickFull, collection);
+                await localFunctions.editCollabParticipantPickOnUser(userId, collab.name, newPickFull, userCollection);
+
+                const swapEmbed = new EmbedBuilder()
+                    .setFooter({ text: 'Endless Mirage | New Character Swap', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                    .setColor('#f26e6a')
+                    .setThumbnail(participation.avatar_url)
+                    .setDescription(`**\`\`\`ml\n🎫 New Character Swap!\`\`\`**                                                                                    **${collab.name}**`)
+                    .addFields(
+                        {
+                            name: "‎",
+                            value: "**\`\`\`ml\n- Picked\`\`\`**",
+                            inline: true
+                        },
+                        {
+                            name: "‎",
+                            value: `┌ Pick ID: **${newPickFull.id}**\n└ Name: **${newPickFull.name}**`,
+                            inline: true
+                        },
+                        {
+                            name: "‎",
+                            value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                        },
+                        {
+                            name: "‎",
+                            value: "**\`\`\`js\n+ Available\`\`\`**",
+                            inline: true
+                        },
+                        {
+                            name: "‎",
+                            value: `┌ Pick ID: **${currentPick.id}**\n└ Name: **${currentPick.name}**`,
+                            inline: true
+                        },
+                        {
+                            name: "‎",
+                            value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                        },
+                    )
+                logChannel.send({ content: `<@${userId}>`, embeds: [swapEmbed] });
+                await int.editReply(`You've swaped your pick! New pick: ${newPickFull.name}`);
+                while (true) {
+                    try {
+                        await localFunctions.unsetParticipationOnSheet(collab, currentPick);
+                        console.log('Parcitipation unset');
+                        break;
+                    } catch (e) {
+                        console.log(e);
+                        console.log('Sheet update failed, retring in 2 minutes...');
+                        await localFunctions.delay(2 * 60 * 1000);
+                    }
+                }
+                while (true) {
+                    try {
+                        await localFunctions.setParticipationOnSheet(collab, newPickFull, userOsuDataFull.username);
+                        console.log('New pick set!');
+                        break;
+                    } catch (e) {
+                        console.log(e);
+                        console.log('Sheet update failed, retring in 2 minutes...');
+                        await localFunctions.delay(2 * 60 * 1000);
                     }
                 }
             }
+
         } catch (e) {
             console.log(e);
         } finally {
             mongoClient.close();
             mongoClientUsers.close();
-            mongoClientCollabs.close();
-            joinCache.delete(userId);
+            mongoClientSpecial.close();
         }
-    },
-};
+    }
+}
