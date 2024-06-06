@@ -42,7 +42,7 @@ module.exports = {
                 let contentString = "";
                 const snipes = await localFunctions.getCollabSnipes(collab.collabName, collection, pick.id);
                 if (typeof snipes !== "undefined") {
-                    if (typeof snipes.find(p => p.pick === id) !== "undefined") {
+                    if (typeof snipes.find(p => p.pick === pick.id) !== "undefined") {
                         contentString = "Snipers! ";
                     }
                     for (const snipe of snipes) {
