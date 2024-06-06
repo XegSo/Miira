@@ -31,7 +31,7 @@ module.exports = {
             const userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
             const existingTradeRequest = await localFunctions.getTradeRequest(userId, collectionSpecial);
             if (existingTradeRequest.length !== 0) {
-                return await int.reply({ content: `You cannot snipe a pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
+                return await int.editReply({ content: `You cannot snipe a pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
             }
             try {
                 if (typeof userCollabs.find(uc => uc.collabName === collab.name) === "undefined") {
@@ -40,11 +40,10 @@ module.exports = {
             } catch {
                 return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
             }
-            const newPickFull = collab.pool.items.find(i => i.id === pick);
-            if (newPickFull.status === "available") {
+            if (pick.status === "available") {
                 return await int.editReply('This character is available! You can swap your pick.');
             }
-            const pickRequested = newPickFull.id;
+            const pickRequested = pick.id;
 
             let participants = collab.participants;
             const fullTraderParticipation = participants.find((e) => e.discordId === userId);

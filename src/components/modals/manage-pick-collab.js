@@ -23,9 +23,7 @@ module.exports = {
                 initializedMap = adminCache;
             }
         }
-        manageCache.set(int.user.id, {
-            collab: initializedMap.get(int.user.id).collab
-        })
+        
         const userId = int.user.id;
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(userId);
@@ -110,7 +108,7 @@ module.exports = {
                 components: [components]
             });
 
-            initializedMap.set(int.user.id, {
+            manageCache.set(int.user.id, {
                 collab: collab,
                 pick: pick,
                 participation: pickOwner
@@ -157,7 +155,7 @@ module.exports = {
                 components: [components]
             });
 
-            initializedMap.set(int.user.id, {
+            manageCache.set(int.user.id, {
                 collab: collab,
                 pick: pick
             })

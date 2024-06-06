@@ -2,26 +2,14 @@ const { EmbedBuilder } = require('discord.js');
 const { connectToMongoDB } = require('../../mongo');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
-const { collabCache } = require('./manage-pick-collab');
-const { userCheckCache } = require('../../commands/collabs/collabs');
+const { reportCache } = require('../buttons/report-accept');
 
 module.exports = {
     data: {
-        name: "blacklist-user-collab-admin"
+        name: "blacklist-user-report"
     },
     async execute(int, client) {
-        let initializedMap;
-        if (collabCache.size > 0) {
-            if (typeof collabCache.get(int.user.id) !== "undefined") {
-                initializedMap = collabCache;
-            }
-        }
-        if (userCheckCache.size > 0) {
-            if (typeof userCheckCache.get(int.user.id) !== "undefined") {
-                initializedMap = userCheckCache;
-            }
-        }
-        await int.deferReply({ephemeral: true});
+        await int.deferReply({ ephemeral: true });
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
         const { collection: blacklistCollection, client: mongoClientBlacklist } = await connectToMongoDB("Blacklist");
@@ -30,11 +18,12 @@ module.exports = {
         const auditChannel = guild.channels.cache.get(localConstants.auditLogChannelID);
 
         try {
-            const collab = initializedMap.get(int.user.id).collab;
-            const pickFull = initializedMap.get(int.user.id).pick;
-            let participants = collab.participants;
+            const report = reportCache.get(int.user.id).report;
+            const collab = await localFunctions.getCollab(report.collab, collection);
+            const pickFull = collab.pool.items.find(e => e.id === report.pickId);
+            const message = reportCache.get(int.user.id).message;
             const id = pickFull.id;
-            const fullParticipation = participants.find((e) => e.id === id);
+            const fullParticipation = collab.participants.find((e) => e.id === id);
 
             await localFunctions.setBlacklist(fullParticipation.discordId, int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : "None", blacklistCollection);
             let userCollabs = await localFunctions.getUserCollabs(fullParticipation.discordId, userCollection);
@@ -68,6 +57,39 @@ module.exports = {
                 .setColor('#f26e6a')
                 .setDescription(`**\`\`\`ml\n📣 New Action Taken\`\`\`**                                                                                                        **An user has been blacklisted!**\n\n**Pick Name**: ${pickFull.name}\n**Pick ID**: ${pickFull.id}\n**Ex-Owner**: <@${fullParticipation.discordId}>\n**Removed by**: <@${int.user.id}>\n**Reason**: ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : "None"}`);
             auditChannel.send({ content: '', embeds: [auditEmbed] });
+
+            let reportEmbed = new EmbedBuilder()
+                .setFooter({ text: "Endless Mirage | Report Accepted", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                .setColor('#f26e6a')
+                .setTimestamp()
+                .setURL('https://endlessmirage.net/')
+                .setDescription(`**\`\`\`📣 Report Accepted\`\`\`**\n**Action taken:** Blacklist\n**Admin:** <@${int.user.id}>`)
+                .addFields(
+                    {
+                        name: report.embed.data.fields[0].name,
+                        value: report.embed.data.fields[0].value
+                    },
+                    {
+                        name: report.embed.data.fields[1].name,
+                        value: report.embed.data.fields[1].value
+                    }
+                )
+
+            const reporterMember = await guild.members.cache.find(member => member.id === report.reporterUser);
+            try {
+                reporterMember.send({
+                    content: `Your report for the user <@${report.reportedUser}> has been accepted and the user has been blacklisted from future collabs.`,
+                });
+            } catch (e) {
+                console.log(e);
+                const logChannel = guild.channels.cache.get(localConstants.logChannelID);
+                logChannel.send({
+                    content: `<@${report.reporterUser}> Your report for the user <@${report.reportedUser}> has been accepted and the user has been blacklisted from future collabs.`,
+                });
+            }
+
+            await message.edit({ embeds: [reportEmbed], components: [] });
+            await localFunctions.liquidateReport(report._id);
             await int.editReply('The user has been blacklisted.');
         } finally {
             mongoClient.close();

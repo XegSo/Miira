@@ -42,6 +42,9 @@ module.exports = {
                 let contentString = "";
                 const snipes = await localFunctions.getCollabSnipes(collab.collabName, collection, pick.id);
                 if (typeof snipes !== "undefined") {
+                    if (typeof snipes.find(p => p.pick === id) !== "undefined") {
+                        contentString = "Snipers! ";
+                    }
                     for (const snipe of snipes) {
                         contentString = contentString.concat('', `<@${snipe.userId}>`);
                         await localFunctions.removeCollabSnipe(collab.collabName, collection, snipe.userId);

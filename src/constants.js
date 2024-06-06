@@ -811,6 +811,7 @@ const suggestionChannelID = '880953549561954314';
 const imageSwapChannelID = '1241221376833228800';
 const auditLogChannelID = "1243646608176840846";
 const userActionsLogChannelID = "1243692051347017848";
+const reportsLogChannelID = "1248040971413880953";
 
 const botId = '959278677789663302';
 const guildId = "630281137998004224"
@@ -830,6 +831,7 @@ const startingSubDay = 1;
 const finalSubDay = 5;
 
 module.exports = {
+    reportsLogChannelID,
     userActionsLogChannelID,
     auditLogChannelID,
     startingSubDay,

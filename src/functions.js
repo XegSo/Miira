@@ -1784,12 +1784,40 @@ module.exports = {
         }
     },
 
+    updateReport: async function (messageId, type, reporterUser, reportedUser, status, embed, collab, pickId, reason) {
+        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+        try {
+            await collectionSpecial.updateOne({ _id: messageId }, { $set: { type, reporterUser, reportedUser, status, embed, collab, pickId, reason } }, { upsert: true });
+        } catch (error) {
+            console.error('Error sending image request:', error);
+            return null;
+        } finally {
+            if (mongoClient) {
+                mongoClient.close();
+            }
+        }
+    },
+
     liquidateImageRequest: async function (messageId) {
         const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
         try {
             await collectionSpecial.deleteOne({ _id: messageId });
         } catch (error) {
-            console.error('Error liquidating suggestion:', error);
+            console.error('Error liquidating image request:', error);
+            return null;
+        } finally {
+            if (mongoClient) {
+                mongoClient.close();
+            }
+        }
+    },
+
+    liquidateReport: async function (messageId) {
+        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+        try {
+            await collectionSpecial.deleteOne({ _id: messageId });
+        } catch (error) {
+            console.error('Error liquidating report:', error);
             return null;
         } finally {
             if (mongoClient) {
@@ -1906,6 +1934,18 @@ module.exports = {
         try {
             const imageRequest = await collectionSpecial.findOne({ _id: messageId });
             return imageRequest ? imageRequest || false : false;
+        } finally {
+            if (mongoClient) {
+                mongoClient.close();
+            }
+        }
+    },
+
+    getReportByMessage: async function (messageId) {
+        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+        try {
+            const report = await collectionSpecial.findOne({ _id: messageId });
+            return report ? report || false : false;
         } finally {
             if (mongoClient) {
                 mongoClient.close();

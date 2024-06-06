@@ -1848,6 +1848,9 @@ module.exports = {
                             let contentString = "";
                             const snipes = await localFunctions.getCollabSnipes(collab.name, collection, currentPick.id);
                             if (typeof snipes !== "undefined") {
+                                if (typeof snipes.find(p => p.pick === id) !== "undefined") {
+                                    contentString = "Snipers! ";
+                                }
                                 for (const snipe of snipes) {
                                     contentString = contentString.concat('', `<@${snipe.userId}>`);
                                     await localFunctions.removeCollabSnipe(collab.name, collection, snipe.userId);
@@ -1889,7 +1892,7 @@ module.exports = {
                                         value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
                                     },
                                 )
-                            logChannel.send({ content: `<@${userId}>${contentString}`, embeds: [swapEmbed] });
+                            logChannel.send({ content: `${contentString}\n<@${userId}>`, embeds: [swapEmbed] });
                             await int.editReply(`You've swaped your pick! New pick: ${newPickFull.name}`);
                             while (true) {
                                 try {
