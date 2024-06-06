@@ -62,7 +62,6 @@ module.exports = {
             let tierRenewal = { name: userTier.name ,type: 'Renewal', price: fullTier.generalRenewalPrice, class: 'Tier'};
             newCart.push(tierRenewal);
             contentString = contentString.concat("\n • ", `**Name:** ${tierRenewal.name} \n   **Price:** ${tierRenewal.price}$ \n **   Type:** ${tierRenewal.type}\n`);
-            console.log(newCart);
 
             await localFunctions.setCart(userId, newCart, collection);
             addedToCartEmbed.setDescription(`**\`\`\`prolog\n🚀 Content added to your cart\`\`\`**                                                                                                        ${contentString}`); 

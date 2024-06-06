@@ -47,7 +47,6 @@ module.exports = {
             }
             const userTier = await localFunctions.getUserTier(userId, collection);
             if (userTier) {
-                console.log(userTier);
                 tier = localFunctions.premiumToInteger(userTier.name);
             } else if (guildMember.roles.cache.has('743505566617436301')) {
                 let premiumDetails = await localFunctions.assignPremium(userId, collection, guildMember);
@@ -60,7 +59,7 @@ module.exports = {
                 .addFields(
                     {
                         name: "‎",
-                        value: `┌ Username: **${userOsu.username}**\n├ Country: **${tools.country(userOsu.country_code)}**\n├ Rank: **${userOsu.statistics.global_rank}**\n├ Peak Rank: **${userOsu.rank_highest.rank}**\n└ Level: **${userOsu.statistics.level.current}**`,
+                        value: `┌ Username: **${userOsu.username}**\n├ Country: **${tools.country(userOsu.country_code)}**\n├ Rank: **${userOsu.statistics.global_rank ? userOsu.statistics.global_rank : "Unranked"}**\n├ Peak Rank: **${userOsu.rank_highest.rank}**\n└ Level: **${userOsu.statistics.level.current}**`,
                         inline: true
                     },
                     {
@@ -93,6 +92,10 @@ module.exports = {
                     new ButtonBuilder()
                         .setLabel('🔄 Update your data')
                         .setCustomId('refresh-osu-data')
+                        .setStyle('Primary'),
+                    new ButtonBuilder()
+                        .setLabel('🔄 Change your gamemode')
+                        .setCustomId('change-osu-mode')
                         .setStyle('Primary')
                 )
                 osuEmbed.addFields(
@@ -108,6 +111,11 @@ module.exports = {
                         .setCustomId('refresh-osu-data')
                         .setStyle('Primary')
                         .setDisabled(true),
+                    new ButtonBuilder()
+                        .setLabel('🔄 Change your gamemode')
+                        .setCustomId('change-osu-mode')
+                        .setStyle('Primary')
+                        .setDisabled(true)
                 )
                 osuEmbed.addFields(
                     {

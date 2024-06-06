@@ -14,10 +14,8 @@ module.exports = {
             const guild = discordClient.guilds.cache.get(localConstants.guildId);
             const logChannel = guild.channels.cache.get(localConstants.logChannelID);
             try {
-                console.log(message.user.ircUsername);
                 const query = await v2.site.search({ mode: "user", query: message.user.ircUsername });
                 let correctedUsername = query.user.data[0].username;
-                console.log(correctedUsername);
                 let userDB = await localFunctions.getUserByOsuVerification(correctedUsername, collection);
                 let i = 1;
                 while (typeof userDB.verificationData === "undefined") {
@@ -30,10 +28,8 @@ module.exports = {
                         return;
                     }
                 }
-                console.log(userDB.verificationData.code);
                 if (userDB.verificationData.code === parseInt(message.message)) {
                     const currentData = userDB.verificationData.user;
-                    console.log(userDB.verificationData.user);
                     await localFunctions.verifyUserBancho(correctedUsername, userDB.verificationData.user, collection);
                     console.log(`User ${correctedUsername} verified succesfully.`)
                     logChannel.send(`<@${userDB._id}> Your account has been linked!`);
@@ -59,7 +55,6 @@ module.exports = {
 
                 }
             } catch (e) {
-                console.log('Error during verification')
                 console.log(e);
             } finally {
                 mongoClient.close();

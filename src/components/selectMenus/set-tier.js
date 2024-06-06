@@ -10,7 +10,6 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const pendingUser = giveTierCache.get(int.user.id);
-        console.log(pendingUser.user.tag);
         const guild = int.guild;
         const pendingMember = await guild.members.fetch(pendingUser.user.id);
 
@@ -21,7 +20,6 @@ module.exports = {
             let newRoleId = '';
             const pendingTier = int.values[0];
             let currentTier = await localFunctions.getUserTier(pendingUser.user.id, collection);
-            console.log(currentTier);
             if (currentTier) {
                 await pendingMember.roles.remove(currentTier.id);
             }

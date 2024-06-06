@@ -235,7 +235,6 @@ module.exports = {
                 }
                 const userTier = await localFunctions.getUserTier(userId, collection);
                 if (userTier) {
-                    console.log(userTier);
                     tier = localFunctions.premiumToInteger(userTier.name);
                 } else if (guildMember.roles.cache.has('743505566617436301')) {
                     let premiumDetails = await localFunctions.assignPremium(userId, collection, guildMember);
@@ -249,7 +248,7 @@ module.exports = {
                     .addFields(
                         {
                             name: "‎",
-                            value: `┌ Username: **${userOsu.username}**\n├ Country: **${tools.country(userOsu.country_code)}**\n├ Rank: **${userOsu.statistics.global_rank}**\n├ Peak Rank: **${userOsu.rank_highest.rank}**\n└ Level: **${userOsu.statistics.level.current}**`,
+                            value: `┌ Username: **${userOsu.username}**\n├ Country: **${tools.country(userOsu.country_code)}**\n├ Rank: **${userOsu.statistics.global_rank ? userOsu.statistics.global_rank : "Unranked"}**\n├ Peak Rank: **${userOsu.rank_highest.rank}**\n└ Level: **${userOsu.statistics.level.current}**`,
                             inline: true
                         },
                         {
@@ -276,12 +275,15 @@ module.exports = {
                         }
                     )
                 }
-                console.log(currentDate - lastUpdate)
                 if (!lastUpdate || (currentDate - lastUpdate) > 604800) {
                     buttons = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setLabel('🔄 Update your data')
                             .setCustomId('refresh-osu-data')
+                            .setStyle('Primary'),
+                        new ButtonBuilder()
+                            .setLabel('🔄 Change your gamemode')
+                            .setCustomId('change-osu-mode')
                             .setStyle('Primary')
                     )
                     osuEmbed.addFields(
@@ -297,6 +299,11 @@ module.exports = {
                             .setCustomId('refresh-osu-data')
                             .setStyle('Primary')
                             .setDisabled(true),
+                        new ButtonBuilder()
+                            .setLabel('🔄 Change your gamemode')
+                            .setCustomId('change-osu-mode')
+                            .setStyle('Primary')
+                            .setDisabled(true)
                     )
                     osuEmbed.addFields(
                         {
@@ -502,7 +509,6 @@ module.exports = {
                 }
                 const userTier = await localFunctions.getUserTier(userId, collection);
                 if (userTier) {
-                    console.log(userTier);
                     tier = localFunctions.premiumToInteger(userTier.name);
                 } else if (guildMember.roles.cache.has('743505566617436301')) {
                     let premiumDetails = await localFunctions.assignPremium(userId, collection, guildMember);
@@ -894,7 +900,6 @@ module.exports = {
                         tierString = `${tierString}\n*Renewal price for all perks: ${tierDetails.generalRenewalPrice}$*`;
                     }
 
-                    console.log(userTier.name);
                     let activeMonthlySupport = false;
                     if (monthlySupportData) {
                         if (monthlySupportData.status !== "innactive") {
@@ -1355,9 +1360,7 @@ module.exports = {
                                     console.log('Attempt to join the collab while locked!');
                                     return await int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60}:R>`);
                                 }
-                                console.log(currentDate);
-                                console.log(currentDate + openMegacollab.lockSystem.timeout * 60);
-                                console.log(openMegacollab.lockSystem.current.time);
+
                                 if (((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 120)) || (currentDate + openMegacollab.lockSystem.timeout * 60) >= openMegacollab.lockSystem.current.time) && openMegacollab.lockSystem.current.time !== 0) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
                                     const current = {
                                         participations: 0,
@@ -1370,7 +1373,6 @@ module.exports = {
                             }
                         }
                         let fullPick;
-                        console.log(pick);
                         openMegacollab = await localFunctions.getCollab(openMegacollab.name, collection);
                         if (typeof pick === 'string' && /^\d+$/.test(pick)) {
                             fullPick = await openMegacollab.pool.items.find(i => i.id === pick);
@@ -1378,7 +1380,6 @@ module.exports = {
                             pick = pick.split('-')[0].trim();
                             fullPick = await openMegacollab.pool.items.find(i => i.name === pick);
                         }
-                        console.log(fullPick.id);
                         if (fullPick.status === "picked") {
                             return await int.editReply('This character got picked while you were selecting...');
                         }
@@ -1398,9 +1399,7 @@ module.exports = {
                         }
                         if (typeof prestige !== "undefined") {
                             prestige = prestige.name;
-                            console.log(prestige);
                             prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
-                            console.log(prestigeLevel);
                         }
                         let userOsuData = localFunctions.flattenObject(userOsuDataFull);
                         const userParticipant = {
@@ -1599,9 +1598,6 @@ module.exports = {
                                     console.log('Attempt to join the collab while locked!');
                                     return await int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60}:R>`);
                                 }
-                                console.log(currentDate);
-                                console.log(currentDate + openMegacollab.lockSystem.timeout * 60);
-                                console.log(openMegacollab.lockSystem.current.time);
                                 if (((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 120)) || (currentDate + openMegacollab.lockSystem.timeout * 60) >= openMegacollab.lockSystem.current.time) && openMegacollab.lockSystem.current.time !== 0) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
                                     const current = {
                                         participations: 0,
@@ -1621,11 +1617,9 @@ module.exports = {
                         while (pick === 0) {
                             openMegacollab = await localFunctions.getCollab(openMegacollab.name, collection);
                             idCheck = Math.ceil(Math.random() * openMegacollab.pool.size);
-                            console.log(idCheck);
                             fullPick = openMegacollab.pool.items[idCheck];
                             if (fullPick.status !== "picked") {
                                 pick = fullPick.id;
-                                console.log(fullPick);
                             }
                         }
 
@@ -1644,9 +1638,7 @@ module.exports = {
                         }
                         if (typeof prestige !== "undefined") {
                             prestige = prestige.name;
-                            console.log(prestige);
                             prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
-                            console.log(prestigeLevel);
                         }
                         let userOsuData = localFunctions.flattenObject(userOsuDataFull);
                         const userParticipant = {

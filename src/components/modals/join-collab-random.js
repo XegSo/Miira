@@ -71,9 +71,6 @@ module.exports = {
                         console.log('Attempt to join the collab while locked!');
                         return await int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${collab.lockSystem.current.time + collab.lockSystem.timeout * 60}:R>`);
                     }
-                    console.log(currentDate);
-                    console.log(currentDate + collab.lockSystem.timeout * 60);
-                    console.log(collab.lockSystem.current.time);
                     if (((currentDate > (collab.lockSystem.current.lastParticipant + 120)) || (currentDate + collab.lockSystem.timeout * 60) >= collab.lockSystem.current.time) && collab.lockSystem.current.time !== 0) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
                         const current = {
                             participations: 0,
@@ -94,11 +91,9 @@ module.exports = {
             while (pick === 0) {
                 collab = await localFunctions.getCollab(collab.name, collection);
                 idCheck = Math.ceil(Math.random() * collab.pool.size) - 1;
-                console.log(idCheck);
                 itemInPool = collab.pool.items[idCheck];
                 if (itemInPool.status !== "picked") {
                     pick = itemInPool.id;
-                    console.log(itemInPool);
                 }
             }
 
@@ -118,9 +113,7 @@ module.exports = {
             }
             if (typeof prestige !== "undefined") {
                 prestige = prestige.name;
-                console.log(prestige);
                 prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
-                console.log(prestigeLevel);
             }
             const userOsuDataFull = await localFunctions.getOsuData(userId, userCollection);
             let userOsuData = localFunctions.flattenObject(userOsuDataFull);

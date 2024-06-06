@@ -172,8 +172,6 @@ module.exports = {
                     tierString = `${tierString}\n*Renewal price for all perks: ${tierDetails.generalRenewalPrice}$*`;
                 }
 
-                console.log(userTier.name);
-
                 if (userPerks?.length) {
                     let useMenu = new SelectMenuBuilder()
                         .setCustomId('use-perks')

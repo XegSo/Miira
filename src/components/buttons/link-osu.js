@@ -25,14 +25,14 @@ module.exports = {
                 .setCustomId('name')
                 .setLabel('Type your osu! name')
                 .setStyle(TextInputStyle.Short)
-                .setRequired(false);
+                .setRequired(true);
             
             const mode = new TextInputBuilder()
                 .setCustomId('mode')
                 .setLabel('Type your main gamemode')
                 .setPlaceholder('osu | fruits | mania | taiko')
                 .setStyle(TextInputStyle.Short)
-                .setRequired(false);    
+                .setRequired(true);    
 
             modal.addComponents(new ActionRowBuilder().addComponents(name), new ActionRowBuilder().addComponents(mode));
 

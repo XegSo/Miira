@@ -12,7 +12,6 @@ module.exports = {
     async execute(int, client) {
         const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
         const selectedPerk = int.values[0];
-        console.log(selectedPerk);
         const fullPerk = localConstants.premiumPerks.find(p => p.name === selectedPerk);
         try {
             if (selectedPerk === "Custom Endless Mirage Hoodie" || selectedPerk === "Host your own Megacollab") return await int.reply({ content: 'To claim this perk, please DM the host!', ephemeral: true });

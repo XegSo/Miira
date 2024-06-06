@@ -14,7 +14,6 @@ module.exports = {
       const itemsToDelete = int.values;
       let userItemsInCart = await localFunctions.getCart(userId, collection);
       let newCart = userItemsInCart.filter((e) => !itemsToDelete.includes(e.name));
-      console.log(newCart);
       await localFunctions.setCart(userId, newCart, collection);
       let messageComponents = new ActionRowBuilder().addComponents(
         new ButtonBuilder()

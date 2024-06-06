@@ -10,7 +10,6 @@ module.exports = {
     async execute (int, client) {
         await int.deferReply({ ephemeral: true });
         const reward = Math.min(parseInt(int.fields.getTextInputValue("reward")),5000);
-        console.log(reward)
         if (!Number.isInteger(reward)) {
             await int.editReply({content: 'Invalid amount of tokens.', ephemeral: true});
             return;

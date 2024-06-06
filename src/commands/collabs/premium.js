@@ -131,7 +131,6 @@ module.exports = {
                     tierString = `${tierString}\n*Renewal price for all perks: ${tierDetails.generalRenewalPrice}$*`;
                 }
 
-                console.log(userTier.name);
                 let activeMonthlySupport = false;
                 if (monthlySupportData) {
                     if (monthlySupportData.status !== "innactive") {

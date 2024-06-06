@@ -5,26 +5,27 @@ module.exports = {
         .setName('help')
         .setDescription('Display info for all the commands.'),
     async execute(int, client) {
-        const helpEmbedTop = new EmbedBuilder()
-            .setImage('https://puu.sh/JPjqk/bce4cc9fa1.png')
-            .setColor('#f26e6a');
+
         const helpEmbed = new EmbedBuilder()
             .setColor('#f26e6a')
-            .setThumbnail('https://puu.sh/JP9Iw/a365159d0e.png')
-            .setTitle('**Bot Commands:**')
-            .setImage('https://puu.sh/JPffc/3c792e61c9.png')
-            .setDescription('• \`\`/help\`\` Displays this message.\n\n• \`\`/profile\`\` Displays your profile with your Balance, Top message Combo and Current token Booster.\n\n• \`\`/shop\`\` Use this command to view the shop and make a purchase of an item. Once you purchase an item it will go into your inventory.\n\n• \`\`/inventory\`\` View all the items that you possess and make use of them.\n\n• \`\`/leaderboard\`\` See the top 10 users with most credits in the server.');
-        const helpEmbed2 = new EmbedBuilder()
-            .setColor('#f26e6a')
-            .setTitle('**Server Economy**')
-            .setDescription('By chatting on this server, you can earn tokens which you can redeem for special items on the shop. The current system has the following specifications:\n\n• You can obtain tokens depending on the message length. The current system gives \`\`(0.1*messageLength)/(0.5+(0.00004*(messageLength^2)))*(1.5-(1.5*(e^(-0.2*(combo+1)))))\`\` tokens per message. The base tokens and the token cap scale with the current combo. \n\n• With every message you send every 5 seconds with a lenght greather than 20 characters you obtain a combo that gives you bonus tokens following the formula mentioned above. \n\n• You can only obtain tokens every 5 seconds. \n\n• If you stop chatting for 5 minutes your combo resets.\n\n• Any active token booster overrides the token limitation and might double or quadruple it, as the total amount of tokens you can earn is given by \`\`tokens earned after current token cap * boosters active\`\`.\n\n• You can only have one booster of each kind active at the time.\n\n• You obtain 20 extra credits for your first message on the day. \n\n• We might host random daily boost events with any multipliers. \n\n• If you\'re inactive for more than 14 days, your tokens will start to decay in a rhythm of 100 tokens per day. A decay immunity item might be added in the future. \n\n• Any sign of system exploitation will be punished by staff.\n\n• Commands channels are blacklisted. <#659669962587242526> is not blacklisted.\n\n• URLs, images and emojis do not give tokens.')
-            .setImage('https://puu.sh/JPffc/3c792e61c9.png')
-            .setFooter({ text: 'Note: Prices and Items on the shop might change at any given time.' });
-        const helpEmbed3 = new EmbedBuilder()
-            .setColor('#f26e6a')
-            .setTitle('**Future plans**')
-            .setDescription('There will be implementations that will be added into this system later on, which are the following:\n\n• You will be able to generate an unique referral code that you can use to invite your friends to the collabs. Once the user you invited completes 3 bumps you obtain an amount of tokens to be defined.\n\n• You will be able to set certain scores on certain maps given by future poolers in this server to obtain credits.\n\n• You will be able to obtain tokens by setting top 10 scores, with a bit of more weight for more skilled users.\n\n• **Any ideas and feedback for this economy is welcome!**')
-            .setImage('https://puu.sh/JPffc/3c792e61c9.png');
-        int.reply({ content: "", embeds: [helpEmbedTop, helpEmbed, helpEmbed2, helpEmbed3] });
+            .setTitle('**Miira Commands**')
+            .setDescription('**\`\`\`ml\n🧭 Server Commands\`\`\`**                                                                                                         • \`\`/help\`\` Displays this message.\n\n• \`\`/server profile\`\` Displays your server profile with your Balance, Top message Combo and Current token Booster.\n\n• \`\`/server shop\`\` Use this command to view the server shop and make a purchase of an item. Once you purchase an item it will go into your inventory.\n\n• \`\`/server inventory\`\` View all the items that you possess and make use of them.\n\n• \`\`/server leaderboard\`\` See the top 10 users with most credits or more combo in the server.\n\n• \`\`/server daily\`\` Claim daily tokens.\n\n• \`\`/server suggest\`\` Make a suggestion for the server.')
+            .setFooter({ text: 'Endless Mirage | Help Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+            .addFields(
+                {
+                    name :"‎",
+                    value: '**\`\`\`ml\n🔮 Collab Commands\`\`\`**                                                                                                         • \`\`/collabs join\`\` Display a dashboard with all the collabs you can join.\n\n• \`\`/collabs manage\`\` Manage your past and current collab participations.\n\n• \`\`/collabs info\`\` Visualize all the collabs that have been hosted since 2024.\n\n• \`\`/collabs profile\`\` Manage your collab profile.\n\n• \`\`/collabs link\`\` Link your osu! account to the bot.\n\n• \`\`/collabs premium\`\` Support us!\n\n• \`\`/collabs perks\`\` Manage your premium perks.\n\n• \`\`/collabs feedback\`\` Send feedback to us regarding the collabs.',
+                },
+                {
+                    name :"‎",
+                    value: '**\`\`\`ml\n🏐 Megacollab Commands\`\`\`**                                                                                                         • \`\`/collabs quick join\`\` Join an open megacollab with a simple command.\n\n• \`\`/collabs quick join-random\`\` Join an open megacollab with a simple command and a random pick.\n\n• \`\`/collabs quick swap\`\` Swap your megacollab pick with a simple command.\n\n• \`\`/collabs quick trade\`\` Open a trade request with another user.\n\n• \`\`/collabs quick pick-check\`\` Check the status of a pick.\n\n• \`\`/collabs quick user-check\`\` Check the entry of another user.\n\n• \`\`/collabs quick snipe\`\` Obtain a notification if a character becomes available.',
+                },
+                {
+                    name: "‎",
+                    value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                },
+            )
+
+        int.reply({ content: "", embeds: [helpEmbed], ephemeral: true });
     }    
 }

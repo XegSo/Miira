@@ -13,6 +13,7 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+        const { collection: blacklistCollection, client: mongoClientBlacklist } = await connectToMongoDB("Blacklist");
         try {
             let verificationCode = 0;
             let osu_user_full = [];
@@ -20,8 +21,9 @@ module.exports = {
                 osu_user_full = fetchCache.get(userId).osu_user;
             }
             const osu_user = localFunctions.removeFields(osu_user_full, localConstants.unnecesaryFieldsOsu);
+            const blacklistCheck = await localFunctions.getBlacklistOsuId(osu_user.id, blacklistCollection)
+            if (blacklistCheck) return await int.editReply('You cannot link this account because you\'re blacklisted from the collabs.')
             const currentData = await localFunctions.getVerificationData(userId, collection);
-            console.log(currentData);
             if (currentData.length === 0) {
                 verificationCode = localFunctions.generateRandomCode();
                 const verification = {
@@ -61,6 +63,7 @@ module.exports = {
             })
         } finally {
             mongoClient.close();
+            mongoClientBlacklist.close();
         }
     },
 }

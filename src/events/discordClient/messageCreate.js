@@ -65,7 +65,6 @@ module.exports = {
                             let initialization = false;
                             let currentIndex = parseInt(jsonData.items[0].sheetIndex);
                             let lastColumn = 0;
-                            console.log(currentIndex);
                             let sheet;
                             for (let item of jsonData.items) {
                                 if (item.coordinate !== lastColumn && lastColumn !== 0) {
@@ -115,7 +114,6 @@ module.exports = {
                             let jsonData = JSON.parse(buffer.toString());
                             jsonData.host = userId;
                             jsonData.status = "on design";
-                            console.log(jsonData);
                             await localFunctions.setCollab(jsonData, collabCollection);
                             message.reply('New collab created succesfully in the database.')
                             createCollabCache.delete(userId);
@@ -131,7 +129,6 @@ module.exports = {
                             const response = await fetch(attachment.url);
                             const buffer = Buffer.from(await response.arrayBuffer());
                             let jsonData = JSON.parse(buffer.toString());
-                            console.log(jsonData);
                             await localFunctions.editCollab(editCache.get(userId).collab.name, jsonData, collabCollection);
                             message.reply('Collab edited succesfully.')
                             editCache.delete(userId);
@@ -148,7 +145,6 @@ module.exports = {
                             const buffer = Buffer.from(await response.arrayBuffer());
                             let jsonData = JSON.parse(buffer.toString());
                             for (let item of jsonData) {
-                                console.log(item);
                                 const premiumDiscordId = item.discordId
                                 delete item.name;
                                 delete item.discordId;
@@ -167,7 +163,6 @@ module.exports = {
             if (messageLength === 0) {
                 break messageCheck;
             }
-            console.log(`User: ${message.author.tag}`);
             let tokensEarned;
             let tokensEarnedNB = (0.1 * messageLength) / (0.5 + (0.00004 * (messageLength ** 2))) * (1.5 - (1.5 * (Math.E ** (-0.2))));
 
@@ -177,12 +172,10 @@ module.exports = {
 
                 // Check if the user's combo is still active
                 if (currentTime - comboData.lastMessageTime < localConstants.comboInterval) {
-                    console.log(`Current combo ${comboData.messages}`);
                     let comboBonus = comboData.messages;
                     comboData.lastMessageTime = currentTime;
                     tokensEarned = 20 * Math.log(Math.E, 4 * messageLength * -2.5) * (1.5 - (1.5 * (Math.E ** (-0.02 * (comboBonus + 1)))));
                     if (isNaN(tokensEarned)) {
-                        console.log('An issue in the token function has been encountered.')
                         tokensEarned = tokensEarnedNB;
                     }
                     if (messageLength > 20) {
@@ -283,7 +276,6 @@ module.exports = {
             if (globalBoostEndTime) {
                 if (globalBoostEndTime >= currentTime) {
                     tokensEarned *= globalBoostValue;
-                    console.log(`Tokens earned with active Global boost: ${tokensEarned}`);
                 }
             }
 
@@ -298,8 +290,6 @@ module.exports = {
             await localFunctions.setLastMessageDate(userId, currentTime, collection);
 
             userCooldowns.set(userId, currentTime);
-
-            console.log(`${message.author.tag} earned ${tokensEarned} Mirage Tokens.\n`);
         } catch (e) {
             console.log(e);
         } finally {

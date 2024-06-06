@@ -36,7 +36,7 @@ module.exports = {
             const id = pickFull.id;
             const fullParticipation = participants.find((e) => e.id === id);
 
-            await localFunctions.setBlacklist(fullParticipation.discordId, int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : "None", blacklistCollection);
+            await localFunctions.setBlacklist(fullParticipation.discordId, int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : "None", fullParticipation.osu_id, blacklistCollection);
             let userCollabs = await localFunctions.getUserCollabs(fullParticipation.discordId, userCollection);
             await localFunctions.unsetCollabParticipation(collab.name, collection, id);
             userCollabs = userCollabs.filter(e => e.collabName !== collab.name);

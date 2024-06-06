@@ -19,9 +19,7 @@ module.exports = {
                 for (const perk of tier.perks) {
                     if (pendingPerks.includes(perk.name) && !(userPerks.some(userPerk => userPerk.name === perk.name))) {
                         userPerks.push(perk);
-                        console.log(userPerks);
                         await localFunctions.setPerks(pendingUser.user.id, userPerks, collection);
-                        console.log(`Perk "${perk.name}" found in tier "${tier.name}"`);
                     }
                 }
             }

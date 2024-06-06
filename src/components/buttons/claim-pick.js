@@ -98,9 +98,7 @@ module.exports = {
                 }
                 if (typeof prestige !== "undefined") {
                     prestige = prestige.name;
-                    console.log(prestige);
                     prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
-                    console.log(prestigeLevel);
                 }
                 userOsuData = localFunctions.flattenObject(userOsuData);
                 const userParticipant = {

@@ -32,8 +32,6 @@ module.exports = {
             }
         }*/
 
-        console.log(users);
-
         int.editReply("Starting to set new prestige. This might take a while");
 
         for (const user of users) {
@@ -50,9 +48,7 @@ module.exports = {
             let prestige = member.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
             if (typeof prestige !== "undefined") {
                 prestige = prestige.name;
-                console.log(prestige);
                 prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
-                console.log(prestigeLevel);
             } else {
                 prestigeLevel = 0;
             }
@@ -64,9 +60,6 @@ module.exports = {
             let oldPrestigeRole = localFunctions.getRoleIDByPrestige(prestigeLevel.toString());
             let newPrestige = prestigeLevel + 1;
             let newPrestigeRole = localFunctions.getRoleIDByPrestige(newPrestige.toString());
-
-            console.log(oldPrestigeRole);
-            console.log(newPrestigeRole);
             if (oldPrestigeRole) {
                 await member.roles.remove(oldPrestigeRole);
             }

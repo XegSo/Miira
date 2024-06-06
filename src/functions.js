@@ -57,8 +57,6 @@ module.exports = {
             const targetHSL = hexToHSL(targetColor);
 
             const { saturationFactor, lightnessFactor } = calculateAdjustmentFactors(imageHSL, targetHSL);
-            console.log(saturationFactor);
-            console.log(lightnessFactor);
             // Apply the hue change
             const modifiedImageBuffer = await sharp(imageBuffer)
                 .modulate({
@@ -360,7 +358,6 @@ module.exports = {
             await sheet.saveUpdatedCells();
             sheet.resetLocalCache();
         } catch (e) {
-            console.log('Error while setting data on the sheet');
             console.log(e);
         }
     },
@@ -387,7 +384,6 @@ module.exports = {
             await sheet.saveUpdatedCells();
             sheet.resetLocalCache();
         } catch (e) {
-            console.log('Error while setting data on the sheet');
             console.log(e);
         }
     },
@@ -706,7 +702,6 @@ module.exports = {
             ];
         }
         const result = finalSkillsPrototipe.map((skill) => {
-            console.log(skill);
             const rankObj = localConstants.skillRanksByScore.find((rank) => skill.value >= rank.value);
             let rank;
             if (typeof rankObj.rank !== "undefined") {
@@ -1119,7 +1114,6 @@ module.exports = {
     getCollabSnipes: async function (name, collection, pick) {
         const collab = await collection.findOne({ name: name });
         if (typeof collab.snipes !== "undefined") {
-            console.log(collab.snipes);
             return collab.snipes.filter(s => s.pick === pick);
         } else {
             return undefined;
@@ -1136,6 +1130,26 @@ module.exports = {
                 'participants.$.category': newPick.category,
             }
         }, { upsert: true });
+    },
+
+    editPickName: async function (pickId, userId, collabName, collabCollection, userCollection, name) {
+        await collabCollection.updateOne({ name: collabName, 'participants.id': pickId }, {
+            $set: {
+                'participants.$.name': name,
+            }
+        }, { upsert: true });
+        await collabCollection.updateOne({ name: collabName, 'pool.items.id': pickId }, {
+            $set: {
+                'pool.items.$.name': name,
+            }
+        }, { upsert: true });
+        if (userId) {
+            await userCollection.updateOne({ _id: userId, 'collabs.collabName': collabName }, {
+                $set: {
+                    'collabs.$.collabPick.name': name,
+                }
+            }, { upsert: true });
+        }
     },
 
     editPickImage: async function (pickId, userId, collabName, collabCollection, userCollection, newURL) {
@@ -1408,12 +1422,17 @@ module.exports = {
     },
 
 
-    setBlacklist: async function (userId, reason, collection) {
-        await collection.updateOne({ _id: userId }, { $set: { reason } }, { upsert: true });
+    setBlacklist: async function (userId, reason, osuId, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { reason, osuId } }, { upsert: true });
     },
 
     getBlacklist: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
+        return user ? user || false : false;
+    },
+
+    getBlacklistOsuId: async function (osuId, collection) {
+        const user = await collection.findOne({ osuId: osuId });
         return user ? user || false : false;
     },
 
@@ -1973,7 +1992,6 @@ module.exports = {
     scheduleDailyDecay: async function (client) {
         const now = new Date();
         const currentDay = now.getDate();
-        console.log(currentDay);
         const currentMonth = now.getMonth() + 1;
         const year = now.getFullYear();
         const numberOfDaysInMonth = new Date(year, currentMonth, 0).getDate();
@@ -2243,11 +2261,11 @@ async function handleDailyDecay() {
 
             if (!lastMessageTimestamp) continue;
 
-            const daysSinceLastMessage = (Date.now() - lastMessageTimestamp) / (1000 * 60 * 60 * 24);
+            const daysSinceLastMessage = (Math.floor(new Date().getTime() / 1000) - lastMessageTimestamp) / (1000 * 60 * 60 * 24);
 
             if (daysSinceLastMessage > 14) {
                 const currentBalance = user.balance || 0;
-                const newBalance = Math.max(currentBalance - 100, 0);
+                const newBalance = Math.max(currentBalance - 1000, 0);
 
                 await collection.updateOne(
                     { _id: user._id },
