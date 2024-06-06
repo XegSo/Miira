@@ -40,23 +40,23 @@ module.exports = {
                     case 'early delivery':
                     case 'completed':
                     case 'archived':
-                        return await int.editReply('You cannot trade your character at this collab state.');
+                        return int.editReply('You cannot trade your character at this collab state.');
                 }
                 let pool = collab.pool.items;
                 let digits = pool[0].id.length;
                 const pickRequested = localFunctions.padNumberWithZeros(parseInt(int.fields.getTextInputValue('pick')), digits);
                 const statusOfRequestedPick = pool.find((e) => e.id === pickRequested);
                 if (typeof statusOfRequestedPick === "undefined") {
-                    return await int.editReply('Invalid character ID!');
+                    return int.editReply('Invalid character ID!');
                 }
                 if (statusOfRequestedPick.status === "available") {
-                    return await int.editReply('This character is available! You can swap your pick without trading.');
+                    return int.editReply('This character is available! You can swap your pick without trading.');
                 }
 
                 let participants = collab.participants;
                 const fullTraderParticipation = participants.find((e) => e.discordId === userId);
                 if (fullTraderParticipation.id === pickRequested) {
-                    return await int.editReply('You cannot trade to yourself silly!');
+                    return int.editReply('You cannot trade to yourself silly!');
                 }
 
                 const fullRequestedParticipation = participants.find((e) => e.id === pickRequested);

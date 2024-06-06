@@ -31,24 +31,24 @@ module.exports = {
             const userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
             const existingTradeRequest = await localFunctions.getTradeRequest(userId, collectionSpecial);
             if (existingTradeRequest.length !== 0) {
-                return await int.editReply({ content: `You cannot snipe a pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
+                return int.editReply({ content: `You cannot snipe a pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
             }
             try {
                 if (typeof userCollabs.find(uc => uc.collabName === collab.name) === "undefined") {
-                    return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                    return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
                 }
             } catch {
-                return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
             }
             if (pick.status === "available") {
-                return await int.editReply('This character is available! You can swap your pick.');
+                return int.editReply('This character is available! You can swap your pick.');
             }
             const pickRequested = pick.id;
 
             let participants = collab.participants;
             const fullTraderParticipation = participants.find((e) => e.discordId === userId);
             if (fullTraderParticipation.id === pickRequested) {
-                return await int.editReply('You cannot snipe yourself silly!');
+                return int.editReply('You cannot snipe yourself silly!');
             }
             const snipe = {
                 pick: pick.id,

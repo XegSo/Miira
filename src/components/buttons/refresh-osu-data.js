@@ -11,14 +11,14 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
+        const currentDate = Math.floor(new Date().getTime() / 1000);
         try {
-            const currentDate = Math.floor(new Date().getTime() / 1000);
             let userOsu = await localFunctions.getOsuData(userId, collection);
             const userTop100 = await v2.scores.user.category(userOsu.osu_id, 'best', { mode: userOsu.playmode, limit: '100' });
             if (typeof userTop100 !== "undefined") {
                 await int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
             } else if (typeof userTop100 === "undefined" || !userTop100) {
-                return await int.editReply('There was an error fetching your top 100 scores...');
+                return int.editReply('There was an error fetching your top 100 scores...');
             }
             const skills = await localFunctions.calculateSkill(userTop100, userOsu.playmode);
             let modsData = await localFunctions.analyzeMods(userTop100);

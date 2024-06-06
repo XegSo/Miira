@@ -13,8 +13,8 @@ module.exports = {
         const report = await localFunctions.getReportByMessage(int.message.id);
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(int.user.id);
-        if (!guildMember.roles.cache.has('630636502187114496')) return await int.editReply('You have no permission to do this!');
-        if (typeof report === "undefined") return await int.editReply('Something went wrong...');
+        if (!guildMember.roles.cache.has('630636502187114496')) return int.editReply('You have no permission to do this!');
+        if (typeof report === "undefined") return int.editReply('Something went wrong...');
         let actionEmbed = new EmbedBuilder()
             .setFooter({ text: "Endless Mirage | Accepting Report", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')

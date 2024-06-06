@@ -19,11 +19,11 @@ module.exports = {
         try {
             const user = await localFunctions.getUser(userId, collection);
             if (!user) {
-                return await int.editReply('You can not perform this action.');
+                return int.editReply('You can not perform this action.');
             } else if (typeof user.monthlyDonation === "undefined") {
-                return await int.editReply('You can not perform this action.');
+                return int.editReply('You can not perform this action.');
             } else if (user.monthlyDonation.status === "paid") {
-                return await int.editReply('You already payed this month!');
+                return int.editReply('You already payed this month!');
             }
             let amountToPay = parseInt(user.monthlyDonation.currentAmount);
             checkoutEmbed.setDescription("**\`\`\`prolog\n💎 Your Payment link is ready!\`\`\`**\n*At the moment, we only support PayPal and Ko-fi Payments.*")

@@ -22,7 +22,7 @@ module.exports = {
             }
             const osu_user = localFunctions.removeFields(osu_user_full, localConstants.unnecesaryFieldsOsu);
             const blacklistCheck = await localFunctions.getBlacklistOsuId(osu_user.id, blacklistCollection)
-            if (blacklistCheck) return await int.editReply('You cannot link this account because you\'re blacklisted from the collabs.')
+            if (blacklistCheck) return int.editReply('You cannot link this account because you\'re blacklisted from the collabs.')
             const currentData = await localFunctions.getVerificationData(userId, collection);
             if (currentData.length === 0) {
                 verificationCode = localFunctions.generateRandomCode();

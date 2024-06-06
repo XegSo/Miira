@@ -24,7 +24,7 @@ module.exports = {
             }
         }
         let pick = initializedMap.get(userId).participation;
-        if (pick.discordId === userId) return await int.editReply('You cannot report yourself silly!');
+        if (pick.discordId === userId) return int.editReply('You cannot report yourself silly!');
         let status = 'Pending';
         let collab = initializedMap.get(userId).collab;
         const guild = client.guilds.cache.get(localConstants.guildId);

@@ -12,8 +12,8 @@ module.exports = {
         const request = await localFunctions.getImageRequestByMessage(int.message.id);
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(int.user.id);
-        if (!guildMember.roles.cache.has('630636502187114496')) return await int.editReply('You have no permission to do this!');
-        if (typeof request === "undefined") return await int.editReply('Something went wrong...');
+        if (!guildMember.roles.cache.has('630636502187114496')) return int.editReply('You have no permission to do this!');
+        if (typeof request === "undefined") return int.editReply('Something went wrong...');
 
         const newImgURL = request.imgURL;
         const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");

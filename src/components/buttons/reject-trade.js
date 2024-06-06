@@ -19,7 +19,7 @@ module.exports = {
             const requestedUser = existingTradeRequest.requestedUser;
             const traderUser = existingTradeRequest.traderUser;
             if (requestedUser.discordId !== userId && traderUser.discordId !== userId) {
-                return await int.editReply({ content: "You cannot interact with this request!", ephemeral: true });
+                return int.editReply({ content: "You cannot interact with this request!", ephemeral: true });
             }
             const tradeEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | Rejected Trade', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })

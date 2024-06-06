@@ -52,7 +52,7 @@ module.exports = {
       const auditEmbed = new EmbedBuilder()
         .setFooter({ text: 'Endless Mirage | Audit Log', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
         .setColor('#f26e6a')
-        .setDescription(`**\`\`\`ml\n📣 New Action Taken\`\`\`**                                                                                                        **A pick's name has been changed**\n\n**Pick ID**: ${pickFull.id}\n**Old Name**: ${pick.name}\n**New Name**: ${int.fields.getTextInputValue("ch_name")}`);
+        .setDescription(`**\`\`\`ml\n📣 New Action Taken\`\`\`**                                                                                                        **A pick's name has been changed**\n\n**Pick ID**: ${pick.id}\n**Old Name**: ${pick.name}\n**New Name**: ${int.fields.getTextInputValue("ch_name")}`);
       auditChannel.send({ content: '', embeds: [auditEmbed] });
       await int.editReply({ content: 'The name of the pick has been changed.', ephemeral: true });
     } finally {

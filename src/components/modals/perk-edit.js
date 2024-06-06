@@ -21,7 +21,7 @@ module.exports = {
             if (typeof toVerify !== "undefined") {
                 for (const imageField of toVerify) {
                     let check = await localFunctions.isPNGURL(replies[imageField.name])
-                    if (!check) return await int.editReply('One or more provided URLs are not a valid PNG...');
+                    if (!check) return int.editReply('One or more provided URLs are not a valid PNG...');
                 }
             }
             replies.userId = int.user.id;

@@ -27,9 +27,9 @@ module.exports = {
     let type = 'image change'
     const imageURL = int.fields.getTextInputValue("imageURL");
     const isPNG = await localFunctions.isPNGURL(imageURL);
-    if (!isPNG) return await int.editReply('The provided image URL is not valid or is not png! Please provide a valid png URL.');
+    if (!isPNG) return int.editReply('The provided image URL is not valid or is not png! Please provide a valid png URL.');
     let alreadySuggested = await localFunctions.getImageRequestByUser(int.user.id);
-    if (alreadySuggested) return await int.editReply('You already have a request under review!');
+    if (alreadySuggested) return int.editReply('You already have a request under review!');
     let status = 'Pending';
     let collab = initializedMap.get(int.user.id).collab;
     let pick = await collab.participants.find(p => p.discordId === int.user.id.toString());

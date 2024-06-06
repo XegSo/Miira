@@ -13,9 +13,9 @@ module.exports = {
         try {
             if (cancel === "yes") {
                 await localFunctions.setSubStatus(int.user.id, collection, "innactive");
-                return await int.editReply('Your monthly subscription has been canceled.');
+                return int.editReply('Your monthly subscription has been canceled.');
             } else {
-                return await int.editReply('Invalid action.');
+                return int.editReply('Invalid action.');
             }
         } finally {
             mongoClient.close();

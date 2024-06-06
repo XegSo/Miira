@@ -21,10 +21,10 @@ module.exports = {
             const requestedUser = existingTradeRequest.requestedUser;
             const traderUser = existingTradeRequest.traderUser;
             if (requestedUser.discordId !== userId && traderUser.discordId !== userId) {
-                return await int.editReply({ content: "You cannot interact with this request!", ephemeral: true });
+                return int.editReply({ content: "You cannot interact with this request!", ephemeral: true });
             }
             if (traderUser.discordId === userId) {
-                return await int.editReply({ content: "You cannot accept the request you proposed. The owner of the pick you requested has to accept it in order to proceed.", ephemeral: true });
+                return int.editReply({ content: "You cannot accept the request you proposed. The owner of the pick you requested has to accept it in order to proceed.", ephemeral: true });
             }
             if (requestedUser.discordId === userId) {
                 const collab = await localFunctions.getCollab(existingTradeRequest.collabName, collection);

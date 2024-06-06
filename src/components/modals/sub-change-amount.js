@@ -10,14 +10,14 @@ module.exports = {
         const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
         let newAmmount = parseFloat(int.fields.getTextInputValue('newAmmount'));
         if (isNaN(newAmmount)) {
-            return await int.editReply('Invalid amount!');
-        } else if (5 > newAmmount || newAmmount % 1 != 0) {
-            return await int.editReply('Invalid amount! Use a number that is greater or equal to 5 and not decimal.');
+            return int.editReply('Invalid amount!');
+        } else if (newAmmount < 5 || newAmmount % 1 != 0) {
+            return int.editReply('Invalid amount! Use a number that is greater or equal to 5 and not decimal.');
         }
 
         try {
             await localFunctions.setSubAmount(int.user.id, collection, newAmmount);
-            return await int.editReply('Your monthly subscription amount has been edited! Run /premium to check it.');
+            return int.editReply('Your monthly subscription amount has been edited! Run /premium to check it.');
         } finally {
             mongoClient.close();
         }

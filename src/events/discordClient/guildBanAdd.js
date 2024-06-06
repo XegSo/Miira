@@ -16,7 +16,7 @@ module.exports = {
             let user = await localFunctions.getUser(userId, userCollection);
             if (typeof userCollabs === "undefined" || userCollabs.length === 0) return;
             console.log(`User ${user.tag} with id ${userId} has been banned while on collabs.`);
-            await localFunctions.setBlacklist(userId, "Banned", fullParticipation.osu_id, user.osuData.osu_id, blacklistCollection);
+            await localFunctions.setBlacklist(userId, "Banned", user.osuData.osu_id, blacklistCollection);
             for (let userCollab of userCollabs) {
                 let collab = await localFunctions.getCollab(userCollab.collabName, collection);
                 if (collab.status !== "closed" && collab.status !== "delivered" && collab.status !== "archived" && collab.status !== "completed") {

@@ -36,7 +36,7 @@ module.exports = {
             const userOsuDataFull = await localFunctions.getOsuData(userId, userCollection);
             let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
             let collab = initializedMap.get(userId).collab;
-            if (collab.status !== "open" && userId !== "687004886922952755") return await int.editReply('You cannot perform this action when the collab is not open.')
+            if (collab.status !== "open" && userId !== "687004886922952755") return int.editReply('You cannot perform this action when the collab is not open.')
             const pick = initializedMap.get(userId).pick.id;
             const existingTradeRequest = await localFunctions.getTradeRequest(userId, collectionSpecial);
             if (existingTradeRequest.length !== 0) {
@@ -45,7 +45,7 @@ module.exports = {
 
             const newPickFull = collab.pool.items.find(i => i.id === pick);
             if (newPickFull.status === "picked") {
-                return await int.editReply('This character has just been picked! Try running the command again and requesting a trade.');
+                return int.editReply('This character has just been picked! Try running the command again and requesting a trade.');
             }
 
             let participants = collab.participants ? collab.participants : [];
@@ -60,7 +60,7 @@ module.exports = {
                             .setLabel('🔗 Link your osu! Account')
                             .setStyle('Success'),
                     )
-                    return await int.editReply({
+                    return int.editReply({
                         content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
                         components: [components]
                     });
@@ -71,7 +71,7 @@ module.exports = {
                 verificationCollabs = verificationCollabs || [];
                 try {
                     if (typeof userCollabData.find(e => verificationCollabs.find(c => c.name === e.name)) !== "undefined") {
-                        return await int.editReply('You are already participating in an active collab!');
+                        return int.editReply('You are already participating in an active collab!');
                     }
                 } catch { }
 
@@ -79,7 +79,7 @@ module.exports = {
                 const itemInPool = await collab.pool.items.find((e) => e.id === pick);
 
                 if (itemInPool.status === "picked") {
-                    return await int.editReply('This character has been picked already by someone else!');
+                    return int.editReply('This character has been picked already by someone else!');
                 }
 
                 await localFunctions.setCollabParticipation(collab.name, collection, pick);

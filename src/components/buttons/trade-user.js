@@ -38,10 +38,10 @@ module.exports = {
             const collab = initializedMap.get(userId).collab;
             try {
                 if (typeof userCollabs.find(uc => uc.collabName === collab.name) === "undefined") {
-                    return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                    return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
                 }
             } catch {
-                return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
             }
             if (collab.type === "pooled") {
                 switch (collab.status) {
@@ -50,7 +50,7 @@ module.exports = {
                     case 'early delivery':
                     case 'completed':
                     case 'archived':
-                        return await int.editReply('You cannot trade your character at this collab state.');
+                        return int.editReply('You cannot trade your character at this collab state.');
                 }
                 const newPickFull = initializedMap.get(userId).pick;
                 const pickRequested = newPickFull.id;
@@ -58,7 +58,7 @@ module.exports = {
                 let participants = collab.participants;
                 const fullTraderParticipation = participants.find((e) => e.discordId === userId);
                 if (fullTraderParticipation.id === pickRequested) {
-                    return await int.editReply('You cannot trade to yourself silly!');
+                    return int.editReply('You cannot trade to yourself silly!');
                 }
 
                 const fullRequestedParticipation = initializedMap.get(userId).participation;

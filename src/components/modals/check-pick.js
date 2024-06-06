@@ -32,7 +32,7 @@ module.exports = {
             const typedPick = localFunctions.padNumberWithZeros(parseInt(int.fields.getTextInputValue('pick')), digits);
             const pick = await collab.pool.items.find((e) => e.id === typedPick);
             if (typeof pick === "undefined") {
-                return await int.editReply('Invalid character ID!');
+                return int.editReply('Invalid character ID!');
             }
             if (pick.status === "picked") {
                 const pickOwner = collab.participants.find(u => parseInt(u.id) === parseInt(pick.id));

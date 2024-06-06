@@ -28,7 +28,7 @@ module.exports = {
                         .setLabel('🔗 Link your osu! Account')
                         .setStyle('Success'),
                 )
-                return await int.editReply({
+                return int.editReply({
                     content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
                     components: [components]
                 });
@@ -39,11 +39,11 @@ module.exports = {
             verificationCollabs = verificationCollabs || [];
             try {
                 if (typeof userCollabData.find(e => verificationCollabs.find(c => c.name === e.name)) !== "undefined") {
-                    return await int.editReply('You are already participating in an active collab!');
+                    return int.editReply('You are already participating in an active collab!');
                 }
             } catch { }
             if (typeof userCollabData.find(e => e.collabName === collab.name) !== "undefined") {
-                return await int.editReply({
+                return int.editReply({
                     content: 'You are already participating in this collab. To edit your data, manage your participation in your collabs profile.',
                 });
             }
@@ -56,10 +56,10 @@ module.exports = {
                 let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
                 let itemInPool = pool.find((e) => e.id === pick);
                 if (typeof userCollabs.find(e => e.name === collab.name) !== "undefined") {
-                    return await int.editReply('You are already participating in this collab!');
+                    return int.editReply('You are already participating in this collab!');
                 }
                 if (typeof itemInPool === "undefined") {
-                    return await int.editReply('Invalid character ID!');
+                    return int.editReply('Invalid character ID!');
                 }
 
                 if (typeof collab.lockSystem !== "undefined") { /*Prevents ratelimit*/
@@ -75,7 +75,7 @@ module.exports = {
                     } else { /*Allows or denys the entry*/
                         if (collab.lockSystem.current.participations >= collab.lockSystem.users && currentDate < (collab.lockSystem.current.time + collab.lockSystem.timeout * 60)) {
                             console.log('Attempt to join the collab while locked!');
-                            return await int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${collab.lockSystem.current.time + collab.lockSystem.timeout * 60}:R>`);
+                            return int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${collab.lockSystem.current.time + collab.lockSystem.timeout * 60}:R>`);
                         }
                         if (((currentDate > (collab.lockSystem.current.lastParticipant + 120)) || (currentDate + collab.lockSystem.timeout * 60) >= collab.lockSystem.current.time) && collab.lockSystem.current.time !== 0) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
                             const current = {
@@ -93,7 +93,7 @@ module.exports = {
                 itemInPool = await collab.pool.items.find((e) => e.id === pick);
 
                 if (itemInPool.status === "picked") {
-                    return await int.editReply('This character has been picked already by someone else!');
+                    return int.editReply('This character has been picked already by someone else!');
                 }
 
                 await localFunctions.setCollabParticipation(collab.name, collection, pick);

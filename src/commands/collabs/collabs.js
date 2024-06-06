@@ -195,7 +195,7 @@ module.exports = {
                     .setLabel('🔗 Link your osu! Account')
                     .setStyle('Success'),
             )
-            return await int.editReply({
+            return int.editReply({
                 content: 'Link your account using the button bellow.',
                 components: [components]
             });
@@ -1313,7 +1313,7 @@ module.exports = {
                 try {
                     const currentDate = Math.floor(new Date().getTime() / 1000);
                     const blacklistCheck = await localFunctions.getBlacklist(int.user.id, blacklistCollection)
-                    if (blacklistCheck) return await int.editReply('You\'re blacklisted from all collabs and cannot participate...');
+                    if (blacklistCheck) return int.editReply('You\'re blacklisted from all collabs and cannot participate...');
                     const allCollabs = await localFunctions.getCollabs(collection);
                     const userCollabs = await localFunctions.getUserCollabs(int.user.id, userCollection);
                     let openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
@@ -1322,7 +1322,7 @@ module.exports = {
                     } else {
                         try {
                             if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) !== "undefined") {
-                                return await int.editReply('You\'re already participating on this collab! To edit your pick use the ``/collabs manage`` command.');
+                                return int.editReply('You\'re already participating on this collab! To edit your pick use the ``/collabs manage`` command.');
                             }
                         } catch { }
                         let pick = int.options.getString('pick');
@@ -1334,15 +1334,15 @@ module.exports = {
                                     .setLabel('🔗 Link your osu! Account')
                                     .setStyle('Success'),
                             )
-                            return await int.editReply({
+                            return int.editReply({
                                 content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
                                 components: [components]
                             });
                         }
-                        if (int.options.getString('avatar_text').length > openMegacollab.fieldRestrictions.av) return await int.editReply(`The character limit for the avatar is of ${openMegacollab.fieldRestrictions.av} characters!`);
-                        if (int.options.getString('banner_text').length > openMegacollab.fieldRestrictions.ca) return await int.editReply(`The character limit for the banner is of ${openMegacollab.fieldRestrictions.ca} characters!`);
+                        if (int.options.getString('avatar_text').length > openMegacollab.fieldRestrictions.av) return int.editReply(`The character limit for the avatar is of ${openMegacollab.fieldRestrictions.av} characters!`);
+                        if (int.options.getString('banner_text').length > openMegacollab.fieldRestrictions.ca) return int.editReply(`The character limit for the banner is of ${openMegacollab.fieldRestrictions.ca} characters!`);
                         if (int.options.getString('banner_quote') !== null) {
-                            if (int.options.getString('banner_quote').length > openMegacollab.fieldRestrictions.ca_quote) return await int.editReply(`The character limit for the quote is of ${openMegacollab.fieldRestrictions.ca_quote} characters!`);
+                            if (int.options.getString('banner_quote').length > openMegacollab.fieldRestrictions.ca_quote) return int.editReply(`The character limit for the quote is of ${openMegacollab.fieldRestrictions.ca_quote} characters!`);
                         }
 
                         if (typeof openMegacollab.lockSystem !== "undefined") { /*Prevents ratelimit*/
@@ -1358,7 +1358,7 @@ module.exports = {
                             } else { /*Allows or denys the entry*/
                                 if (openMegacollab.lockSystem.current.participations >= openMegacollab.lockSystem.users && currentDate < (openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60)) {
                                     console.log('Attempt to join the collab while locked!');
-                                    return await int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60}:R>`);
+                                    return int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60}:R>`);
                                 }
 
                                 if (((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 120)) || (currentDate + openMegacollab.lockSystem.timeout * 60) >= openMegacollab.lockSystem.current.time) && openMegacollab.lockSystem.current.time !== 0) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
@@ -1381,7 +1381,7 @@ module.exports = {
                             fullPick = await openMegacollab.pool.items.find(i => i.name === pick);
                         }
                         if (fullPick.status === "picked") {
-                            return await int.editReply('This character got picked while you were selecting...');
+                            return int.editReply('This character got picked while you were selecting...');
                         }
                         await localFunctions.setCollabParticipation(openMegacollab.name, collection, pick);
 
@@ -1551,7 +1551,7 @@ module.exports = {
                 try {
                     const currentDate = Math.floor(new Date().getTime() / 1000);
                     const blacklistCheck = await localFunctions.getBlacklist(int.user.id, blacklistCollection)
-                    if (blacklistCheck) return await int.editReply('You\'re blacklisted from all collabs and cannot participate...');
+                    if (blacklistCheck) return int.editReply('You\'re blacklisted from all collabs and cannot participate...');
                     const allCollabs = await localFunctions.getCollabs(collection);
                     const userCollabs = await localFunctions.getUserCollabs(int.user.id, userCollection);
                     let openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
@@ -1560,7 +1560,7 @@ module.exports = {
                     } else {
                         try {
                             if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) !== "undefined") {
-                                return await int.editReply('You\'re already participating on this collab! To edit your pick use the ``/collabs manage`` command.');
+                                return int.editReply('You\'re already participating on this collab! To edit your pick use the ``/collabs manage`` command.');
                             }
                         } catch { }
 
@@ -1572,15 +1572,15 @@ module.exports = {
                                     .setLabel('🔗 Link your osu! Account')
                                     .setStyle('Success'),
                             )
-                            return await int.editReply({
+                            return int.editReply({
                                 content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
                                 components: [components]
                             });
                         }
-                        if (int.options.getString('avatar_text').length > openMegacollab.fieldRestrictions.av) return await int.editReply(`The character limit for the avatar is of ${openMegacollab.fieldRestrictions.av} characters!`);
-                        if (int.options.getString('banner_text').length > openMegacollab.fieldRestrictions.ca) return await int.editReply(`The character limit for the banner is of ${openMegacollab.fieldRestrictions.ca} characters!`);
+                        if (int.options.getString('avatar_text').length > openMegacollab.fieldRestrictions.av) return int.editReply(`The character limit for the avatar is of ${openMegacollab.fieldRestrictions.av} characters!`);
+                        if (int.options.getString('banner_text').length > openMegacollab.fieldRestrictions.ca) return int.editReply(`The character limit for the banner is of ${openMegacollab.fieldRestrictions.ca} characters!`);
                         if (int.options.getString('banner_quote') !== null) {
-                            if (int.options.getString('banner_quote').length > openMegacollab.fieldRestrictions.ca_quote) return await int.editReply(`The character limit for the quote is of ${openMegacollab.fieldRestrictions.ca_quote} characters!`);
+                            if (int.options.getString('banner_quote').length > openMegacollab.fieldRestrictions.ca_quote) return int.editReply(`The character limit for the quote is of ${openMegacollab.fieldRestrictions.ca_quote} characters!`);
                         }
 
                         if (typeof openMegacollab.lockSystem !== "undefined") { /*Prevents ratelimit*/
@@ -1596,7 +1596,7 @@ module.exports = {
                             } else { /*Allows or denys the entry*/
                                 if (openMegacollab.lockSystem.current.participations >= openMegacollab.lockSystem.users && currentDate < (openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60)) {
                                     console.log('Attempt to join the collab while locked!');
-                                    return await int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60}:R>`);
+                                    return int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60}:R>`);
                                 }
                                 if (((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 120)) || (currentDate + openMegacollab.lockSystem.timeout * 60) >= openMegacollab.lockSystem.current.time) && openMegacollab.lockSystem.current.time !== 0) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
                                     const current = {
@@ -1801,32 +1801,32 @@ module.exports = {
                     } else {
                         try {
                             if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === "undefined") {
-                                return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                                return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
                             }
                         } catch {
-                            return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                            return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
                         }
                         const collab = openMegacollab;
                         if (collab.type === "pooled") {
                             switch (collab.status) {
                                 case 'full':
-                                    return await int.editReply('This collab is full! There is no character to swap with. Try trading!');
+                                    return int.editReply('This collab is full! There is no character to swap with. Try trading!');
                                 case 'closed':
                                 case 'delivered':
                                 case 'early delivery':
                                 case 'completed':
                                 case 'archived':
-                                    return await int.editReply('You cannot swap your character at this collab state.');
+                                    return int.editReply('You cannot swap your character at this collab state.');
                             }
 
                             let pool = collab.pool.items;
                             const pickId = int.options.getString('pick');
                             const newPickFull = pool.find(i => i.id === pickId);
                             if (typeof newPickFull === "undefined") {
-                                return await int.editReply('Invalid character ID!');
+                                return int.editReply('Invalid character ID!');
                             }
                             if (newPickFull.status === "picked") {
-                                return await int.editReply('This character has already been picked!');
+                                return int.editReply('This character has already been picked!');
                             }
                             const pick = newPickFull.id;
                             const userCollab = userCollabs.find(e => e.collabName === collab.name);
@@ -1935,10 +1935,10 @@ module.exports = {
                     } else {
                         try {
                             if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === "undefined") {
-                                return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                                return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
                             }
                         } catch {
-                            return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                            return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
                         }
                         const collab = openMegacollab;
                         if (collab.type === "pooled") {
@@ -1948,23 +1948,23 @@ module.exports = {
                                 case 'early delivery':
                                 case 'completed':
                                 case 'archived':
-                                    return await int.editReply('You cannot trade your character at this collab state.');
+                                    return int.editReply('You cannot trade your character at this collab state.');
                             }
                             let pool = collab.pool.items;
                             const pickId = int.options.getString('pick');
                             const newPickFull = pool.find(i => i.id === pickId);
                             if (typeof newPickFull === "undefined") {
-                                return await int.editReply('Invalid character ID!');
+                                return int.editReply('Invalid character ID!');
                             }
                             if (newPickFull.status === "available") {
-                                return await int.editReply('This character is available! You can swap your pick without trading.');
+                                return int.editReply('This character is available! You can swap your pick without trading.');
                             }
                             const pickRequested = newPickFull.id;
 
                             let participants = collab.participants;
                             const fullTraderParticipation = participants.find((e) => e.discordId === userId);
                             if (fullTraderParticipation.id === pickRequested) {
-                                return await int.editReply('You cannot trade to yourself silly!');
+                                return int.editReply('You cannot trade to yourself silly!');
                             }
 
                             const fullRequestedParticipation = participants.find((e) => e.id === pickRequested);
@@ -2052,7 +2052,7 @@ module.exports = {
                         const pickId = int.options.getString('pick');
                         const pool = openMegacollab.pool.items;
                         const pick = pool.find(i => i.id === pickId);
-                        if (typeof pick === "undefined") return await int.editReply('Something went wrong...');
+                        if (typeof pick === "undefined") return int.editReply('Something went wrong...');
                         if (pick.status === "picked") {
                             const pickOwner = openMegacollab.participants.find(u => parseInt(u.id) === parseInt(pickId));
                             const pickEmbed = new EmbedBuilder()
@@ -2240,7 +2240,7 @@ module.exports = {
                         const participants = openMegacollab.participants;
                         const user = participants.find(i => i.discordId === pick);
                         const updatedPick = openMegacollab.pool.items.find(i => i.id === user.id);
-                        if (typeof user === "undefined") return await int.editReply('Something went wrong...');
+                        if (typeof user === "undefined") return int.editReply('Something went wrong...');
                         const pickEmbed = new EmbedBuilder()
                             .setFooter({ text: "Endless Mirage | Megacollab Picks", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                             .setColor('#f26e6a')
@@ -2366,21 +2366,21 @@ module.exports = {
                     } else {
                         try {
                             if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === "undefined") {
-                                return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                                return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
                             }
                         } catch {
-                            return await int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                            return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
                         }
                         const newPickFull = openMegacollab.pool.items.find(i => i.id === pick);
                         if (newPickFull.status === "available") {
-                            return await int.editReply('This character is available! You can swap your pick.');
+                            return int.editReply('This character is available! You can swap your pick.');
                         }
                         const pickRequested = newPickFull.id;
 
                         let participants = openMegacollab.participants;
                         const fullTraderParticipation = participants.find((e) => e.discordId === userId);
                         if (fullTraderParticipation.id === pickRequested) {
-                            return await int.editReply('You cannot snipe yourself silly!');
+                            return int.editReply('You cannot snipe yourself silly!');
                         }
                         const snipe = {
                             pick: pick,

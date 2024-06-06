@@ -74,12 +74,12 @@ module.exports = {
             }
 
             let newImg = int.fields.getTextInputValue('img');
-            if (!newImg) return await int.editReply('The fields have been edited.');
+            if (!newImg) return int.editReply('The fields have been edited.');
             if (!localFunctions.isPNGURL(newImg)) {
                 if (textEdits) {
-                    return await int.editReply('The fields have been edited, but the image provided is not a PNG! Provide a PNG image to edit this field.');
+                    return int.editReply('The fields have been edited, but the image provided is not a PNG! Provide a PNG image to edit this field.');
                 } else {
-                    return await int.editReply('The image provided is not a PNG! Provide a PNG image to edit this field.');
+                    return int.editReply('The image provided is not a PNG! Provide a PNG image to edit this field.');
                 }
             }
             let oldImg = participation.imgURL;

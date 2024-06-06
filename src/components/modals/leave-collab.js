@@ -19,7 +19,7 @@ module.exports = {
             const collab = leaveCache.get(int.user.id).collab;
             const fullCollab = await localFunctions.getCollab(collab.collabName, collection);
             if (collab.collabPick.name !== int.fields.getTextInputValue('pick')) {
-                return await int.editReply('Wrong name, make sure you didn\'t make a typo!');
+                return int.editReply('Wrong name, make sure you didn\'t make a typo!');
             }
             if (fullCollab.type === "pooled") {
                 let pick = collab.collabPick;

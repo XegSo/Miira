@@ -37,13 +37,13 @@ module.exports = {
             if (collab.type === "pooled") {
                 switch (collab.status) {
                     case 'full':
-                        return await int.editReply('This collab is full! There is no character to swap with. Try trading!');
+                        return int.editReply('This collab is full! There is no character to swap with. Try trading!');
                     case 'closed':
                     case 'delivered':
                     case 'early delivery':
                     case 'completed':
                     case 'archived':
-                        return await int.editReply('You cannot swap your character at this collab state.');
+                        return int.editReply('You cannot swap your character at this collab state.');
                 }
 
                 let pool = collab.pool.items;
@@ -54,10 +54,10 @@ module.exports = {
                 const currentPick = pool.find((e) => e.id === userCollab.collabPick.id);
                 const newPickFull = pool.find((e) => e.id === pick);
                 if (typeof newPickFull === "undefined") {
-                    return await int.editReply('Invalid character ID!');
+                    return int.editReply('Invalid character ID!');
                 }
                 if (newPickFull.status === "picked") {
-                    return await int.editReply('This character has already been picked!');
+                    return int.editReply('This character has already been picked!');
                 }
                 const userOsuDataFull = await localFunctions.getOsuData(userId, userCollection);
                 await localFunctions.unsetCollabParticipation(collab.name, collection, currentPick.id);
