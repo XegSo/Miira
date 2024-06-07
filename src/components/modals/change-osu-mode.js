@@ -58,6 +58,7 @@ module.exports = {
             userOsu.rank_highest = newUserData.rank_highest;
             userOsu.statistics = newUserData.statistics;
             userOsu.cover_url = newUserData.cover_url;
+            userOsu.playmode = mode;
 
             await localFunctions.verifyUserManual(int.user.id, userOsu, collection);
             await localFunctions.setUserLastUpdate(userId, currentDate, collection);
