@@ -1023,6 +1023,11 @@ module.exports = {
         return user ? user || null : null;
     },
 
+    getInviter: async function (referralCode, collection) {
+        const user = await collection.findOne({ referralCode: referralCode });
+        return user ? user || null : null;
+    },
+
     getUserDaily: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.daily || null : null;

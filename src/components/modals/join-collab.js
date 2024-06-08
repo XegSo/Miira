@@ -33,6 +33,15 @@ module.exports = {
                     components: [components]
                 });
             }
+            let referral = int.fields.getTextInputValue('referral').length ? int.fields.getTextInputValue('referral') : false;
+            if (referral) {
+                const inviter = await localFunctions.getInviter(referral, userCollection);
+                if (inviter) {
+                    if (inviter._id === userId) return int.editReply('You cannot use your own referral code silly!');
+                } else {
+                    referral = false;
+                }
+            }
             let userCollabData = joinCache.get(int.user.id).userCollabData;
             let allCollabs = await localFunctions.getCollabs(collabsCollection);
             let verificationCollabs = allCollabs.find(e => e.status === "open" || e.status === "full" || e.status === "delivered" || e.status === "early access" || e.status === "closed");
@@ -125,7 +134,8 @@ module.exports = {
                     ca_quote: int.fields.getTextInputValue('ca_quote').length ? int.fields.getTextInputValue('ca_quote') : "",
                     prestige: prestigeLevel,
                     tier: tier,
-                    bump_imune: tier ? true : false
+                    bump_imune: tier ? true : false,
+                    referral: referral ? referral: false
                 };
                 const data = { ...userParticipant, ...itemInPool, ...userOsuData };
                 await localFunctions.addCollabParticipant(collab.name, collection, data);
@@ -153,11 +163,8 @@ module.exports = {
                     .setURL('https://endlessmirage.net/')
                     .setThumbnail(userOsuDataFull.avatar_url)
                     .setAuthor({ name: `New Participation on the ${collab.name}!`, iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                    .setDescription(`**\`\`\`ml\n🎫 osu! Info\`\`\`**                                                                                    `)
                     .addFields(
-                        {
-                            name: "‎",
-                            value: `**\`\`\`ml\n🎫 osu! Info\`\`\`**                                                                                    `
-                        },
                         {
                             name: "‎",
                             value: `┌ User: **${userOsuDataFull.username}**\n├ Country: **${userOsuDataFull.country_code}**\n├ Rank: **#${userOsuDataFull.statistics.global_rank}**\n├ Peak: **#${userOsuDataFull.rank_highest.rank}**\n└ Mode: **${userOsuDataFull.playmode}**`,
@@ -213,11 +220,21 @@ module.exports = {
                         name: "‎",
                         value: `┌ Category: **${itemInPool.category}**\n├ Premium Tier: **${tier}**\n└ Prestige Level: **${prestigeLevel}**`,
                         inline: true
-                    },
+                    }
+                )
+                if (referral) {
+                    joinEmbed.addFields(
+                        {
+                            name: "‎",
+                            value: `Referred by <@${inviter._id}>`
+                        }
+                    )
+                }
+                joinEmbed.addFields(
                     {
                         name: "‎",
                         value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
-                    },
+                    }
                 )
                 const imageEmbed = new EmbedBuilder()
                     .setImage(itemInPool.imgURL)

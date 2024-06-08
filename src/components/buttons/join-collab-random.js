@@ -40,7 +40,14 @@ module.exports = {
                 .setStyle(TextInputStyle.Short)
                 .setRequired(false);
 
-            modal.addComponents(new ActionRowBuilder().addComponents(av_text), new ActionRowBuilder().addComponents(ca_text), new ActionRowBuilder().addComponents(ca_quote));
+            const referral = new TextInputBuilder()
+                .setCustomId('referral')
+                .setLabel('Insert a referral code.')
+                .setPlaceholder('Did you know that you can get your own referral code to invite your friends using the /collabs referral command? You will obtain tokens everytime your friend bumps their pick! Use /server shop to see all you can buy.')
+                .setStyle(TextInputStyle.Paragraph)
+                .setRequired(false);
+
+            modal.addComponents(new ActionRowBuilder().addComponents(av_text), new ActionRowBuilder().addComponents(ca_text), new ActionRowBuilder().addComponents(ca_quote),  new ActionRowBuilder().addComponents(referral));
 
             await int.showModal(modal);
 

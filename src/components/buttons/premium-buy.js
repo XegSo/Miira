@@ -35,12 +35,11 @@ module.exports = {
             .setColor('#f26e6a')   
         main: try {
             let userTierDB = await localFunctions.getTier(userId, collection);
-            if (!selectionTier.size) {
+            if (!selectionTier.size || typeof selectionTier.get(int.user.id) === "undefined") {
                 if (userTierDB.length === 0 && guildMember.roles.cache.has('743505566617436301')) {
                     await localFunctions.assignPremium(userId, collection, guildMember);
                 }
-                if (messageId) {
-                    
+                if (messageId) {    
                     switch (messageId) {
                         case '1195513874032631961':
                             messageTier = localConstants.premiumTiers[0];

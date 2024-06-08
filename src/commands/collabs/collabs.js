@@ -23,6 +23,7 @@ module.exports = {
         .addSubcommand((subcommand) => subcommand.setName("premium").setDescription('All regarding premium status.'))
         .addSubcommand((subcommand) => subcommand.setName("perks").setDescription('Manage your megacollab perks.'))
         .addSubcommand((subcommand) => subcommand.setName("feedback").setDescription('Send a feedback comment for the staff.'))
+        .addSubcommand((subcommand) => subcommand.setName("referral").setDescription('Obtain and share your referral code.'))
         .addSubcommandGroup((subcommandGroup) =>
             subcommandGroup
                 .setName('quick')
@@ -35,7 +36,6 @@ module.exports = {
                                 .setDescription('Pick name')
                                 .setRequired(true)
                                 .setAutocomplete(true)
-
                         )
                         .addStringOption(option =>
                             option.setName('avatar_text')
@@ -50,6 +50,10 @@ module.exports = {
                         .addStringOption(option =>
                             option.setName('banner_quote')
                                 .setDescription('Quote for the banner')
+                        )
+                        .addStringOption(option =>
+                            option.setName('referral')
+                                .setDescription('Referral code')
                         )
                 )
                 .addSubcommand((subcommand) =>
@@ -68,6 +72,10 @@ module.exports = {
                         .addStringOption(option =>
                             option.setName('banner_quote')
                                 .setDescription('Quote for the banner')
+                        )
+                        .addStringOption(option =>
+                            option.setName('referral')
+                                .setDescription('Referral code')
                         )
                 )
                 .addSubcommand((subcommand) =>
@@ -207,6 +215,29 @@ module.exports = {
                 content: 'Link your account using the button bellow.',
                 components: [components]
             });
+        }
+
+        if (subcommand === "referral") {
+            localFunctions.handleReferralCommand(int)
+                .then(async (code) => {
+                    const cartEmbed = new EmbedBuilder()
+                        .setFooter({ text: 'Endless Mirage | Referral Code', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                        .setColor('#f26e6a')
+                        .setTitle(`Welcome ${int.user.tag}!`)
+                        .setDescription(`**\`\`\`prolog\nYour current referral code is ${code}\`\`\`**`)
+                    const components = new ActionRowBuilder().addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('see-referrals')
+                            .setLabel('❄️ Referred users')
+                            .setStyle('Success'),
+                    )
+                    await int.editReply({ embeds: [cartEmbed], components: [components]});
+                })
+                .catch((error) => {
+                    console.error('Error handling referral command:', error);
+                    int.editReply({ content: 'An error occurred while generating your referral code.', ephemeral: true });
+                });
+            return;
         }
 
         if (subcommand === "profile") {
@@ -1161,7 +1192,7 @@ module.exports = {
                                     .setStyle('Success'),
                             );
 
-                            int.editReply({embeds: [dashboardEmbed], components: [components]});
+                            int.editReply({ embeds: [dashboardEmbed], components: [components] });
 
                         } else {
                             let i = 1;
@@ -1187,8 +1218,8 @@ module.exports = {
                                         .setLabel('New Bump')
                                         .setStyle('Success'),
                                 );
-    
-                                int.editReply({embeds: [dashboardEmbed], components: [components]});
+
+                                int.editReply({ embeds: [dashboardEmbed], components: [components] });
                             } else if (bumps.length !== 4) {
                                 const components = new ActionRowBuilder().addComponents(
                                     new ButtonBuilder()
@@ -1196,8 +1227,8 @@ module.exports = {
                                         .setLabel('Stop Bump')
                                         .setStyle('Danger'),
                                 );
-    
-                                int.editReply({embeds: [dashboardEmbed], components: [components]});
+
+                                int.editReply({ embeds: [dashboardEmbed], components: [components] });
                             } else {
                                 const components = new ActionRowBuilder().addComponents(
                                     new ButtonBuilder()
@@ -1205,8 +1236,8 @@ module.exports = {
                                         .setLabel('Filter Users')
                                         .setStyle('Primary'),
                                 );
-    
-                                int.editReply({embeds: [dashboardEmbed], components: [components]});
+
+                                int.editReply({ embeds: [dashboardEmbed], components: [components] });
                             }
 
                         }
@@ -1439,6 +1470,15 @@ module.exports = {
                                 components: [components]
                             });
                         }
+                        let referral = int.fields.getString('referral') ? int.fields.getString('referral') : false;
+                        if (referral) {
+                            const inviter = await localFunctions.getInviter(referral, userCollection);
+                            if (inviter) {
+                                if (inviter._id === userId) return int.editReply('You cannot use your own referral code silly!');
+                            } else {
+                                referral = false;
+                            }
+                        }
                         if (int.options.getString('avatar_text').length > openMegacollab.fieldRestrictions.av) return int.editReply(`The character limit for the avatar is of ${openMegacollab.fieldRestrictions.av} characters!`);
                         if (int.options.getString('banner_text').length > openMegacollab.fieldRestrictions.ca) return int.editReply(`The character limit for the banner is of ${openMegacollab.fieldRestrictions.ca} characters!`);
                         if (int.options.getString('banner_quote') !== null) {
@@ -1511,7 +1551,8 @@ module.exports = {
                             ca_quote: int.options.getString('banner_quote') ? int.options.getString('banner_quote') : "",
                             prestige: prestigeLevel,
                             tier: tier,
-                            bump_imune: tier ? true : false
+                            bump_imune: tier ? true : false,
+                            referral: referral ? referral : false
                         };
                         const data = { ...userParticipant, ...fullPick, ...userOsuData };
                         await localFunctions.addCollabParticipant(openMegacollab.name, collection, data);
@@ -1540,11 +1581,8 @@ module.exports = {
                             .setURL('https://endlessmirage.net/')
                             .setThumbnail(userOsuDataFull.avatar_url)
                             .setAuthor({ name: `New Participation on the ${openMegacollab.name}!`, iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                            .setDescription(`**\`\`\`ml\n🎫 osu! Info\`\`\`**                                                                                    `)
                             .addFields(
-                                {
-                                    name: "‎",
-                                    value: `**\`\`\`ml\n🎫 osu! Info\`\`\`**                                                                                    `
-                                },
                                 {
                                     name: "‎",
                                     value: `┌ User: **${userOsuDataFull.username}**\n├ Country: **${userOsuDataFull.country_code}**\n├ Rank: **#${userOsuDataFull.statistics.global_rank}**\n├ Peak: **#${userOsuDataFull.rank_highest.rank}**\n└ Mode: **${userOsuDataFull.playmode}**`,
@@ -1601,10 +1639,20 @@ module.exports = {
                                 value: `┌ Category: **${fullPick.category}**\n├ Premium Tier: **${tier}**\n└ Prestige Level: **${prestigeLevel}**`,
                                 inline: true
                             },
+                        )
+                        if (referral) {
+                            joinEmbed.addFields(
+                                {
+                                    name: "‎",
+                                    value: `Referred by <@${inviter._id}>`
+                                }
+                            )
+                        }
+                        joinEmbed.addFields(
                             {
                                 name: "‎",
                                 value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
-                            },
+                            }
                         )
                         const imageEmbed = new EmbedBuilder()
                             .setImage(fullPick.imgURL)
@@ -1679,6 +1727,15 @@ module.exports = {
                                 components: [components]
                             });
                         }
+                        let referral = int.fields.getString('referral') ? int.fields.getString('referral') : false;
+                        if (referral) {
+                            const inviter = await localFunctions.getInviter(referral, userCollection);
+                            if (inviter) {
+                                if (inviter._id === userId) return int.editReply('You cannot use your own referral code silly!');
+                            } else {
+                                referral = false;
+                            }
+                        }
                         if (int.options.getString('avatar_text').length > openMegacollab.fieldRestrictions.av) return int.editReply(`The character limit for the avatar is of ${openMegacollab.fieldRestrictions.av} characters!`);
                         if (int.options.getString('banner_text').length > openMegacollab.fieldRestrictions.ca) return int.editReply(`The character limit for the banner is of ${openMegacollab.fieldRestrictions.ca} characters!`);
                         if (int.options.getString('banner_quote') !== null) {
@@ -1752,7 +1809,8 @@ module.exports = {
                             ca_quote: int.options.getString('banner_quote') ? int.options.getString('banner_quote') : "",
                             prestige: prestigeLevel,
                             tier: tier,
-                            bump_imune: tier ? true : false
+                            bump_imune: tier ? true : false,
+                            referral: referral ? referral : false
                         };
                         const data = { ...userParticipant, ...fullPick, ...userOsuData };
                         await localFunctions.addCollabParticipant(openMegacollab.name, collection, data);
@@ -1781,11 +1839,8 @@ module.exports = {
                             .setURL('https://endlessmirage.net/')
                             .setThumbnail(userOsuDataFull.avatar_url)
                             .setAuthor({ name: `New Participation on the ${openMegacollab.name}!`, iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                            .setDescription(`**\`\`\`ml\n🎫 osu! Info\`\`\`**                                                                                    `)
                             .addFields(
-                                {
-                                    name: "‎",
-                                    value: `**\`\`\`ml\n🎫 osu! Info\`\`\`**                                                                                    `
-                                },
                                 {
                                     name: "‎",
                                     value: `┌ User: **${userOsuDataFull.username}**\n├ Country: **${userOsuDataFull.country_code}**\n├ Rank: **#${userOsuDataFull.statistics.global_rank}**\n├ Peak: **#${userOsuDataFull.rank_highest.rank}**\n└ Mode: **${userOsuDataFull.playmode}**`,
@@ -1842,10 +1897,20 @@ module.exports = {
                                 value: `┌ Category: **${fullPick.category}**\n├ Premium Tier: **${tier}**\n└ Prestige Level: **${prestigeLevel}**`,
                                 inline: true
                             },
+                        )
+                        if (referral) {
+                            joinEmbed.addFields(
+                                {
+                                    name: "‎",
+                                    value: `Referred by <@${inviter._id}>`
+                                }
+                            )
+                        }
+                        joinEmbed.addFields(
                             {
                                 name: "‎",
                                 value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
-                            },
+                            }
                         )
                         const imageEmbed = new EmbedBuilder()
                             .setImage(fullPick.imgURL)
