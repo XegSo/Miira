@@ -82,6 +82,10 @@ module.exports = {
                         )
                 )
                 .addSubcommand((subcommand) =>
+                    subcommand.setName("bump")
+                        .setDescription('Bump your current megacollab participation.')
+                )
+                .addSubcommand((subcommand) =>
                     subcommand.setName("trade")
                         .setDescription('Trade a pick in a quick way. (Megacollab only)')
                         .addStringOption(option =>
@@ -137,8 +141,12 @@ module.exports = {
                         )
                 )
                 .addSubcommand((subcommand) =>
+                    subcommand.setName("set-bumps")
+                        .setDescription('Setup bumps for megacollabs. (Admin only)')
+                )
+                .addSubcommand((subcommand) =>
                     subcommand.setName("link")
-                        .setDescription('Links an account instantly. (Admin Only)')
+                        .setDescription('Links an account instantly. (Admin only)')
                         .addStringOption(option =>
                             option.setName('discordid')
                                 .setDescription('User discord id')
@@ -167,8 +175,8 @@ module.exports = {
         const subcommand = int.options.getSubcommand();
         const subcommandGroup = int.options.getSubcommandGroup();
         const userId = int.user.id;
-        const guild = client.guilds.cache.get(localConstants.guildId);
-        const guildMember = guild.members.cache.get(userId);
+        const guild = await client.guilds.cache.get(localConstants.guildId);
+        const guildMember = await guild.members.cache.get(userId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
         if (subcommand === "create") {
             if (userId !== '687004886922952755') {
@@ -1116,6 +1124,96 @@ module.exports = {
         }
 
         if (subcommandGroup === "admin") {
+            if (subcommand === "set-bumps") {
+                if (!guildMember.roles.cache.has('630636502187114496')) {
+                    await int.editReply('You are not allowed to do this.');
+                    return;
+                }
+                const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+                const currentDate = Math.floor(Date.now() / 1000);
+                try {
+                    const allCollabs = await localFunctions.getCollabs(collection);
+                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
+                    if (typeof openMegacollab === "undefined") {
+                        await int.editReply('There is no open megacollabs at the moment...')
+                    } else {
+                        const collab = openMegacollab;
+                        let bumps = collab.bumps;
+                        const dashboardEmbed = new EmbedBuilder()
+                            .setFooter({ text: 'Endless Mirage | Bumps Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                            .setColor('#f26e6a')
+                            .setDescription(`**\`\`\`ml\n🧱 Endless Mirage | Admin Bump Dashboard\`\`\`**\n**${collab.name}**`);
+                        if (typeof bumps === "undefined") {
+                            dashboardEmbed.addFields(
+                                {
+                                    name: "‎",
+                                    value: "There are no bumps for this collab yet..."
+                                },
+                                {
+                                    name: "‎",
+                                    value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                                }
+                            );
+                            const components = new ActionRowBuilder().addComponents(
+                                new ButtonBuilder()
+                                    .setCustomId('start-bump')
+                                    .setLabel('New Bump')
+                                    .setStyle('Success'),
+                            );
+
+                            int.editReply({embeds: [dashboardEmbed], components: [components]});
+
+                        } else {
+                            let i = 1;
+                            for (const bump of bumps) {
+                                dashboardEmbed.addFields(
+                                    {
+                                        name: "‎",
+                                        value: `Bump #${i}\n- **Starting Date:** ${bump.startingDate}\n- **Duration:** ${bump.days} days`
+                                    }
+                                )
+                            }
+                            dashboardEmbed.addFields(
+                                {
+                                    name: "‎",
+                                    value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                                }
+                            )
+                            const latestBumpIndex = bumps.length - 1;
+                            if (currentDate - bumps[latestBumpIndex].startingDate > bumps[currentBumpIndex].days * 24 * 60 * 60) {
+                                const components = new ActionRowBuilder().addComponents(
+                                    new ButtonBuilder()
+                                        .setCustomId('start-bump')
+                                        .setLabel('New Bump')
+                                        .setStyle('Success'),
+                                );
+    
+                                int.editReply({embeds: [dashboardEmbed], components: [components]});
+                            } else {
+                                const components = new ActionRowBuilder().addComponents(
+                                    new ButtonBuilder()
+                                        .setCustomId('stop-bump')
+                                        .setLabel('Stop Bump')
+                                        .setStyle('Danger'),
+                                );
+    
+                                int.editReply({embeds: [dashboardEmbed], components: [components]});
+                            }
+                            if (bumps.length === 4) {
+                                components.addComponents(
+                                    new ButtonBuilder()
+                                        .setCustomId('filter-bump')
+                                        .setLabel('Filter Users')
+                                        .setStyle('Secondary'),
+                                )
+                            }
+                        }
+                    }
+                } finally {
+                    mongoClient.close();
+                }
+            }
+
             if (subcommand === "link") {
                 if (!guildMember.roles.cache.has('630636502187114496')) {
                     await int.editReply('You are not allowed to do this.');
@@ -1533,6 +1631,8 @@ module.exports = {
                                 await localFunctions.delay(2 * 60 * 1000);
                             }
                         }
+
+                        await guildMember.roles.add(openMegacollab.roleId);
                     }
                 } catch (e) {
                     console.log(e);
@@ -1773,6 +1873,8 @@ module.exports = {
                             }
                         }
 
+                        await guildMember.roles.add(openMegacollab.roleId);
+
                     }
                 } catch (e) {
                     console.log(e);
@@ -1784,7 +1886,7 @@ module.exports = {
                 return;
             }
 
-            if (subcommand == "swap") {
+            if (subcommand === "swap") {
                 const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
                 const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
                 const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
@@ -1918,7 +2020,7 @@ module.exports = {
                 return;
             }
 
-            if (subcommand == "trade") {
+            if (subcommand === "trade") {
                 const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
                 const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
                 const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
@@ -2041,7 +2143,53 @@ module.exports = {
                 return;
             }
 
-            if (subcommand == "pick-check") {
+            if (subcommand === "bump") {
+                const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+                const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
+                try {
+                    const allCollabs = await localFunctions.getCollabs(collection);
+                    const userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
+                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
+                    if (typeof openMegacollab === "undefined") {
+                        await int.editReply('There is no open megacollabs at the moment...')
+                    } else {
+                        try {
+                            if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === "undefined") {
+                                return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                            }
+                        } catch {
+                            return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
+                        }
+                        const collab = openMegacollab;
+                        const participation = collab.participants.find(u => u.discordId === userId);
+                        if (participation.bump_imune) return int.editReply('You\'re imune to bumps! How awesome.');
+                        const bumps = collab.bumps;
+                        if (typeof bumps === "undefined") return int.editReply('The bumps for the current megacollab have not started yet!');
+                        const currentBumpIndex = bumps.length - 1;
+                        const currentDate = Math.floor(Date.now() / 1000);
+                        if (typeof bumps[currentBumpIndex].users.find(u => u.discordId === userId) !== "undefined") return int.editReply('You have already bumped!');
+                        let userBumps = {};
+                        for (const bump of bumps) {
+                            if (typeof bump.users.find(u => u.discordId === userId) !== "undefined") {
+                                userBumps.push(bump);
+                            }
+                        }
+                        if (currentDate - bumps[currentBumpIndex].startingDate > bumps[currentBumpIndex].days * 24 * 60 * 60) return int.editReply(`The time window to bump has passed! Please try again on the next one. You have completed ${userBumps.length} of ${currentBumpIndex + 1} bumps.`);
+                        const bumpEntry = {
+                            discordId: userId,
+                            date: currentDate,
+                        }
+                        await localFunctions.addCollabBumpUser(collab.name, collection, bumps[currentBumpIndex], bumpEntry);
+                        await int.editReply('You have bumped your participation succesfully');
+
+                    }
+                } finally {
+                    mongoClient.close();
+                    mongoClientUsers.close();
+                }
+            }
+
+            if (subcommand === "pick-check") {
                 const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
                 try {
                     const allCollabs = await localFunctions.getCollabs(collection);
@@ -2228,7 +2376,7 @@ module.exports = {
                 return;
             }
 
-            if (subcommand == "user-check") {
+            if (subcommand === "user-check") {
                 const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
                 try {
                     const allCollabs = await localFunctions.getCollabs(collection);
@@ -2375,8 +2523,12 @@ module.exports = {
                         if (newPickFull.status === "available") {
                             return int.editReply('This character is available! You can swap your pick.');
                         }
+                        if (typeof openMegacollab.snipes !== "undefined") {
+                            if (typeof openMegacollab.snipes.find(s => s.userId === userId && s.pick === pick)) {
+                                return int.editReply('You already have a snipe for this character.')
+                            }
+                        }
                         const pickRequested = newPickFull.id;
-
                         let participants = openMegacollab.participants;
                         const fullTraderParticipation = participants.find((e) => e.discordId === userId);
                         if (fullTraderParticipation.id === pickRequested) {

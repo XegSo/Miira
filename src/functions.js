@@ -1107,6 +1107,14 @@ module.exports = {
         await collection.updateOne({ name: collab }, { $push: { snipes: snipe } }, { upsert: true });
     },
 
+    addCollabBump: async function (collab, collection, bump) {
+        await collection.updateOne({ name: collab }, { $push: { bumps: bump } }, { upsert: true });
+    },
+
+    addCollabBumpUser: async function (collab, collection, bump, user) {
+        await collection.updateOne({ name: collab, 'bumps.startingDate': bump.startingDate }, { $push: { 'bumps.$.users': user } }, { upsert: true });
+    },
+
     removeCollabSnipe: async function (collab, collection, user) {
         await collection.updateOne({ name: collab }, { $pull: { snipes: { userId: user } } }, { upsert: true });
     },
@@ -1245,6 +1253,15 @@ module.exports = {
             await collection.updateOne({ _id: userId }, { $unset: { collabs: 1 } });
         } catch (error) {
             console.error('Error liquidating the collabs for the user:', error);
+            return null;
+        }
+    },
+
+    liquidateUserOsuData: async function (userId, collection) {
+        try {
+            await collection.updateOne({ _id: userId }, { $unset: { osuData: 1 } });
+        } catch (error) {
+            console.error('Error liquidating the collab data for the user:', error);
             return null;
         }
     },

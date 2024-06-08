@@ -245,6 +245,8 @@ module.exports = {
                         await localFunctions.delay(2*60*1000);
                     }
                 }
+
+                await guildMember.roles.add(collab.roleId);
             }
         } catch (e) {
             console.log(e);

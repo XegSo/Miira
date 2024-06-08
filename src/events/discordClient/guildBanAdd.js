@@ -25,6 +25,7 @@ module.exports = {
                     await localFunctions.unsetCollabParticipation(collab.name, collection, userCollab.collabPick.id);
                     await localFunctions.removeCollabParticipant(collab.name, collection, userId);
                     await localFunctions.unsetParticipationOnSheet(collab, userCollab.collabPick);
+                    await localFunctions.liquidateUserOsuData(userId, userCollection);
                     const leaveEmbed = new EmbedBuilder()
                         .setFooter({ text: 'Endless Mirage | New Character Available', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                         .setColor('#f26e6a')

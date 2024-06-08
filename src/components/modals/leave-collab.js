@@ -13,7 +13,8 @@ module.exports = {
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
         const userId = int.user.id;
-        const guild = client.guilds.cache.get(localConstants.guildId);
+        const guild = await client.guilds.cache.get(localConstants.guildId);
+        const guildMember = await guild.members.fetch(userId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
         try {
             const collab = leaveCache.get(int.user.id).collab;
@@ -77,6 +78,8 @@ module.exports = {
                 if (fullCollab.status === "full") {
                     await localFunctions.setCollabStatus(fullCollab.name, "open", collection);
                 }
+
+                await guildMember.roles.remove(openMegacollab.roleId);
             }
         } catch (e) {
             console.log(e);

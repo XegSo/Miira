@@ -42,6 +42,9 @@ module.exports = {
             await localFunctions.removeCollabParticipant(collab.name, collection, fullParticipation.discordId);
             await localFunctions.unsetParticipationOnSheet(collab, pickFull);
 
+            const pendingMember = await guild.members.fetch(fullParticipation.discordId);
+            await pendingMember.roles.remove(collab.roleId);
+
             let contentString = "";
             const snipes = await localFunctions.getCollabSnipes(collab.name, collection, id);
             if (typeof snipes !== "undefined") {

@@ -43,6 +43,10 @@ module.exports = {
             await localFunctions.setUserCollabs(fullParticipation.discordId, userCollabs, userCollection);
             await localFunctions.removeCollabParticipant(collab.name, collection, fullParticipation.discordId);
             await localFunctions.unsetParticipationOnSheet(collab, pickFull);
+            await localFunctions.liquidateUserOsuData(fullParticipation.discordId, userCollection);
+
+            const pendingMember = await guild.members.fetch(fullParticipation.discordId);
+            await pendingMember.roles.remove(collab.roleId);
 
             let contentString = "";
             const snipes = collab.snipes;

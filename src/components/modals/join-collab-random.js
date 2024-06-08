@@ -247,6 +247,8 @@ module.exports = {
                 }
             }
 
+            await guildMember.roles.add(collab.roleId);
+
         } catch (e) {
             console.log(e);
         } finally {
