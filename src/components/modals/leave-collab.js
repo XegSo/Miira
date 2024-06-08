@@ -79,7 +79,7 @@ module.exports = {
                     await localFunctions.setCollabStatus(fullCollab.name, "open", collection);
                 }
 
-                await guildMember.roles.remove(openMegacollab.roleId);
+                await guildMember.roles.remove(fullCollab.roleId);
             }
         } catch (e) {
             console.log(e);

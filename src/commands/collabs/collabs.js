@@ -1180,7 +1180,7 @@ module.exports = {
                                 }
                             )
                             const latestBumpIndex = bumps.length - 1;
-                            if (currentDate - bumps[latestBumpIndex].startingDate > bumps[currentBumpIndex].days * 24 * 60 * 60) {
+                            if (currentDate - bumps[latestBumpIndex].startingDate > bumps[clatestBumpIndex].days * 24 * 60 * 60 && bumps.length !== 4) {
                                 const components = new ActionRowBuilder().addComponents(
                                     new ButtonBuilder()
                                         .setCustomId('start-bump')
@@ -1189,7 +1189,7 @@ module.exports = {
                                 );
     
                                 int.editReply({embeds: [dashboardEmbed], components: [components]});
-                            } else {
+                            } else if (bumps.length !== 4) {
                                 const components = new ActionRowBuilder().addComponents(
                                     new ButtonBuilder()
                                         .setCustomId('stop-bump')
@@ -1198,15 +1198,17 @@ module.exports = {
                                 );
     
                                 int.editReply({embeds: [dashboardEmbed], components: [components]});
-                            }
-                            if (bumps.length === 4) {
-                                components.addComponents(
+                            } else {
+                                const components = new ActionRowBuilder().addComponents(
                                     new ButtonBuilder()
                                         .setCustomId('filter-bump')
                                         .setLabel('Filter Users')
-                                        .setStyle('Secondary'),
-                                )
+                                        .setStyle('Primary'),
+                                );
+    
+                                int.editReply({embeds: [dashboardEmbed], components: [components]});
                             }
+
                         }
                     }
                 } finally {
@@ -2524,7 +2526,7 @@ module.exports = {
                             return int.editReply('This character is available! You can swap your pick.');
                         }
                         if (typeof openMegacollab.snipes !== "undefined") {
-                            if (typeof openMegacollab.snipes.find(s => s.userId === userId && s.pick === pick)) {
+                            if (typeof openMegacollab.snipes.find(s => s.userId === userId && s.pick === pick) !== "undefined") {
                                 return int.editReply('You already have a snipe for this character.')
                             }
                         }
