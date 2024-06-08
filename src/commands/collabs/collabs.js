@@ -1180,7 +1180,7 @@ module.exports = {
                                 }
                             )
                             const latestBumpIndex = bumps.length - 1;
-                            if (currentDate - bumps[latestBumpIndex].startingDate > bumps[clatestBumpIndex].days * 24 * 60 * 60 && bumps.length !== 4) {
+                            if (currentDate - bumps[latestBumpIndex].startingDate > bumps[latestBumpIndex].days * 24 * 60 * 60 && bumps.length !== 4) {
                                 const components = new ActionRowBuilder().addComponents(
                                     new ButtonBuilder()
                                         .setCustomId('start-bump')
