@@ -33,8 +33,9 @@ module.exports = {
                 });
             }
             let referral = int.fields.getTextInputValue('referral').length ? int.fields.getTextInputValue('referral') : false;
+            let inviter;
             if (referral) {
-                const inviter = await localFunctions.getInviter(referral, userCollection);
+                inviter = await localFunctions.getInviter(referral, userCollection);
                 if (inviter) {
                     if (inviter._id === userId) return int.editReply('You cannot use your own referral code silly!');
                 } else {

@@ -231,7 +231,7 @@ module.exports = {
                             .setLabel('❄️ Referred users')
                             .setStyle('Success'),
                     )
-                    await int.editReply({ embeds: [cartEmbed], components: [components]});
+                    await int.editReply({ embeds: [cartEmbed], components: [components] });
                 })
                 .catch((error) => {
                     console.error('Error handling referral command:', error);
@@ -1471,8 +1471,9 @@ module.exports = {
                             });
                         }
                         let referral = int.fields.getString('referral') ? int.fields.getString('referral') : false;
+                        let inviter;
                         if (referral) {
-                            const inviter = await localFunctions.getInviter(referral, userCollection);
+                            inviter = await localFunctions.getInviter(referral, userCollection);
                             if (inviter) {
                                 if (inviter._id === userId) return int.editReply('You cannot use your own referral code silly!');
                             } else {
@@ -1728,8 +1729,9 @@ module.exports = {
                             });
                         }
                         let referral = int.fields.getString('referral') ? int.fields.getString('referral') : false;
+                        let inviter;
                         if (referral) {
-                            const inviter = await localFunctions.getInviter(referral, userCollection);
+                            inviter = await localFunctions.getInviter(referral, userCollection);
                             if (inviter) {
                                 if (inviter._id === userId) return int.editReply('You cannot use your own referral code silly!');
                             } else {
