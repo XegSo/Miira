@@ -1560,7 +1560,7 @@ module.exports = {
                             tier: tier,
                             bump_imune: tier ? true : false,
                             referral: referral ? referral : false,
-                            collabName: collab.name,
+                            collabName: openMegacollab.name,
                         };
                         const data = { ...userParticipant, ...fullPick, ...userOsuData };
                         await localFunctions.addCollabParticipant(openMegacollab.name, collection, data);
