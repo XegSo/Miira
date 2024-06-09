@@ -135,7 +135,8 @@ module.exports = {
                 prestige: prestigeLevel,
                 tier: tier,
                 bump_imune: tier ? true : false,
-                referral: referral ? referral: false
+                referral: referral ? referral: false,
+                collabName: collab.name,
             };
             const data = { ...userParticipant, ...itemInPool, ...userOsuData };
             await localFunctions.addCollabParticipant(collab.name, collection, data);
@@ -267,6 +268,7 @@ module.exports = {
 
         } catch (e) {
             console.log(e);
+            await int.editReply('Your pick has been locked but there has been an error while joining the collab. Please ping the owner in the support channel!');
         } finally {
             mongoClient.close();
             mongoClientUsers.close();

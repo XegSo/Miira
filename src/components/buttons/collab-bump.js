@@ -1,5 +1,6 @@
 const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
+const localConstants = require('../../constants');
 
 module.exports = {
     data: {
@@ -10,6 +11,7 @@ module.exports = {
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
         const userId = int.user.id;
+        const guild = client.guilds.cache.get(localConstants.guildId);
         try {
             const allCollabs = await localFunctions.getCollabs(collection);
             const userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
@@ -39,6 +41,15 @@ module.exports = {
             const bumpEntry = {
                 discordId: userId,
                 date: currentDate,
+            }
+            if (participation.referral) {
+                const referralCode = participation.referral;
+                const inviterUser = await localFunctions.getUserByReferral(referralCode, userCollection);
+                const logChannel = guild.channels.cache.get(localConstants.logChannelID);
+                let currentBalance = inviterUser.balance;
+                currentBalance = currentBalance + 2000;
+                await localFunctions.setBalance(inviterUser._id, currentBalance, userCollection);
+                logChannel.send({ content: `<@${inviterUser._id}> The user ${int.user.tag} has bumped their pick and you've received **2000** tokens!`})
             }
             await localFunctions.addCollabBumpUser(collab.name, collection, bumps[currentBumpIndex], bumpEntry);
             await int.editReply('You have bumped your participation succesfully');

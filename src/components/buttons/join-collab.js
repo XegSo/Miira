@@ -49,7 +49,7 @@ module.exports = {
             const referral = new TextInputBuilder()
                 .setCustomId('referral')
                 .setLabel('Insert a referral code.')
-                .setPlaceholder('Did you know that you can get your own referral code to invite your friends using the /collabs referral command? You will obtain tokens everytime your friend bumps their pick! Use /server shop to see all you can buy.')
+                .setPlaceholder('Did you know that you can get a referral code to invite your friends using /collabs referral?')
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(false);
 
@@ -64,7 +64,8 @@ module.exports = {
             })
             buttonCache.delete(int.user.id);
 
-        } catch {
+        } catch (e) {
+            console.log(e);
             int.reply({
                 content: 'Collab is not cached, try to run the command to show it again.',
                 ephemeral: true

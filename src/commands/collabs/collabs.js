@@ -223,8 +223,14 @@ module.exports = {
                     const cartEmbed = new EmbedBuilder()
                         .setFooter({ text: 'Endless Mirage | Referral Code', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                         .setColor('#f26e6a')
-                        .setTitle(`Welcome ${int.user.tag}!`)
-                        .setDescription(`**\`\`\`prolog\nYour current referral code is ${code}\`\`\`**`)
+                        .setTitle(`Your current referral code is:`)
+                        .setDescription(`**\`\`\`prolog\n${code}\`\`\`**                                                                                                        \nEverytime a friend you invited to the collab bumps their pick, you will get **2000 tokens**!\nIssue the command \`\`/server shop\`\` to see all you can buy, and the command \`\`/server profile\`\` to check the amount of tokens you have.`)
+                        .addFields(
+                            {
+                                name: "‎",
+                                value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                            }
+                        )
                     const components = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('see-referrals')
@@ -1553,7 +1559,8 @@ module.exports = {
                             prestige: prestigeLevel,
                             tier: tier,
                             bump_imune: tier ? true : false,
-                            referral: referral ? referral : false
+                            referral: referral ? referral : false,
+                            collabName: collab.name,
                         };
                         const data = { ...userParticipant, ...fullPick, ...userOsuData };
                         await localFunctions.addCollabParticipant(openMegacollab.name, collection, data);
@@ -1687,6 +1694,7 @@ module.exports = {
                     }
                 } catch (e) {
                     console.log(e);
+                    await int.editReply('Your pick has been locked but there has been an error while joining the collab. Please ping the owner in the support channel!');
                 } finally {
                     mongoClient.close();
                     mongoClientUsers.close();
@@ -1812,7 +1820,8 @@ module.exports = {
                             prestige: prestigeLevel,
                             tier: tier,
                             bump_imune: tier ? true : false,
-                            referral: referral ? referral : false
+                            referral: referral ? referral : false,
+                            collabName: openMegacollab.name,
                         };
                         const data = { ...userParticipant, ...fullPick, ...userOsuData };
                         await localFunctions.addCollabParticipant(openMegacollab.name, collection, data);
@@ -1947,6 +1956,7 @@ module.exports = {
                     }
                 } catch (e) {
                     console.log(e);
+                    await int.editReply('Your pick has been locked but there has been an error while joining the collab. Please ping the owner in the support channel!');
                 } finally {
                     mongoClient.close();
                     mongoClientUsers.close();
@@ -2247,6 +2257,14 @@ module.exports = {
                         const bumpEntry = {
                             discordId: userId,
                             date: currentDate,
+                        }
+                        if (participation.referral) {
+                            const referralCode = participation.referral;
+                            const inviterUser = await localFunctions.getUserByReferral(referralCode, userCollection);
+                            let currentBalance = inviterUser.balance;
+                            currentBalance = currentBalance + 2000;
+                            await localFunctions.setBalance(inviterUser._id, currentBalance, userCollection);
+                            logChannel.send({ content: `<@${inviterUser._id}> The user ${int.user.tag} has bumped their pick and you've received **2000** tokens!`})
                         }
                         await localFunctions.addCollabBumpUser(collab.name, collection, bumps[currentBumpIndex], bumpEntry);
                         await int.editReply('You have bumped your participation succesfully');

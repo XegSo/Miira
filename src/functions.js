@@ -1018,6 +1018,16 @@ module.exports = {
         return user ? user.collabs || [] : [];
     },
 
+    getUserReferral: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.referralCode || false : false;
+    },
+
+    getUserByReferral: async function (referral, collection) {
+        const user = await collection.findOne({ referralCode: referral });
+        return user ? user || false : false;
+    },
+
     getUser: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user || null : null;
