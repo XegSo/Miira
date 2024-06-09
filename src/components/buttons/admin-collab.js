@@ -13,7 +13,7 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const guild = client.guilds.cache.get(localConstants.guildId);
-        const guildMember = guild.members.cache.get(userId);
+        const guildMember = guild.members.cache.get(int.user.id);
         if (!guildMember.roles.cache.has('630636502187114496')) return;
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         try {

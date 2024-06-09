@@ -2449,7 +2449,6 @@ async function scheduleDailyDecay(client) {
                 subChannel.send({
                     content: '',
                     embeds: [reminderEmbed],
-                    components: [renewComponents],
                 });
                 console.log(`DM Sent to ${user._id}`);
             }
