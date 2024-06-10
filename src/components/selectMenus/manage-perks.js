@@ -27,6 +27,10 @@ module.exports = {
                 .setAuthor({ name: `Managing the ${perkName} for the ${collabName}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
                 .setDescription(`*Thank you for supporting the collabs!*\n                                                                                                        \n**\`\`\`ml\n✅ Current perk information\`\`\`**`);
             const propertiesNames = Object.keys(selectedPerk);
+            managePerkCache.set(int.user.id, {
+                collabName: collab.name,
+                perkName: perkName
+            })
             const propertiesToDisplay = Object.keys(selectedPerk).map(localFunctions.transformPropertyName);
             for (let i = 0; i < propertiesToDisplay.length; i++) {
                 perksEmbed.addFields(

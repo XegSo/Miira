@@ -21,7 +21,7 @@ module.exports = {
             const currentRestrictions = fieldRestrictions[perkName];
             const modal = new ModalBuilder()
                 .setCustomId("perk-edit")
-                .setTitle('Claim your perk!');
+                .setTitle('Edit your perk!');
             let modalField;
             for (const requiredField of fullPerk.fields) {
                 if (requiredField.type === "text") {
