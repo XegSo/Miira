@@ -1476,7 +1476,7 @@ module.exports = {
                                 components: [components]
                             });
                         }
-                        let referral = int.fields.getString('referral') ? int.fields.getString('referral') : false;
+                        let referral = int.options.getString('referral') ? int.options.getString('referral') : false;
                         let inviter;
                         if (referral) {
                             inviter = await localFunctions.getInviter(referral, userCollection);
@@ -1736,7 +1736,7 @@ module.exports = {
                                 components: [components]
                             });
                         }
-                        let referral = int.fields.getString('referral') ? int.fields.getString('referral') : false;
+                        let referral = int.options.getString('referral') ? int.options.getString('referral') : false;
                         let inviter;
                         if (referral) {
                             inviter = await localFunctions.getInviter(referral, userCollection);
