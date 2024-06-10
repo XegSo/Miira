@@ -31,7 +31,7 @@ module.exports = {
         try {
             const existingTradeRequest = await localFunctions.getTradeRequest(int.user.id, collectionSpecial);
             if (existingTradeRequest.length !== 0) {
-                return await int.reply({ content: `You cannot swap your pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
+                return await int.editReply({ content: `You cannot swap your pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
             }
             const collab = initializedMap.get(int.user.id).collab
             if (collab.type === "pooled") {
