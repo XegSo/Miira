@@ -64,7 +64,6 @@ module.exports = {
             })
 
         } catch (e) {
-            console.log(e);
             int.reply({
                 content: 'Collab is not cached, try to run the command to show it again.',
                 ephemeral: true
