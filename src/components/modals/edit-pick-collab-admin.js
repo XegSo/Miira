@@ -23,7 +23,7 @@ module.exports = {
       }
     }
     const guild = client.guilds.cache.get(localConstants.guildId);
-    const pick = initializedMap.get(int.user.id).pick.id;
+    const pick = initializedMap.get(int.user.id).pick;
     let user = null;
     let contentString = "";
     if (typeof initializedMap.get(int.user.id).participation !== "undefined") {
@@ -34,7 +34,7 @@ module.exports = {
     const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
     const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
     try {
-      await localFunctions.editPickName(pick, user, collab, collabCollection, userCollection, int.fields.getTextInputValue("ch_name"));
+      await localFunctions.editPickName(pick.id, user, collab, collabCollection, userCollection, int.fields.getTextInputValue("ch_name"));
       const logChannel = guild.channels.cache.get(localConstants.logChannelID);
       const auditChannel = guild.channels.cache.get(localConstants.auditLogChannelID);
       let charEmbed = new EmbedBuilder()

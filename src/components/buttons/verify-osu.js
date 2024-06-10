@@ -61,6 +61,8 @@ module.exports = {
                 embeds: [dashboardEmbed],
                 components: [components]
             })
+        } catch {
+            await int.editReply('Something went wrong, most likely the bot just got reset while you were trying this interaction. Please try to verify from the beggining again.')
         } finally {
             mongoClient.close();
             mongoClientBlacklist.close();

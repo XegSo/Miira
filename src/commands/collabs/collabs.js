@@ -1530,7 +1530,7 @@ module.exports = {
                         if (fullPick.status === "picked") {
                             return int.editReply('This character got picked while you were selecting...');
                         }
-                        await localFunctions.setCollabParticipation(openMegacollab.name, collection, pick);
+                        await localFunctions.setCollabParticipation(openMegacollab.name, collection, fullPick.id);
 
                         let prestigeLevel = 0;
                         let tier = 0;
@@ -2241,7 +2241,7 @@ module.exports = {
                         }
                         const collab = openMegacollab;
                         const participation = collab.participants.find(u => u.discordId === userId);
-                        if (participation.bump_imune) return int.editReply('You\'re imune to bumps! How awesome.');
+                        if (participation.bump_imune) return int.editReply('You\'re immune to bumps! How awesome.');
                         const bumps = collab.bumps;
                         if (typeof bumps === "undefined") return int.editReply('The bumps for the current megacollab have not started yet!');
                         const currentBumpIndex = bumps.length - 1;
