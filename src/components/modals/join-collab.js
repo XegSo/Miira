@@ -89,7 +89,7 @@ module.exports = {
                             console.log('Attempt to join the collab while locked!');
                             return int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${collab.lockSystem.current.time + collab.lockSystem.timeout * 60}:R>`);
                         }
-                        if (((currentDate > (collab.lockSystem.current.lastParticipant + 120)) || (currentDate + collab.lockSystem.timeout * 60) >= collab.lockSystem.current.time) && collab.lockSystem.current.time !== 0) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
+                        if ((currentDate > (collab.lockSystem.current.lastParticipant + 120)) || (currentDate >= collab.lockSystem.current.time + collab.lockSystem.timeout * 60 && collab.lockSystem.current.time !== 0)) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
                             const current = {
                                 participations: 0,
                                 time: 0
@@ -268,6 +268,13 @@ module.exports = {
                 }
 
                 await guildMember.roles.add(collab.roleId);
+
+                if (collab.status === "early access") {
+                    let userPerks = await localFunctions.getPerks(userId, userCollection);
+                    if (userPerks.length === 0) return;
+                    userPerks = await userPerks.filter(p => p.name !== "Megacollab Early Access");
+                    await localFunctions.setPerks(userId, userPerks, userCollection);
+                }
             }
         } catch (e) {
             console.log(e);

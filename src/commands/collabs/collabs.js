@@ -1508,7 +1508,7 @@ module.exports = {
                                     return int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60}:R>`);
                                 }
 
-                                if (((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 120)) || (currentDate + openMegacollab.lockSystem.timeout * 60) >= openMegacollab.lockSystem.current.time) && openMegacollab.lockSystem.current.time !== 0) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
+                                if ((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 120)) || (currentDate >= openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60 && openMegacollab.lockSystem.current.time !== 0)) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
                                     const current = {
                                         participations: 0,
                                         time: 0
@@ -1767,7 +1767,7 @@ module.exports = {
                                     console.log('Attempt to join the collab while locked!');
                                     return int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60}:R>`);
                                 }
-                                if (((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 120)) || (currentDate + openMegacollab.lockSystem.timeout * 60) >= openMegacollab.lockSystem.current.time) && openMegacollab.lockSystem.current.time !== 0) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
+                                if ((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 120)) || (currentDate >= openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60 && openMegacollab.lockSystem.current.time !== 0)) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
                                     const current = {
                                         participations: 0,
                                         time: 0
