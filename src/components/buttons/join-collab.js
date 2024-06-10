@@ -62,7 +62,6 @@ module.exports = {
                 osuData: buttonCache.get(int.user.id).osuData,
                 userCollabData: buttonCache.get(int.user.id).userCollabData
             })
-            buttonCache.delete(int.user.id);
 
         } catch (e) {
             console.log(e);
