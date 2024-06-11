@@ -204,7 +204,7 @@ module.exports = {
             return;
         }
 
-        if (subcommand === "link") {
+        if (subcommand === "link" && subcommandGroup !== "admin") {
             const components = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('link-osu')
