@@ -5,6 +5,7 @@ const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 const { parse } = require('dotenv');
+const { content } = require('googleapis/build/src/apis/content');
 const createCollabCache = new Map();
 const claimCache = new Map();
 const userCheckCache = new Map();
@@ -22,6 +23,7 @@ module.exports = {
         .addSubcommand((subcommand) => subcommand.setName("link").setDescription('Link your osu! account.'))
         .addSubcommand((subcommand) => subcommand.setName("premium").setDescription('All regarding premium status.'))
         .addSubcommand((subcommand) => subcommand.setName("perks").setDescription('Manage your megacollab perks.'))
+        .addSubcommand((subcommand) => subcommand.setName("owoinvite").setDescription('Send help Sarah has me hostage in her basement'))
         .addSubcommand((subcommand) => subcommand.setName("feedback").setDescription('Send a feedback comment for the staff.'))
         .addSubcommand((subcommand) => subcommand.setName("referral").setDescription('Obtain and share your referral code.'))
         .addSubcommandGroup((subcommandGroup) =>
@@ -179,16 +181,23 @@ module.exports = {
                 )
         ),
     async execute(int, client) {
-        await int.deferReply({ ephemeral: true });
         const subcommand = int.options.getSubcommand();
         const subcommandGroup = int.options.getSubcommandGroup();
         const userId = int.user.id;
         const guild = await client.guilds.cache.get(localConstants.guildId);
         const guildMember = await guild.members.cache.get(userId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
+
+        if (subcommand === "owoinvite") {
+            await int.reply(`o-oh hewwo s-s-senpai >///<,\n\nI am lwooking for more fwends in a reaaaalllllly kwel discord swever called Endless Mirage (づ｡◕‿‿◕｡)づ. I'd figure you'd be the perfect match to become my s-s-senpai and help me fill in some slots for our realllllllyyyyyy cool pwoject!(^◡^ ).\nWe have over 5k spots and we only have 1k filled at the moment... so I thought maybeeeee you wanna join ><. So pwetty pwease help us out by joining, I will give you a sooooooper long huggg ᕙ(^▿^-ᕙ). I will also call you senpai from now on OwO.\nPlease consider joining and hope to see you there soon,\n\nmany huggos and love ❤️`);
+            return;
+        }
+
+        await int.deferReply({ ephemeral: true });
+
         if (subcommand === "create") {
             if (userId !== '687004886922952755') {
-                await int.editReply('You are not allowed to do this!');
+                await int.reply('You are not allowed to do this!');
                 return;
             }
             int.editReply('Please reply to this message with a JSON attatchment.');
@@ -200,7 +209,7 @@ module.exports = {
         }
 
         if (subcommand === "feedback") {
-            await int.editReply('This command is WIP!');
+            await int.reply({ content: 'This command is WIP!'});
             return;
         }
 
