@@ -13,7 +13,6 @@ module.exports = {
         const blacklistCollection = client.db.collection("Blacklist");
         
         let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
-        let user = await localFunctions.getUser(userId, userCollection);
         if (typeof userCollabs === "undefined" || userCollabs.length === 0) return;
         console.log(`User ${user.tag} with id ${userId} has been banned while on collabs.`);
         await localFunctions.setBlacklist(userId, "Banned", user.osuData.osu_id, blacklistCollection);
