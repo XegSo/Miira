@@ -1,4 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 const { EmbedBuilder } = require('discord.js');
@@ -10,7 +9,7 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+        const collection = client.db.collection("OzenCollection");
         const userId = int.user.id;
 
         mainProcess: try {
@@ -89,7 +88,6 @@ module.exports = {
 
         } catch (e) {
             console.log(e);
-            mongoClient.close();
-        }    
+        }
     }
 }

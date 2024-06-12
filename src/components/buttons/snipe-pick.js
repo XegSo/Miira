@@ -1,4 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const { userCheckCache } = require('../../commands/collabs/collabs');
 const { userCheckCacheModal } = require('../modals/check-pick');
@@ -11,9 +10,9 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
-        const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
-        const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
-        const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
+        const collection = client.db.collection("Collabs");
+        const userCollection = client.db.collection("OzenCollection");
+        const collectionSpecial = client.db.collection("Special");
         let initializedMap;
         if (userCheckCache.size > 0) {
             if (typeof userCheckCache.get(int.user.id) !== "undefined") {
@@ -58,10 +57,6 @@ module.exports = {
             await int.editReply('A notification if this pick becomes available will be sent to you! If the character becomes available and it gets picked by someone else, your would need to run this command again to get another notification.');
         } catch (e) {
             console.log(e);
-        } finally {
-            mongoClient.close();
-            mongoClientUsers.close();
-            mongoClientSpecial.close();
         }
     }
 }

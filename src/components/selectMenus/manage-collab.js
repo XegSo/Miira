@@ -1,6 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 const profileMenuCache = new Map();
@@ -12,8 +11,8 @@ module.exports = {
   async execute(int, client) {
     await int.deferReply({ ephemeral: true });
     const userId = int.user.id;
-    const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
-    const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
+    const collection = client.db.collection("Collabs");
+    const userCollection = client.db.collection("OzenCollection");
     const guild = client.guilds.cache.get(localConstants.guildId);
     const guildMember = guild.members.cache.get(userId);
     try {
@@ -183,14 +182,11 @@ module.exports = {
 
       profileMenuCache.set(int.user.id, {
         collab: fullCollab,
-      })
+      });
 
     } catch (e) {
       console.log(e)
       await int.editReply('Something went wrong...')
-    } finally {
-      mongoClient.close();
-      mongoClientUsers.close();
     }
   },
   profileMenuCache: profileMenuCache

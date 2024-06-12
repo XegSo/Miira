@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { SelectMenuBuilder, ActionRowBuilder } = require('@discordjs/builders');
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const removePerksCache = new Map();
 
@@ -24,32 +23,25 @@ module.exports = {
                 .setPlaceholder('Select the perks.')
                 .setMinValues(1)
 
-        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");        
-
-        main: try {
-            const userPerks = await localFunctions.getPerks(user.id, collection);
-            if (userPerks.length === 0) {
-                await int.editReply('The user has no perks in the database.');
-                break main;
-            }
-            userPerks.forEach((perk) => {
-                perkMenu.addOptions({ label: perk.name , value: perk.name, description: `${perk.name}` })
-            });
-    
-            removePerksCache.set(int.user.id, {
-                user: user,
-            });
-
-            perkMenu.setMaxValues(perkMenu.options.length);
-            const row = new ActionRowBuilder().addComponents(perkMenu);
-    
-            await int.editReply({
-                components: [row]
-            });
-        } finally {
-            mongoClient.close();
+        const collection = client.db.collection("OzenCollection");       
+        const userPerks = await localFunctions.getPerks(user.id, collection);
+        
+        if (userPerks.length === 0) {
+            await int.editReply('The user has no perks in the database.');
+            return;
         }
-      
+
+        userPerks.forEach((perk) => {
+            perkMenu.addOptions({ label: perk.name , value: perk.name, description: `${perk.name}` });
+        });
+
+        removePerksCache.set(int.user.id, { user });
+        perkMenu.setMaxValues(perkMenu.options.length);
+        const row = new ActionRowBuilder().addComponents(perkMenu);
+
+        await int.editReply({
+            components: [row]
+        });
     },
     removePerksCache: removePerksCache
 }

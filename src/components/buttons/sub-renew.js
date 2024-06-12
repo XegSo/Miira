@@ -1,4 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 const { EmbedBuilder } = require('discord.js');
@@ -11,7 +10,7 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
-        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+        const collection = client.db.collection("OzenCollection");
         const checkoutEmbed = new EmbedBuilder()
             .setFooter({ text: 'Endless Mirage', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')
@@ -61,8 +60,6 @@ module.exports = {
             });
         } catch (e) {
             console.log(e);
-        } finally {
-            mongoClient.close();
         }
     }
 }

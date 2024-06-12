@@ -1,6 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 
@@ -12,7 +11,7 @@ module.exports = {
   async execute(int, client) {
     await int.deferReply({ ephemeral: true });
     const guild = client.guilds.cache.get(localConstants.guildId);
-    const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+    const collection = client.db.collection("Collabs");
     const currentDate = Math.floor(Date.now() / 1000);
     const duration = parseInt(int.fields.getTextInputValue('duration'));
     if (isNaN(duration)) return int.editReply('Provide a valid number of days.');
@@ -54,8 +53,6 @@ module.exports = {
       }
     } catch (e) {
       console.log(e);
-    } finally {
-      mongoClient.close();
     }
-  },
+  }
 };

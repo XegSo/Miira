@@ -1,7 +1,7 @@
 const { TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 const { collabCache } = require('./admin-collab');
-const { adminCache }= require('../../commands/collabs/collabs');
+const { adminCache } = require('../../commands/collabs/collabs');
 
 module.exports = {
     data: {

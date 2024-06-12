@@ -1,4 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const { EmbedBuilder } = require('discord.js');
@@ -23,7 +22,8 @@ module.exports = {
                 initializedMap = profileButtonCache;
             }
         }
-        const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
+
+        const collectionSpecial = client.db.collection("Special");
         const userId = int.user.id;
         const guild = client.guilds.cache.get(localConstants.guildId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
@@ -116,16 +116,13 @@ module.exports = {
                     'messageId': message.id,
                     'messageUrl': message.url,
                     'collabName': collab.name
-                }
+                };
 
                 await localFunctions.updateTradeRequest(tradeData, collectionSpecial);
-
                 await int.editReply(`New trade request created in <#${localConstants.logChannelID}>`);
             }
         } catch (e) {
             console.log(e);
-        } finally {
-            mongoClientSpecial.close();
         }
     },
 };

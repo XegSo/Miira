@@ -1,4 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
@@ -13,7 +12,7 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+        const collection = client.db.collection("Collabs");
         let initializedMap;
         if (profileMenuCache.size > 0) {
             if (typeof profileMenuCache.get(int.user.id) !== "undefined") {
@@ -148,8 +147,6 @@ module.exports = {
 
         } catch (e) {
             console.log(e);
-        } finally {
-            mongoClient.close();
         }
     },
     claimCacheModal: claimCacheModal,

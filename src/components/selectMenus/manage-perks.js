@@ -1,6 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const managePerkCache = new Map();
 
@@ -10,8 +9,9 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
+        const collabCollection = client.db.collection("Collabs");
         const [perkName, collabName] = int.values[0].split('-');
+
         try {
             const collab = await localFunctions.getCollab(collabName, collabCollection);
             const userPerks = collab.perks.users.filter(p => p.userId === int.user.id);
@@ -100,8 +100,6 @@ module.exports = {
         } catch (e) {
             console.log(e);
             await int.reply({ content: 'Try this interaction again... this took more than 3 seconds for some reason', ephemeral: true });
-        } finally {
-            mongoClientCollabs.close();
         }
     },
     managePerkCache: managePerkCache

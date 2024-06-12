@@ -1,4 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const { AttachmentBuilder } = require('discord.js');
 const { collabCache } = require('./admin-collab');
@@ -11,40 +10,38 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply();
-        const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+        const collection = client.db.collection("Collabs");
+
         let initializedMap;
-            if (collabCache.size > 0) {
-                if (typeof collabCache.get(int.user.id) !== "undefined") {
-                    initializedMap = collabCache;
-                }
+        if (collabCache.size > 0) {
+            if (typeof collabCache.get(int.user.id) !== "undefined") {
+                initializedMap = collabCache;
             }
-            if (adminCache.size > 0) {
-                if (typeof adminCache.get(int.user.id) !== "undefined") {
-                    initializedMap = adminCache;
-                }
-            }
-        try {
-            const collabName = initializedMap.get(int.user.id).collab.name
-            const collab = await localFunctions.getCollab(collabName, collection);
-            
-            if (collab.host !== int.user.id) {
-                int.editReply('You are not allowed to do this.');
-                return;
-            }
-            let toExport = collab.perks.toExport;
-            await Promise.all(Object.entries(toExport).map(async ([perk, userEntries]) => {
-                for (let i = 0; i < userEntries.length; i++) {
-                    await processUserEntry(userEntries[i], collection, collabName);
-                }
-            }));
-            const excelBuffer = localFunctions.createExcelBuffer(toExport);
-            const attachment = new AttachmentBuilder(excelBuffer, {
-                name: `${collabName}-Premium Perks.xlsx`
-            });
-            await int.editReply({ files: [attachment] });
-        } finally {
-            mongoClient.close();
         }
+        if (adminCache.size > 0) {
+            if (typeof adminCache.get(int.user.id) !== "undefined") {
+                initializedMap = adminCache;
+            }
+        }
+            
+        const collabName = initializedMap.get(int.user.id).collab.name
+        const collab = await localFunctions.getCollab(collabName, collection);
+        
+        if (collab.host !== int.user.id) {
+            int.editReply('You are not allowed to do this.');
+            return;
+        }
+        let toExport = collab.perks.toExport;
+        await Promise.all(Object.entries(toExport).map(async ([perk, userEntries]) => {
+            for (let i = 0; i < userEntries.length; i++) {
+                await processUserEntry(userEntries[i], collection, collabName);
+            }
+        }));
+        const excelBuffer = localFunctions.createExcelBuffer(toExport);
+        const attachment = new AttachmentBuilder(excelBuffer, {
+            name: `${collabName}-Premium Perks.xlsx`
+        });
+        await int.editReply({ files: [attachment] });
     }
 }
 

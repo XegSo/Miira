@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, TextInputStyle, EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder, SelectMenuBuilder } = require('@discordjs/builders');
-const { connectToMongoDB } = require('../../mongo');
 const Canvas = require('canvas');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
@@ -53,73 +52,73 @@ module.exports = {
     const userId = int.user.id;
     const guild = client.guilds.cache.get(localConstants.guildId);
     const guildMember = guild.members.cache.get(userId);
+    const collection = client.db.collection("OzenCollection");
+    const collectionSpecial = client.db.collection("Special");
+    
     if (subcommand === "inventory") {
       await int.deferReply({ ephemeral: true });
       const userId = int.user.id;
-      const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+
       // Retrieve the user's inventory items from the database
-      try {
-        const userInventory = await localFunctions.getInventory(userId, collection);
-        const onUse = await localFunctions.getOnUse(userId, collection);
+      const userInventory = await localFunctions.getInventory(userId, collection);
+      const onUse = await localFunctions.getOnUse(userId, collection);
+      const inventoryEmbedTop = new EmbedBuilder()
+        .setImage('https://puu.sh/JPcRE/8db81baad8.png')
+        .setColor('#f26e6a');
 
-
-        const inventoryEmbedTop = new EmbedBuilder()
-          .setImage('https://puu.sh/JPcRE/8db81baad8.png')
-          .setColor('#f26e6a');
-
-        if (!userInventory || userInventory.length === 0) {
-          const emptyEmbedBottom = new EmbedBuilder()
-            .setDescription('\`\`\`🔐 Items on storage\`\`\`')
-            .setImage('https://puu.sh/JPffc/3c792e61c9.png')
-            .setColor('#f26e6a')
-            .addFields({ name: 'Your inventory is empty.', value: 'Use /shop to get some items.' });
-          await int.editReply({
-            content: '',
-            embeds: [inventoryEmbedTop, emptyEmbedBottom],
-            ephemeral: true
-          });
-          return;
-        }
-
-        const options = [
-          new SelectMenuBuilder()
-            .setCustomId('use-item')
-            .setPlaceholder('Select an item to use.')
-            .addOptions(
-              userInventory.map((item) => ({
-                label: item.name,
-                value: item.name,
-                description: item.value,
-              }))
-            ),
-        ];
-
-        const inventoryEmbedBottom = new EmbedBuilder()
+      if (!userInventory || userInventory.length === 0) {
+        const emptyEmbedBottom = new EmbedBuilder()
+          .setDescription('\`\`\`🔐 Items on storage\`\`\`')
           .setImage('https://puu.sh/JPffc/3c792e61c9.png')
-          .setColor('#f26e6a');
-        inventoryEmbedBottom.setDescription('\`\`\`🔐 Items on storage\`\`\`');
-        for (const item of userInventory) {
-          inventoryEmbedBottom.addFields({ name: `· ${item.name}`, value: item.desc });
-        }
-
-        if (onUse) {
-          inventoryEmbedBottom.addFields({ name: "\u200B", value: '\`\`\`🚀 Items on use\`\`\`' });
-          for (const item of onUse) {
-            inventoryEmbedBottom.addFields({ name: `· ${item.name}`, value: item.desc });
-          }
-        }
-
-        const actionRow = new ActionRowBuilder().addComponents(options);
+          .setColor('#f26e6a')
+          .addFields({ name: 'Your inventory is empty.', value: 'Use /shop to get some items.' });
         await int.editReply({
           content: '',
-          components: [actionRow],
-          embeds: [inventoryEmbedTop, inventoryEmbedBottom],
+          embeds: [inventoryEmbedTop, emptyEmbedBottom],
           ephemeral: true
         });
-      } finally {
-        mongoClient.close();
+        return;
       }
+
+      const options = [
+        new SelectMenuBuilder()
+          .setCustomId('use-item')
+          .setPlaceholder('Select an item to use.')
+          .addOptions(
+            userInventory.map((item) => ({
+              label: item.name,
+              value: item.name,
+              description: item.value,
+            }))
+          ),
+      ];
+
+      const inventoryEmbedBottom = new EmbedBuilder()
+        .setImage('https://puu.sh/JPffc/3c792e61c9.png')
+        .setColor('#f26e6a')
+        .setDescription('\`\`\`🔐 Items on storage\`\`\`');
+
+      for (const item of userInventory) {
+        inventoryEmbedBottom.addFields({ name: `· ${item.name}`, value: item.desc });
+      }
+
+      if (onUse) {
+        inventoryEmbedBottom.addFields({ name: "\u200B", value: '\`\`\`🚀 Items on use\`\`\`' });
+        
+        for (const item of onUse) {
+          inventoryEmbedBottom.addFields({ name: `· ${item.name}`, value: item.desc });
+        }
+      }
+
+      const actionRow = new ActionRowBuilder().addComponents(options);
+      await int.editReply({
+        content: '',
+        components: [actionRow],
+        embeds: [inventoryEmbedTop, inventoryEmbedBottom],
+        ephemeral: true
+      });
     }
+
     if (subcommand === "leaderboard") {
       await int.deferReply();
       const leaderboardType = int.options.getString('choice');
@@ -146,150 +145,142 @@ module.exports = {
       await int.deferReply();
       const date = Date.now();
       const userId = int.user.id;
-      const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-      const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB("Special");
       const guild = client.guilds.cache.get(localConstants.guildId);
       const guildMember = guild.members.cache.get(userId);
-      try {
-        const NormalBoostboostEndTime = await localFunctions.getBoostEndTime(userId, collection);
-        const remainingTimeNormalBoost = NormalBoostboostEndTime ? NormalBoostboostEndTime - date : 0;
-        const PermaBoost = await localFunctions.getPermaBoost(userId, collection);
-        const GlobalBoost = await localFunctions.getGlobalBoost(collectionSpecial);
-        const GlobalBoostTime = GlobalBoost.boostEndTime;
-        const remainingTimeGlobalBoost = GlobalBoost ? GlobalBoost.boostEndTime : 0;
-        const GlobalBoostMultiplier = GlobalBoost ? GlobalBoost.multiplier : 0;
 
-        const balance = await localFunctions.getBalance(userId, collection);
-        const existingBalance = balance ? balance : 0;
-        const topCombo = await localFunctions.getTopCombo(userId, collection) || 0;
+      const NormalBoostboostEndTime = await localFunctions.getBoostEndTime(userId, collection);
+      const remainingTimeNormalBoost = NormalBoostboostEndTime ? NormalBoostboostEndTime - date : 0;
+      const PermaBoost = await localFunctions.getPermaBoost(userId, collection);
+      const GlobalBoost = await localFunctions.getGlobalBoost(collectionSpecial);
+      const GlobalBoostTime = GlobalBoost.boostEndTime;
+      const remainingTimeGlobalBoost = GlobalBoost ? GlobalBoost.boostEndTime : 0;
+      const GlobalBoostMultiplier = GlobalBoost ? GlobalBoost.multiplier : 0;
 
-        let userInventory = await localFunctions.getInventory(userId, collection) || [];
+      const balance = await localFunctions.getBalance(userId, collection);
+      const existingBalance = balance ? balance : 0;
+      const topCombo = await localFunctions.getTopCombo(userId, collection) || 0;
 
-        let onUse = await localFunctions.getOnUse(userId, collection);
+      let userInventory = await localFunctions.getInventory(userId, collection) || [];
 
-        let MirageFormat = Intl.NumberFormat('en-US', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        });
+      let onUse = await localFunctions.getOnUse(userId, collection);
 
-        let formattedBalance = MirageFormat.format(existingBalance)
+      let MirageFormat = Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
 
-        let boosts = [];
-        let badges = [];
-        let userLevel = 'LEVEL 0';
-        let textColor = "#f9e1e1";
-        const comboFullText = `TOP COMBO: ${topCombo}`;;
-        let backgroundName = '';
+      let formattedBalance = MirageFormat.format(existingBalance)
 
-        const roles = guildMember.roles.cache.map(role => role.name);
-        const badgesDB = await localFunctions.getBadges(userId, collection);
+      let boosts = [];
+      let badges = [];
+      let userLevel = 'LEVEL 0';
+      let textColor = "#f9e1e1";
+      const comboFullText = `TOP COMBO: ${topCombo}`;;
+      let backgroundName = '';
 
-        if (badgesDB) {
-          badges = badgesDB;
-        } else {
-          badges = localFunctions.updateBadges(roles);
-          await localFunctions.setBadges(userId, badges, collection);
-        }
+      const roles = guildMember.roles.cache.map(role => role.name);
+      const badgesDB = await localFunctions.getBadges(userId, collection);
 
-        if (roles.includes("Level 3")) {
-          userLevel = "LEVEL 3";
-        } else if (roles.includes("Level 2")) {
-          userLevel = "LEVEL 2";
-        } else if (roles.includes("Level 1")) {
-          userLevel = "LEVEL 1";
-        }
-
-        if (remainingTimeNormalBoost) {
-          if (remainingTimeNormalBoost > 0) {
-            const secondsRemainingNormalBoost = remainingTimeNormalBoost / 1000;
-            if (secondsRemainingNormalBoost < 60) {
-              boosts.push(`2X TOKEN BOOST EXPIRING IN ${Math.round(secondsRemainingNormalBoost)} SECONDS`);
-            }
-            if (secondsRemainingNormalBoost < 3600) {
-              boosts.push(`2X TOKEN BOOST EXPIRING IN ${Math.round(secondsRemainingNormalBoost / 60)} MINUTES`);
-            }
-            if (secondsRemainingNormalBoost > 3600) {
-              boosts.push(`2X TOKEN BOOST EXPIRING IN ${Math.round(secondsRemainingNormalBoost / 3600)} HOURS`);
-            }
-          }
-        }
-
-        if (GlobalBoostTime) {
-          if (GlobalBoostTime > date) {
-            const secondsRemainingGlobalBoost = (remainingTimeGlobalBoost - date) / 1000;
-            if (secondsRemainingGlobalBoost < 60) {
-              boosts.push(`${GlobalBoostMultiplier}X GLOBAL BOOST EXPIRING IN ${Math.round(secondsRemainingGlobalBoost)} SECONDS`);
-            }
-            if (secondsRemainingGlobalBoost < 3600) {
-              boosts.push(`${GlobalBoostMultiplier}X GLOBAL BOOST EXPIRING IN ${Math.round(secondsRemainingGlobalBoost / 60)} MINUTES`);
-            }
-            if (secondsRemainingGlobalBoost > 3600) {
-              boosts.push(`${GlobalBoostMultiplier}X GLOBAL BOOST EXPIRING IN ${Math.round(secondsRemainingGlobalBoost / 3600)} HOURS`);
-            }
-          }
-        }
-
-        if (PermaBoost) {
-          boosts.push('PERMANENT 2X TOKEN BOOST');
-        }
-
-        const canvas = Canvas.createCanvas(2800, 646);
-        const ctx = canvas.getContext('2d');
-
-        const avatar = await Canvas.loadImage(int.user.displayAvatarURL({ extension: "jpg", size: 2048 }));
-
-        ctx.drawImage(avatar, 30, 30, 510, 510);
-
-        if (!onUse.length && !userInventory.length) { //Updates cosmetics if the user doesn't have them
-          await localFunctions.updateNonPurchaseableCosmetics(userId, collection, roles, userInventory, onUse)
-          console.log(`Cosmetics for user ${int.user.tag} have been updated`);
-        }
-
-        try {
-          backgroundName = onUse.find((item) => item.type === 'background').name;
-        } catch (error) {
-          backgroundName = 'Profile';
-        }
-
-        if (backgroundName === "Staff Background") {
-          textColor = "#FFFFFF";
-        }
-
-        let background = await Canvas.loadImage(`./assets/backgrounds/${backgroundName}.png`);
-        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-
-        localFunctions.ctxText(canvas, ctx, textColor, int.user.username.split("").join(String.fromCharCode(8202)), 'start', 'Montserrat', 114, 'normal', 494, 120);
-
-        localFunctions.ctxText(canvas, ctx, textColor, formattedBalance.split("").join(String.fromCharCode(8202)), 'start', 'Montserrat', 125, 'italic', 603, 436);
-
-        localFunctions.ctxText(canvas, ctx, textColor, comboFullText.split("").join(String.fromCharCode(8202)), 'start', 'Montserrat', 78, 'italic', 1777, 388);
-
-        localFunctions.ctxText(canvas, ctx, textColor, userLevel.split("").join(String.fromCharCode(8202)), 'start', 'Montserrat', 78, 'italic', 1777, 511);
-
-        let posyBoosts = 54;
-        for (const boost of boosts) {
-          localFunctions.ctxText(canvas, ctx, textColor, boost.split("").join(String.fromCharCode(8202)), 'end', 'Montserrat', 34, 'Normal', 2764, posyBoosts);
-          posyBoosts = posyBoosts + 50;
-        }
-
-        let posxBadges = 596;
-        for (const badge of badges) {
-          let badgeImage = await Canvas.loadImage(`./assets/badges/${badge}.png`);
-          ctx.drawImage(badgeImage, posxBadges, 207, 92, 92);
-          posxBadges = posxBadges + 160;
-        }
-
-        const attachment = new AttachmentBuilder(canvas.toBuffer("image/png"), {
-          name: "profile.png"
-        });
-
-        await int.editReply({ files: [attachment] });
-
-
-      } finally {
-        mongoClient.close();
-        mongoClientSpecial.close();
+      if (badgesDB) {
+        badges = badgesDB;
+      } else {
+        badges = localFunctions.updateBadges(roles);
+        await localFunctions.setBadges(userId, badges, collection);
       }
+
+      if (roles.includes("Level 3")) {
+        userLevel = "LEVEL 3";
+      } else if (roles.includes("Level 2")) {
+        userLevel = "LEVEL 2";
+      } else if (roles.includes("Level 1")) {
+        userLevel = "LEVEL 1";
+      }
+
+      if (remainingTimeNormalBoost) {
+        if (remainingTimeNormalBoost > 0) {
+          const secondsRemainingNormalBoost = remainingTimeNormalBoost / 1000;
+          if (secondsRemainingNormalBoost < 60) {
+            boosts.push(`2X TOKEN BOOST EXPIRING IN ${Math.round(secondsRemainingNormalBoost)} SECONDS`);
+          }
+          if (secondsRemainingNormalBoost < 3600) {
+            boosts.push(`2X TOKEN BOOST EXPIRING IN ${Math.round(secondsRemainingNormalBoost / 60)} MINUTES`);
+          }
+          if (secondsRemainingNormalBoost > 3600) {
+            boosts.push(`2X TOKEN BOOST EXPIRING IN ${Math.round(secondsRemainingNormalBoost / 3600)} HOURS`);
+          }
+        }
+      }
+
+      if (GlobalBoostTime) {
+        if (GlobalBoostTime > date) {
+          const secondsRemainingGlobalBoost = (remainingTimeGlobalBoost - date) / 1000;
+          if (secondsRemainingGlobalBoost < 60) {
+            boosts.push(`${GlobalBoostMultiplier}X GLOBAL BOOST EXPIRING IN ${Math.round(secondsRemainingGlobalBoost)} SECONDS`);
+          }
+          if (secondsRemainingGlobalBoost < 3600) {
+            boosts.push(`${GlobalBoostMultiplier}X GLOBAL BOOST EXPIRING IN ${Math.round(secondsRemainingGlobalBoost / 60)} MINUTES`);
+          }
+          if (secondsRemainingGlobalBoost > 3600) {
+            boosts.push(`${GlobalBoostMultiplier}X GLOBAL BOOST EXPIRING IN ${Math.round(secondsRemainingGlobalBoost / 3600)} HOURS`);
+          }
+        }
+      }
+
+      if (PermaBoost) {
+        boosts.push('PERMANENT 2X TOKEN BOOST');
+      }
+
+      const canvas = Canvas.createCanvas(2800, 646);
+      const ctx = canvas.getContext('2d');
+
+      const avatar = await Canvas.loadImage(int.user.displayAvatarURL({ extension: "jpg", size: 2048 }));
+
+      ctx.drawImage(avatar, 30, 30, 510, 510);
+
+      if (!onUse.length && !userInventory.length) { //Updates cosmetics if the user doesn't have them
+        await localFunctions.updateNonPurchaseableCosmetics(userId, collection, roles, userInventory, onUse)
+        console.log(`Cosmetics for user ${int.user.tag} have been updated`);
+      }
+
+      try {
+        backgroundName = onUse.find((item) => item.type === 'background').name;
+      } catch (error) {
+        backgroundName = 'Profile';
+      }
+
+      if (backgroundName === "Staff Background") {
+        textColor = "#FFFFFF";
+      }
+
+      let background = await Canvas.loadImage(`./assets/backgrounds/${backgroundName}.png`);
+      ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+      localFunctions.ctxText(canvas, ctx, textColor, int.user.username.split("").join(String.fromCharCode(8202)), 'start', 'Montserrat', 114, 'normal', 494, 120);
+
+      localFunctions.ctxText(canvas, ctx, textColor, formattedBalance.split("").join(String.fromCharCode(8202)), 'start', 'Montserrat', 125, 'italic', 603, 436);
+
+      localFunctions.ctxText(canvas, ctx, textColor, comboFullText.split("").join(String.fromCharCode(8202)), 'start', 'Montserrat', 78, 'italic', 1777, 388);
+
+      localFunctions.ctxText(canvas, ctx, textColor, userLevel.split("").join(String.fromCharCode(8202)), 'start', 'Montserrat', 78, 'italic', 1777, 511);
+
+      let posyBoosts = 54;
+      for (const boost of boosts) {
+        localFunctions.ctxText(canvas, ctx, textColor, boost.split("").join(String.fromCharCode(8202)), 'end', 'Montserrat', 34, 'Normal', 2764, posyBoosts);
+        posyBoosts = posyBoosts + 50;
+      }
+
+      let posxBadges = 596;
+      for (const badge of badges) {
+        let badgeImage = await Canvas.loadImage(`./assets/badges/${badge}.png`);
+        ctx.drawImage(badgeImage, posxBadges, 207, 92, 92);
+        posxBadges = posxBadges + 160;
+      }
+
+      const attachment = new AttachmentBuilder(canvas.toBuffer("image/png"), {
+        name: "profile.png"
+      });
+
+      await int.editReply({ files: [attachment] });
     }
     if (subcommand === "suggest") {
       const modal = new ModalBuilder()
@@ -365,45 +356,41 @@ module.exports = {
     }
     if (subcommand === "daily") {
       await int.deferReply();
-      const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
       const currentDate = Date.now();
-      try {
-        let userArray = await localFunctions.getUserDaily(userId, collection);
-        const currentBalance = await localFunctions.getBalance(userId, collection);
-        let amountToEarn = 100;
-        let newBalance = currentBalance;
-        if (!userArray) {
-          userArray = {
-            streak: 0,
-            lastDate: currentDate,
-          };
-        }
-        const daysSinceLastMessage = (currentDate - userArray.lastDate) / (1000 * 60 * 60 * 24);
-        if (daysSinceLastMessage > 2 || daysSinceLastMessage === 0) {
-          const oldStreak = userArray.streak;
-          userArray.streak = 0;
-          userArray.lastDate = currentDate;
-          newBalance = currentBalance + amountToEarn;
-          await localFunctions.setUserDaily(userId, userArray, collection);
-          await localFunctions.setBalance(userId, newBalance, collection);
-          if (daysSinceLastMessage === 0) {
-            int.editReply(`Welcome to your first daily claim! You\'ve obtained ${amountToEarn} tokens and you\'ve started a new streak! You will obtain **30** extra tokens by every day you run this command! You will also have a time window of **24 hours** to run this command after one day passes. If you miss the window your streak will reset!`);
-          } else {
-            int.editReply(`Oh no! You\'ve obtained **${amountToEarn}** tokens and you\'ve restarted your streak! Your old streak was of ${oldStreak}. Good luck on this new run!`);
-          }
-        } else if (daysSinceLastMessage <= 2 && daysSinceLastMessage >= 1) {
-          amountToEarn = 100 + (30*(userArray.streak + 1));
-          userArray.streak = userArray.streak + 1;
-          userArray.lastDate = currentDate;
-          newBalance = currentBalance + amountToEarn;
-          await localFunctions.setUserDaily(userId, userArray, collection);
-          await localFunctions.setBalance(userId, newBalance, collection);
-          int.editReply(`Welcome back! You\'ve obtained **${amountToEarn}** tokens! Your current streak is of **${userArray.streak}**!.`);
+
+      let userArray = await localFunctions.getUserDaily(userId, collection);
+      const currentBalance = await localFunctions.getBalance(userId, collection);
+      let amountToEarn = 100;
+      let newBalance = currentBalance;
+      if (!userArray) {
+        userArray = {
+          streak: 0,
+          lastDate: currentDate,
+        };
+      }
+      const daysSinceLastMessage = (currentDate - userArray.lastDate) / (1000 * 60 * 60 * 24);
+      if (daysSinceLastMessage > 2 || daysSinceLastMessage === 0) {
+        const oldStreak = userArray.streak;
+        userArray.streak = 0;
+        userArray.lastDate = currentDate;
+        newBalance = currentBalance + amountToEarn;
+        await localFunctions.setUserDaily(userId, userArray, collection);
+        await localFunctions.setBalance(userId, newBalance, collection);
+        if (daysSinceLastMessage === 0) {
+          int.editReply(`Welcome to your first daily claim! You\'ve obtained ${amountToEarn} tokens and you\'ve started a new streak! You will obtain **30** extra tokens by every day you run this command! You will also have a time window of **24 hours** to run this command after one day passes. If you miss the window your streak will reset!`);
         } else {
-          int.editReply(`You cannot claim your daily bonus yet! Come back <t:${Math.floor(userArray.lastDate/1000 + 86400)}:R>`);
+          int.editReply(`Oh no! You\'ve obtained **${amountToEarn}** tokens and you\'ve restarted your streak! Your old streak was of ${oldStreak}. Good luck on this new run!`);
         }
-      } finally {
-        mongoClient.close();
+      } else if (daysSinceLastMessage <= 2 && daysSinceLastMessage >= 1) {
+        amountToEarn = 100 + (30*(userArray.streak + 1));
+        userArray.streak = userArray.streak + 1;
+        userArray.lastDate = currentDate;
+        newBalance = currentBalance + amountToEarn;
+        await localFunctions.setUserDaily(userId, userArray, collection);
+        await localFunctions.setBalance(userId, newBalance, collection);
+        int.editReply(`Welcome back! You\'ve obtained **${amountToEarn}** tokens! Your current streak is of **${userArray.streak}**!.`);
+      } else {
+        int.editReply(`You cannot claim your daily bonus yet! Come back <t:${Math.floor(userArray.lastDate/1000 + 86400)}:R>`);
       }
     }
   }

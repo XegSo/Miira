@@ -24,11 +24,11 @@ module.exports = {
         const boostDuration = parseFloat(int.options.getString('timer'));
 
         if (isNaN(multiplier) || isNaN(boostDuration)) {
-        int.reply({ content: 'Please provide valid numerical values for multiplier and timer.', ephemeral: true });
-        return;
+          int.reply({ content: 'Please provide valid numerical values for multiplier and timer.', ephemeral: true });
+          return;
         }
 
         localFunctions.applyGlobalBoost(multiplier, boostDuration);
-        int.reply({ content: `Global boost of ${multiplier}x for ${boostDuration} hours has been applied.`, ephemeral: true });
+        await int.reply({ content: `Global boost of ${multiplier}x for ${boostDuration} hours has been applied.`, ephemeral: true });
     }    
 }

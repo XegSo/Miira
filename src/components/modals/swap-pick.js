@@ -1,4 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const { EmbedBuilder } = require('discord.js');
@@ -11,9 +10,9 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
-        const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
-        const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
+        const collection = client.db.collection("Collabs");
+        const userCollection = client.db.collection("OzenCollection");
+        const collectionSpecial = client.db.collection("Special");
         const userId = int.user.id;
         const guild = client.guilds.cache.get(localConstants.guildId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
@@ -137,10 +136,6 @@ module.exports = {
             }
         } catch (e) {
             console.log(e);
-        } finally {
-            mongoClient.close();
-            mongoClientUsers.close();
-            mongoClientSpecial.close();
         }
-    },
+    }
 };

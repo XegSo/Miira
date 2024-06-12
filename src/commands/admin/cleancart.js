@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 
 module.exports = {
@@ -17,15 +16,9 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         if (int.user.id !== '687004886922952755') return;
         const user = int.options.getUser('user');
-        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-        try {
-            await localFunctions.delCart(user.id,collection);
-        } catch (e) {
-            console.log(e);
-        } finally {
-            mongoClient.close();
-        }
+        const collection = client.db.collection('OzenCollection');
 
+        await localFunctions.delCart(user.id, collection);
         await int.editReply(`Cart cleared for user ${user.tag}`);
     },
 }
