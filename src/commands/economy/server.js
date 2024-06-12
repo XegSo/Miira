@@ -377,7 +377,7 @@ module.exports = {
         await localFunctions.setUserDaily(userId, userArray, collection);
         await localFunctions.setBalance(userId, newBalance, collection);
         if (daysSinceLastMessage === 0) {
-          int.editReply(`Welcome to your first daily claim! You\'ve obtained ${amountToEarn} tokens and you\'ve started a new streak! You will obtain **20** extra tokens by every day you run this command! You will also have a time window of **24 hours** to run this command after 18 hours. If you miss the window your streak will reset!`);
+          int.editReply(`Welcome to your first daily claim! You\'ve obtained ${amountToEarn} tokens and you\'ve started a new streak! You will obtain **20** extra tokens by every day you run this command! You will also have a time window of **30 hours** to run this command after 18 hours. If you miss the window your streak will reset!`);
         } else {
           int.editReply(`Oh no! You\'ve obtained **${amountToEarn}** tokens and you\'ve restarted your streak! Your old streak was of ${oldStreak}. Good luck on this new run!`);
         }
