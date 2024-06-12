@@ -1169,7 +1169,7 @@ module.exports = {
                 }
 
                 const currentDate = Math.floor(Date.now() / 1000);
-                const allCollabs = await localFunctions.getCollabs(collection);
+                const allCollabs = await localFunctions.getCollabs(collabCollection);
                 const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
                 
                 if (typeof openMegacollab === "undefined") {
