@@ -744,7 +744,7 @@ module.exports = {
                 .setAuthor({ name: `Welcome to your perks dashboard ${int.user.tag}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' });
             
 
-            let userPerks = await localFunctions.getPerks(userId, userCollection);
+            let userPerks = await localFunctions.getPerks(userId, collection);
             let submittedPerks = await localFunctions.getUserPerksAllCollabs(collabCollection, userId);
             const component = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
@@ -2005,7 +2005,7 @@ module.exports = {
                             await localFunctions.editCollabParticipantPickOnUser(userId, collab.name, newPickFull, collection);
 
                             let contentString = "";
-                            const snipes = await localFunctions.getCollabSnipes(collab.name, colabCollection, currentPick.id);
+                            const snipes = await localFunctions.getCollabSnipes(collab.name, collabCollection, currentPick.id);
                             if (typeof snipes !== "undefined") {
                                 if (typeof snipes.find(p => p.pick === currentPick.id) !== "undefined") {
                                     contentString = "Snipers! ";
