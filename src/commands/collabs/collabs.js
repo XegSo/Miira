@@ -719,7 +719,7 @@ module.exports = {
                 const collabsMenu = new SelectMenuBuilder()
                     .setCustomId('select-collab')
                     .setPlaceholder('Select a collab to visualize.')
-                const allCollabs = await localFunctions.getCollabs(collection);
+                const allCollabs = await localFunctions.getCollabs(collabCollection);
                 for (let collab of allCollabs) {
                     collabsMenu.addOptions({ label: collab.name, value: collab.name });
                 }
