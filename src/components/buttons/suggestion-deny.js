@@ -9,9 +9,9 @@ module.exports = {
         name: 'suggestion-deny'
     },
     async execute (int, client) {
-        const suggestion = await localFunctions.getSuggestion(int.message.id);
+        const suggestion = await localFunctions.getSuggestion(client, int.message.id);
         if (suggestion.user === int.user.id) {
-            await localFunctions.liquidateSuggestion(int.message.id);
+            await localFunctions.liquidateSuggestion(client, int.message.id);
             int.message.delete();
             int.reply({content: 'Suggestion successfully removed.', ephemeral: true});
             return;

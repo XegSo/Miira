@@ -7,7 +7,7 @@ module.exports = {
     },
     async execute (int, client) {
         await int.deferReply({ ephemeral: true });
-        const suggestion = await localFunctions.getSuggestion(int.message.id);
+        const suggestion = await localFunctions.getSuggestion(client, int.message.id);
         if (suggestion.status === 'Approved.' || suggestion.status === 'Denied.') return;
         let voters = suggestion.voters;
         if (suggestion.user === int.user.id) {
@@ -36,6 +36,6 @@ module.exports = {
                     );
         int.message.edit({ embeds: [updatedEmbed] });
         await int.editReply({content: 'You\'ve successfully voted.', ephemeral: true});
-        await localFunctions.updateSuggestion(int.message.id, suggestion.user, suggestion.status, updatedEmbed, upvotes, downvotes, voters);
+        await localFunctions.updateSuggestion(client, int.message.id, suggestion.user, suggestion.status, updatedEmbed, upvotes, downvotes, voters);
     },
 };

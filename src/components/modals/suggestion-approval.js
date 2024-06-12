@@ -19,7 +19,7 @@ module.exports = {
         const logChannel = int.guild.channels.cache.get('1152347792539402250');
         
         const suggestionMessage = SuggestionCache.get(int.user.id).message;
-        const suggestion = await localFunctions.getSuggestion(suggestionMessage.id);
+        const suggestion = await localFunctions.getSuggestion(client, suggestionMessage.id);
         const currentBalance = await localFunctions.getBalance(suggestion.user, collection);
         
         if (suggestion.upvotes-suggestion.downvotes < 1) {
@@ -46,7 +46,7 @@ module.exports = {
         const newBalance = currentBalance + reward;
         await localFunctions.setBalance(suggestion.user, newBalance, collection);
         suggestionMessage.reply(`<@${suggestion.user}> Your suggestion has been approved and you've obtained ${reward} ₥.`);
-        await localFunctions.liquidateSuggestion(suggestionMessage.id);
+        await localFunctions.liquidateSuggestion(client, suggestionMessage.id);
         const logEmbed = new EmbedBuilder()
             .setColor('#f26e6a')
             .setImage('https://puu.sh/JPffc/3c792e61c9.png')

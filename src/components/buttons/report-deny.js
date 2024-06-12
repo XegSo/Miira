@@ -8,7 +8,7 @@ module.exports = {
     },
     async execute (int, client) {
         await int.deferReply({ ephemeral: true })
-        const report = await localFunctions.getReportByMessage(int.message.id);
+        const report = await localFunctions.getReportByMessage(client, int.message.id);
 
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(int.user.id);
@@ -32,7 +32,7 @@ module.exports = {
                 }
             )
         await int.message.edit({ embeds: [reportEmbed], components: [] });
-        await localFunctions.liquidateReport(report._id);
+        await localFunctions.liquidateReport(client, report._id);
         await int.editReply({ content: 'Request successfully denied.', ephemeral: true });
         const reporterMember = await guild.members.cache.find(member => member.id === report.reporterUser);
         try {

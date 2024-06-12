@@ -8,7 +8,7 @@ module.exports = {
         name: 'swap-image-deny'
     },
     async execute (int, client) {
-        const request = await localFunctions.getImageRequestByMessage(int.message.id);
+        const request = await localFunctions.getImageRequestByMessage(client, int.message.id);
 
         const modal = new ModalBuilder()
             .setCustomId("swap-image-deny")

@@ -80,7 +80,7 @@ module.exports = {
             )
 
         await message.edit({ embeds: [reportEmbed], components: [] });
-        await localFunctions.liquidateReport(report._id);
+        await localFunctions.liquidateReport(client, report._id);
         const reporterMember = await guild.members.cache.find(member => member.id === report.reporterUser);
         try {
             reporterMember.send({

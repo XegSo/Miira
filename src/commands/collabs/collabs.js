@@ -230,7 +230,7 @@ module.exports = {
         }
 
         if (subcommand === "referral") {
-            localFunctions.handleReferralCommand(int)
+            localFunctions.handleReferralCommand(int, client)
                 .then(async (code) => {
                     const cartEmbed = new EmbedBuilder()
                         .setFooter({ text: 'Endless Mirage | Referral Code', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })

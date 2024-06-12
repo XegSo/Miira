@@ -174,7 +174,7 @@ module.exports = {
 
       } else if (selectedItem === "Global Boost") {
         const announcementsChannel = int.guild.channels.cache.get('764561474000912434');
-        localFunctions.applyGlobalBoost(4, 24);
+        localFunctions.applyGlobalBoost(4, 24, client);
         await int.editReply({ content: "Global boost applied!", ephemeral: true });
         announcementsChannel.send(`<@&1107112464455311400> <@${int.user.id}> has activated a global 4X Token Boost for 24 hours!`);
 

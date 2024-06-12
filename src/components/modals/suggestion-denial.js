@@ -9,7 +9,7 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const suggestionMessage = SuggestionCache.get(int.user.id).message;
-        const suggestion = await localFunctions.getSuggestion(suggestionMessage.id);
+        const suggestion = await localFunctions.getSuggestion(client, suggestionMessage.id);
         const reason = int.fields.getTextInputValue("text-reason");
         let status = 'Denied.';
         const updatedEmbed = new EmbedBuilder()
@@ -27,7 +27,7 @@ module.exports = {
             );
         suggestionMessage.edit({ embeds: [updatedEmbed], components: [] });
         suggestionMessage.reply(`<@${suggestion.user}> Your suggestion has been denied.\nReason: ${reason}`);
-        await localFunctions.liquidateSuggestion(suggestionMessage.id);
+        await localFunctions.liquidateSuggestion(client, suggestionMessage.id);
         SuggestionCache.delete(int.user.id);
         await int.editReply({ content: 'Suggestion successfully denied.', ephemeral: true });
     },

@@ -13,7 +13,7 @@ module.exports = {
             int.reply({content: 'You cannot approve suggestions.', ephemeral: true});
             return;
         }
-        const suggestion = await localFunctions.getSuggestion(int.message.id);
+        const suggestion = await localFunctions.getSuggestion(client, int.message.id);
         if (suggestion.status === 'Approved.' || suggestion.status === 'Denied.') return;
 
         const modal = new ModalBuilder()
