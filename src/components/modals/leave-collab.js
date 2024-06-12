@@ -12,11 +12,16 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
         const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
+        const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
         const userId = int.user.id;
         const guild = await client.guilds.cache.get(localConstants.guildId);
         const guildMember = await guild.members.fetch(userId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
         try {
+            const existingTradeRequest = await localFunctions.getTradeRequest(int.user.id, collectionSpecial);
+            if (existingTradeRequest.length !== 0) {
+                return await int.editReply({ content: `You cannot leave the collab when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
+            }
             const collab = leaveCache.get(int.user.id).collab;
             const fullCollab = await localFunctions.getCollab(collab.collabName, collection);
             if (collab.collabPick.name !== int.fields.getTextInputValue('pick')) {
@@ -86,6 +91,7 @@ module.exports = {
         } finally {
             mongoClient.close();
             mongoClientUsers.close();
+            mongoClientSpecial.close();
         }
     },
 };

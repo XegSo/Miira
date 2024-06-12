@@ -1982,7 +1982,7 @@ module.exports = {
                     const userCollabs = await localFunctions.getUserCollabs(int.user.id, userCollection);
                     const existingTradeRequest = await localFunctions.getTradeRequest(int.user.id, collectionSpecial);
                     if (existingTradeRequest.length !== 0) {
-                        return await int.reply({ content: `You cannot swap your pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
+                        return await int.editReply({ content: `You cannot swap your pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
                     }
                     const allCollabs = await localFunctions.getCollabs(collection);
                     const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
@@ -2116,7 +2116,7 @@ module.exports = {
                     const userCollabs = await localFunctions.getUserCollabs(int.user.id, userCollection);
                     const existingTradeRequest = await localFunctions.getTradeRequest(int.user.id, collectionSpecial);
                     if (existingTradeRequest.length !== 0) {
-                        return await int.reply({ content: `You cannot request a trade when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
+                        return await int.editReply({ content: `You cannot request a trade when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
                     }
                     const allCollabs = await localFunctions.getCollabs(collection);
                     const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
@@ -2601,7 +2601,7 @@ module.exports = {
                     const userCollabs = await localFunctions.getUserCollabs(int.user.id, userCollection);
                     const existingTradeRequest = await localFunctions.getTradeRequest(int.user.id, collectionSpecial);
                     if (existingTradeRequest.length !== 0) {
-                        return await int.reply({ content: `You cannot snipe a pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
+                        return await int.editReply({ content: `You cannot snipe a pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
                     }
                     const allCollabs = await localFunctions.getCollabs(collection);
                     const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
