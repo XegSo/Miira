@@ -10,14 +10,6 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply();
-        const collection = client.db.collection("Collabs");
-        const collab = await localFunctions.getCollab(collabCache.get(int.user.id).collab.name, collection);
-        
-        if (collab.host !== int.user.id) {
-            int.editReply('You are not allowed to do this.');
-            return;
-        }
-
         let initializedMap;
         if (collabCache.size > 0) {
             if (typeof collabCache.get(int.user.id) !== "undefined") {
@@ -29,6 +21,13 @@ module.exports = {
             if (typeof adminCache.get(int.user.id) !== "undefined") {
                 initializedMap = adminCache;
             }
+        }
+        const collection = client.db.collection("Collabs");
+        const collab = await localFunctions.getCollab(initializedMap.get(int.user.id).collab.name, collection);
+        
+        if (collab.host !== int.user.id) {
+            int.editReply('You are not allowed to do this.');
+            return;
         }
 
         const collabParticipants = await localFunctions.getCollabParticipants(initializedMap.get(int.user.id).collab.name, collection);
