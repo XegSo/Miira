@@ -381,7 +381,7 @@ module.exports = {
         } else {
           int.editReply(`Oh no! You\'ve obtained **${amountToEarn}** tokens and you\'ve restarted your streak! Your old streak was of ${oldStreak}. Good luck on this new run!`);
         }
-      } else if (daysSinceLastMessage <= 2 && daysSinceLastMessage >= 1) {
+      } else if (daysSinceLastMessage <= 2 && daysSinceLastMessage >= 0.75) {
         amountToEarn = 100 + (30*(userArray.streak + 1));
         userArray.streak = userArray.streak + 1;
         userArray.lastDate = currentDate;
@@ -390,7 +390,7 @@ module.exports = {
         await localFunctions.setBalance(userId, newBalance, collection);
         int.editReply(`Welcome back! You\'ve obtained **${amountToEarn}** tokens! Your current streak is of **${userArray.streak}**!.`);
       } else {
-        int.editReply(`You cannot claim your daily bonus yet! Come back <t:${Math.floor(userArray.lastDate/1000 + 86400)}:R>`);
+        int.editReply(`You cannot claim your daily bonus yet! Come back <t:${Math.floor(userArray.lastDate/1000 + 64800)}:R>`);
       }
     }
   }
