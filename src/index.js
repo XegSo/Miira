@@ -1,5 +1,7 @@
 require('dotenv').config();
-const { auth } = require('osu-api-extended')
+
+const { auth } = require('osu-api-extended');
+const { MongoClient } = require('mongodb');
 const { Client, Collection, GatewayIntentBits, Partials } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
@@ -47,7 +49,23 @@ client.handleEvents();
 client.handleCommands();
 client.handleComponents();
 
+async function main() {
+  // Connect to MongoDB.
+  const mongoClient = new MongoClient(process.env.MONGO);
+  await mongoClient.connect();
+  client.db = mongoClient.db("Ozen");
+  console.log('Connected to MongoDB.');
 
-banchoClient.connect().then(() => {console.log('Connected to bancho.')});
-auth.login(clientIDv2, clientSv2, ['public']).then(() => {console.log('Connected to osu api.')});
-client.login(discordToken);
+  // Connect to Bancho.
+  await banchoClient.connect();
+  console.log('Connected to bancho.');
+
+  // Connect to osu! API.
+  await auth.login(clientIDv2, clientSv2, ['public']);
+  console.log('Connected to osu api.');
+
+  // Connect to Discord.
+  await client.login(discordToken);
+}
+
+main();

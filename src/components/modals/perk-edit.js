@@ -1,5 +1,4 @@
 const { perkCache } = require('../../components/buttons/perk-edit');
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 
 module.exports = {
@@ -8,7 +7,7 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
+        const collection = client.db.collection("Collabs");
         const cache = perkCache.get(int.user.id);
         const perk = cache.perk
         try {
@@ -34,8 +33,7 @@ module.exports = {
             int.editReply('Your entry has been edited.');
             
         } finally {
-            mongoClient.close();
             perkCache.delete(int.user.id);
         }
-    },
+    }
 };

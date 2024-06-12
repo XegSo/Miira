@@ -1,4 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
@@ -12,8 +11,9 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
-        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-        const { collection: blacklistCollection, client: mongoClientBlacklist } = await connectToMongoDB("Blacklist");
+        const collection = client.db.collection("OzenCollection");
+        const blacklistCollection = client.db.collection("Blacklist");
+        
         try {
             let verificationCode = 0;
             let osu_user_full = [];
@@ -63,9 +63,6 @@ module.exports = {
             })
         } catch {
             await int.editReply('Something went wrong, most likely the bot just got reset while you were trying this interaction. Please try to verify from the beggining again.')
-        } finally {
-            mongoClient.close();
-            mongoClientBlacklist.close();
         }
-    },
-}
+    }
+};

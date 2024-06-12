@@ -1,17 +1,17 @@
 const { v2 } = require('osu-api-extended');
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 
 module.exports = {
     data: {
         name: 'refresh-osu-data'
     },
-    async execute(int) {
+    async execute(int, client) {
         const userId = int.user.id;
         await int.deferReply({ ephemeral: true });
-        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-        const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
+        const collection = client.db.collection("OzenCollection");
+        const collabCollection = client.db.collection("Collabs");
         const currentDate = Math.floor(new Date().getTime() / 1000);
+
         try {
             let userOsu = await localFunctions.getOsuData(userId, collection);
             const userTop100 = await v2.scores.user.category(userOsu.osu_id, 'best', { mode: userOsu.playmode, limit: '100' });
@@ -88,9 +88,6 @@ module.exports = {
             userOsu.modsData = modsData;
             await localFunctions.verifyUserManual(int.user.id, userOsu, collection);
             await localFunctions.setUserLastUpdate(userId, currentDate, collection);
-        } finally {
-            mongoClient.close();
-            mongoClientCollabs.close();
         }
-    },
+    }
 };

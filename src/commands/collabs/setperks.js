@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions')
 
 module.exports = {
@@ -13,8 +12,8 @@ module.exports = {
                 .setDescription('Set status [on/off].')
                 .setRequired(true)
                 .addChoices(
-                { name: 'on', value: 'on' },
-                { name: 'off', value: 'off' },
+                    { name: 'on', value: 'on' },
+                    { name: 'off', value: 'off' },
                 )
         )
         .addIntegerOption(option => 
@@ -25,20 +24,22 @@ module.exports = {
         ),
     async execute(int, client) {
         if (int.user.id !== '687004886922952755') return;
+
         const status = int.options.getString('switch');
         const decayDate = int.options.getInteger('decaydate');
         let newStatus = 0;
-        const { collection, client: mongoClientSpecial } = await connectToMongoDB("Special");
+        const collection = client.db.collection("Special");
+
         if (status === "on") {
             newStatus = 1;
         }
+
         try {
             await localFunctions.setPerkUsage(newStatus, collection);
             await localFunctions.setPerkStartingDecayDate(decayDate, collection);
-            int.reply({ content: `New perk usage status: ${status}`, ephemeral: true });
+            await int.reply({ content: `New perk usage status: ${status}`, ephemeral: true });
         } catch (error) {
-            int.reply({ content: `Something went wrong: ${error}`, ephemeral: true });
-            mongoClientSpecial.close();
+            await int.reply({ content: `Something went wrong: ${error}`, ephemeral: true });
         }
     }    
 }

@@ -1,4 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const { EmbedBuilder } = require('discord.js');
@@ -14,8 +13,8 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
-        const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
-        const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB('Special');
+        const userCollection = client.db.collection("OzenCollection");
+        const collectionSpecial = client.db.collection("Special");
         const guild = client.guilds.cache.get(localConstants.guildId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
         let initializedMap;
@@ -126,9 +125,6 @@ module.exports = {
 
         } catch (e) {
             console.log(e);
-        } finally {
-            mongoClientUsers.close();
-            mongoClientSpecial.close();
         }
     }
 }

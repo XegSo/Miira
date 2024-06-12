@@ -1,6 +1,5 @@
 const { TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
-const { connectToMongoDB } = require('../../mongo');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const perkCache = new Map();
@@ -10,7 +9,7 @@ module.exports = {
         name: 'use-perks'
     },
     async execute(int, client) {
-        const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
+        const collabCollection = client.db.collection("Collabs");
         const selectedPerk = int.values[0];
         const fullPerk = localConstants.premiumPerks.find(p => p.name === selectedPerk);
         try {
@@ -67,8 +66,6 @@ module.exports = {
 
         } catch {
             await int.reply({ content: 'Try this interaction again... this took more than 3 seconds for some reason', ephemeral: true });
-        } finally {
-            mongoClientCollabs.close();
         }
     },
     perkCache: perkCache

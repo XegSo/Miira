@@ -1,17 +1,17 @@
 const { v2 } = require('osu-api-extended');
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 
 module.exports = {
     data: {
         name: 'change-osu-mode'
     },
-    async execute(int) {
+    async execute(int, client) {
         const userId = int.user.id;
         await int.deferReply({ ephemeral: true });
-        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-        const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
+        const collection = client.db.collection("OzenCollection");
+        const collabCollection = client.db.collection("Collabs");
         const currentDate = Math.floor(new Date().getTime() / 1000);
+
         try {
             let mode = int.fields.getTextInputValue('mode');
             mode = mode.toLowerCase();
@@ -105,9 +105,6 @@ module.exports = {
             userOsu.modsData = modsData;
             await localFunctions.verifyUserManual(int.user.id, userOsu, collection);
             await localFunctions.setUserLastUpdate(userId, currentDate, collection);
-        } finally {
-            mongoClient.close();
-            mongoClientCollabs.close();
         }
     },
 };

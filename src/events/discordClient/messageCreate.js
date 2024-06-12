@@ -1,4 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
 const { connectToSpreadsheet } = require('../../googleSheets');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
@@ -11,10 +10,11 @@ const userCombos = new Map();
 
 module.exports = {
     name: 'messageCreate',
-    async execute(message) {
+    async execute(message, client) {
         if (message.author.bot) return;
         if (message.channel.type === 'dm') return;
         if (message.guildId !== '630281137998004224') return;
+
         const userId = message.author.id;
         const currentTime = Date.now();
 
@@ -40,10 +40,11 @@ module.exports = {
         const startOfDay = new Date(currentTime);
         startOfDay.setHours(0, 0, 0, 0);
 
-        // Establish a connection to MongoDB
-        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-        const { collection: collectionSpecial, client: mongoClientSpecial } = await connectToMongoDB("Special");
-        const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
+        // Grab the MongoDB collections.
+        const collection = client.db.collection("OzenCollection");
+        const collectionSpecial = client.db.collection("Special");
+        const collabCollection = client.db.collection("Collabs");
+
         const globalBoost = await localFunctions.getGlobalBoost(collectionSpecial);
         const globalBoostEndTime = globalBoost.boostEndTime;
         const globalBoostValue = globalBoost.multiplier;
@@ -292,10 +293,6 @@ module.exports = {
             userCooldowns.set(userId, currentTime);
         } catch (e) {
             console.log(e);
-        } finally {
-            mongoClient.close();
-            mongoClientSpecial.close();
-            mongoClientCollabs.close();
         }
     }
 }

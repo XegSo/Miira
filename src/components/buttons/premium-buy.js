@@ -1,4 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 const { EmbedBuilder } = require('discord.js');
@@ -18,7 +17,7 @@ module.exports = {
         if (int.message.channelId === '767374005782052864') {
             messageId = int.message.id;
         }
-        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+        const collection = client.db.collection("OzenCollection");
         const userId = int.user.id;
         const guildMember = await guild.members.fetch(userId)
         var arrayOfObjects = [];
@@ -138,8 +137,7 @@ module.exports = {
             console.log(e);
         } finally {
             selectionTier.delete(int.user.id);
-            mongoClient.close();
-        } 
+        }
     },
     premiumBuyCache: premiumBuyCache
 }

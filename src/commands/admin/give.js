@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions')
 
 module.exports = {
@@ -22,6 +21,7 @@ module.exports = {
     async execute(int, client) {
         if (int.user.id !== '687004886922952755') return;
         await int.deferReply({ ephemeral: true });
+
         // Check if the command has the required arguments/options
         const userId = int.options.getUser('user');
         const amount = int.options.getInteger('amount');
@@ -31,17 +31,14 @@ module.exports = {
           return;
         }
     
-        // Establish a connection to MongoDB
-        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-    
-        try {
-          const currentBalance = await localFunctions.getBalance(userId.id, collection); // Fetch user's balance from the database
-          const newBalance = currentBalance + amount;
-          await localFunctions.setBalance(userId.id, newBalance, collection);
-    
-          await int.editReply({ content: `Assigned ${amount} credits to user <@${userId.id}>.`, ephemeral: true });
-        } finally {
-          mongoClient.close();
-        }
+
+        // Get the MongoDB collection
+        const collection = client.db.collection("OzenCollection");
+        
+        // Fetch user's balance from the database
+        const currentBalance = await localFunctions.getBalance(userId.id, collection); 
+        const newBalance = currentBalance + amount;
+        await localFunctions.setBalance(userId.id, newBalance, collection);
+        await int.editReply({ content: `Assigned ${amount} credits to user <@${userId.id}>.`, ephemeral: true });
     }   
 }

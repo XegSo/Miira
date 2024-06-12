@@ -1,4 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 const { EmbedBuilder } = require('discord.js');
@@ -13,7 +12,7 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
+        const collection = client.db.collection("OzenCollection");
         const allMaps = [premiumBuyCache, perkCache, upgradeCache];
         const userId = int.user.id;
         const pendingItems = int.values;
@@ -292,9 +291,6 @@ module.exports = {
         } catch (e) {
             await int.editReply("Please reopen the menu if you desire to add another item to your cart!");
             console.log(e);
-            mongoClient.close();
-        } finally {
-            mongoClient.close();
         }
     }
 }

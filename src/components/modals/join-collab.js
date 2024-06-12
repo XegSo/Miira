@@ -1,4 +1,3 @@
-const { connectToMongoDB } = require('../../mongo');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const { EmbedBuilder } = require('discord.js');
@@ -13,9 +12,9 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         buttonCache.delete(int.user.id);
-        const { collection, client: mongoClient } = await connectToMongoDB("Collabs");
-        const { collection: userCollection, client: mongoClientUsers } = await connectToMongoDB("OzenCollection");
-        const { collection: collabsCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
+        const collection = client.db.collection("Collabs");
+        const userCollection = client.db.collection("OzenCollection");
+        const collabsCollection = client.db.collection("Collabs");
         const userId = int.user.id;
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(userId);
@@ -280,9 +279,6 @@ module.exports = {
             console.log(e);
             await int.editReply('Your pick has been locked but there has been an error while joining the collab. Please ping the owner in the support channel!');
         } finally {
-            mongoClient.close();
-            mongoClientUsers.close();
-            mongoClientCollabs.close();
             joinCache.delete(userId);
         }
     },

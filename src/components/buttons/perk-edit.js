@@ -4,7 +4,6 @@ const { managePerkCache } = require('../selectMenus/manage-perks');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const perkCache = new Map();
-const { connectToMongoDB } = require('../../mongo');
 
 module.exports = {
     data: {
@@ -12,9 +11,10 @@ module.exports = {
     },
     async execute(int, client) {
         const collabName = managePerkCache.get(int.user.id).collabName;
-        const { collection: collabCollection, client: mongoClientCollabs } = await connectToMongoDB("Collabs");
+        const collabCollection = client.db.collection("Collabs");
         const perkName = managePerkCache.get(int.user.id).perkName;
         const fullPerk = localConstants.premiumPerks.find(p => p.name === perkName);
+
         try {
             const fullCollab = await localFunctions.getCollab(collabName, collabCollection);
             const fieldRestrictions = fullCollab.fieldRestrictions.premium_perks;
@@ -52,9 +52,7 @@ module.exports = {
             });
         } catch {
             await int.reply({ content: 'Try this interaction again... this took more than 3 seconds for some reason', ephemeral: true });
-        } finally {
-            mongoClientCollabs.close();
         }
     },
     perkCache: perkCache
-}
+};
