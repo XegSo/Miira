@@ -269,7 +269,7 @@ module.exports = {
 
                 await guildMember.roles.add(collab.roleId);
 
-                if (collab.status === "early access") {
+                if (collab.status === "early access" && tier !== 8) {
                     let userPerks = await localFunctions.getPerks(userId, userCollection);
                     if (userPerks.length === 0) return;
                     userPerks = await userPerks.filter(p => p.name !== "Megacollab Early Access");
