@@ -94,7 +94,7 @@ module.exports = {
         }
 
         await message.edit({ embeds: [reportEmbed], components: [] });
-        await localFunctions.liquidateReport(report._id);
+        await localFunctions.liquidateReport(client, report._id);
         await int.editReply('The user has been blacklisted.');
     }
 };

@@ -1,5 +1,4 @@
 require('dotenv').config();
-const { connectToMongoDB } = require('./mongo');
 const { connectToSpreadsheet } = require('./googleSheets');
 const localConstants = require('./constants');
 const { v2 } = require('osu-api-extended');
@@ -860,9 +859,10 @@ module.exports = {
         }
     },
 
-    handleReferralCommand: async function (int) {
+    handleReferralCommand: async function (int, client) {
         const userId = int.user.id;
-        const { collection, mongoClient } = await connectToMongoDB("OzenCollection");
+        const collection = client.db.collection("OzenCollection");
+
         try {
             let referralCode = await getReferralCode(userId, collection);
             if (!referralCode) {
@@ -873,10 +873,6 @@ module.exports = {
         } catch (error) {
             console.error('Error handling referral command:', error);
             return null;
-        } finally {
-            if (mongoClient) {
-                mongoClient.close();
-            }
         }
     },
 
@@ -1759,8 +1755,9 @@ module.exports = {
         return ctx.font;
     },
 
-    applyGlobalBoost: async function (multiplier, durationInHours) {
-        const { collection: collection, client: mongoClient } = await connectToMongoDB("Special");
+    applyGlobalBoost: async function (multiplier, durationInHours, client) {
+        const collection = client.db.collection("Special");
+
         try {
             const currentTime = Date.now();
             const boostEndTime = currentTime + durationInHours * 3600000; // Convert hours to milliseconds
@@ -1768,10 +1765,6 @@ module.exports = {
         } catch (error) {
             console.error('Error applying global boost:', error);
             return null;
-        } finally {
-            if (mongoClient) {
-                mongoClient.close();
-            }
         }
     },
 
@@ -1821,77 +1814,63 @@ module.exports = {
 
     },
 
-    updateImageRequest: async function (messageId, type, user, imgURL, oldImgURL, status, embed, collab, pickId) {
-        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+    updateImageRequest: async function (client, messageId, type, user, imgURL, oldImgURL, status, embed, collab, pickId) {
+        const collectionSpecial = client.db.collection("Special");
+
         try {
             await collectionSpecial.updateOne({ _id: messageId }, { $set: { type, user, imgURL, oldImgURL, status, embed, collab, pickId } }, { upsert: true });
         } catch (error) {
             console.error('Error sending image request:', error);
             return null;
-        } finally {
-            if (mongoClient) {
-                mongoClient.close();
-            }
         }
     },
 
-    updateReport: async function (messageId, type, reporterUser, reportedUser, status, embed, collab, pickId, reason) {
-        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+    updateReport: async function (client, messageId, type, reporterUser, reportedUser, status, embed, collab, pickId, reason) {
+        const collectionSpecial = client.db.collection("Special");
+
         try {
             await collectionSpecial.updateOne({ _id: messageId }, { $set: { type, reporterUser, reportedUser, status, embed, collab, pickId, reason } }, { upsert: true });
         } catch (error) {
             console.error('Error sending image request:', error);
             return null;
-        } finally {
-            if (mongoClient) {
-                mongoClient.close();
-            }
         }
     },
 
-    liquidateImageRequest: async function (messageId) {
-        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+    liquidateImageRequest: async function (client, messageId) {
+        const collectionSpecial = client.db.collection("Special");
+
         try {
             await collectionSpecial.deleteOne({ _id: messageId });
         } catch (error) {
             console.error('Error liquidating image request:', error);
             return null;
-        } finally {
-            if (mongoClient) {
-                mongoClient.close();
-            }
         }
     },
 
-    liquidateReport: async function (messageId) {
-        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+    liquidateReport: async function (client, messageId) {
+        const collectionSpecial = client.db.collection("Special");
+        
         try {
             await collectionSpecial.deleteOne({ _id: messageId });
         } catch (error) {
             console.error('Error liquidating report:', error);
             return null;
-        } finally {
-            if (mongoClient) {
-                mongoClient.close();
-            }
         }
     },
 
-    updateSuggestion: async function (messageId, user, status, embed, upvotes, downvotes, voters) {
+    updateSuggestion: async function (client, messageId, user, status, embed, upvotes, downvotes, voters) {
         if (!voters) {
-            let suggestion = await getSuggestion(messageId);
+            let suggestion = await this.getSuggestion(client, messageId);
             voters = suggestion.voters;
         }
-        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+
+        const collectionSpecial = client.db.collection("Special");
+
         try {
             await collectionSpecial.updateOne({ _id: messageId }, { $set: { user, status, embed, upvotes, downvotes, voters } }, { upsert: true });
         } catch (error) {
             console.error('Error creating suggestion:', error);
             return null;
-        } finally {
-            if (mongoClient) {
-                mongoClient.close();
-            }
         }
     },
 
@@ -1919,17 +1898,14 @@ module.exports = {
         await collection.deleteOne({ _id: messageId });
     },
 
-    liquidateSuggestion: async function (messageId) {
-        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
+    liquidateSuggestion: async function (client, messageId) {
+        const collectionSpecial = client.db.collection("Special");
+        
         try {
             await collectionSpecial.deleteOne({ _id: messageId });
         } catch (error) {
             console.error('Error liquidating suggestion:', error);
             return null;
-        } finally {
-            if (mongoClient) {
-                mongoClient.close();
-            }
         }
     },
 
@@ -1951,64 +1927,41 @@ module.exports = {
         }
     },
 
-    getSuggestion: async function (messageId) {
-        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
-        try {
-            const messageEmbed = await collectionSpecial.findOne({ _id: messageId });
-            return messageEmbed ? messageEmbed || [] : [];
-        } finally {
-            if (mongoClient) {
-                mongoClient.close();
-            }
+    getSuggestion: async function (client, messageId) {
+        const collectionSpecial = client.db.collection("Special");
+        const messageEmbed = await collectionSpecial.findOne({ _id: messageId });
+        return messageEmbed ? messageEmbed || [] : [];
+    },
+
+    getImageRequestByUser: async function (client, userId) {
+        const collectionSpecial = client.db.collection("Special");
+        let imageRequest = await collectionSpecial.find({ user: userId }).toArray();
+        imageRequest = imageRequest.filter(r => r.type === "image change");
+
+        if (imageRequest.length > 0) {
+            return imageRequest;
+        } else {
+            return false;
         }
     },
 
-    getImageRequestByUser: async function (userId) {
-        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
-        try {
-            let imageRequest = await collectionSpecial.find({ user: userId }).toArray();
-            imageRequest = imageRequest.filter(r => r.type === "image change");
-            if (imageRequest.length > 0) {
-                return imageRequest;
-            } else {
-                return false;
-            }
-        } finally {
-            if (mongoClient) {
-                mongoClient.close();
-            }
-        }
+    getImageRequestByMessage: async function (client, messageId) {
+        const collectionSpecial = client.db.collection("Special");
+        const imageRequest = await collectionSpecial.findOne({ _id: messageId });
+        return imageRequest ? imageRequest || false : false;
     },
 
-    getImageRequestByMessage: async function (messageId) {
-        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
-        try {
-            const imageRequest = await collectionSpecial.findOne({ _id: messageId });
-            return imageRequest ? imageRequest || false : false;
-        } finally {
-            if (mongoClient) {
-                mongoClient.close();
-            }
-        }
+    getReportByMessage: async function (client, messageId) {
+        const collectionSpecial = client.db.collection("Special");
+        const report = await collectionSpecial.findOne({ _id: messageId });
+        return report ? report || false : false;
     },
 
-    getReportByMessage: async function (messageId) {
-        const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
-        try {
-            const report = await collectionSpecial.findOne({ _id: messageId });
-            return report ? report || false : false;
-        } finally {
-            if (mongoClient) {
-                mongoClient.close();
-            }
-        }
-    },
-
-    updateLeaderboardData: async function (type) {
+    updateLeaderboardData: async function (client, type) {
         let leaderboardDataCombo = [];
         let leaderboardDataTokens = [];
         try {
-            const userData = await fetchUserDataFromDatabase();
+            const userData = await fetchUserDataFromDatabase(client);
             if (type === 'tokens') {
                 const sortedTokens = userData.sort((a, b) => b.credits - a.credits);
                 return leaderboardDataTokens = sortedTokens.slice(0, 10); // Top 10 users by tokens
@@ -2028,7 +1981,7 @@ module.exports = {
         const year = now.getFullYear();
         const numberOfDaysInMonth = new Date(year, currentMonth, 0).getDate();
         const nextRun = new Date(now);
-        const { collection: userCollection } = await connectToMongoDB("OzenCollection");
+        const userCollection = client.db.collection("OzenCollection");
 
         nextRun.setUTCHours(localConstants.dailyCheckHour, localConstants.dailyCheckMinute, 0, 0);
 
@@ -2169,11 +2122,11 @@ module.exports = {
             console.log(`Sub renewal scheduled in ${numberOfDaysInMonth - currentDay + 1} days.`)
         }
         /*console.log('user timed out for 24 hours');*/
-        const { collection } = await connectToMongoDB("Collabs");
+        const collection = client.db.collection("Collabs");
         await handleCollabClosures(collection, client);
         await handleCollabOpenings(collection, client);
         setTimeout(async () => {
-            await handleDailyDecay();
+            await handleDailyDecay(client);
             /*await member.timeout(86400000, "Daily timeout for this user.");*/
             scheduleDailyDecay(client);
         }, delay);
@@ -2267,46 +2220,39 @@ async function setReferralCode(userId, referralCode, collection) {
     await collection.updateOne({ _id: userId }, { $set: { referralCode } }, { upsert: true });
 }
 
-async function fetchUserDataFromDatabase() {
-    const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-    try {
-        const userData = await collection.find({}).toArray();
-        const userDataArray = userData.map(user => ({
-            userId: user._id,
-            credits: user.balance || 0,
-            topCombo: user.topCombo || 0
-        }));
-        return userDataArray;
-    } finally {
-        mongoClient.close();
-    }
+async function fetchUserDataFromDatabase(client) {
+    const collection = client.db.collection("OzenCollection");
+    const userData = await collection.find({}).toArray();
+    const userDataArray = userData.map(user => ({
+        userId: user._id,
+        credits: user.balance || 0,
+        topCombo: user.topCombo || 0
+    }));
+
+    return userDataArray;
 }
 
-async function handleDailyDecay() {
+async function handleDailyDecay(client) {
     console.log("Running daily decay");
-    const { collection, client: mongoClient } = await connectToMongoDB("OzenCollection");
-    try {
-        const users = await collection.find({}).toArray();
+    const collection = client.db.collection("OzenCollection");
+    const users = await collection.find({}).toArray();
 
-        for (const user of users) {
-            const lastMessageTimestamp = user.lastMessageDate;
+    for (const user of users) {
+        const lastMessageTimestamp = user.lastMessageDate;
 
-            if (!lastMessageTimestamp) continue;
+        if (!lastMessageTimestamp) continue;
 
-            const daysSinceLastMessage = (Math.floor(new Date().getTime() / 1000) - lastMessageTimestamp) / (1000 * 60 * 60 * 24);
+        const daysSinceLastMessage = (Math.floor(new Date().getTime() / 1000) - lastMessageTimestamp) / (1000 * 60 * 60 * 24);
 
-            if (daysSinceLastMessage > 14) {
-                const currentBalance = user.balance || 0;
-                const newBalance = Math.max(currentBalance - 1000, 0);
+        if (daysSinceLastMessage > 14) {
+            const currentBalance = user.balance || 0;
+            const newBalance = Math.max(currentBalance - 1000, 0);
 
-                await collection.updateOne(
-                    { _id: user._id },
-                    { $set: { balance: newBalance } }
-                );
-            }
+            await collection.updateOne(
+                { _id: user._id },
+                { $set: { balance: newBalance } }
+            );
         }
-    } finally {
-        mongoClient.close();
     }
 }
 
@@ -2317,7 +2263,7 @@ async function scheduleDailyDecay(client) {
     const year = now.getFullYear();
     const numberOfDaysInMonth = new Date(year, currentMonth, 0).getDate();
     const nextRun = new Date(now);
-    const { collection: userCollection } = await connectToMongoDB("OzenCollection");
+    const userCollection = client.db.collection("OzenCollection");
 
     nextRun.setUTCHours(localConstants.dailyCheckHour, localConstants.dailyCheckMinute, 0, 0);
 
@@ -2458,27 +2404,15 @@ async function scheduleDailyDecay(client) {
         console.log(`Sub renewal scheduled in ${numberOfDaysInMonth - currentDay + 1} days.`)
     }
     /*console.log('user timed out for 24 hours');*/
-    const { collection } = await connectToMongoDB("Collabs");
+    const collection = client.db.collection("Collabs");
     await handleCollabClosures(collection, client);
     await handleCollabOpenings(collection, client);
 
     setTimeout(async () => {
-        await handleDailyDecay();
+        await handleDailyDecay(client);
         /*await member.timeout(86040000, "Daily timeout for this user.");*/
         scheduleDailyDecay(client);
     }, delay);
-}
-
-async function getSuggestion(messageId) {
-    const { collection: collectionSpecial, client: mongoClient } = await connectToMongoDB("Special");
-    try {
-        const messageEmbed = await collectionSpecial.findOne({ _id: messageId });
-        return messageEmbed ? messageEmbed || [] : [];
-    } finally {
-        if (mongoClient) {
-            mongoClient.close();
-        }
-    }
 }
 
 function applyText(canvas, text, fontFamily, fontSize, fontStyle) {

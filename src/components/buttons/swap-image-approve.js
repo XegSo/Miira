@@ -8,7 +8,7 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true })
-        const request = await localFunctions.getImageRequestByMessage(int.message.id);
+        const request = await localFunctions.getImageRequestByMessage(client, int.message.id);
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(int.user.id);
         if (!guildMember.roles.cache.has('630636502187114496')) return int.editReply('You have no permission to do this!');
@@ -43,7 +43,7 @@ module.exports = {
             .setImage(request.oldImgURL)
         await int.message.edit({ embeds: [imageSwapEmbed, oldImageEmbed], components: [] });
         await logChannel.send({ content: `<@${request.user}> Your image change request has been accepted!`, embeds: [imageSwapEmbed, oldImageEmbed] });
-        await localFunctions.liquidateImageRequest(request._id);
+        await localFunctions.liquidateImageRequest(client, request._id);
         await int.editReply({ content: 'Request successfully accepted.', ephemeral: true });
     }
 };

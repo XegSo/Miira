@@ -6,7 +6,7 @@ module.exports = {
     },
     async execute (int, client) {
         await int.deferReply({ ephemeral: true });
-        const suggestion = await localFunctions.getSuggestion(int.message.id);
+        const suggestion = await localFunctions.getSuggestion(client, int.message.id);
         const suggestionUser = await client.users.fetch(suggestion.user)
         try {           
             const thread = await int.message.startThread({

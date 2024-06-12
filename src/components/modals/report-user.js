@@ -65,7 +65,7 @@ module.exports = {
             ephemeral: true,
         });
 
-        await localFunctions.updateReport(message.id, type, userId, pick.discordId, status, reportEmbed, collab.name, pick.id, reason);
+        await localFunctions.updateReport(client, message.id, type, userId, pick.discordId, status, reportEmbed, collab.name, pick.id, reason);
         await int.editReply({ content: 'Your report has been sent successfully', ephemeral: true });
     },
 };

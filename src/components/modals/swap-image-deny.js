@@ -33,15 +33,15 @@ module.exports = {
                     name: request.embed.data.fields[1].name,
                     value: request.embed.data.fields[1].value
                 }
-            )
+            );
 
         let oldImageEmbed = new EmbedBuilder()
             .setURL('https://endlessmirage.net/')
-            .setImage(request.oldImgURL)
+            .setImage(request.oldImgURL);
         await message.edit({ embeds: [imageSwapEmbed, oldImageEmbed], components: [] });
         await logChannel.send({ content: `<@${request.user}> Your image change request has been denied.\n**Reason:** ${reason}`, embeds: [imageSwapEmbed, oldImageEmbed]});
-        await localFunctions.liquidateImageRequest(request._id);
+        await localFunctions.liquidateImageRequest(client, request._id);
         ImageRequestCache.delete(int.user.id);
         await int.editReply({ content: 'Request successfully denied.', ephemeral: true });
-    },
+    }
 };

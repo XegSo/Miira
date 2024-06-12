@@ -124,7 +124,7 @@ module.exports = {
       const leaderboardType = int.options.getString('choice');
       if (leaderboardType === 'tokens' || leaderboardType === null) {
         // Prepare the leaderboard data for the embed
-        let leaderboardDataTokens = await localFunctions.updateLeaderboardData('tokens');
+        let leaderboardDataTokens = await localFunctions.updateLeaderboardData(client, 'tokens');
         const TopEmbed = new EmbedBuilder()
           .setImage('https://puu.sh/JPdfL/9b2860ac7a.png')
           .setColor('#f26e6a');
@@ -133,7 +133,7 @@ module.exports = {
 
         await int.editReply({ content: '', embeds: [TopEmbed, TokensEmbed] });
       } else {
-        let leaderboardDataCombo = await localFunctions.updateLeaderboardData('combo');
+        let leaderboardDataCombo = await localFunctions.updateLeaderboardData(client, 'combo');
         const TopEmbed = new EmbedBuilder()
           .setImage('https://puu.sh/JPdfL/9b2860ac7a.png')
           .setColor('#f26e6a');

@@ -28,7 +28,7 @@ module.exports = {
     const imageURL = int.fields.getTextInputValue("imageURL");
     const isPNG = await localFunctions.isPNGURL(imageURL);
     if (!isPNG) return int.editReply('The provided image URL is not valid or is not png! Please provide a valid png URL.');
-    let alreadySuggested = await localFunctions.getImageRequestByUser(int.user.id);
+    let alreadySuggested = await localFunctions.getImageRequestByUser(client, int.user.id);
     if (alreadySuggested) return int.editReply('You already have a request under review!');
     let status = 'Pending';
     let collab = initializedMap.get(int.user.id).collab;
@@ -72,7 +72,7 @@ module.exports = {
       ephemeral: true,
     });
 
-    await localFunctions.updateImageRequest(message.id, type, int.user.id, imageURL, pick.imgURL, status, imageSwapEmbed, collab.name, pick.id);
+    await localFunctions.updateImageRequest(client, message.id, type, int.user.id, imageURL, pick.imgURL, status, imageSwapEmbed, collab.name, pick.id);
     await int.editReply({ content: 'Your request has been sent successfully', ephemeral: true });
   },
 };

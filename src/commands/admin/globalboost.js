@@ -28,7 +28,7 @@ module.exports = {
           return;
         }
 
-        localFunctions.applyGlobalBoost(multiplier, boostDuration);
+        await localFunctions.applyGlobalBoost(multiplier, boostDuration, client);
         await int.reply({ content: `Global boost of ${multiplier}x for ${boostDuration} hours has been applied.`, ephemeral: true });
     }    
 }

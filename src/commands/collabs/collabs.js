@@ -230,7 +230,7 @@ module.exports = {
         }
 
         if (subcommand === "referral") {
-            localFunctions.handleReferralCommand(int)
+            localFunctions.handleReferralCommand(int, client)
                 .then(async (code) => {
                     const cartEmbed = new EmbedBuilder()
                         .setFooter({ text: 'Endless Mirage | Referral Code', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
@@ -719,7 +719,7 @@ module.exports = {
                 const collabsMenu = new SelectMenuBuilder()
                     .setCustomId('select-collab')
                     .setPlaceholder('Select a collab to visualize.')
-                const allCollabs = await localFunctions.getCollabs(collection);
+                const allCollabs = await localFunctions.getCollabs(collabCollection);
                 for (let collab of allCollabs) {
                     collabsMenu.addOptions({ label: collab.name, value: collab.name });
                 }
@@ -1169,7 +1169,7 @@ module.exports = {
                 }
 
                 const currentDate = Math.floor(Date.now() / 1000);
-                const allCollabs = await localFunctions.getCollabs(collection);
+                const allCollabs = await localFunctions.getCollabs(collabCollection);
                 const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
                 
                 if (typeof openMegacollab === "undefined") {
@@ -1299,7 +1299,7 @@ module.exports = {
                 }
 
                 try {
-                    let collab = await localFunctions.getCollab(int.options.getString('collab'), collection)
+                    let collab = await localFunctions.getCollab(int.options.getString('collab'), collabCollection)
                     let components = [];
                     let extraComponents = [];
                     let URLstring = '';
