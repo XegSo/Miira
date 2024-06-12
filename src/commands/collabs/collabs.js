@@ -1299,7 +1299,7 @@ module.exports = {
                 }
 
                 try {
-                    let collab = await localFunctions.getCollab(int.options.getString('collab'), collection)
+                    let collab = await localFunctions.getCollab(int.options.getString('collab'), collabCollection)
                     let components = [];
                     let extraComponents = [];
                     let URLstring = '';
