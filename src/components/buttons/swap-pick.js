@@ -8,16 +8,16 @@ module.exports = {
     },
     async execute(int, client) {
         const modal = new ModalBuilder()
-            .setCustomId("swap-pick")
-            .setTitle(`Swap your current pick.`);
+            .setCustomId('swap-pick')
+            .setTitle('Swap your current pick.');
 
         const pick = new TextInputBuilder()
             .setCustomId('pick')
-            .setLabel("Type the ID of the character to swap.")
-            .setStyle(TextInputStyle.Short)
+            .setLabel('Type the ID of the character to swap.')
+            .setStyle(TextInputStyle.Short);
 
         modal.addComponents(new ActionRowBuilder().addComponents(pick));
 
         await int.showModal(modal);
-    },
-}
+    }
+};

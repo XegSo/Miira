@@ -17,15 +17,15 @@ module.exports = {
         if (int.user.id !== '687004886922952755') return;
 
         const user = int.options.getUser('user');
-        const collection = client.db.collection("OzenCollection");
+        const collection = client.db.collection('OzenCollection');
 
         try {
             await localFunctions.delTier(user.id, collection);
-            console.log(`Tier removed for user ${user.tag}`)
+            console.log(`Tier removed for user ${user.tag}`);
         } catch (e) {
             console.log(e);
         }
 
         await int.editReply(`Tier removed for user ${user.tag}`);
-    },
-}
+    }
+};

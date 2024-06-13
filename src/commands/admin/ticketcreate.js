@@ -6,7 +6,7 @@ module.exports = {
         .setName('ticketcreate')
         .setDescription('Create a ticket system. (Admin only).')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-        .addStringOption(option => 
+        .addStringOption(option =>
             option
                 .setName('channelid')
                 .setDescription('Insert the channel ID for the embed')
@@ -19,7 +19,7 @@ module.exports = {
 
         if (!channel) {
             await int.editReply({ content: 'Please provide a channel Id.', ephemeral: true });
-        return;
+            return;
         }
         const TicketTopEmbed = new EmbedBuilder()
             .setColor('#f26e6a')
@@ -30,18 +30,18 @@ module.exports = {
             .setTitle('Contact staff via Ticket.')
             .setDescription('Click on the button bellow to contact staff to discuss any matter on a private channel. Keep in mind rules still apply on there.');
         await channel.send({
-            content: "",
+            content: '',
             embeds: [TicketTopEmbed, TicketEmbed],
             components: [
                 new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                    .setCustomId('create-ticket')
-                    .setLabel('🎫 Create a Ticket.')
-                    .setStyle('Primary')
-                ),
+                    new ButtonBuilder()
+                        .setCustomId('create-ticket')
+                        .setLabel('🎫 Create a Ticket.')
+                        .setStyle('Primary')
+                )
             ],
-            ephemeral: true,
+            ephemeral: true
         });
         await int.editReply({ content: 'Embed created succesfully', ephemeral: true });
-    }    
-}
+    }
+};

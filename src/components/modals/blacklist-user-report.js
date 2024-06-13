@@ -5,14 +5,14 @@ const { reportCache } = require('../buttons/report-accept');
 
 module.exports = {
     data: {
-        name: "blacklist-user-report"
+        name: 'blacklist-user-report'
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        
-        const collection = client.db.collection("Collabs");
-        const userCollection = client.db.collection("OzenCollection");
-        const blacklistCollection = client.db.collection("Blacklist");
+
+        const collection = client.db.collection('Collabs');
+        const userCollection = client.db.collection('OzenCollection');
+        const blacklistCollection = client.db.collection('Blacklist');
 
         const guild = client.guilds.cache.get(localConstants.guildId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
@@ -25,7 +25,7 @@ module.exports = {
         const id = pickFull.id;
         const fullParticipation = collab.participants.find((e) => e.id === id);
 
-        await localFunctions.setBlacklist(fullParticipation.discordId, int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : "None", fullParticipation.osu_id, blacklistCollection);
+        await localFunctions.setBlacklist(fullParticipation.discordId, int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : 'None', fullParticipation.osu_id, blacklistCollection);
         let userCollabs = await localFunctions.getUserCollabs(fullParticipation.discordId, userCollection);
         await localFunctions.unsetCollabParticipation(collab.name, collection, id);
         userCollabs = userCollabs.filter(e => e.collabName !== collab.name);
@@ -38,11 +38,11 @@ module.exports = {
         await pendingMember.roles.remove(collab.roleId);
 
 
-        let contentString = "";
+        let contentString = '';
         const snipes = collab.snipes;
-        if (typeof snipes !== "undefined") {
-            if (typeof snipes.find(p => p.pick === id) !== "undefined") {
-                contentString = "Snipers! ";
+        if (typeof snipes !== 'undefined') {
+            if (typeof snipes.find(p => p.pick === id) !== 'undefined') {
+                contentString = 'Snipers! ';
             }
             for (const snipe of snipes) {
                 contentString = contentString.concat('', `<@${snipe.userId}>`);
@@ -54,17 +54,17 @@ module.exports = {
             .setFooter({ text: 'Endless Mirage | New Character Available', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')
             .setDescription(`**\`\`\`ml\n📣 New Character Available!\`\`\`**                                                                                                        **${collab.name}**\nName:${pickFull.name}\nID: ${pickFull.id}`)
-            .setImage(pickFull.imgURL)
-        logChannel.send({ content: `${contentString}\nUser <@${fullParticipation.discordId}> has been blacklisted from the collabs.\n**Reason:** ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : "None"}\n**Removed by:** <@${int.user.id}>`, embeds: [leaveEmbed] });
+            .setImage(pickFull.imgURL);
+        logChannel.send({ content: `${contentString}\nUser <@${fullParticipation.discordId}> has been blacklisted from the collabs.\n**Reason:** ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : 'None'}\n**Removed by:** <@${int.user.id}>`, embeds: [leaveEmbed] });
 
         const auditEmbed = new EmbedBuilder()
             .setFooter({ text: 'Endless Mirage | Audit Log', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')
-            .setDescription(`**\`\`\`ml\n📣 New Action Taken\`\`\`**                                                                                                        **An user has been blacklisted!**\n\n**Pick Name**: ${pickFull.name}\n**Pick ID**: ${pickFull.id}\n**Ex-Owner**: <@${fullParticipation.discordId}>\n**Removed by**: <@${int.user.id}>\n**Reason**: ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : "None"}`);
+            .setDescription(`**\`\`\`ml\n📣 New Action Taken\`\`\`**                                                                                                        **An user has been blacklisted!**\n\n**Pick Name**: ${pickFull.name}\n**Pick ID**: ${pickFull.id}\n**Ex-Owner**: <@${fullParticipation.discordId}>\n**Removed by**: <@${int.user.id}>\n**Reason**: ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : 'None'}`);
         auditChannel.send({ content: '', embeds: [auditEmbed] });
 
         let reportEmbed = new EmbedBuilder()
-            .setFooter({ text: "Endless Mirage | Report Accepted", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+            .setFooter({ text: 'Endless Mirage | Report Accepted', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')
             .setTimestamp()
             .setURL('https://endlessmirage.net/')
@@ -78,18 +78,18 @@ module.exports = {
                     name: report.embed.data.fields[1].name,
                     value: report.embed.data.fields[1].value
                 }
-            )
+            );
 
         const reporterMember = await guild.members.cache.find(member => member.id === report.reporterUser);
         try {
             reporterMember.send({
-                content: `Your report for the user <@${report.reportedUser}> has been accepted and the user has been blacklisted from future collabs.`,
+                content: `Your report for the user <@${report.reportedUser}> has been accepted and the user has been blacklisted from future collabs.`
             });
         } catch (e) {
             console.log(e);
             const logChannel = guild.channels.cache.get(localConstants.logChannelID);
             logChannel.send({
-                content: `<@${report.reporterUser}> Your report for the user <@${report.reportedUser}> has been accepted and the user has been blacklisted from future collabs.`,
+                content: `<@${report.reporterUser}> Your report for the user <@${report.reportedUser}> has been accepted and the user has been blacklisted from future collabs.`
             });
         }
 

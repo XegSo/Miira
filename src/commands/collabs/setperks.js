@@ -1,22 +1,22 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const localFunctions = require('../../functions')
+const localFunctions = require('../../functions');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('setperkstatus')
         .setDescription('Change the perk usage status (Admin Only).')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-        .addStringOption(option => 
+        .addStringOption(option =>
             option
                 .setName('switch')
                 .setDescription('Set status [on/off].')
                 .setRequired(true)
                 .addChoices(
                     { name: 'on', value: 'on' },
-                    { name: 'off', value: 'off' },
+                    { name: 'off', value: 'off' }
                 )
         )
-        .addIntegerOption(option => 
+        .addIntegerOption(option =>
             option
                 .setName('decaydate')
                 .setDescription('Decay date in UNIX epoch.')
@@ -28,9 +28,9 @@ module.exports = {
         const status = int.options.getString('switch');
         const decayDate = int.options.getInteger('decaydate');
         let newStatus = 0;
-        const collection = client.db.collection("Special");
+        const collection = client.db.collection('Special');
 
-        if (status === "on") {
+        if (status === 'on') {
             newStatus = 1;
         }
 
@@ -41,5 +41,5 @@ module.exports = {
         } catch (error) {
             await int.reply({ content: `Something went wrong: ${error}`, ephemeral: true });
         }
-    }    
-}
+    }
+};

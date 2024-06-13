@@ -12,7 +12,7 @@ module.exports = {
             const collabName = buttonCache.get(int.user.id).collab;
             const collabData = buttonCache.get(int.user.id).fullCollabData;
             const modal = new ModalBuilder()
-                .setCustomId("join-collab-random")
+                .setCustomId('join-collab-random')
                 .setTitle(`${collabName}`);
 
             const av_text = new TextInputBuilder()
@@ -21,7 +21,7 @@ module.exports = {
                 .setPlaceholder('Typically your username.')
                 .setMinLength(2)
                 .setMaxLength(collabData.fieldRestrictions.av)
-                .setStyle(TextInputStyle.Short)
+                .setStyle(TextInputStyle.Short);
 
             const ca_text = new TextInputBuilder()
                 .setCustomId('ca_text')
@@ -29,7 +29,7 @@ module.exports = {
                 .setPlaceholder('Typically your username.')
                 .setMinLength(2)
                 .setMaxLength(collabData.fieldRestrictions.ca)
-                .setStyle(TextInputStyle.Short)
+                .setStyle(TextInputStyle.Short);
 
             const ca_quote = new TextInputBuilder()
                 .setCustomId('ca_quote')
@@ -47,7 +47,7 @@ module.exports = {
                 .setStyle(TextInputStyle.Paragraph)
                 .setRequired(false);
 
-            modal.addComponents(new ActionRowBuilder().addComponents(av_text), new ActionRowBuilder().addComponents(ca_text), new ActionRowBuilder().addComponents(ca_quote),  new ActionRowBuilder().addComponents(referral));
+            modal.addComponents(new ActionRowBuilder().addComponents(av_text), new ActionRowBuilder().addComponents(ca_text), new ActionRowBuilder().addComponents(ca_quote), new ActionRowBuilder().addComponents(referral));
 
             await int.showModal(modal);
 
@@ -55,14 +55,14 @@ module.exports = {
                 collab: buttonCache.get(int.user.id).collab,
                 osuData: buttonCache.get(int.user.id).osuData,
                 userCollabData: buttonCache.get(int.user.id).userCollabData
-            })
+            });
 
         } catch {
             int.reply({
                 content: 'Collab is not cached, try to run the command to show it again.',
                 ephemeral: true
-            })
-        } 
+            });
+        }
     },
     joinCache: joinCache
-}
+};

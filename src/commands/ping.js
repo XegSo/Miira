@@ -7,5 +7,5 @@ module.exports = {
         .setDescription('pong'),
     async execute(int, client) {
         int.reply('pong');
-    }    
-}
+    }
+};

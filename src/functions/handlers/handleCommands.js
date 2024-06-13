@@ -7,20 +7,20 @@ const guildId = '630281137998004224';
 
 class CommandLoader {
     constructor(commands, commandArray) {
-        this.commands = commands
-        this.commandArray = commandArray
+        this.commands = commands;
+        this.commandArray = commandArray;
         this.init();
     }
 
     init() {
-        fs.readdirSync(path.join(__dirname, "../../commands")).filter((file) => {
+        fs.readdirSync(path.join(__dirname, '../../commands')).filter((file) => {
             if (file.endsWith('.js')) {
                 const command = require(path.join(__dirname, (`../../commands/${file}`)));
                 this.commands.set(command.data.name, command);
                 this.commandArray.push(command.data.toJSON());
                 console.log(`Command: ${command.data.name} has been loaded.`);
             }
-        })
+        });
     }
 
     readFolder(folder) {
@@ -31,7 +31,7 @@ class CommandLoader {
                 this.commandArray.push(command.data.toJSON());
                 console.log(`Command: ${command.data.name} has been loaded.`);
             }
-        })
+        });
     }
 }
 
@@ -49,7 +49,7 @@ module.exports = (client) => {
 
             await rest.put(
                 Routes.applicationCommands(clientId),
-                { body: client.commandArray },
+                { body: client.commandArray }
             );
 
             console.log('Succesfully reloaded application (/) commands.');
@@ -57,7 +57,7 @@ module.exports = (client) => {
             console.error(error);
         }
 
-    }
+    };
 
     // If the fuckers dupe then hardreset them.
     client.hardReset = async () => {
@@ -70,5 +70,5 @@ module.exports = (client) => {
         rest.put(Routes.applicationCommands(clientId), { body: [] })
             .then(() => console.log('Successfully deleted all application commands.'))
             .catch(console.error);
-    }
+    };
 };

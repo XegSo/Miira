@@ -9,7 +9,7 @@ module.exports = {
         name: 'delete-collab'
     },
     async execute(int, client) {
-        const collab = collabCache.get(int.user.id).collab
+        const collab = collabCache.get(int.user.id).collab;
         if (collab.host !== int.user.id) {
             int.reply('You are not allowed to do this.');
             return;
@@ -17,21 +17,21 @@ module.exports = {
 
         let initializedMap;
         if (collabCache.size > 0) {
-            if (typeof collabCache.get(int.user.id) !== "undefined") {
+            if (typeof collabCache.get(int.user.id) !== 'undefined') {
                 initializedMap = collabCache;
             }
         }
         if (adminCache.size > 0) {
-            if (typeof adminCache.get(int.user.id) !== "undefined") {
+            if (typeof adminCache.get(int.user.id) !== 'undefined') {
                 initializedMap = adminCache;
             }
         }
         deleteCache.set(int.user.id, {
             collab: initializedMap.get(int.user.id).collab
-        })
+        });
 
         const modal = new ModalBuilder()
-            .setCustomId("delete-collab")
+            .setCustomId('delete-collab')
             .setTitle('Collab deletion');
 
         const title = new TextInputBuilder()
@@ -46,4 +46,4 @@ module.exports = {
         await int.showModal(modal);
     },
     deleteCache: deleteCache
-}
+};

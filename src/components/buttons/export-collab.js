@@ -12,19 +12,19 @@ module.exports = {
         await int.deferReply();
         let initializedMap;
         if (collabCache.size > 0) {
-            if (typeof collabCache.get(int.user.id) !== "undefined") {
+            if (typeof collabCache.get(int.user.id) !== 'undefined') {
                 initializedMap = collabCache;
             }
         }
 
         if (adminCache.size > 0) {
-            if (typeof adminCache.get(int.user.id) !== "undefined") {
+            if (typeof adminCache.get(int.user.id) !== 'undefined') {
                 initializedMap = adminCache;
             }
         }
-        const collection = client.db.collection("Collabs");
+        const collection = client.db.collection('Collabs');
         const collab = await localFunctions.getCollab(initializedMap.get(int.user.id).collab.name, collection);
-        
+
         if (collab.host !== int.user.id) {
             int.editReply('You are not allowed to do this.');
             return;
@@ -42,4 +42,4 @@ module.exports = {
 
         await int.editReply({ files: [attachment] });
     }
-}
+};

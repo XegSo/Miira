@@ -19,15 +19,15 @@ module.exports = {
         if (int.user.id !== '687004886922952755') return;
         const userId = int.options.getUser('user');
         const perkMenu = new SelectMenuBuilder()
-                .setCustomId('set-tier')
-                .setPlaceholder('Select the tier.')
-                
+            .setCustomId('set-tier')
+            .setPlaceholder('Select the tier.');
+
         localConstants.premiumTiers.forEach((tier) => {
-            perkMenu.addOptions({ label: tier.name , value: tier.name, description: `${tier.name}` })
+            perkMenu.addOptions({ label: tier.name, value: tier.name, description: `${tier.name}` });
         });
 
         giveTierCache.set(int.user.id, {
-            user: userId,
+            user: userId
         });
 
         const row = new ActionRowBuilder().addComponents(perkMenu);
@@ -37,4 +37,4 @@ module.exports = {
         });
     },
     giveTierCache: giveTierCache
-}
+};

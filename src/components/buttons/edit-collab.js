@@ -10,16 +10,16 @@ module.exports = {
         await int.deferReply();
         let initializedMap;
         if (collabCache.size > 0) {
-            if (typeof collabCache.get(int.user.id) !== "undefined") {
+            if (typeof collabCache.get(int.user.id) !== 'undefined') {
                 initializedMap = collabCache;
             }
         }
         if (adminCache.size > 0) {
-            if (typeof adminCache.get(int.user.id) !== "undefined") {
+            if (typeof adminCache.get(int.user.id) !== 'undefined') {
                 initializedMap = adminCache;
             }
         }
-        
+
         if (int.user.id !== '687004886922952755') {
             await int.editReply('You are not allowed to do this!');
             return;
@@ -30,9 +30,9 @@ module.exports = {
         editCache.set(int.user.id, {
             collab: initializedMap.get(int.user.id).collab,
             userId: int.user.id,
-            messageId: replyMessage.id,
+            messageId: replyMessage.id
 
-        })
+        });
     },
     editCache: editCache
-}
+};

@@ -8,7 +8,7 @@ module.exports = {
     },
     async execute(int, client) {
         const modal = new ModalBuilder()
-            .setCustomId("report-user")
+            .setCustomId('report-user')
             .setTitle('Report an user');
 
         const reason = new TextInputBuilder()
@@ -19,5 +19,5 @@ module.exports = {
 
         modal.addComponents(new ActionRowBuilder().addComponents(reason));
         await int.showModal(modal);
-    },
-}
+    }
+};

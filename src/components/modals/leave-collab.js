@@ -5,13 +5,13 @@ const { leaveCache } = require('../buttons/leave-collab');
 
 module.exports = {
     data: {
-        name: "leave-collab"
+        name: 'leave-collab'
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        const collection = client.db.collection("Collabs");
-        const userCollection = client.db.collection("OzenCollection");
-        const collectionSpecial = client.db.collection("Special");
+        const collection = client.db.collection('Collabs');
+        const userCollection = client.db.collection('OzenCollection');
+        const collectionSpecial = client.db.collection('Special');
         const userId = int.user.id;
         const guild = await client.guilds.cache.get(localConstants.guildId);
         const guildMember = await guild.members.fetch(userId);
@@ -26,13 +26,13 @@ module.exports = {
             if (collab.collabPick.name !== int.fields.getTextInputValue('pick')) {
                 return int.editReply('Wrong name, make sure you didn\'t make a typo!');
             }
-            if (fullCollab.type === "pooled") {
+            if (fullCollab.type === 'pooled') {
                 let pick = collab.collabPick;
                 let pool = fullCollab.pool.items;
                 const itemInPool = pool.find((e) => e.id === pick.id);
 
                 const userPerks = await localFunctions.getCollabPerksOfUser(collab.collabName, collection, userId);
-                if (typeof userPerks !== "undefined") {
+                if (typeof userPerks !== 'undefined') {
                     for (const perk of userPerks) {
                         await localFunctions.liquidatePerkEntry(userId, collab.collabName, perk.perk, collection);
                     }
@@ -44,11 +44,11 @@ module.exports = {
                 await localFunctions.setUserCollabs(userId, userCollabs, userCollection);
                 await localFunctions.removeCollabParticipant(collab.collabName, collection, userId);
 
-                let contentString = "";
+                let contentString = '';
                 const snipes = await localFunctions.getCollabSnipes(collab.collabName, collection, pick.id);
-                if (typeof snipes !== "undefined") {
-                    if (typeof snipes.find(p => p.pick === pick.id) !== "undefined") {
-                        contentString = "Snipers! ";
+                if (typeof snipes !== 'undefined') {
+                    if (typeof snipes.find(p => p.pick === pick.id) !== 'undefined') {
+                        contentString = 'Snipers! ';
                     }
                     for (const snipe of snipes) {
                         contentString = contentString.concat('', `<@${snipe.userId}>`);
@@ -60,13 +60,13 @@ module.exports = {
                     .setFooter({ text: 'Endless Mirage | New Character Available', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
                     .setURL('https://endlessmirage.net/')
-                    .setDescription(`**\`\`\`ml\n🎫 New Character Available!\`\`\`**                                                                                                        **${fullCollab.name}**\nName:${pick.name}\nID: ${pick.id}`)
+                    .setDescription(`**\`\`\`ml\n🎫 New Character Available!\`\`\`**                                                                                                        **${fullCollab.name}**\nName:${pick.name}\nID: ${pick.id}`);
 
                 const embed2 = new EmbedBuilder()
                     .setImage(pick.imgURL)
-                    .setURL('https://endlessmirage.net/')
+                    .setURL('https://endlessmirage.net/');
                 logChannel.send({ content: contentString, embeds: [leaveEmbed, embed2] });
-                await int.editReply("You've left the collab succesfully.");
+                await int.editReply('You\'ve left the collab succesfully.');
 
                 while (true) {
                     try {
@@ -75,12 +75,12 @@ module.exports = {
                         break;
                     } catch {
                         console.log('Sheet update failed, retring in 2 minutes...');
-                        await localFunctions.delay(2*60*1000);
+                        await localFunctions.delay(2 * 60 * 1000);
                     }
                 }
 
-                if (fullCollab.status === "full") {
-                    await localFunctions.setCollabStatus(fullCollab.name, "open", collection);
+                if (fullCollab.status === 'full') {
+                    await localFunctions.setCollabStatus(fullCollab.name, 'open', collection);
                 }
 
                 await guildMember.roles.remove(fullCollab.roleId);

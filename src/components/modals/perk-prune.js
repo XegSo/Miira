@@ -3,12 +3,12 @@ const { managePerkCache } = require('../selectMenus/manage-perks');
 
 module.exports = {
     data: {
-        name: "perk-prune"
+        name: 'perk-prune'
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        const collection = client.db.collection("Collabs");
-        
+        const collection = client.db.collection('Collabs');
+
         let name = int.fields.getTextInputValue('name');
         const collabName = managePerkCache.get(int.user.id).collabName;
         const perkName = managePerkCache.get(int.user.id).perkName;

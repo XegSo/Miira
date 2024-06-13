@@ -2,11 +2,11 @@ const localFunctions = require('../../functions');
 
 module.exports = {
     data: {
-        name: "sub-change-amount"
+        name: 'sub-change-amount'
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        const collection = client.db.collection("OzenCollection");
+        const collection = client.db.collection('OzenCollection');
 
         let newAmmount = parseFloat(int.fields.getTextInputValue('newAmmount'));
         if (isNaN(newAmmount)) {

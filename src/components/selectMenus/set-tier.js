@@ -13,7 +13,7 @@ module.exports = {
         const pendingMember = await guild.members.fetch(pendingUser.user.id);
 
         if (!pendingUser) return;
-        const collection = client.db.collection("OzenCollection");
+        const collection = client.db.collection('OzenCollection');
 
         let newPerks = [];
         let newRoleId = '';
@@ -26,7 +26,7 @@ module.exports = {
         for (const tier of localConstants.premiumTiers) {
             for (const perk of tier.perks) {
                 newPerks.push(perk);
-                console.log(`${perk.name} has been added.`)
+                console.log(`${perk.name} has been added.`);
             }
             if (pendingTier === tier.name) {
                 newRoleId = tier.roleId;
@@ -40,7 +40,7 @@ module.exports = {
         await localFunctions.setPerks(pendingUser.user.id, newPerks, collection);
         await localFunctions.setUserTier(pendingUser.user.id, { name: pendingTier, id: newRoleId }, collection);
 
-        await int.editReply(`Tier given to <@${pendingUser.user.id}>`)
+        await int.editReply(`Tier given to <@${pendingUser.user.id}>`);
         giveTierCache.delete(int.user.id);
     }
 };

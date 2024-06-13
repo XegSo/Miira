@@ -5,14 +5,14 @@ const { reportCache } = require('../buttons/report-accept');
 
 module.exports = {
     data: {
-        name: "edit-fields-report"
+        name: 'edit-fields-report'
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         let editString = '';
         let textEdits = false;
-        const collection = client.db.collection("OzenCollection");
-        const collabCollection = client.db.collection("Collabs");
+        const collection = client.db.collection('OzenCollection');
+        const collabCollection = client.db.collection('Collabs');
         const report = reportCache.get(int.user.id).report;
         const message = reportCache.get(int.user.id).message;
         const guild = client.guilds.cache.get(localConstants.guildId);
@@ -52,18 +52,18 @@ module.exports = {
             const editEmbed = new EmbedBuilder()
                 .setFooter({ text: 'Endless Mirage | Admin Action', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                 .setColor('#f26e6a')
-                .setDescription(`**\`\`\`ml\n📣 New Input Edit By Admins...\`\`\`**                                                                                                        **${collab.name}**\n${editString}`)
-            logChannel.send({ content: `<@${participation.discordId}> Your input has been edited!\n**Reason:** ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : "None"}\n**Edited by:** <@${int.user.id}>`, embeds: [editEmbed] });
+                .setDescription(`**\`\`\`ml\n📣 New Input Edit By Admins...\`\`\`**                                                                                                        **${collab.name}**\n${editString}`);
+            logChannel.send({ content: `<@${participation.discordId}> Your input has been edited!\n**Reason:** ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : 'None'}\n**Edited by:** <@${int.user.id}>`, embeds: [editEmbed] });
 
             const auditEmbed = new EmbedBuilder()
                 .setFooter({ text: 'Endless Mirage | Audit Log', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                 .setColor('#f26e6a')
-                .setDescription(`**\`\`\`ml\n📣 New Action Taken\`\`\`**                                                                                                        **The fields of an user have been edited!**\n\n**Pick Name**: ${participation.name}\n**Pick ID**: ${participation.id}\n**Owner**: <@${participation.discordId}>\n**Edited by**: <@${int.user.id}>\n**Reason**: ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : "None"}\n${editString}`);
+                .setDescription(`**\`\`\`ml\n📣 New Action Taken\`\`\`**                                                                                                        **The fields of an user have been edited!**\n\n**Pick Name**: ${participation.name}\n**Pick ID**: ${participation.id}\n**Owner**: <@${participation.discordId}>\n**Edited by**: <@${int.user.id}>\n**Reason**: ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : 'None'}\n${editString}`);
             auditChannel.send({ content: '', embeds: [auditEmbed] });
         }
 
         let reportEmbed = new EmbedBuilder()
-            .setFooter({ text: "Endless Mirage | Report Accepted", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+            .setFooter({ text: 'Endless Mirage | Report Accepted', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')
             .setTimestamp()
             .setURL('https://endlessmirage.net/')
@@ -77,20 +77,20 @@ module.exports = {
                     name: report.embed.data.fields[1].name,
                     value: report.embed.data.fields[1].value
                 }
-            )
+            );
 
         await message.edit({ embeds: [reportEmbed], components: [] });
         await localFunctions.liquidateReport(client, report._id);
         const reporterMember = await guild.members.cache.find(member => member.id === report.reporterUser);
         try {
             reporterMember.send({
-                content: `Your report for the user <@${report.reportedUser}> has been accepted and the fields of the user have been edited.`,
+                content: `Your report for the user <@${report.reportedUser}> has been accepted and the fields of the user have been edited.`
             });
         } catch (e) {
             console.log(e);
             const logChannel = guild.channels.cache.get(localConstants.logChannelID);
             logChannel.send({
-                content: `<@${report.reporterUser}> Your report for the user <@${report.reportedUser}> has been accepted and the fields of the user have been edited.`,
+                content: `<@${report.reporterUser}> Your report for the user <@${report.reportedUser}> has been accepted and the fields of the user have been edited.`
             });
         }
 
@@ -106,27 +106,27 @@ module.exports = {
         let oldImg = participation.imgURL;
         await localFunctions.editPickImage(participation.id, participation.discordId, collab.name, collabCollection, collection, newImg);
         let imageSwapEmbed = new EmbedBuilder()
-            .setFooter({ text: "Endless Mirage | Admin Action", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+            .setFooter({ text: 'Endless Mirage | Admin Action', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')
             .setTimestamp()
             .setImage(newImg)
             .setURL('https://endlessmirage.net/')
-            .setDescription(`**\`\`\`📣 New Input Edit By Admins...\`\`\`**`)
+            .setDescription('**```📣 New Input Edit By Admins...```**');
 
         let oldImageEmbed = new EmbedBuilder()
             .setURL('https://endlessmirage.net/')
-            .setImage(oldImg)
+            .setImage(oldImg);
 
-        logChannel.send({ content: `<@${participation.discordId}> Your image has been edited!\n**Reason:** ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : "None"}\n**Edited by:** <@${int.user.id}>`, embeds: [imageSwapEmbed, oldImageEmbed] });
+        logChannel.send({ content: `<@${participation.discordId}> Your image has been edited!\n**Reason:** ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : 'None'}\n**Edited by:** <@${int.user.id}>`, embeds: [imageSwapEmbed, oldImageEmbed] });
         const auditEmbedImg1 = new EmbedBuilder()
             .setFooter({ text: 'Endless Mirage | Audit Log', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')
             .setImage(newImg)
             .setURL('https://endlessmirage.net/')
-            .setDescription(`**\`\`\`ml\n📣 New Action Taken\`\`\`**                                                                                                        **An image has been edited!**\n\n**Pick Name**: ${participation.name}\n**Pick ID**: ${participation.id}\n**Owner**: <@${participation.discordId}>\n**Edited by**: <@${int.user.id}>\n**Reason**: ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : "None"}`);
+            .setDescription(`**\`\`\`ml\n📣 New Action Taken\`\`\`**                                                                                                        **An image has been edited!**\n\n**Pick Name**: ${participation.name}\n**Pick ID**: ${participation.id}\n**Owner**: <@${participation.discordId}>\n**Edited by**: <@${int.user.id}>\n**Reason**: ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : 'None'}`);
         let auditEmbedImg2 = new EmbedBuilder()
-        .setURL('https://endlessmirage.net/')
-        .setImage(oldImg)
+            .setURL('https://endlessmirage.net/')
+            .setImage(oldImg);
 
         auditChannel.send({ content: '', embeds: [auditEmbedImg1, auditEmbedImg2] });
 

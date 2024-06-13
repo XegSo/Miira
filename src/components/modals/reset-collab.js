@@ -3,13 +3,13 @@ const { resetCache } = require('../buttons/reset-collab');
 
 module.exports = {
     data: {
-        name: "reset-collab"
+        name: 'reset-collab'
     },
     async execute(int, client) {
         await int.deferReply();
-        const collection = client.db.collection("Collabs");
-        const userCollection = client.db.collection("OzenCollection");
-        
+        const collection = client.db.collection('Collabs');
+        const userCollection = client.db.collection('OzenCollection');
+
         let name = int.fields.getTextInputValue('name');
         if (resetCache.get(int.user.id).collab.host === int.user.id && resetCache.get(int.user.id).collab.name === name) {
             await localFunctions.liquidateCollabUsers(resetCache.get(int.user.id).collab.name, collection);

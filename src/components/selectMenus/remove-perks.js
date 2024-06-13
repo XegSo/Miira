@@ -9,14 +9,14 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const pendingUser = removePerksCache.get(int.user.id);
         if (!pendingUser) return;
-        const collection = client.db.collection("OzenCollection");
+        const collection = client.db.collection('OzenCollection');
 
         const pendingPerks = int.values;
         let userPerks = await localFunctions.getPerks(pendingUser.user.id, collection) || [];
 
         const newPerks = userPerks.filter(perk => !pendingPerks.includes(perk.name));
         await localFunctions.setPerks(pendingUser.user.id, newPerks, collection);
-        await int.editReply(`<@${pendingUser.user.id}>'s perks have been updated.`)
+        await int.editReply(`<@${pendingUser.user.id}>'s perks have been updated.`);
         removePerksCache.delete(int.user.id);
     }
 };

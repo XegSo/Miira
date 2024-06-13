@@ -7,13 +7,13 @@ module.exports = {
     async execute(client) {
         localFunctions.scheduleDailyDecay(client);
         console.log('Ready.');
-        
+
         await client.user.setPresence({
             activities: [{
-                name: "you <3",
+                name: 'you <3',
                 type: ActivityType.Watching
             }],
-            status: "online"
+            status: 'online'
         });
     }
-}
+};

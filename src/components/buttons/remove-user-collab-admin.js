@@ -8,16 +8,16 @@ module.exports = {
     },
     async execute(int, client) {
         const modal = new ModalBuilder()
-            .setCustomId("remove-user-collab-admin")
+            .setCustomId('remove-user-collab-admin')
             .setTitle('Remove an user from the collab');
 
         const reason = new TextInputBuilder()
             .setCustomId('reason')
             .setLabel('Type a reason')
-            .setStyle(TextInputStyle.Short)
+            .setStyle(TextInputStyle.Short);
 
 
         modal.addComponents(new ActionRowBuilder().addComponents(reason));
         await int.showModal(modal);
-    },
-}
+    }
+};
