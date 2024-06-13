@@ -6,23 +6,23 @@ const { userCheckCache } = require('../../commands/collabs/collabs');
 
 module.exports = {
     data: {
-        name: "remove-user-collab-admin"
+        name: 'remove-user-collab-admin'
     },
     async execute(int, client) {
         let initializedMap;
         if (collabCache.size > 0) {
-            if (typeof collabCache.get(int.user.id) !== "undefined") {
+            if (typeof collabCache.get(int.user.id) !== 'undefined') {
                 initializedMap = collabCache;
             }
         }
         if (userCheckCache.size > 0) {
-            if (typeof userCheckCache.get(int.user.id) !== "undefined") {
+            if (typeof userCheckCache.get(int.user.id) !== 'undefined') {
                 initializedMap = userCheckCache;
             }
         }
         await int.deferReply({ ephemeral: true });
-        const collection = client.db.collection("Collabs");
-        const userCollection = client.db.collection("OzenCollection");
+        const collection = client.db.collection('Collabs');
+        const userCollection = client.db.collection('OzenCollection');
         const guild = client.guilds.cache.get(localConstants.guildId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
         const auditChannel = guild.channels.cache.get(localConstants.auditLogChannelID);
@@ -43,11 +43,11 @@ module.exports = {
         const pendingMember = await guild.members.fetch(fullParticipation.discordId);
         await pendingMember.roles.remove(collab.roleId);
 
-        let contentString = "";
+        let contentString = '';
         const snipes = await localFunctions.getCollabSnipes(collab.name, collection, id);
-        if (typeof snipes !== "undefined") {
-            if (typeof snipes.find(p => p.pick === id) !== "undefined") {
-                contentString = "Snipers! ";
+        if (typeof snipes !== 'undefined') {
+            if (typeof snipes.find(p => p.pick === id) !== 'undefined') {
+                contentString = 'Snipers! ';
             }
             for (const snipe of snipes) {
                 contentString = contentString.concat('', `<@${snipe.userId}>`);
@@ -59,13 +59,13 @@ module.exports = {
             .setFooter({ text: 'Endless Mirage | New Character Available', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')
             .setDescription(`**\`\`\`ml\n📣 New Character Available!\`\`\`**                                                                                                        **${collab.name}**\nName:${pickFull.name}\nID: ${pickFull.id}`)
-            .setImage(pickFull.imgURL)
-        logChannel.send({ content: `${contentString}\nUser <@${fullParticipation.discordId}> has been removed from the collab.\n**Reason:** ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : "None"}\n**Removed by:** <@${int.user.id}>`, embeds: [leaveEmbed] });
+            .setImage(pickFull.imgURL);
+        logChannel.send({ content: `${contentString}\nUser <@${fullParticipation.discordId}> has been removed from the collab.\n**Reason:** ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : 'None'}\n**Removed by:** <@${int.user.id}>`, embeds: [leaveEmbed] });
 
         const auditEmbed = new EmbedBuilder()
             .setFooter({ text: 'Endless Mirage | Audit Log', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')
-            .setDescription(`**\`\`\`ml\n📣 New Action Taken\`\`\`**                                                                                                        **An user has been removed from the collab!**\n\n**Pick Name**: ${pickFull.name}\n**Pick ID**: ${pickFull.id}\n**Ex-Owner**: <@${fullParticipation.discordId}>\n**Removed by**: <@${int.user.id}>\n**Reason**: ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : "None"}`);
+            .setDescription(`**\`\`\`ml\n📣 New Action Taken\`\`\`**                                                                                                        **An user has been removed from the collab!**\n\n**Pick Name**: ${pickFull.name}\n**Pick ID**: ${pickFull.id}\n**Ex-Owner**: <@${fullParticipation.discordId}>\n**Removed by**: <@${int.user.id}>\n**Reason**: ${int.fields.getTextInputValue('reason') ? int.fields.getTextInputValue('reason') : 'None'}`);
         auditChannel.send({ content: '', embeds: [auditEmbed] });
         await int.editReply('The user has been removed from the collab.');
     }

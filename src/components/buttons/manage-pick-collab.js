@@ -7,16 +7,16 @@ module.exports = {
     },
     async execute(int, client) {
         const modal = new ModalBuilder()
-            .setCustomId("manage-pick-collab")
+            .setCustomId('manage-pick-collab')
             .setTitle('Manage an pick from the collab');
 
         const pick = new TextInputBuilder()
             .setCustomId('pick')
             .setLabel('Type the id of the pick')
-            .setStyle(TextInputStyle.Short)
+            .setStyle(TextInputStyle.Short);
 
         modal.addComponents(new ActionRowBuilder().addComponents(pick));
 
         await int.showModal(modal);
-    },
-}
+    }
+};

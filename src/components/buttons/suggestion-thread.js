@@ -4,20 +4,20 @@ module.exports = {
     data: {
         name: 'suggestion-thread'
     },
-    async execute (int, client) {
+    async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const suggestion = await localFunctions.getSuggestion(client, int.message.id);
-        const suggestionUser = await client.users.fetch(suggestion.user)
-        try {           
+        const suggestionUser = await client.users.fetch(suggestion.user);
+        try {
             const thread = await int.message.startThread({
                 name: `${suggestionUser.tag}'s suggestion thread`,
-                autoArchiveDuration: 60,
-            })
+                autoArchiveDuration: 60
+            });
             thread.members.add(int.user.id);
-            await int.editReply({content: 'Thread created.', ephemeral: true});
+            await int.editReply({ content: 'Thread created.', ephemeral: true });
         } catch (error) {
-            await int.editReply({content: 'A thread already has been created.', ephemeral: true});
-            return;   
-        }    
-    },
+            await int.editReply({ content: 'A thread already has been created.', ephemeral: true });
+            return;
+        }
+    }
 };

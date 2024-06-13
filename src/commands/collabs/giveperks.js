@@ -19,19 +19,19 @@ module.exports = {
         if (int.user.id !== '687004886922952755') return;
         const user = int.options.getUser('user');
         const perkMenu = new SelectMenuBuilder()
-                .setCustomId('set-perks')
-                .setPlaceholder('Select the perks.')
-                .setMinValues(1)
-                .setMaxValues(17)
-                
+            .setCustomId('set-perks')
+            .setPlaceholder('Select the perks.')
+            .setMinValues(1)
+            .setMaxValues(17);
+
         localConstants.premiumTiers.forEach((tier) => {
             tier.perks.forEach((perk) => {
-                perkMenu.addOptions({ label: perk.name , value: perk.name, description: `${tier.name} perk` })
+                perkMenu.addOptions({ label: perk.name, value: perk.name, description: `${tier.name} perk` });
             });
         });
 
         givePerksCache.set(int.user.id, {
-            user: user,
+            user: user
         });
 
         const row = new ActionRowBuilder().addComponents(perkMenu);
@@ -41,4 +41,4 @@ module.exports = {
         });
     },
     givePerksCache: givePerksCache
-}
+};

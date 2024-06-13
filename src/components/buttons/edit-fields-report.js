@@ -8,11 +8,11 @@ module.exports = {
         name: 'edit-fields-report'
     },
     async execute(int, client) {
-        const collection = client.db.collection("Collabs");
+        const collection = client.db.collection('Collabs');
         const collab = await localFunctions.getCollab(reportCache.get(int.user.id).report.collab, collection);
 
         const modal = new ModalBuilder()
-            .setCustomId("edit-fields-report")
+            .setCustomId('edit-fields-report')
             .setTitle('Edit the fields of an user in the collab.');
 
         const av_text = new TextInputBuilder()

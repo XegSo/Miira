@@ -11,24 +11,24 @@ module.exports = {
     async execute(int, client) {
         let initializedMap;
         if (collabCache.size > 0) {
-            if (typeof collabCache.get(int.user.id) !== "undefined") {
+            if (typeof collabCache.get(int.user.id) !== 'undefined') {
                 initializedMap = collabCache;
             }
         }
         if (adminCache.size > 0) {
-            if (typeof adminCache.get(int.user.id) !== "undefined") {
+            if (typeof adminCache.get(int.user.id) !== 'undefined') {
                 initializedMap = adminCache;
             }
         }
 
-        const collab = initializedMap.get(int.user.id).collab
+        const collab = initializedMap.get(int.user.id).collab;
         if (collab.host !== int.user.id) {
             int.reply('You are not allowed to do this.');
             return;
         }
 
         const modal = new ModalBuilder()
-            .setCustomId("reset-collab")
+            .setCustomId('reset-collab')
             .setTitle('Collab user reset');
 
         const title = new TextInputBuilder()
@@ -44,7 +44,7 @@ module.exports = {
 
         resetCache.set(int.user.id, {
             collab: initializedMap.get(int.user.id).collab
-        })
+        });
     },
     resetCache: resetCache
-}
+};

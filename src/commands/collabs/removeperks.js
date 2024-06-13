@@ -19,20 +19,20 @@ module.exports = {
         if (int.user.id !== '687004886922952755') return;
         const user = int.options.getUser('user');
         const perkMenu = new SelectMenuBuilder()
-                .setCustomId('remove-perks')
-                .setPlaceholder('Select the perks.')
-                .setMinValues(1)
+            .setCustomId('remove-perks')
+            .setPlaceholder('Select the perks.')
+            .setMinValues(1);
 
-        const collection = client.db.collection("OzenCollection");       
+        const collection = client.db.collection('OzenCollection');
         const userPerks = await localFunctions.getPerks(user.id, collection);
-        
+
         if (userPerks.length === 0) {
             await int.editReply('The user has no perks in the database.');
             return;
         }
 
         userPerks.forEach((perk) => {
-            perkMenu.addOptions({ label: perk.name , value: perk.name, description: `${perk.name}` });
+            perkMenu.addOptions({ label: perk.name, value: perk.name, description: `${perk.name}` });
         });
 
         removePerksCache.set(int.user.id, { user });
@@ -44,4 +44,4 @@ module.exports = {
         });
     },
     removePerksCache: removePerksCache
-}
+};

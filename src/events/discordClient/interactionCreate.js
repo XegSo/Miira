@@ -1,4 +1,4 @@
-const { InteractionType } = require('discord.js')
+const { InteractionType } = require('discord.js');
 const localFunctions = require('../../functions');
 
 module.exports = {
@@ -18,15 +18,15 @@ module.exports = {
                     int.reply({
                         content: 'Something went wrong.',
                         ephemeral: true
-                    }); 
+                    });
                 } catch {
                     try {
                         int.editReply({
                             content: 'Something went wrong.',
                             ephemeral: true
-                        }); 
+                        });
                     } catch (e) {
-                        console.log(e)
+                        console.log(e);
                     }
                 }
             }
@@ -44,15 +44,15 @@ module.exports = {
                     int.reply({
                         content: 'Something went wrong.',
                         ephemeral: true
-                    }); 
+                    });
                 } catch {
                     try {
                         int.editReply({
                             content: 'Something went wrong.',
                             ephemeral: true
-                        }); 
+                        });
                     } catch (e) {
-                        console.log(e)
+                        console.log(e);
                     }
                 }
             }
@@ -70,15 +70,15 @@ module.exports = {
                     int.reply({
                         content: 'Something went wrong.',
                         ephemeral: true
-                    }); 
+                    });
                 } catch {
                     try {
                         int.editReply({
                             content: 'Something went wrong.',
                             ephemeral: true
-                        }); 
+                        });
                     } catch (e) {
-                        console.log(e)
+                        console.log(e);
                     }
                 }
             }
@@ -96,31 +96,31 @@ module.exports = {
                     int.reply({
                         content: 'Something went wrong.',
                         ephemeral: true
-                    }); 
+                    });
                 } catch {
                     try {
                         int.editReply({
                             content: 'Something went wrong.',
                             ephemeral: true
-                        }); 
+                        });
                     } catch (e) {
-                        console.log(e)
+                        console.log(e);
                     }
                 }
             }
         } else if (int.isAutocomplete()) {
-            const collection = client.db.collection("Collabs");
+            const collection = client.db.collection('Collabs');
 
             if (int.commandName === 'collabs') {
-                if (int.options.getSubcommand() === "join") {
+                if (int.options.getSubcommand() === 'join') {
                     const focusedValue = int.options.getFocused();
                     const allCollabs = await localFunctions.getCollabs(collection);
-                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
+                    const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && c.status === 'open');
 
-                    if (typeof openMegacollab === "undefined") {
+                    if (typeof openMegacollab === 'undefined') {
                         return;
                     } else {
-                        const availablePicks = openMegacollab.pool.items.filter(i => i.status === "available");
+                        const availablePicks = openMegacollab.pool.items.filter(i => i.status === 'available');
                         const filteredChoices = availablePicks.filter((pick) =>
                             pick.name.toLowerCase().startsWith(focusedValue.toLowerCase())
                         );
@@ -128,14 +128,14 @@ module.exports = {
                             return {
                                 name: `${choice.name} - ${choice.series}`,
                                 value: choice.id
-                            }
+                            };
                         });
 
                         int.respond(results.slice(0, 25)).catch(() => {});
                     }
-                   
+
                 }
-                if (int.options.getSubcommand() === "manage") {
+                if (int.options.getSubcommand() === 'manage') {
                     const focusedValue = int.options.getFocused();
                     const allCollabs = await localFunctions.getCollabs(collection);
                     const filteredChoices = allCollabs.filter((collab) =>
@@ -145,22 +145,22 @@ module.exports = {
                         return {
                             name: `${choice.name}`,
                             value: choice.name
-                        }
+                        };
                     });
 
                     int.respond(results.slice(0, 25)).catch(() => {});
-                   
+
                 }
 
-                if (int.options.getSubcommand() === "swap") {
+                if (int.options.getSubcommand() === 'swap') {
                     const focusedValue = int.options.getFocused();
                     const allCollabs = await localFunctions.getCollabs(collection);
-                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
-                    
-                    if (typeof openMegacollab === "undefined") {
+                    const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && c.status === 'open');
+
+                    if (typeof openMegacollab === 'undefined') {
                         return;
                     } else {
-                        const availablePicks = openMegacollab.pool.items.filter(i => i.status === "available");
+                        const availablePicks = openMegacollab.pool.items.filter(i => i.status === 'available');
                         const filteredChoices = availablePicks.filter((pick) =>
                             pick.name.toLowerCase().startsWith(focusedValue.toLowerCase())
                         );
@@ -168,22 +168,22 @@ module.exports = {
                             return {
                                 name: `${choice.name} - ${choice.series}`,
                                 value: choice.id
-                            }
+                            };
                         });
 
                         int.respond(results.slice(0, 25)).catch(() => {});
                     }
                 }
 
-                if (int.options.getSubcommand() === "trade") {
+                if (int.options.getSubcommand() === 'trade') {
                     const focusedValue = int.options.getFocused();
                     const allCollabs = await localFunctions.getCollabs(collection);
-                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
-                    
-                    if (typeof openMegacollab === "undefined") {
+                    const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && c.status === 'open');
+
+                    if (typeof openMegacollab === 'undefined') {
                         return;
                     } else {
-                        const availablePicks = openMegacollab.pool.items.filter(i => i.status === "picked");
+                        const availablePicks = openMegacollab.pool.items.filter(i => i.status === 'picked');
                         const filteredChoices = availablePicks.filter((pick) =>
                             pick.name.toLowerCase().startsWith(focusedValue.toLowerCase())
                         );
@@ -191,19 +191,19 @@ module.exports = {
                             return {
                                 name: `${choice.name} - ${choice.series}`,
                                 value: choice.id
-                            }
+                            };
                         });
 
                         int.respond(results.slice(0, 25)).catch(() => {});
                     }
                 }
 
-                if (int.options.getSubcommand() === "pick-check") {
+                if (int.options.getSubcommand() === 'pick-check') {
                     const focusedValue = int.options.getFocused();
                     const allCollabs = await localFunctions.getCollabs(collection);
-                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab");
+                    const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab');
 
-                    if (typeof openMegacollab === "undefined") {
+                    if (typeof openMegacollab === 'undefined') {
                         return;
                     } else {
                         const picks = openMegacollab.pool.items;
@@ -214,22 +214,22 @@ module.exports = {
                             return {
                                 name: `${choice.name} - ${choice.series}`,
                                 value: choice.id
-                            }
+                            };
                         });
 
                         int.respond(results.slice(0, 25)).catch(() => {});
                     }
                 }
 
-                if (int.options.getSubcommand() === "user-check") {
+                if (int.options.getSubcommand() === 'user-check') {
                     const focusedValue = int.options.getFocused();
                     const allCollabs = await localFunctions.getCollabs(collection);
-                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab");
-                    
-                    if (typeof openMegacollab === "undefined") {
+                    const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab');
+
+                    if (typeof openMegacollab === 'undefined') {
                         return;
                     } else {
-                        if (typeof openMegacollab.participants === "undefined") return;
+                        if (typeof openMegacollab.participants === 'undefined') return;
                         const participants = openMegacollab.participants;
                         const filteredChoices = participants.filter((user) =>
                             user.discordTag.toLowerCase().startsWith(focusedValue.toLowerCase())
@@ -238,19 +238,19 @@ module.exports = {
                             return {
                                 name: `${choice.discordTag} - ${choice.name} - ${choice.series}`,
                                 value: choice.discordId
-                            }
+                            };
                         });
 
                         int.respond(results.slice(0, 25)).catch(() => {});
                     }
                 }
 
-                if (int.options.getSubcommand() === "snipe") {
+                if (int.options.getSubcommand() === 'snipe') {
                     const focusedValue = int.options.getFocused();
                     const allCollabs = await localFunctions.getCollabs(collection);
-                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status !== "delivered" || c.status !== "archived" || c.status !== "completed"));
-                    
-                    if (typeof openMegacollab === "undefined") {
+                    const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && (c.status !== 'delivered' || c.status !== 'archived' || c.status !== 'completed'));
+
+                    if (typeof openMegacollab === 'undefined') {
                         return;
                     } else {
                         const pickedPicks = openMegacollab.participants;
@@ -261,7 +261,7 @@ module.exports = {
                             return {
                                 name: `${choice.name} - ${choice.series} - Picked by: ${choice.username}`,
                                 value: choice.id
-                            }
+                            };
                         });
 
                         int.respond(results.slice(0, 25)).catch(() => {});
@@ -270,4 +270,4 @@ module.exports = {
             }
         }
     }
-}
+};

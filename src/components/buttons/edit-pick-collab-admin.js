@@ -9,7 +9,7 @@ module.exports = {
     async execute(int, client) {
 
         const modal = new ModalBuilder()
-            .setCustomId("edit-pick-collab-admin")
+            .setCustomId('edit-pick-collab-admin')
             .setTitle('Edit the fields of a pick in the collab.');
 
         const ch_name = new TextInputBuilder()
@@ -21,5 +21,5 @@ module.exports = {
         modal.addComponents(new ActionRowBuilder().addComponents(ch_name));
 
         await int.showModal(modal);
-    },
-}
+    }
+};

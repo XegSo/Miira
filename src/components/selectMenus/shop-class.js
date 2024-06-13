@@ -37,7 +37,7 @@ module.exports = {
                 { label: 'Roles', value: 'Roles', description: 'Special Roles.' },
                 { label: 'Commissions', value: 'Commissions', description: 'GFX Commissions.' },
                 { label: 'Collab Perks', value: 'Collab Perks', description: 'Perks for the megacollabs.' },
-                { label: 'Extra', value: 'Extra', description: 'Stuff that doesn\'t fit any category.' },
+                { label: 'Extra', value: 'Extra', description: 'Stuff that doesn\'t fit any category.' }
             ]);
         const actionRowOptions = new ActionRowBuilder().addComponents(options);
         const actionRowShopClass = new ActionRowBuilder().addComponents(shopClass);
@@ -45,9 +45,9 @@ module.exports = {
         int.message.edit({
             content: '',
             embeds: [BuyEmbed, shopEmbed],
-            components: [actionRowOptions, actionRowShopClass],
+            components: [actionRowOptions, actionRowShopClass]
         });
 
         int.reply({ content: `You're now on the ${shopType} section`, ephemeral: true });
     }
-}
+};

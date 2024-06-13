@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const localConstants = require('../../constants')
+const localConstants = require('../../constants');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -20,4 +20,4 @@ module.exports = {
             });
         });
     }
-}
+};

@@ -20,5 +20,5 @@ module.exports = {
 
         await localFunctions.delCart(user.id, collection);
         await int.editReply(`Cart cleared for user ${user.tag}`);
-    },
-}
+    }
+};

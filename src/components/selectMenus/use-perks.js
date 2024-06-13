@@ -9,33 +9,33 @@ module.exports = {
         name: 'use-perks'
     },
     async execute(int, client) {
-        const collabCollection = client.db.collection("Collabs");
+        const collabCollection = client.db.collection('Collabs');
         const selectedPerk = int.values[0];
         const fullPerk = localConstants.premiumPerks.find(p => p.name === selectedPerk);
         try {
-            if (selectedPerk === "Custom Endless Mirage Hoodie" || selectedPerk === "Host your own Megacollab") return await int.reply({ content: 'To claim this perk, please DM the host!', ephemeral: true });
+            if (selectedPerk === 'Custom Endless Mirage Hoodie' || selectedPerk === 'Host your own Megacollab') return await int.reply({ content: 'To claim this perk, please DM the host!', ephemeral: true });
             const allCollabs = await localFunctions.getCollabs(collabCollection);
-            let openMegacollab = allCollabs.find(c => c.restriction === "megacollab" /*&& c.status === "open"*/);
-            if (typeof openMegacollab === "undefined") return await int.reply({ content: 'There is no open megacollabs at the moment...', ephemeral: true })
-            if (selectedPerk === "Collab Early Access") {
-                if (openMegacollab.status === "early access") {
+            let openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' /* && c.status === "open"*/);
+            if (typeof openMegacollab === 'undefined') return await int.reply({ content: 'There is no open megacollabs at the moment...', ephemeral: true });
+            if (selectedPerk === 'Collab Early Access') {
+                if (openMegacollab.status === 'early access') {
                     await int.reply({ content: 'You can claim this perk now! Join the collab using ``/collabs join``', ephemeral: true });
-                } else if (openMegacollab.status === "open") {
+                } else if (openMegacollab.status === 'open') {
                     await int.reply({ content: 'The early access for the current megacollab already has passed! You will be able to claim this perk in the next megacollab.', ephemeral: true });
                 }
                 return;
             }
-            if (typeof openMegacollab.participants === "undefined") return await int.reply({ content: 'You have to be participating in the current megacollab to be able to claim perks!', ephemeral: true });
-            if (typeof openMegacollab.participants.find(p => p.discordId === int.user.id) === "undefined") return await int.reply({ content: 'You have to be participating in the current megacollab to be able to claim perks!', ephemeral: true });
+            if (typeof openMegacollab.participants === 'undefined') return await int.reply({ content: 'You have to be participating in the current megacollab to be able to claim perks!', ephemeral: true });
+            if (typeof openMegacollab.participants.find(p => p.discordId === int.user.id) === 'undefined') return await int.reply({ content: 'You have to be participating in the current megacollab to be able to claim perks!', ephemeral: true });
             const fieldRestrictions = openMegacollab.fieldRestrictions.premium_perks;
             const currentRestrictions = fieldRestrictions[selectedPerk];
             const modal = new ModalBuilder()
-                .setCustomId("perk-modal")
+                .setCustomId('perk-modal')
                 .setTitle('Claim your perk!');
 
             let modalField;
             for (const requiredField of fullPerk.fields) {
-                if (requiredField.type === "text") {
+                if (requiredField.type === 'text') {
                     let res = currentRestrictions[requiredField.name];
                     modalField = new TextInputBuilder()
                         .setCustomId(requiredField.name)
@@ -45,7 +45,7 @@ module.exports = {
                         .setMaxLength(res)
                         .setRequired(true)
                         .setStyle(TextInputStyle.Short);
-                } else if (requiredField.type === "url") {
+                } else if (requiredField.type === 'url') {
                     modalField = new TextInputBuilder()
                         .setCustomId(requiredField.name)
                         .setLabel(requiredField.title)
@@ -54,7 +54,7 @@ module.exports = {
                         .setStyle(TextInputStyle.Short);
                 }
                 modal.addComponents(new ActionRowBuilder().addComponents(modalField));
-                modalField = "";
+                modalField = '';
             }
 
             await int.showModal(modal);
@@ -69,4 +69,4 @@ module.exports = {
         }
     },
     perkCache: perkCache
-}
+};

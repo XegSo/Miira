@@ -11,7 +11,7 @@ module.exports = {
     },
     async execute(int, client) {
         const collabName = managePerkCache.get(int.user.id).collabName;
-        const collabCollection = client.db.collection("Collabs");
+        const collabCollection = client.db.collection('Collabs');
         const perkName = managePerkCache.get(int.user.id).perkName;
         const fullPerk = localConstants.premiumPerks.find(p => p.name === perkName);
 
@@ -20,11 +20,11 @@ module.exports = {
             const fieldRestrictions = fullCollab.fieldRestrictions.premium_perks;
             const currentRestrictions = fieldRestrictions[perkName];
             const modal = new ModalBuilder()
-                .setCustomId("perk-edit")
+                .setCustomId('perk-edit')
                 .setTitle('Edit your perk!');
             let modalField;
             for (const requiredField of fullPerk.fields) {
-                if (requiredField.type === "text") {
+                if (requiredField.type === 'text') {
                     let res = currentRestrictions[requiredField.name];
                     modalField = new TextInputBuilder()
                         .setCustomId(requiredField.name)
@@ -34,7 +34,7 @@ module.exports = {
                         .setMaxLength(res)
                         .setRequired(true)
                         .setStyle(TextInputStyle.Short);
-                } else if (requiredField.type === "url") {
+                } else if (requiredField.type === 'url') {
                     modalField = new TextInputBuilder()
                         .setCustomId(requiredField.name)
                         .setLabel(requiredField.title)
@@ -43,7 +43,7 @@ module.exports = {
                         .setStyle(TextInputStyle.Short);
                 }
                 modal.addComponents(new ActionRowBuilder().addComponents(modalField));
-                modalField = "";
+                modalField = '';
             }
             await int.showModal(modal);
             perkCache.set(int.user.id, {

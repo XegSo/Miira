@@ -11,19 +11,19 @@ module.exports = {
     async execute(int, client) {
         let initializedMap;
         if (profileMenuCache.size > 0) {
-            if (typeof profileMenuCache.get(int.user.id) !== "undefined") {
+            if (typeof profileMenuCache.get(int.user.id) !== 'undefined') {
                 initializedMap = profileMenuCache;
             }
-        } 
+        }
         if (profileButtonCache.size > 0) {
-            if (typeof profileButtonCache.get(int.user.id) !== "undefined") {
+            if (typeof profileButtonCache.get(int.user.id) !== 'undefined') {
                 initializedMap = profileButtonCache;
             }
         }
         try {
             const collab = initializedMap.get(int.user.id).collab;
             const modal = new ModalBuilder()
-                .setCustomId("change-texts")
+                .setCustomId('change-texts')
                 .setTitle(`${collab.name}`);
             const av_text = new TextInputBuilder()
                 .setCustomId('av_text')
@@ -57,7 +57,7 @@ module.exports = {
             await int.showModal(modal);
 
             editCache.set(int.user.id, {
-                collab: collab.name,
+                collab: collab.name
             });
 
         } catch (e) {
@@ -66,4 +66,4 @@ module.exports = {
         }
     },
     editCache: editCache
-}
+};

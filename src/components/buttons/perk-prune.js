@@ -8,7 +8,7 @@ module.exports = {
     async execute(int, client) {
 
         const modal = new ModalBuilder()
-            .setCustomId("perk-prune")
+            .setCustomId('perk-prune')
             .setTitle('Remove your perk entry');
 
         const title = new TextInputBuilder()
@@ -20,5 +20,5 @@ module.exports = {
         modal.addComponents(new ActionRowBuilder().addComponents(title));
 
         await int.showModal(modal);
-    },
-}
+    }
+};

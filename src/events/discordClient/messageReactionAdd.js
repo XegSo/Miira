@@ -1,4 +1,4 @@
-/*const { EmbedBuilder, Events, Partials, TextInputStyle } = require('discord.js');
+/* const { EmbedBuilder, Events, Partials, TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');

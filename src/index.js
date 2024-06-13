@@ -30,7 +30,7 @@ const client = new Client({
         Partials.Message,
         Partials.Channel,
         Partials.Reaction
-    ],
+    ]
 });
 
 client.commands = new Collection();

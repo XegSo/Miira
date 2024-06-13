@@ -15,7 +15,7 @@ module.exports = {
         const purchasedItemValue = parseInt(purchasedItem.value.replace(/[^\d]/g, ''));
 
         // Grab the MongoDB collection.
-        const collection = client.db.collection("OzenCollection");
+        const collection = client.db.collection('OzenCollection');
 
         // Check if the user has enough tokens
         const currentBalance = await localFunctions.getBalance(userId, collection);
@@ -45,7 +45,7 @@ module.exports = {
             const purchasesLogEmbed = new EmbedBuilder()
                 .setColor('#f26e6a')
                 .setImage('https://puu.sh/JPffc/3c792e61c9.png')
-                .setAuthor({ name: "✔️ A new purchase has been made.", iconURL: int.user.displayAvatarURL() })
+                .setAuthor({ name: '✔️ A new purchase has been made.', iconURL: int.user.displayAvatarURL() })
                 .setThumbnail('https://puu.sh/JP9Iw/a365159d0e.png')
                 .setDescription(`**Item: ${purchasedItem.name}**\n**Purchased by <@${int.user.id}>**\n**Value: ${purchasedItemValue} ₥**\nDate: <t:${Math.floor(new Date(Date.now()) / 1000)}:F>.`)
                 .setTimestamp();
@@ -57,4 +57,4 @@ module.exports = {
             await int.reply({ content: `You already have ${purchasedItem.name}.`, ephemeral: true });
         }
     }
-}
+};

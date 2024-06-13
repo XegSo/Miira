@@ -7,14 +7,14 @@ const serviceAccountAuth = new JWT({
     email: keyJson.client_email,
     key: keyJson.private_key,
     scopes: [
-        'https://www.googleapis.com/auth/spreadsheets',
-    ],
+        'https://www.googleapis.com/auth/spreadsheets'
+    ]
 });
 
 async function connectToSpreadsheet(id) {
     const doc = new GoogleSpreadsheet(id, serviceAccountAuth);
     await doc.loadInfo();
-    console.log('Spreadsheet has been loaded.')
+    console.log('Spreadsheet has been loaded.');
     return doc;
 }
 

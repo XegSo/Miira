@@ -13,23 +13,23 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('collabs')
         .setDescription('Collabs dashboard')
-        .addSubcommand((subcommand) => subcommand.setName("join").setDescription('Join a collab!'))
-        .addSubcommand((subcommand) => subcommand.setName("manage").setDescription('Manage your collab participations.'))
-        .addSubcommand((subcommand) => subcommand.setName("info").setDescription('View all info about the collabs hosted since 2024.'))
-        .addSubcommand((subcommand) => subcommand.setName("profile").setDescription('Manage your collab profile.'))
-        .addSubcommand((subcommand) => subcommand.setName("create").setDescription('Create a collab.'))
-        .addSubcommand((subcommand) => subcommand.setName("link").setDescription('Link your osu! account.'))
-        .addSubcommand((subcommand) => subcommand.setName("premium").setDescription('All regarding premium status.'))
-        .addSubcommand((subcommand) => subcommand.setName("perks").setDescription('Manage your megacollab perks.'))
-        .addSubcommand((subcommand) => subcommand.setName("owoinvite").setDescription('Send help Sarah has me hostage in her basement'))
-        .addSubcommand((subcommand) => subcommand.setName("feedback").setDescription('Send a feedback comment for the staff.'))
-        .addSubcommand((subcommand) => subcommand.setName("referral").setDescription('Obtain and share your referral code.'))
+        .addSubcommand((subcommand) => subcommand.setName('join').setDescription('Join a collab!'))
+        .addSubcommand((subcommand) => subcommand.setName('manage').setDescription('Manage your collab participations.'))
+        .addSubcommand((subcommand) => subcommand.setName('info').setDescription('View all info about the collabs hosted since 2024.'))
+        .addSubcommand((subcommand) => subcommand.setName('profile').setDescription('Manage your collab profile.'))
+        .addSubcommand((subcommand) => subcommand.setName('create').setDescription('Create a collab.'))
+        .addSubcommand((subcommand) => subcommand.setName('link').setDescription('Link your osu! account.'))
+        .addSubcommand((subcommand) => subcommand.setName('premium').setDescription('All regarding premium status.'))
+        .addSubcommand((subcommand) => subcommand.setName('perks').setDescription('Manage your megacollab perks.'))
+        .addSubcommand((subcommand) => subcommand.setName('owoinvite').setDescription('Send help Sarah has me hostage in her basement'))
+        .addSubcommand((subcommand) => subcommand.setName('feedback').setDescription('Send a feedback comment for the staff.'))
+        .addSubcommand((subcommand) => subcommand.setName('referral').setDescription('Obtain and share your referral code.'))
         .addSubcommandGroup((subcommandGroup) =>
             subcommandGroup
                 .setName('quick')
                 .setDescription('Quick actions for the megacollabs.')
                 .addSubcommand((subcommand) =>
-                    subcommand.setName("join")
+                    subcommand.setName('join')
                         .setDescription('Join a collab in a quick way. (Megacollab only)')
                         .addStringOption(option =>
                             option.setName('pick')
@@ -57,7 +57,7 @@ module.exports = {
                         )
                 )
                 .addSubcommand((subcommand) =>
-                    subcommand.setName("join-random")
+                    subcommand.setName('join-random')
                         .setDescription('Join a collab in a quick way, with a random pick. (Megacollab only)')
                         .addStringOption(option =>
                             option.setName('avatar_text')
@@ -79,7 +79,7 @@ module.exports = {
                         )
                 )
                 .addSubcommand((subcommand) =>
-                    subcommand.setName("swap")
+                    subcommand.setName('swap')
                         .setDescription('Swap your pick in a quick way. (Megacollab only)')
                         .addStringOption(option =>
                             option.setName('pick')
@@ -90,11 +90,11 @@ module.exports = {
                         )
                 )
                 .addSubcommand((subcommand) =>
-                    subcommand.setName("bump")
+                    subcommand.setName('bump')
                         .setDescription('Bump your current megacollab participation.')
                 )
                 .addSubcommand((subcommand) =>
-                    subcommand.setName("trade")
+                    subcommand.setName('trade')
                         .setDescription('Trade a pick in a quick way. (Megacollab only)')
                         .addStringOption(option =>
                             option.setName('pick')
@@ -104,7 +104,7 @@ module.exports = {
                         )
                 )
                 .addSubcommand((subcommand) =>
-                    subcommand.setName("pick-check")
+                    subcommand.setName('pick-check')
                         .setDescription('Check a character status. (Megacollab only)')
                         .addStringOption(option =>
                             option.setName('pick')
@@ -114,7 +114,7 @@ module.exports = {
                         )
                 )
                 .addSubcommand((subcommand) =>
-                    subcommand.setName("user-check")
+                    subcommand.setName('user-check')
                         .setDescription('Check the participation of an user. (Megacollab only)')
                         .addStringOption(option =>
                             option.setName('user')
@@ -124,7 +124,7 @@ module.exports = {
                         )
                 )
                 .addSubcommand((subcommand) =>
-                    subcommand.setName("snipe")
+                    subcommand.setName('snipe')
                         .setDescription('Get a notification if a pick gets available. (Megacollab only)')
                         .addStringOption(option =>
                             option.setName('pick')
@@ -139,7 +139,7 @@ module.exports = {
                 .setName('admin')
                 .setDescription('Admin commands.')
                 .addSubcommand((subcommand) =>
-                    subcommand.setName("manage")
+                    subcommand.setName('manage')
                         .setDescription('Open the collabs Admin Collabs Dashboard. (Admin only)')
                         .addStringOption(option =>
                             option.setName('collab')
@@ -149,11 +149,11 @@ module.exports = {
                         )
                 )
                 .addSubcommand((subcommand) =>
-                    subcommand.setName("set-bumps")
+                    subcommand.setName('set-bumps')
                         .setDescription('Setup bumps for megacollabs. (Admin only)')
                 )
                 .addSubcommand((subcommand) =>
-                    subcommand.setName("link")
+                    subcommand.setName('link')
                         .setDescription('Links an account instantly. (Admin only)')
                         .addStringOption(option =>
                             option.setName('discordid')
@@ -173,7 +173,7 @@ module.exports = {
                                     { name: 'osu', value: 'osu' },
                                     { name: 'mania', value: 'mania' },
                                     { name: 'fruits', value: 'fruits' },
-                                    { name: 'taiko', value: 'taiko' },
+                                    { name: 'taiko', value: 'taiko' }
                                 )
                         )
                 )
@@ -185,19 +185,19 @@ module.exports = {
         const guild = await client.guilds.cache.get(localConstants.guildId);
         const guildMember = await guild.members.cache.get(userId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
-        const collection = client.db.collection("OzenCollection");
-        const collabCollection = client.db.collection("Collabs");
-        const collectionSpecial = client.db.collection("Special");
-        const blacklistCollection = client.db.collection("Blacklist");
+        const collection = client.db.collection('OzenCollection');
+        const collabCollection = client.db.collection('Collabs');
+        const collectionSpecial = client.db.collection('Special');
+        const blacklistCollection = client.db.collection('Blacklist');
 
-        if (subcommand === "owoinvite") {
-            await int.reply(`o-oh hewwo s-s-senpai >///<,\n\nI am lwooking for more fwends in a reaaaalllllly kwel discord swever called Endless Mirage (づ｡◕‿‿◕｡)づ. I'd figure you'd be the perfect match to become my s-s-senpai and help me fill in some slots for our realllllllyyyyyy cool pwoject!(^◡^ ).\nWe have over 5k spots and we only have 1k filled at the moment... so I thought maybeeeee you wanna join ><. So pwetty pwease help us out by joining, I will give you a sooooooper long huggg ᕙ(^▿^-ᕙ). I will also call you senpai from now on OwO.\nPlease consider joining and hope to see you there soon,\n\nmany huggos and love ❤️`);
+        if (subcommand === 'owoinvite') {
+            await int.reply('o-oh hewwo s-s-senpai >///<,\n\nI am lwooking for more fwends in a reaaaalllllly kwel discord swever called Endless Mirage (づ｡◕‿‿◕｡)づ. I\'d figure you\'d be the perfect match to become my s-s-senpai and help me fill in some slots for our realllllllyyyyyy cool pwoject!(^◡^ ).\nWe have over 5k spots and we only have 1k filled at the moment... so I thought maybeeeee you wanna join ><. So pwetty pwease help us out by joining, I will give you a sooooooper long huggg ᕙ(^▿^-ᕙ). I will also call you senpai from now on OwO.\nPlease consider joining and hope to see you there soon,\n\nmany huggos and love ❤️');
             return;
         }
 
         await int.deferReply({ ephemeral: true });
 
-        if (subcommand === "create") {
+        if (subcommand === 'create') {
             if (userId !== '687004886922952755') {
                 await int.reply('You are not allowed to do this!');
                 return;
@@ -206,48 +206,48 @@ module.exports = {
             const replyMessage = await int.fetchReply();
             createCollabCache.set(int.user.id, {
                 userId: int.user.id,
-                messageId: replyMessage.id,
+                messageId: replyMessage.id
             });
         }
 
-        if (subcommand === "feedback") {
-            await int.reply({ content: 'This command is WIP!'});
+        if (subcommand === 'feedback') {
+            await int.reply({ content: 'This command is WIP!' });
             return;
         }
 
-        if (subcommand === "link" && subcommandGroup !== "admin") {
+        if (subcommand === 'link' && subcommandGroup !== 'admin') {
             const components = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('link-osu')
                     .setLabel('🔗 Link your osu! Account')
-                    .setStyle('Success'),
-            )
+                    .setStyle('Success')
+            );
             return int.editReply({
                 content: 'Link your account using the button bellow.',
                 components: [components]
             });
         }
 
-        if (subcommand === "referral") {
+        if (subcommand === 'referral') {
             localFunctions.handleReferralCommand(int, client)
                 .then(async (code) => {
                     const cartEmbed = new EmbedBuilder()
                         .setFooter({ text: 'Endless Mirage | Referral Code', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                         .setColor('#f26e6a')
-                        .setTitle(`Your current referral code is:`)
+                        .setTitle('Your current referral code is:')
                         .setDescription(`**\`\`\`prolog\n${code}\`\`\`**                                                                                                        \nEverytime a friend you invited to the collab bumps their pick, you will get **2000 tokens**!\nIssue the command \`\`/server shop\`\` to see all you can buy, and the command \`\`/server profile\`\` to check the amount of tokens you have.`)
                         .addFields(
                             {
-                                name: "‎",
-                                value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                                name: '‎',
+                                value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                             }
-                        )
+                        );
                     const components = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('see-referrals')
                             .setLabel('❄️ Referred users')
-                            .setStyle('Success'),
-                    )
+                            .setStyle('Success')
+                    );
                     await int.editReply({ embeds: [cartEmbed], components: [components] });
                 })
                 .catch((error) => {
@@ -257,7 +257,7 @@ module.exports = {
             return;
         }
 
-        if (subcommand === "profile") {
+        if (subcommand === 'profile') {
             const userOsu = await localFunctions.getOsuData(userId, collection);
             const lastUpdate = await localFunctions.getUserLastUpdate(userId, collection);
             const currentDate = Math.floor(Date.now() / 1000);
@@ -267,8 +267,8 @@ module.exports = {
                     new ButtonBuilder()
                         .setCustomId('link-osu')
                         .setLabel('🔗 Link your osu! Account')
-                        .setStyle('Success'),
-                )
+                        .setStyle('Success')
+                );
 
                 await int.editReply({
                     content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
@@ -286,8 +286,8 @@ module.exports = {
             let prestigeLevel = 0;
             let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
 
-            if (typeof prestige !== "undefined") {
-                prestige = prestige.name
+            if (typeof prestige !== 'undefined') {
+                prestige = prestige.name;
                 prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
             }
 
@@ -305,34 +305,34 @@ module.exports = {
                 .setThumbnail(userOsu.avatar_url)
                 .addFields(
                     {
-                        name: "‎",
-                        value: `┌ Username: **${userOsu.username}**\n├ Country: **${tools.country(userOsu.country_code)}**\n├ Rank: **${userOsu.statistics.global_rank ? userOsu.statistics.global_rank : "Unranked"}**\n├ Peak Rank: **${userOsu.rank_highest.rank}**\n└ Level: **${userOsu.statistics.level.current}**`,
+                        name: '‎',
+                        value: `┌ Username: **${userOsu.username}**\n├ Country: **${tools.country(userOsu.country_code)}**\n├ Rank: **${userOsu.statistics.global_rank ? userOsu.statistics.global_rank : 'Unranked'}**\n├ Peak Rank: **${userOsu.rank_highest.rank}**\n└ Level: **${userOsu.statistics.level.current}**`,
                         inline: true
                     },
                     {
-                        name: "‎",
+                        name: '‎',
                         value: `┌ Performance: **${userOsu.statistics.pp}pp**\n├ Join date: **<t:${new Date(userOsu.join_date).getTime() / 1000}:R>**\n├ Prestige Level: **${prestigeLevel}**\n├ Premium Tier: **${tier}**\n└ Playtime: **${Math.floor(userOsu.statistics.play_time / 3600)}h**`,
                         inline: true
                     },
                     {
-                        name: "‎",
-                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
-                    },
-                )
+                        name: '‎',
+                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
+                    }
+                );
 
             if (typeof userOsu.skillRanks !== 'undefined') {
                 osuEmbed.addFields(
                     {
-                        name: "‎",
-                        value: `┌ ACC: **${userOsu.skillRanks[0].rank}** | Score: **${userOsu.skillRanks[0].int}**\n├ REA: **${userOsu.skillRanks[1].rank}** | Score: **${userOsu.skillRanks[1].int}**\n├ ${userOsu.skillRanks[2].skill === "Aim" ? "AIM" : "CON"}: **${userOsu.skillRanks[2].rank}** | Score: **${userOsu.skillRanks[2].int}**\n├ SPD: **${userOsu.skillRanks[3].rank}** | Score: **${userOsu.skillRanks[3].int}**\n├ STA: **${userOsu.skillRanks[4].rank}** | Score: **${userOsu.skillRanks[4].int}**\n└ PRE: **${userOsu.skillRanks[5].rank}** | Score: **${userOsu.skillRanks[5].int}**`,
+                        name: '‎',
+                        value: `┌ ACC: **${userOsu.skillRanks[0].rank}** | Score: **${userOsu.skillRanks[0].int}**\n├ REA: **${userOsu.skillRanks[1].rank}** | Score: **${userOsu.skillRanks[1].int}**\n├ ${userOsu.skillRanks[2].skill === 'Aim' ? 'AIM' : 'CON'}: **${userOsu.skillRanks[2].rank}** | Score: **${userOsu.skillRanks[2].int}**\n├ SPD: **${userOsu.skillRanks[3].rank}** | Score: **${userOsu.skillRanks[3].int}**\n├ STA: **${userOsu.skillRanks[4].rank}** | Score: **${userOsu.skillRanks[4].int}**\n└ PRE: **${userOsu.skillRanks[5].rank}** | Score: **${userOsu.skillRanks[5].int}**`,
                         inline: true
                     },
                     {
-                        name: "‎",
+                        name: '‎',
                         value: `┌ Top 1 Mod: **${userOsu.modsData.top4Mods[0].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[0].percentage) ? Math.round(userOsu.modsData.top4Mods[0].percentage) : userOsu.modsData.top4Mods[0].percentage}%**\n├ Top 2 Mod: **${userOsu.modsData.top4Mods[1].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[1].percentage) ? Math.round(userOsu.modsData.top4Mods[1].percentage) : userOsu.modsData.top4Mods[1].percentage}%**\n├ Top 3 Mod: **${userOsu.modsData.top4Mods[2].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[2].percentage) ? Math.round(userOsu.modsData.top4Mods[2].percentage) : userOsu.modsData.top4Mods[2].percentage}%**\n├ Top 4 Mod: **${userOsu.modsData.top4Mods[3].mod}** | Usage: **${Math.round(userOsu.modsData.top4Mods[3].percentage) ? Math.round(userOsu.modsData.top4Mods[3].percentage) : userOsu.modsData.top4Mods[3].percentage}%**\n└ Most used combination: **${userOsu.modsData.mostCommonModCombination.combination}**`,
                         inline: true
                     }
-                )
+                );
             }
 
             if (!lastUpdate || (currentDate - lastUpdate) > 604800) {
@@ -345,14 +345,14 @@ module.exports = {
                         .setLabel('🔄 Change your gamemode')
                         .setCustomId('change-osu-mode')
                         .setStyle('Primary')
-                )
+                );
 
                 osuEmbed.addFields(
                     {
-                        name: "*You are able to update your analytics.*",
-                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                        name: '*You are able to update your analytics.*',
+                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                     }
-                )
+                );
             } else {
                 buttons = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
@@ -365,14 +365,14 @@ module.exports = {
                         .setCustomId('change-osu-mode')
                         .setStyle('Primary')
                         .setDisabled(true)
-                )
+                );
 
                 osuEmbed.addFields(
                     {
                         name: `*You can update your analytics <t:${Math.floor(lastUpdate + 604800)}:R>.*`,
-                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                     }
-                )
+                );
             }
 
             const userPerks = await localFunctions.getPerks(userId, collection);
@@ -383,42 +383,42 @@ module.exports = {
 
             const deluxeEntry = await localFunctions.getDeluxeEntry(userId, collection);
             for (const collab of collabs) {
-                if (((collab.status !== "closed" && collab.status !== "on design")) && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
+                if (((collab.status !== 'closed' && collab.status !== 'on design')) && typeof collabData.find(e => e.collabName === collab.name) === 'undefined') {
                     switch (collab.restriction) {
-                        case "staff":
-                            if (guildMember.roles.cache.has('961891383365500938') || userId === '687004886922952755') {
-                                joinMenu.addOptions({ label: collab.name, value: collab.name });
-                                collabsToJoinCount++;
-                            }
-                            break;
-                        case "deluxe":
-                            if (deluxeEntry || userId === '687004886922952755') {
-                                joinMenu.addOptions({ label: collab.name, value: collab.name });
-                                collabsToJoinCount++;
-                            }
-                            break;
-                        case "megacollab":
-                            if ((collab.status === "early access" && typeof userPerks.find(e => e.name === "Megacollab Early Access")) || userId === '687004886922952755') {
-                                joinMenu.addOptions({ label: collab.name, value: collab.name });
-                                collabsToJoinCount++;
-                            }
-                            break;
-                        case "prestige":
-                            if (typeof prestige !== "undefined" || userId === '687004886922952755') {
-                                joinMenu.addOptions({ label: collab.name, value: collab.name });
-                                collabsToJoinCount++;
-                            }
-                            break;
-                        case "experimental":
-                            if (tier > 0 || prestigeLevel >= 4 || userId === '687004886922952755') {
-                                joinMenu.addOptions({ label: collab.name, value: collab.name });
-                                collabsToJoinCount++;
-                            }
-                            break;
-                        case "none":
+                    case 'staff':
+                        if (guildMember.roles.cache.has('961891383365500938') || userId === '687004886922952755') {
                             joinMenu.addOptions({ label: collab.name, value: collab.name });
                             collabsToJoinCount++;
-                            break;
+                        }
+                        break;
+                    case 'deluxe':
+                        if (deluxeEntry || userId === '687004886922952755') {
+                            joinMenu.addOptions({ label: collab.name, value: collab.name });
+                            collabsToJoinCount++;
+                        }
+                        break;
+                    case 'megacollab':
+                        if ((collab.status === 'early access' && typeof userPerks.find(e => e.name === 'Megacollab Early Access')) || userId === '687004886922952755') {
+                            joinMenu.addOptions({ label: collab.name, value: collab.name });
+                            collabsToJoinCount++;
+                        }
+                        break;
+                    case 'prestige':
+                        if (typeof prestige !== 'undefined' || userId === '687004886922952755') {
+                            joinMenu.addOptions({ label: collab.name, value: collab.name });
+                            collabsToJoinCount++;
+                        }
+                        break;
+                    case 'experimental':
+                        if (tier > 0 || prestigeLevel >= 4 || userId === '687004886922952755') {
+                            joinMenu.addOptions({ label: collab.name, value: collab.name });
+                            collabsToJoinCount++;
+                        }
+                        break;
+                    case 'none':
+                        joinMenu.addOptions({ label: collab.name, value: collab.name });
+                        collabsToJoinCount++;
+                        break;
                     }
                 }
             }
@@ -432,8 +432,8 @@ module.exports = {
                         embeds: [osuEmbed],
                         components: [buttons]
                     });
-                 } else {
-                    osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you haven't joined any collab yet...*\n`)
+                } else {
+                    osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you haven't joined any collab yet...*\n`);
                     await int.editReply({
                         content: '',
                         embeds: [osuEmbed],
@@ -463,14 +463,14 @@ module.exports = {
                         content: '',
                         embeds: [osuEmbed],
                         components: [buttons, manageMenuRow, joinMenuRow]
-                    })
+                    });
                 }
             }
 
             return;
         }
 
-        if (subcommand === "manage" && subcommandGroup !== "admin") {
+        if (subcommand === 'manage' && subcommandGroup !== 'admin') {
             const userOsu = await localFunctions.getOsuData(userId, collection);
 
             if (!userOsu) {
@@ -478,8 +478,8 @@ module.exports = {
                     new ButtonBuilder()
                         .setCustomId('link-osu')
                         .setLabel('🔗 Link your osu! Account')
-                        .setStyle('Success'),
-                )
+                        .setStyle('Success')
+                );
 
                 await int.editReply({
                     content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
@@ -493,7 +493,7 @@ module.exports = {
             const osuEmbed = new EmbedBuilder()
                 .setFooter({ text: 'Endless Mirage | Manage Collabs', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                 .setColor('#f26e6a')
-                .setThumbnail(userOsu.avatar_url)
+                .setThumbnail(userOsu.avatar_url);
 
             const manageMenu = new SelectMenuBuilder()
                 .setCustomId('manage-collab')
@@ -508,27 +508,27 @@ module.exports = {
                         name: `${currentCollab.collabName}`,
                         value: `┌ Pick ID: ${currentCollab.collabPick.id}\n├ Pick Name: ${currentCollab.collabPick.name}\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${fullCollab.spreadsheetID})**__`
                     }
-                )
+                );
             }
 
             const manageMenuRow = new ActionRowBuilder().addComponents(manageMenu);
             osuEmbed.addFields(
                 {
-                    name: "‎",
-                    value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
-                },
+                    name: '‎',
+                    value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
+                }
             );
 
 
             if (collabData.length !== 0) {
-                osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Manage your past and present participations in this dashboard.*`)
+                osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Manage your past and present participations in this dashboard.*`);
                 await int.editReply({
                     content: '',
                     embeds: [osuEmbed],
                     components: [manageMenuRow]
                 });
             } else {
-                osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you haven't participated in a collab since the creation of this system...*`)
+                osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you haven't participated in a collab since the creation of this system...*`);
                 await int.editReply({
                     content: '',
                     embeds: [osuEmbed]
@@ -538,7 +538,7 @@ module.exports = {
             return;
         }
 
-        if (subcommand === "join" && subcommandGroup !== "quick") {
+        if (subcommand === 'join' && subcommandGroup !== 'quick') {
             const userOsu = await localFunctions.getOsuData(userId, collection);
 
             if (!userOsu) {
@@ -546,7 +546,7 @@ module.exports = {
                     new ButtonBuilder()
                         .setCustomId('link-osu')
                         .setLabel('🔗 Link your osu! Account')
-                        .setStyle('Success'),
+                        .setStyle('Success')
                 );
 
                 await int.editReply({
@@ -563,8 +563,8 @@ module.exports = {
             let prestigeLevel = 0;
             let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
 
-            if (typeof prestige !== "undefined") {
-                prestige = prestige.name
+            if (typeof prestige !== 'undefined') {
+                prestige = prestige.name;
                 prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
             }
 
@@ -581,7 +581,7 @@ module.exports = {
             const osuEmbed = new EmbedBuilder()
                 .setFooter({ text: 'Endless Mirage | Join a Collab', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                 .setColor('#f26e6a')
-                .setThumbnail(userOsu.avatar_url)
+                .setThumbnail(userOsu.avatar_url);
 
             const userPerks = await localFunctions.getPerks(userId, collection);
             let collabsToJoinCount = 0;
@@ -595,103 +595,103 @@ module.exports = {
                 let user_cap = collab.user_cap;
                 let participants = collabs.participants ? collabs.participants.length : 0;
                 let slots = user_cap - participants;
-                if ((((collab.status !== "closed" && collab.status !== "on design" && collab.status !== "full")) && typeof collabData.find(e => e.collabName === collab.name) === "undefined") || userId === '687004886922952755') {
+                if ((((collab.status !== 'closed' && collab.status !== 'on design' && collab.status !== 'full')) && typeof collabData.find(e => e.collabName === collab.name) === 'undefined') || userId === '687004886922952755') {
                     switch (collab.restriction) {
-                        case "staff":
-                            if (guildMember.roles.cache.has('961891383365500938') || userId === '687004886922952755') {
-                                joinMenu.addOptions({ label: collab.name, value: collab.name });
-                                osuEmbed.addFields(
-                                    {
-                                        name: `${collab.name}`,
-                                        value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
-                                    }
-                                )
-                                collabsToJoinCount++;
-                            }
-                            break;
-                        case "deluxe":
-                            if (deluxeEntry || userId === '687004886922952755') {
-                                joinMenu.addOptions({ label: collab.name, value: collab.name });
-                                osuEmbed.addFields(
-                                    {
-                                        name: `${collab.name}`,
-                                        value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
-                                    }
-                                )
-                                collabsToJoinCount++;
-                            }
-                            break;
-                        case "megacollab":
-                            if ((collab.status === "early access" && typeof userPerks.find(e => e.name === "Megacollab Early Access")) || guildMember.roles.cache.has('630636502187114496')/*admin*/ || guildMember.roles.cache.has('834962043735638016')/*special donator*/ || guildMember.roles.cache.has('962251481669574666')/*contributor*/) {
-                                joinMenu.addOptions({ label: collab.name, value: collab.name });
-                                osuEmbed.addFields(
-                                    {
-                                        name: `${collab.name}`,
-                                        value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
-                                    }
-                                )
-                                collabsToJoinCount++;
-                            } else if (collab.status === "open") {
-                                joinMenu.addOptions({ label: collab.name, value: collab.name });
-                                osuEmbed.addFields(
-                                    {
-                                        name: `${collab.name}`,
-                                        value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
-                                    }
-                                )
-                                collabsToJoinCount++;
-                            }
-                            break;
-                        case "prestige":
-                            if (typeof prestige !== "undefined" || userId === '687004886922952755') {
-                                joinMenu.addOptions({ label: collab.name, value: collab.name });
-                                osuEmbed.addFields(
-                                    {
-                                        name: `${collab.name}`,
-                                        value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
-                                    }
-                                )
-                                collabsToJoinCount++;
-                            }
-                            break;
-                        case "experimental":
-                            if (tier > 0 || prestigeLevel >= 4 || userId === '687004886922952755') {
-                                joinMenu.addOptions({ label: collab.name, value: collab.name });
-                                osuEmbed.addFields(
-                                    {
-                                        name: `${collab.name}`,
-                                        value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
-                                    }
-                                )
-                                collabsToJoinCount++;
-                            }
-                            break;
-                        case "none":
+                    case 'staff':
+                        if (guildMember.roles.cache.has('961891383365500938') || userId === '687004886922952755') {
                             joinMenu.addOptions({ label: collab.name, value: collab.name });
                             osuEmbed.addFields(
                                 {
                                     name: `${collab.name}`,
                                     value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
                                 }
-                            )
+                            );
                             collabsToJoinCount++;
-                            break;
+                        }
+                        break;
+                    case 'deluxe':
+                        if (deluxeEntry || userId === '687004886922952755') {
+                            joinMenu.addOptions({ label: collab.name, value: collab.name });
+                            osuEmbed.addFields(
+                                {
+                                    name: `${collab.name}`,
+                                    value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                }
+                            );
+                            collabsToJoinCount++;
+                        }
+                        break;
+                    case 'megacollab':
+                        if ((collab.status === 'early access' && typeof userPerks.find(e => e.name === 'Megacollab Early Access')) || guildMember.roles.cache.has('630636502187114496')/* admin*/ || guildMember.roles.cache.has('834962043735638016')/* special donator*/ || guildMember.roles.cache.has('962251481669574666')/* contributor*/) {
+                            joinMenu.addOptions({ label: collab.name, value: collab.name });
+                            osuEmbed.addFields(
+                                {
+                                    name: `${collab.name}`,
+                                    value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                }
+                            );
+                            collabsToJoinCount++;
+                        } else if (collab.status === 'open') {
+                            joinMenu.addOptions({ label: collab.name, value: collab.name });
+                            osuEmbed.addFields(
+                                {
+                                    name: `${collab.name}`,
+                                    value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                }
+                            );
+                            collabsToJoinCount++;
+                        }
+                        break;
+                    case 'prestige':
+                        if (typeof prestige !== 'undefined' || userId === '687004886922952755') {
+                            joinMenu.addOptions({ label: collab.name, value: collab.name });
+                            osuEmbed.addFields(
+                                {
+                                    name: `${collab.name}`,
+                                    value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                }
+                            );
+                            collabsToJoinCount++;
+                        }
+                        break;
+                    case 'experimental':
+                        if (tier > 0 || prestigeLevel >= 4 || userId === '687004886922952755') {
+                            joinMenu.addOptions({ label: collab.name, value: collab.name });
+                            osuEmbed.addFields(
+                                {
+                                    name: `${collab.name}`,
+                                    value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                }
+                            );
+                            collabsToJoinCount++;
+                        }
+                        break;
+                    case 'none':
+                        joinMenu.addOptions({ label: collab.name, value: collab.name });
+                        osuEmbed.addFields(
+                            {
+                                name: `${collab.name}`,
+                                value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                            }
+                        );
+                        collabsToJoinCount++;
+                        break;
                     }
                 }
             }
             osuEmbed.addFields(
                 {
-                    name: "‎",
-                    value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
-                },
+                    name: '‎',
+                    value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
+                }
             );
             const joinMenuRow = new ActionRowBuilder().addComponents(joinMenu);
             if (collabsToJoinCount === 0) {
                 osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Unfortunately, there isn't any collabs you can join at the moment.*`);
                 await int.editReply({
                     content: '',
-                    embeds: [osuEmbed],
-                })
+                    embeds: [osuEmbed]
+                });
             } else {
                 osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Looks like you can join some collabs!*`);
                 await int.editReply({
@@ -703,21 +703,21 @@ module.exports = {
             return;
         }
 
-        if (subcommand === "info") {
+        if (subcommand === 'info') {
             try {
                 const dashboardEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
-                    .setDescription("**\`\`\`\n🏐 Collabs Dashboard\`\`\`**")
+                    .setDescription('**\`\`\`\n🏐 Collabs Dashboard\`\`\`**')
                     .addFields(
                         {
-                            name: "In this section, you can check information about all the collabs that have been hosted since 2024.",
-                            value: "Use the select menu to visualize a collab.\n<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                            name: 'In this section, you can check information about all the collabs that have been hosted since 2024.',
+                            value: 'Use the select menu to visualize a collab.\n<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                         }
                     );
                 const collabsMenu = new SelectMenuBuilder()
                     .setCustomId('select-collab')
-                    .setPlaceholder('Select a collab to visualize.')
+                    .setPlaceholder('Select a collab to visualize.');
                 const allCollabs = await localFunctions.getCollabs(collabCollection);
                 for (let collab of allCollabs) {
                     collabsMenu.addOptions({ label: collab.name, value: collab.name });
@@ -726,17 +726,17 @@ module.exports = {
                 await int.editReply({
                     content: '',
                     embeds: [dashboardEmbed],
-                    components: [actionRow],
-                })
+                    components: [actionRow]
+                });
             } catch (e) {
                 console.log(e);
-                await int.editReply('Something went wrong...')
+                await int.editReply('Something went wrong...');
             }
 
             return;
         }
 
-        if (subcommand === "perks") {
+        if (subcommand === 'perks') {
             const perksEmbed = new EmbedBuilder()
                 .setFooter({ text: 'Endless Mirage | Perks Dashboard\n', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                 .setColor('#f26e6a')
@@ -749,7 +749,7 @@ module.exports = {
                 new ButtonBuilder()
                     .setCustomId('perks-buy')
                     .setLabel('🔀 Shop')
-                    .setStyle('Primary'),
+                    .setStyle('Primary')
             );
 
             if (submittedPerks.length === 0 && userPerks.length !== 0) {
@@ -760,31 +760,31 @@ module.exports = {
                 for (const perk of userPerks) {
                     useMenu.addOptions({ label: perk.name, value: perk.name, description: perk.description });
                 }
-                perksEmbed.setDescription(`*Seems like you can use some perks!*\n                                                                                                        **\`\`\`ml\n✅ To use one of your perks, use the menu bellow!\`\`\`**`);
+                perksEmbed.setDescription('*Seems like you can use some perks!*\n                                                                                                        **```ml\n✅ To use one of your perks, use the menu bellow!```**');
                 perksEmbed.addFields(
                     {
-                        name: "‎",
-                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                        name: '‎',
+                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                     }
-                )
+                );
                 const useComponent = new ActionRowBuilder().addComponents(useMenu);
                 await int.editReply({
                     content: '',
                     embeds: [perksEmbed],
-                    components: [useComponent, component],
+                    components: [useComponent, component]
                 });
             } else if (submittedPerks.length === 0 && userPerks.length === 0) {
-                perksEmbed.setDescription(`*Seems like you don't have any perk to use...*\n                                                                                                        **\`\`\`ml\n❔ Interested on buying some perk for the megacollabs? Use the button bellow!\`\`\`**`);
+                perksEmbed.setDescription('*Seems like you don\'t have any perk to use...*\n                                                                                                        **```ml\n❔ Interested on buying some perk for the megacollabs? Use the button bellow!```**');
                 perksEmbed.addFields(
                     {
-                        name: "‎",
-                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                        name: '‎',
+                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                     }
-                )
+                );
                 await int.editReply({
                     content: '',
                     embeds: [perksEmbed],
-                    components: [component],
+                    components: [component]
                 });
             } else {
                 let perkMenu = new SelectMenuBuilder()
@@ -795,19 +795,19 @@ module.exports = {
                     perkMenu.addOptions({ label: perk.perk, value: `${perk.perk}-${perk.collabName}`, description: perk.collabName });
                     perksEmbed.addFields(
                         {
-                            name: "‎",
+                            name: '‎',
                             value: `\`\`✒️ ${perk.perk}\`\`\n **└** *Used on the ${perk.collabName}*`
                         }
-                    )
+                    );
                 }
                 perksEmbed.addFields(
                     {
-                        name: "‎",
-                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                        name: '‎',
+                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                     }
-                )
+                );
                 if (userPerks.length !== 0) {
-                    perksEmbed.setDescription(`*Seems like you have some perks submitted!*\n                                                                                                        **\`\`\`ml\n✅ To edit and use your perk(s) use the menus bellow!\`\`\`**`);
+                    perksEmbed.setDescription('*Seems like you have some perks submitted!*\n                                                                                                        **```ml\n✅ To edit and use your perk(s) use the menus bellow!```**');
                     let useMenu = new SelectMenuBuilder()
                         .setCustomId('use-perks')
                         .setPlaceholder('Use your perks.');
@@ -822,15 +822,15 @@ module.exports = {
                     await int.editReply({
                         content: '',
                         embeds: [perksEmbed],
-                        components: [perkComponent, useComponent, component],
+                        components: [perkComponent, useComponent, component]
                     });
                 } else {
-                    perksEmbed.setDescription(`*Seems like you have some perks submitted!*\n                                                                                                        **\`\`\`ml\n✅ To edit your perk(s) use the menu bellow!\`\`\`**`);
+                    perksEmbed.setDescription('*Seems like you have some perks submitted!*\n                                                                                                        **```ml\n✅ To edit your perk(s) use the menu bellow!```**');
                     const perkComponent = new ActionRowBuilder().addComponents(perkMenu);
                     await int.editReply({
                         content: '',
                         embeds: [perksEmbed],
-                        components: [perkComponent, component],
+                        components: [perkComponent, component]
                     });
                 }
             }
@@ -839,10 +839,10 @@ module.exports = {
         }
 
 
-        if (subcommand === "premium") {
+        if (subcommand === 'premium') {
             let renewalPrice = '';
             let decayString = '';
-            let tierString = "**No premium status found!**";
+            let tierString = '**No premium status found!**';
             let tierDetails = '';
             const username = int.user.tag;
             const premiumEmbed = new EmbedBuilder()
@@ -854,13 +854,13 @@ module.exports = {
                 if (userPerks.length !== 0) {
                     let useMenu = new SelectMenuBuilder()
                         .setCustomId('use-perks')
-                        .setPlaceholder('Use your perks.')
+                        .setPlaceholder('Use your perks.');
 
                     premiumEmbed.setAuthor({ name: `Welcome to your perks dashboard ${username}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' });
                     premiumEmbed.setDescription(`${tierString}\n                                                                                                        **\`\`\`ml\n✅ Perks available to use!\`\`\`**`);
                     for (const perk of userPerks) {
                         premiumEmbed.addFields({
-                            name: " ",
+                            name: ' ',
                             value: `\`\`🎫 ${perk.name}\`\`
                              [├](https://discord.com/channels/630281137998004224/767374005782052864) ${perk.description}\n └ Your current renewal price is ${perk.individualPrice}$.`
                         });
@@ -879,31 +879,31 @@ module.exports = {
                         new ButtonBuilder()
                             .setCustomId('perks-buy')
                             .setLabel('🔀 Perk Shop')
-                            .setStyle('Primary'),
-                    )
+                            .setStyle('Primary')
+                    );
                     premiumEmbed.addFields(
                         {
-                            name: "‎",
-                            value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                            name: '‎',
+                            value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                         }
-                    )
+                    );
                     await int.editReply({
                         content: '',
                         embeds: [premiumEmbed],
-                        components: [useComponents, buyComponents],
+                        components: [useComponents, buyComponents]
                     });
                 } else {
-                    premiumEmbed.setDescription('**\`\`\`ml\n 🚀 Welcome to the premium section!\`\`\`**                                                                                                           **In this section, you can find information about the current premium tiers and their perks!**\n\n**• The perks are ACCUMULATIVE.** \n**• After one collab, most perks will need to be RENEWED.** \n**• If there is no renewal, there is a DECAY into former supporter.**\n**• You can also purchase SINGLE PERKS for single use in collabs.**\n**• Premium includes bump immunity.**')
+                    premiumEmbed.setDescription('**\`\`\`ml\n 🚀 Welcome to the premium section!\`\`\`**                                                                                                           **In this section, you can find information about the current premium tiers and their perks!**\n\n**• The perks are ACCUMULATIVE.** \n**• After one collab, most perks will need to be RENEWED.** \n**• If there is no renewal, there is a DECAY into former supporter.**\n**• You can also purchase SINGLE PERKS for single use in collabs.**\n**• Premium includes bump immunity.**');
                     premiumEmbed.addFields(
-                        { name: " ", value: "**\`\`\`ml\n⚠️ Only the prominent perks are mentioned for each tier.\`\`\`**" },
-                        { name: " ", value: "\`\`🎫 Mirage I Premium | Price: 5$\`\`\n └ Exclusive profile picture version." },
-                        { name: " ", value: "\`\`🎫 Mirage II Premium | Price: 10$\`\`\n └ Animated Banner." },
-                        { name: " ", value: "\`\`🎫 Mirage III Premium | Price: 15$\`\`\n └ Animated Stream Overlay." },
-                        { name: " ", value: "\`\`🎫 Mirage IV Premium | Price: 20$\`\`\n └ Early collab delivery.\n" },
-                        { name: " ", value: "\`\`🎫 Mirage V Premium | Price: 40$\`\`\n └ Customized collab themed osu! skin." },
-                        { name: " ", value: "\`\`🎫 Mirage VI Premium | Price: 100$\`\`\n └ Collab early access." },
-                        { name: " ", value: "\`\`🎫 Mirage VII Premium | Price: 250$\`\`\n └ Host your own megacollab." },
-                        { name: " ", value: "**\`\`\`prolog\n💎 Find the full details about each tier in the list bellow.\`\`\`\n<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>**" },
+                        { name: ' ', value: '**\`\`\`ml\n⚠️ Only the prominent perks are mentioned for each tier.\`\`\`**' },
+                        { name: ' ', value: '\`\`🎫 Mirage I Premium | Price: 5$\`\`\n └ Exclusive profile picture version.' },
+                        { name: ' ', value: '\`\`🎫 Mirage II Premium | Price: 10$\`\`\n └ Animated Banner.' },
+                        { name: ' ', value: '\`\`🎫 Mirage III Premium | Price: 15$\`\`\n └ Animated Stream Overlay.' },
+                        { name: ' ', value: '\`\`🎫 Mirage IV Premium | Price: 20$\`\`\n └ Early collab delivery.\n' },
+                        { name: ' ', value: '\`\`🎫 Mirage V Premium | Price: 40$\`\`\n └ Customized collab themed osu! skin.' },
+                        { name: ' ', value: '\`\`🎫 Mirage VI Premium | Price: 100$\`\`\n └ Collab early access.' },
+                        { name: ' ', value: '\`\`🎫 Mirage VII Premium | Price: 250$\`\`\n └ Host your own megacollab.' },
+                        { name: ' ', value: '**\`\`\`prolog\n💎 Find the full details about each tier in the list bellow.\`\`\`\n<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>**' }
                     );
 
                     const defaultComponents = new ActionRowBuilder().addComponents(
@@ -917,13 +917,13 @@ module.exports = {
                                 { label: 'Mirage IV', value: 'Mirage IV', description: 'Cost: 20$' },
                                 { label: 'Mirage V', value: 'Mirage V', description: 'Cost: 40$' },
                                 { label: 'Mirage VI', value: 'Mirage VI', description: 'Cost: 100$' },
-                                { label: 'Mirage VII', value: 'Mirage VII', description: 'Cost: 250$' },
+                                { label: 'Mirage VII', value: 'Mirage VII', description: 'Cost: 250$' }
                             ])
-                    )
+                    );
                     await int.editReply({
                         content: '',
                         embeds: [premiumEmbed],
-                        components: [defaultComponents],
+                        components: [defaultComponents]
                     });
                 }
             } else {
@@ -950,7 +950,7 @@ module.exports = {
 
                 let activeMonthlySupport = false;
                 if (monthlySupportData) {
-                    if (monthlySupportData.status !== "innactive") {
+                    if (monthlySupportData.status !== 'innactive') {
                         activeMonthlySupport = true;
                     }
                 }
@@ -961,34 +961,34 @@ module.exports = {
                         new ButtonBuilder()
                             .setCustomId('sub-manage')
                             .setLabel('💵 Manage Monthly Subscription')
-                            .setStyle('Primary'),
-                    )
+                            .setStyle('Primary')
+                    );
                 } else {
                     subComponent = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('subscribe')
                             .setLabel('💵 Subscribe')
-                            .setStyle('Primary'),
-                    )
+                            .setStyle('Primary')
+                    );
                 }
 
                 if (userPerks?.length || activeMonthlySupport) {
                     let useMenu = new SelectMenuBuilder()
                         .setCustomId('use-perks')
-                        .setPlaceholder('Use your perks.')
+                        .setPlaceholder('Use your perks.');
 
                     premiumEmbed.setAuthor({ name: `Welcome to your premium dashboard ${username}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' });
                     // to rewrite into a single for loop with switch case
                     if (userPerks.some(perk => perk.singleUse === false)) {
-                        premiumEmbed.setDescription(`${tierString}\n                                                                                                        **\`\`\`ml\n🔮 Permanent perks\`\`\`**`)
-                        tierString = ' '
+                        premiumEmbed.setDescription(`${tierString}\n                                                                                                        **\`\`\`ml\n🔮 Permanent perks\`\`\`**`);
+                        tierString = ' ';
                         for (const perk of userPerks) {
                             if ((!perk.singleUse || userTier.name === 'Mirage VII' || userTier.name === 'Mirage X') && perk.name !== 'Host your own Megacollab' && perk.name !== 'Custom Endless Mirage Hoodie') {
                                 if (perk.singleUse) {
                                     useMenu.addOptions({ label: perk.name, value: perk.name, description: perk.description });
                                 }
                                 premiumEmbed.addFields({
-                                    name: " ",
+                                    name: ' ',
                                     value: `\`\`✒️ ${perk.name}\`\`\n └ ${perk.description}`
                                 });
                             }
@@ -996,14 +996,14 @@ module.exports = {
                     }
                     if (userPerks.some(perk => perk.singleUse === true)) {
                         if (tierString !== ' ') {
-                            premiumEmbed.setDescription(`${tierString}\n                                                                                                        **\`\`\`ml\n✅ Perks available to use!\`\`\`**`)
+                            premiumEmbed.setDescription(`${tierString}\n                                                                                                        **\`\`\`ml\n✅ Perks available to use!\`\`\`**`);
                         } else {
                             premiumEmbed.addFields(
                                 {
-                                    name: " ",
-                                    value: "**\`\`\`ml\n✅ Perks available to use!\`\`\`**",
-                                },
-                            )
+                                    name: ' ',
+                                    value: '**\`\`\`ml\n✅ Perks available to use!\`\`\`**'
+                                }
+                            );
                         }
                         for (const perk of userPerks) {
                             if (perk.singleUse && userTier.name !== 'Mirage VII' && userTier.name !== 'Mirage X') {
@@ -1013,13 +1013,13 @@ module.exports = {
                                     renewalPrice = '';
                                 }
                                 premiumEmbed.addFields({
-                                    name: " ",
+                                    name: ' ',
                                     value: `\`\`🎫 ${perk.name}\`\`\n ├ ${perk.description}${renewalPrice}`
                                 });
                                 useMenu.addOptions({ label: perk.name, value: perk.name, description: perk.description });
                             } else if (perk.name === 'Custom Endless Mirage Hoodie' || perk.name === 'Host your own Megacollab') {
                                 premiumEmbed.addFields({
-                                    name: " ",
+                                    name: ' ',
                                     value: `\`\`🎫 ${perk.name}\`\`
                                  └ ${perk.description}`
                                 });
@@ -1040,10 +1040,10 @@ module.exports = {
                         new ButtonBuilder()
                             .setCustomId('perks-buy')
                             .setLabel('🔀 Shop')
-                            .setStyle('Primary'),
-                    )
+                            .setStyle('Primary')
+                    );
 
-                    if (userTier.name !== "Mirage VII" || userTier.name !== "Mirage X") {
+                    if (userTier.name !== 'Mirage VII' || userTier.name !== 'Mirage X') {
                         mainComponents.addComponents(
                             new ButtonBuilder()
                                 .setCustomId('upgrade-tier')
@@ -1052,7 +1052,7 @@ module.exports = {
                             new ButtonBuilder()
                                 .setCustomId('premium-renew')
                                 .setLabel('🔁 Renew')
-                                .setStyle('Primary'),
+                                .setStyle('Primary')
                         );
                     }
 
@@ -1070,17 +1070,17 @@ module.exports = {
                             const monthsPending = Math.ceil(pendingAmount / monthlySubAmount);
                             premiumEmbed.addFields(
                                 {
-                                    name: " ",
-                                    value: `**\`\`\`ml\n✅ Active subscription status!\`\`\`**\n\`\`❤️ Current Monthly Amount\`\`\n └ ${monthlySubAmount}$\n\n\`\`❤️ Time Pending for the Next Tier\`\`\n └ ${monthsPending} Month(s)!\n\n\`\`❤️ Amount Pending for the Next Tier\`\`\n └ ${pendingAmount}$\n\n*Your current subscription includes automatic renewal for all perks and free access to deluxe collabs.*\n*For more info about your subscription, use the manage button bellow!*`,
-                                },
-                            )
+                                    name: ' ',
+                                    value: `**\`\`\`ml\n✅ Active subscription status!\`\`\`**\n\`\`❤️ Current Monthly Amount\`\`\n └ ${monthlySubAmount}$\n\n\`\`❤️ Time Pending for the Next Tier\`\`\n └ ${monthsPending} Month(s)!\n\n\`\`❤️ Amount Pending for the Next Tier\`\`\n └ ${pendingAmount}$\n\n*Your current subscription includes automatic renewal for all perks and free access to deluxe collabs.*\n*For more info about your subscription, use the manage button bellow!*`
+                                }
+                            );
                         } else {
                             premiumEmbed.addFields(
                                 {
-                                    name: " ",
-                                    value: "**\`\`\`ml\n✅ Active subscription status!\`\`\`**\n**You're currently at the peak tier! Thank you for your incredible support!**\n\n*Your current subscription includes automatic renewal for all perks and free access to deluxe collabs.*\n*For more info about your subscription, use the manage button bellow!*",
+                                    name: ' ',
+                                    value: '**\`\`\`ml\n✅ Active subscription status!\`\`\`**\n**You\'re currently at the peak tier! Thank you for your incredible support!**\n\n*Your current subscription includes automatic renewal for all perks and free access to deluxe collabs.*\n*For more info about your subscription, use the manage button bellow!*'
                                 }
-                            )
+                            );
                         }
 
                     }
@@ -1090,36 +1090,36 @@ module.exports = {
                             const useComponents = new ActionRowBuilder().addComponents(useMenu);
                             premiumEmbed.addFields(
                                 {
-                                    name: "‎",
-                                    value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                                    name: '‎',
+                                    value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                                 }
-                            )
+                            );
                             await int.editReply({
                                 content: '',
                                 embeds: [premiumEmbed],
-                                components: [useComponents, mainComponents, subComponent],
+                                components: [useComponents, mainComponents, subComponent]
                             });
                         }
                     } catch (error) {
                         premiumEmbed.addFields(
                             {
-                                name: "‎",
-                                value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                                name: '‎',
+                                value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                             }
-                        )
+                        );
                         await int.editReply({
                             content: '',
                             embeds: [premiumEmbed],
-                            components: [mainComponents, subComponent],
+                            components: [mainComponents, subComponent]
                         });
                     }
 
                 } else {
                     decayString = `\n └ Your tier will decay <t:${premiumData.date}:R>.`;
 
-                    premiumEmbed.setAuthor({ name: `Welcome to your premium dashboard ${username}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
-                    premiumEmbed.setDescription(`${tierString}\n                                                                                                        **\`\`\`ml\n⚠️ No perks available to claim!\`\`\`**`)
-                    premiumEmbed.addFields({ name: " ", value: `\`\`🎫 Notice\`\`\n ├ It\'s recommended to renew any of your perks.${decayString}` })
+                    premiumEmbed.setAuthor({ name: `Welcome to your premium dashboard ${username}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' });
+                    premiumEmbed.setDescription(`${tierString}\n                                                                                                        **\`\`\`ml\n⚠️ No perks available to claim!\`\`\`**`);
+                    premiumEmbed.addFields({ name: ' ', value: `\`\`🎫 Notice\`\`\n ├ It\'s recommended to renew any of your perks.${decayString}` });
                     mainComponents = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('premium-info')
@@ -1140,28 +1140,28 @@ module.exports = {
                         new ButtonBuilder()
                             .setCustomId('upgrade-tier')
                             .setLabel('⏏️ Upgrade')
-                            .setStyle('Primary'),
+                            .setStyle('Primary')
                     );
 
                     premiumEmbed.addFields(
                         {
-                            name: "‎",
-                            value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                            name: '‎',
+                            value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                         }
                     );
 
                     await int.editReply({
                         content: '',
                         embeds: [premiumEmbed],
-                        components: [mainComponents, subComponent],
+                        components: [mainComponents, subComponent]
                     });
                 }
             }
             return;
         }
 
-        if (subcommandGroup === "admin") {
-            if (subcommand === "set-bumps") {
+        if (subcommandGroup === 'admin') {
+            if (subcommand === 'set-bumps') {
                 if (!guildMember.roles.cache.has('630636502187114496')) {
                     await int.editReply('You are not allowed to do this.');
                     return;
@@ -1169,10 +1169,10 @@ module.exports = {
 
                 const currentDate = Math.floor(Date.now() / 1000);
                 const allCollabs = await localFunctions.getCollabs(collabCollection);
-                const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
+                const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && (c.status === 'open' || c.status === 'early access' || c.status === 'on design'));
 
-                if (typeof openMegacollab === "undefined") {
-                    await int.editReply('There is no open megacollabs at the moment...')
+                if (typeof openMegacollab === 'undefined') {
+                    await int.editReply('There is no open megacollabs at the moment...');
                 } else {
                     const collab = openMegacollab;
                     let bumps = collab.bumps;
@@ -1180,22 +1180,22 @@ module.exports = {
                         .setFooter({ text: 'Endless Mirage | Bumps Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                         .setColor('#f26e6a')
                         .setDescription(`**\`\`\`ml\n🧱 Endless Mirage | Admin Bump Dashboard\`\`\`**\n**${collab.name}**`);
-                    if (typeof bumps === "undefined") {
+                    if (typeof bumps === 'undefined') {
                         dashboardEmbed.addFields(
                             {
-                                name: "‎",
-                                value: "There are no bumps for this collab yet..."
+                                name: '‎',
+                                value: 'There are no bumps for this collab yet...'
                             },
                             {
-                                name: "‎",
-                                value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                                name: '‎',
+                                value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                             }
                         );
                         const components = new ActionRowBuilder().addComponents(
                             new ButtonBuilder()
                                 .setCustomId('start-bump')
                                 .setLabel('New Bump')
-                                .setStyle('Success'),
+                                .setStyle('Success')
                         );
 
                         int.editReply({ embeds: [dashboardEmbed], components: [components] });
@@ -1205,24 +1205,24 @@ module.exports = {
                         for (const bump of bumps) {
                             dashboardEmbed.addFields(
                                 {
-                                    name: "‎",
+                                    name: '‎',
                                     value: `Bump #${i}\n- **Starting Date:** ${bump.startingDate}\n- **Duration:** ${bump.days} days`
                                 }
-                            )
+                            );
                         }
                         dashboardEmbed.addFields(
                             {
-                                name: "‎",
-                                value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                                name: '‎',
+                                value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                             }
-                        )
+                        );
                         const latestBumpIndex = bumps.length - 1;
                         if (currentDate - bumps[latestBumpIndex].startingDate > bumps[latestBumpIndex].days * 24 * 60 * 60 && bumps.length !== 4) {
                             const components = new ActionRowBuilder().addComponents(
                                 new ButtonBuilder()
                                     .setCustomId('start-bump')
                                     .setLabel('New Bump')
-                                    .setStyle('Success'),
+                                    .setStyle('Success')
                             );
 
                             int.editReply({ embeds: [dashboardEmbed], components: [components] });
@@ -1231,7 +1231,7 @@ module.exports = {
                                 new ButtonBuilder()
                                     .setCustomId('stop-bump')
                                     .setLabel('Stop Bump')
-                                    .setStyle('Danger'),
+                                    .setStyle('Danger')
                             );
 
                             int.editReply({ embeds: [dashboardEmbed], components: [components] });
@@ -1240,7 +1240,7 @@ module.exports = {
                                 new ButtonBuilder()
                                     .setCustomId('filter-bump')
                                     .setLabel('Filter Users')
-                                    .setStyle('Primary'),
+                                    .setStyle('Primary')
                             );
 
                             int.editReply({ embeds: [dashboardEmbed], components: [components] });
@@ -1250,7 +1250,7 @@ module.exports = {
                 }
             }
 
-            if (subcommand === "link") {
+            if (subcommand === 'link') {
                 if (!guildMember.roles.cache.has('630636502187114496')) {
                     await int.editReply('You are not allowed to do this.');
                     return;
@@ -1258,7 +1258,7 @@ module.exports = {
 
                 const user = await v2.user.details(int.options.getString('osuid'), int.options.getString('gamemode'));
 
-                if (typeof user === "undefined") {
+                if (typeof user === 'undefined') {
                     await int.editReply('User not found...');
                     return;
                 }
@@ -1272,13 +1272,13 @@ module.exports = {
                 let modsData = await localFunctions.analyzeMods(userTop100);
 
                 const filler = {
-                    mod: "--",
-                    percentage: "--"
-                }
+                    mod: '--',
+                    percentage: '--'
+                };
 
                 let i = 0;
                 while (i < 4) {
-                    if (typeof modsData.top4Mods[i] === "undefined") {
+                    if (typeof modsData.top4Mods[i] === 'undefined') {
                         modsData.top4Mods.push(filler);
                     }
                     i++;
@@ -1291,19 +1291,19 @@ module.exports = {
 
                 return;
             }
-            if (subcommand === "manage") {
+            if (subcommand === 'manage') {
                 if (!guildMember.roles.cache.has('630636502187114496')) {
                     await int.editReply('You are not allowed to do this.');
                     return;
                 }
 
                 try {
-                    let collab = await localFunctions.getCollab(int.options.getString('collab'), collabCollection)
+                    let collab = await localFunctions.getCollab(int.options.getString('collab'), collabCollection);
                     let components = [];
                     let extraComponents = [];
                     let URLstring = '';
-                    if (typeof collab.spreadsheetID !== "undefined") {
-                        URLstring = `  [Spreadsheet URL](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})\n`
+                    if (typeof collab.spreadsheetID !== 'undefined') {
+                        URLstring = `  [Spreadsheet URL](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})\n`;
                     }
                     const dashboardEmbed = new EmbedBuilder()
                         .setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
@@ -1313,14 +1313,14 @@ module.exports = {
                     let extraString = '';
 
                     if (collab.user_cap !== 0) {
-                        extraString = `User Limit: ${collab.user_cap}\n`
+                        extraString = `User Limit: ${collab.user_cap}\n`;
                     } else {
-                        extraString = "Unlimited\n"
+                        extraString = 'Unlimited\n';
                     }
 
                     dashboardEmbed.addFields(
                         {
-                            name: "‎",
+                            name: '‎',
                             value: `┌ Type: ${localFunctions.capitalizeFirstLetter(collab.type)}\n├ Topic: ${localFunctions.capitalizeFirstLetter(collab.topic)}\n└ Status: ${localFunctions.capitalizeFirstLetter(collab.status)}\n`,
                             inline: true
                         }
@@ -1328,7 +1328,7 @@ module.exports = {
 
                     dashboardEmbed.addFields(
                         {
-                            name: "‎",
+                            name: '‎',
                             value: `┌ Class: ${localFunctions.capitalizeFirstLetter(collab.restriction)}\n├ Opening date: <t:${parseInt(collab.opening)}:R>\n└ ${extraString}`,
                             inline: true
                         }
@@ -1336,72 +1336,72 @@ module.exports = {
 
                     dashboardEmbed.addFields(
                         {
-                            name: "‎",
-                            value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                            name: '‎',
+                            value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                         }
-                    )
+                    );
 
                     if (int.user.id === collab.host) {
                         components = new ActionRowBuilder().addComponents(
                             new ButtonBuilder()
                                 .setCustomId('edit-collab')
                                 .setLabel('✏️ Edit')
-                                .setStyle('Primary'),
-                        )
-                        if (collab.type === "pooled") {
+                                .setStyle('Primary')
+                        );
+                        if (collab.type === 'pooled') {
                             components.addComponents(
                                 new ButtonBuilder()
                                     .setCustomId('pool-collab')
                                     .setLabel('📁 Pool')
-                                    .setStyle('Primary'),
-                            )
+                                    .setStyle('Primary')
+                            );
                             components.addComponents(
                                 new ButtonBuilder()
                                     .setCustomId('manage-pick-collab')
                                     .setLabel('🔩 Picks')
-                                    .setStyle('Primary'),
-                            )
+                                    .setStyle('Primary')
+                            );
                         }
 
                         components.addComponents(
                             new ButtonBuilder()
                                 .setCustomId('reset-collab')
                                 .setLabel('🔁 Reset')
-                                .setStyle('Danger'),
-                        )
+                                .setStyle('Danger')
+                        );
 
                         components.addComponents(
                             new ButtonBuilder()
                                 .setCustomId('delete-collab')
                                 .setLabel('🚮 Delete')
-                                .setStyle('Danger'),
-                        )
+                                .setStyle('Danger')
+                        );
 
-                        if (collab.status !== "on design" || int.user.id === "687004886922952755") {
+                        if (collab.status !== 'on design' || int.user.id === '687004886922952755') {
                             extraComponents = new ActionRowBuilder().addComponents(
                                 new ButtonBuilder()
                                     .setCustomId('export-collab')
                                     .setLabel('⬇️ Export')
-                                    .setStyle('Success'),
-                            )
-                            if (typeof collab.perks !== "undefined") {
+                                    .setStyle('Success')
+                            );
+                            if (typeof collab.perks !== 'undefined') {
                                 extraComponents.addComponents(
                                     new ButtonBuilder()
                                         .setCustomId('export-collab-perks')
                                         .setLabel('⬇️ Perks')
-                                        .setStyle('Success'),
-                                )
+                                        .setStyle('Success')
+                                );
                             }
                             extraComponents.addComponents(
                                 new ButtonBuilder()
                                     .setCustomId('deliver-collab')
                                     .setLabel('⬆️ Deliver')
-                                    .setStyle('Success'),
-                            )
+                                    .setStyle('Success')
+                            );
                             await int.editReply({
                                 content: '',
                                 embeds: [dashboardEmbed],
-                                components: [components, extraComponents],
+                                components: [components, extraComponents]
                             });
                         } else {
                             await int.editReply({
@@ -1416,43 +1416,43 @@ module.exports = {
                             new ButtonBuilder()
                                 .setCustomId('manage-pick-collab')
                                 .setLabel('🔩 Picks')
-                                .setStyle('Primary'),
-                        )
-                        if (collab.status !== "on design") {
+                                .setStyle('Primary')
+                        );
+                        if (collab.status !== 'on design') {
                             extraComponents = new ActionRowBuilder().addComponents(
                                 new ButtonBuilder()
                                     .setCustomId('export-collab')
                                     .setLabel('⬇️ Export')
-                                    .setStyle('Success'),
-                            )
+                                    .setStyle('Success')
+                            );
                         }
                     }
 
                     adminCache.set(int.user.id, {
-                        collab: collab,
-                    })
+                        collab: collab
+                    });
 
                 } catch (e) {
-                    console.log(e)
-                    await int.editReply('Something went wrong...')
+                    console.log(e);
+                    await int.editReply('Something went wrong...');
                 }
             }
         }
 
-        if (subcommandGroup === "quick") {
-            if (subcommand === "join") {
+        if (subcommandGroup === 'quick') {
+            if (subcommand === 'join') {
                 try {
                     const currentDate = Math.floor(new Date().getTime() / 1000);
-                    const blacklistCheck = await localFunctions.getBlacklist(int.user.id, blacklistCollection)
+                    const blacklistCheck = await localFunctions.getBlacklist(int.user.id, blacklistCollection);
                     if (blacklistCheck) return int.editReply('You\'re blacklisted from all collabs and cannot participate...');
                     const allCollabs = await localFunctions.getCollabs(collabCollection);
                     const userCollabs = await localFunctions.getUserCollabs(int.user.id, collection);
-                    let openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
-                    if (typeof openMegacollab === "undefined") {
-                        await int.editReply('There is no open megacollabs at the moment...')
+                    let openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && c.status === 'open');
+                    if (typeof openMegacollab === 'undefined') {
+                        await int.editReply('There is no open megacollabs at the moment...');
                     } else {
                         try {
-                            if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) !== "undefined") {
+                            if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) !== 'undefined') {
                                 return int.editReply('You\'re already participating on this collab! To edit your pick use the ``/collabs manage`` command.');
                             }
                         } catch { }
@@ -1463,8 +1463,8 @@ module.exports = {
                                 new ButtonBuilder()
                                     .setCustomId('link-osu')
                                     .setLabel('🔗 Link your osu! Account')
-                                    .setStyle('Success'),
-                            )
+                                    .setStyle('Success')
+                            );
                             return int.editReply({
                                 content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
                                 components: [components]
@@ -1489,27 +1489,27 @@ module.exports = {
                             if (int.options.getString('banner_quote').length > openMegacollab.fieldRestrictions.ca_quote) return int.editReply(`The character limit for the quote is of ${openMegacollab.fieldRestrictions.ca_quote} characters!`);
                         }
 
-                        if (typeof openMegacollab.lockSystem !== "undefined") { /*Prevents ratelimit*/
-                            if (typeof openMegacollab.lockSystem.current === "undefined") { /*System startup from first pick*/
+                        if (typeof openMegacollab.lockSystem !== 'undefined') { /* Prevents ratelimit*/
+                            if (typeof openMegacollab.lockSystem.current === 'undefined') { /* System startup from first pick*/
                                 const current = {
                                     participations: 0,
                                     time: 0,
                                     lastParticipant: 0
-                                }
+                                };
                                 openMegacollab.lockSystem.current = current;
                                 console.log('Starting up lock system...');
                                 await localFunctions.setLockSystem(openMegacollab.name, openMegacollab.lockSystem, collabCollection);
-                            } else { /*Allows or denys the entry*/
+                            } else { /* Allows or denys the entry*/
                                 if (openMegacollab.lockSystem.current.participations >= openMegacollab.lockSystem.users && currentDate < (openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60)) {
                                     console.log('Attempt to join the collab while locked!');
                                     return int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60}:R>`);
                                 }
 
-                                if ((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 120)) || (currentDate >= openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60 && openMegacollab.lockSystem.current.time !== 0)) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
+                                if ((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 120)) || (currentDate >= openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60 && openMegacollab.lockSystem.current.time !== 0)) { /* Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
                                     const current = {
                                         participations: 0,
                                         time: 0
-                                    }
+                                    };
                                     openMegacollab.lockSystem.current = current;
                                     await localFunctions.setLockSystem(openMegacollab.name, openMegacollab.lockSystem, collection);
                                     console.log('Resetting lock system...');
@@ -1524,7 +1524,7 @@ module.exports = {
                             pick = pick.split('-')[0].trim();
                             fullPick = await openMegacollab.pool.items.find(i => i.name === pick);
                         }
-                        if (fullPick.status === "picked") {
+                        if (fullPick.status === 'picked') {
                             return int.editReply('This character got picked while you were selecting...');
                         }
                         await localFunctions.setCollabParticipation(openMegacollab.name, collabCollection, fullPick.id);
@@ -1541,7 +1541,7 @@ module.exports = {
                                 tier = localFunctions.premiumToInteger(userTier.name);
                             }
                         }
-                        if (typeof prestige !== "undefined") {
+                        if (typeof prestige !== 'undefined') {
                             prestige = prestige.name;
                             prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
                         }
@@ -1552,18 +1552,18 @@ module.exports = {
                             joinDate: currentDate,
                             av_text: int.options.getString('avatar_text'),
                             ca_text: int.options.getString('banner_text'),
-                            ca_quote: int.options.getString('banner_quote') ? int.options.getString('banner_quote') : "",
+                            ca_quote: int.options.getString('banner_quote') ? int.options.getString('banner_quote') : '',
                             prestige: prestigeLevel,
                             tier: tier,
                             bump_imune: tier ? true : false,
                             referral: referral ? referral : false,
-                            collabName: openMegacollab.name,
+                            collabName: openMegacollab.name
                         };
                         const data = { ...userParticipant, ...fullPick, ...userOsuData };
                         await localFunctions.addCollabParticipant(openMegacollab.name, collabCollection, data);
                         const participants = openMegacollab ? openMegacollab.participants || [] : [];
                         if ((participants.length + 1) === openMegacollab.user_cap) {
-                            await localFunctions.setCollabStatus(openMegacollab.name, "full", collabCollection);
+                            await localFunctions.setCollabStatus(openMegacollab.name, 'full', collabCollection);
                         }
                         const profileData = {
                             collabName: openMegacollab.name,
@@ -1571,10 +1571,10 @@ module.exports = {
                             joinDate: currentDate,
                             av_text: int.options.getString('avatar_text'),
                             ca_text: int.options.getString('banner_text'),
-                            ca_quote: int.options.getString('banner_quote') ? int.options.getString('banner_quote') : "",
+                            ca_quote: int.options.getString('banner_quote') ? int.options.getString('banner_quote') : '',
                             prestige: prestigeLevel,
                             tier: tier
-                        }
+                        };
 
                         userCollabs.push(profileData);
                         await localFunctions.setUserCollabs(userId, userCollabs, collection);
@@ -1586,87 +1586,87 @@ module.exports = {
                             .setURL('https://endlessmirage.net/')
                             .setThumbnail(userOsuDataFull.avatar_url)
                             .setAuthor({ name: `New Participation on the ${openMegacollab.name}!`, iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
-                            .setDescription(`**\`\`\`ml\n🎫 osu! Info\`\`\`**                                                                                    `)
+                            .setDescription('**```ml\n🎫 osu! Info```**                                                                                    ')
                             .addFields(
                                 {
-                                    name: "‎",
+                                    name: '‎',
                                     value: `┌ User: **${userOsuDataFull.username}**\n├ Country: **${userOsuDataFull.country_code}**\n├ Rank: **#${userOsuDataFull.statistics.global_rank}**\n├ Peak: **#${userOsuDataFull.rank_highest.rank}**\n└ Mode: **${userOsuDataFull.playmode}**`,
                                     inline: true
                                 },
                                 {
-                                    name: "‎",
+                                    name: '‎',
                                     value: `┌ PP: **${userOsuDataFull.statistics.pp}pp**\n├ Level: **${userOsuDataFull.statistics.level.current}**\n├ Playcount: **${userOsuDataFull.statistics.play_count}**\n├ Playtime: **${Math.floor(userOsuDataFull.statistics.play_time / 3600)}h **\n└ Followers: **${userOsuDataFull.follower_count}**`,
                                     inline: true
                                 }
-                            )
+                            );
                         try {
                             joinEmbed.addFields(
                                 {
-                                    name: "‎",
-                                    value: `**\`\`\`ml\n🧊 Account Analytics\`\`\`**                                                                                    `
+                                    name: '‎',
+                                    value: '**```ml\n🧊 Account Analytics```**                                                                                    '
                                 },
                                 {
-                                    name: "‎",
-                                    value: `┌ ACC: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[0].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[0].int : "..."}**\n├ REA: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[1].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[1].int : "..."}**\n├ ${userOsuDataFull.skillRanks[2].skill === "Aim" ? "AIM" : "CON"}: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[2].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[2].int : "..."}**\n├ SPD: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[3].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[3].int : "..."}**\n├ STA: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[4].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[4].int : "..."}**\n└ PRE: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[5].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[5].int : "..."}**`,
+                                    name: '‎',
+                                    value: `┌ ACC: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[0].rank : '...'}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[0].int : '...'}**\n├ REA: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[1].rank : '...'}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[1].int : '...'}**\n├ ${userOsuDataFull.skillRanks[2].skill === 'Aim' ? 'AIM' : 'CON'}: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[2].rank : '...'}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[2].int : '...'}**\n├ SPD: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[3].rank : '...'}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[3].int : '...'}**\n├ STA: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[4].rank : '...'}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[4].int : '...'}**\n└ PRE: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[5].rank : '...'}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[5].int : '...'}**`,
                                     inline: true
                                 },
                                 {
-                                    name: "‎",
-                                    value: `┌ Top 1 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[0].mod : "..."}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[0].percentage) : "..."}%**\n├ Top 2 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[1].mod : "..."}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[1].percentage) : "..."}%**\n├ Top 3 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[2].mod : "..."}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[2].percentage) : "..."}%**\n├ Top 4 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[3].mod : "..."}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[3].percentage) : "..."}%**\n└ Combination: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.mostCommonModCombination.combination : "..."}**`,
+                                    name: '‎',
+                                    value: `┌ Top 1 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[0].mod : '...'}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[0].percentage) : '...'}%**\n├ Top 2 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[1].mod : '...'}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[1].percentage) : '...'}%**\n├ Top 3 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[2].mod : '...'}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[2].percentage) : '...'}%**\n├ Top 4 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[3].mod : '...'}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[3].percentage) : '...'}%**\n└ Combination: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.mostCommonModCombination.combination : '...'}**`,
                                     inline: true
                                 }
-                            )
+                            );
                         } catch {
                             joinEmbed.addFields(
                                 {
-                                    name: "‎",
-                                    value: `**\`\`\`ml\n🧊 Account Analytics\`\`\`**                                                                                    `
+                                    name: '‎',
+                                    value: '**```ml\n🧊 Account Analytics```**                                                                                    '
                                 },
                                 {
-                                    name: "‎",
-                                    value: `There was some error trying to get your analytics... Please try updaging them on your collabs profile command.`,
+                                    name: '‎',
+                                    value: 'There was some error trying to get your analytics... Please try updaging them on your collabs profile command.',
                                     inline: true
-                                },
-                            )
+                                }
+                            );
                         }
                         joinEmbed.addFields(
                             {
-                                name: "‎",
-                                value: `**\`\`\`ml\n📀 Participation Data\`\`\`**                                                                                    `
+                                name: '‎',
+                                value: '**```ml\n📀 Participation Data```**                                                                                    '
                             },
                             {
-                                name: "‎",
+                                name: '‎',
                                 value: `┌ Pick ID: **${fullPick.id}**\n├ Name: **${fullPick.name}**\n└ Series: **${fullPick.series}**`,
                                 inline: true
                             },
                             {
-                                name: "‎",
+                                name: '‎',
                                 value: `┌ Category: **${fullPick.category}**\n├ Premium Tier: **${tier}**\n└ Prestige Level: **${prestigeLevel}**`,
                                 inline: true
-                            },
-                        )
+                            }
+                        );
                         if (referral) {
                             joinEmbed.addFields(
                                 {
-                                    name: "‎",
+                                    name: '‎',
                                     value: `Referred by <@${inviter._id}>`
                                 }
-                            )
+                            );
                         }
                         joinEmbed.addFields(
                             {
-                                name: "‎",
-                                value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                                name: '‎',
+                                value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                             }
-                        )
+                        );
                         const imageEmbed = new EmbedBuilder()
                             .setImage(fullPick.imgURL)
                             .setFooter({ text: 'Endless Mirage | Pick Image', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                             .setColor('#f26e6a')
-                            .setURL('https://endlessmirage.net/')
+                            .setURL('https://endlessmirage.net/');
 
                         logChannel.send({ content: `<@${userId}>`, embeds: [joinEmbed, imageEmbed] });
-                        if (typeof openMegacollab.lockSystem !== "undefined") { /*Prevents ratelimit*/
+                        if (typeof openMegacollab.lockSystem !== 'undefined') { /* Prevents ratelimit*/
                             openMegacollab.lockSystem.current.participations = openMegacollab.lockSystem.current.participations + 1;
                             openMegacollab.lockSystem.current.lastParticipant = Math.floor(new Date().getTime() / 1000);
                             if (openMegacollab.lockSystem.current.participations === openMegacollab.lockSystem.users) {
@@ -1697,19 +1697,19 @@ module.exports = {
                 return;
             }
 
-            if (subcommand === "join-random") {
+            if (subcommand === 'join-random') {
                 try {
                     const currentDate = Math.floor(new Date().getTime() / 1000);
-                    const blacklistCheck = await localFunctions.getBlacklist(int.user.id, blacklistCollection)
+                    const blacklistCheck = await localFunctions.getBlacklist(int.user.id, blacklistCollection);
                     if (blacklistCheck) return int.editReply('You\'re blacklisted from all collabs and cannot participate...');
                     const allCollabs = await localFunctions.getCollabs(collabCollection);
                     const userCollabs = await localFunctions.getUserCollabs(int.user.id, collection);
-                    let openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
-                    if (typeof openMegacollab === "undefined") {
-                        await int.editReply('There is no open megacollabs at the moment...')
+                    let openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && c.status === 'open');
+                    if (typeof openMegacollab === 'undefined') {
+                        await int.editReply('There is no open megacollabs at the moment...');
                     } else {
                         try {
-                            if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) !== "undefined") {
+                            if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) !== 'undefined') {
                                 return int.editReply('You\'re already participating on this collab! To edit your pick use the ``/collabs manage`` command.');
                             }
                         } catch { }
@@ -1720,8 +1720,8 @@ module.exports = {
                                 new ButtonBuilder()
                                     .setCustomId('link-osu')
                                     .setLabel('🔗 Link your osu! Account')
-                                    .setStyle('Success'),
-                            )
+                                    .setStyle('Success')
+                            );
                             return int.editReply({
                                 content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
                                 components: [components]
@@ -1743,26 +1743,26 @@ module.exports = {
                             if (int.options.getString('banner_quote').length > openMegacollab.fieldRestrictions.ca_quote) return int.editReply(`The character limit for the quote is of ${openMegacollab.fieldRestrictions.ca_quote} characters!`);
                         }
 
-                        if (typeof openMegacollab.lockSystem !== "undefined") { /*Prevents ratelimit*/
-                            if (typeof openMegacollab.lockSystem.current === "undefined") { /*System startup from first pick*/
+                        if (typeof openMegacollab.lockSystem !== 'undefined') { /* Prevents ratelimit*/
+                            if (typeof openMegacollab.lockSystem.current === 'undefined') { /* System startup from first pick*/
                                 const current = {
                                     participations: 0,
                                     time: 0,
                                     lastParticipant: 0
-                                }
+                                };
                                 openMegacollab.lockSystem.current = current;
                                 console.log('Starting up lock system...');
                                 await localFunctions.setLockSystem(openMegacollab.name, openMegacollab.lockSystem, collabCollection);
-                            } else { /*Allows or denys the entry*/
+                            } else { /* Allows or denys the entry*/
                                 if (openMegacollab.lockSystem.current.participations >= openMegacollab.lockSystem.users && currentDate < (openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60)) {
                                     console.log('Attempt to join the collab while locked!');
                                     return int.editReply(`The collab is currently locked to prevent ratelimit! Please try to join again <t:${openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60}:R>`);
                                 }
-                                if ((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 120)) || (currentDate >= openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60 && openMegacollab.lockSystem.current.time !== 0)) { /*Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
+                                if ((currentDate > (openMegacollab.lockSystem.current.lastParticipant + 120)) || (currentDate >= openMegacollab.lockSystem.current.time + openMegacollab.lockSystem.timeout * 60 && openMegacollab.lockSystem.current.time !== 0)) { /* Reset the system if over 2m have passed and no one has joined, or if the timeout has passed*/
                                     const current = {
                                         participations: 0,
                                         time: 0
-                                    }
+                                    };
                                     openMegacollab.lockSystem.current = current;
                                     await localFunctions.setLockSystem(openMegacollab.name, openMegacollab.lockSystem, collabCollection);
                                     console.log('Resetting lock system...');
@@ -1778,7 +1778,7 @@ module.exports = {
                             openMegacollab = await localFunctions.getCollab(openMegacollab.name, collabCollection);
                             idCheck = Math.ceil(Math.random() * openMegacollab.pool.size);
                             fullPick = openMegacollab.pool.items[idCheck];
-                            if (fullPick.status !== "picked") {
+                            if (fullPick.status !== 'picked') {
                                 pick = fullPick.id;
                             }
                         }
@@ -1796,7 +1796,7 @@ module.exports = {
                                 tier = localFunctions.premiumToInteger(userTier.name);
                             }
                         }
-                        if (typeof prestige !== "undefined") {
+                        if (typeof prestige !== 'undefined') {
                             prestige = prestige.name;
                             prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
                         }
@@ -1807,18 +1807,18 @@ module.exports = {
                             joinDate: currentDate,
                             av_text: int.options.getString('avatar_text'),
                             ca_text: int.options.getString('banner_text'),
-                            ca_quote: int.options.getString('banner_quote') ? int.options.getString('banner_quote') : "",
+                            ca_quote: int.options.getString('banner_quote') ? int.options.getString('banner_quote') : '',
                             prestige: prestigeLevel,
                             tier: tier,
                             bump_imune: tier ? true : false,
                             referral: referral ? referral : false,
-                            collabName: openMegacollab.name,
+                            collabName: openMegacollab.name
                         };
                         const data = { ...userParticipant, ...fullPick, ...userOsuData };
                         await localFunctions.addCollabParticipant(openMegacollab.name, collabCollection, data);
                         const participants = openMegacollab ? openMegacollab.participants || [] : [];
                         if ((participants.length + 1) === openMegacollab.user_cap) {
-                            await localFunctions.setCollabStatus(openMegacollab.name, "full", collabCollection);
+                            await localFunctions.setCollabStatus(openMegacollab.name, 'full', collabCollection);
                         }
                         const profileData = {
                             collabName: openMegacollab.name,
@@ -1826,10 +1826,10 @@ module.exports = {
                             joinDate: currentDate,
                             av_text: int.options.getString('avatar_text'),
                             ca_text: int.options.getString('banner_text'),
-                            ca_quote: int.options.getString('banner_quote') ? int.options.getString('banner_quote') : "",
+                            ca_quote: int.options.getString('banner_quote') ? int.options.getString('banner_quote') : '',
                             prestige: prestigeLevel,
                             tier: tier
-                        }
+                        };
 
                         userCollabs.push(profileData);
                         await localFunctions.setUserCollabs(userId, userCollabs, collection);
@@ -1841,87 +1841,87 @@ module.exports = {
                             .setURL('https://endlessmirage.net/')
                             .setThumbnail(userOsuDataFull.avatar_url)
                             .setAuthor({ name: `New Participation on the ${openMegacollab.name}!`, iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
-                            .setDescription(`**\`\`\`ml\n🎫 osu! Info\`\`\`**                                                                                    `)
+                            .setDescription('**```ml\n🎫 osu! Info```**                                                                                    ')
                             .addFields(
                                 {
-                                    name: "‎",
+                                    name: '‎',
                                     value: `┌ User: **${userOsuDataFull.username}**\n├ Country: **${userOsuDataFull.country_code}**\n├ Rank: **#${userOsuDataFull.statistics.global_rank}**\n├ Peak: **#${userOsuDataFull.rank_highest.rank}**\n└ Mode: **${userOsuDataFull.playmode}**`,
                                     inline: true
                                 },
                                 {
-                                    name: "‎",
+                                    name: '‎',
                                     value: `┌ PP: **${userOsuDataFull.statistics.pp}pp**\n├ Level: **${userOsuDataFull.statistics.level.current}**\n├ Playcount: **${userOsuDataFull.statistics.play_count}**\n├ Playtime: **${Math.floor(userOsuDataFull.statistics.play_time / 3600)}h **\n└ Followers: **${userOsuDataFull.follower_count}**`,
                                     inline: true
                                 }
-                            )
+                            );
                         try {
                             joinEmbed.addFields(
                                 {
-                                    name: "‎",
-                                    value: `**\`\`\`ml\n🧊 Account Analytics\`\`\`**                                                                                    `
+                                    name: '‎',
+                                    value: '**```ml\n🧊 Account Analytics```**                                                                                    '
                                 },
                                 {
-                                    name: "‎",
-                                    value: `┌ ACC: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[0].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[0].int : "..."}**\n├ REA: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[1].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[1].int : "..."}**\n├ ${userOsuDataFull.skillRanks[2].skill === "Aim" ? "AIM" : "CON"}: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[2].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[2].int : "..."}**\n├ SPD: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[3].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[3].int : "..."}**\n├ STA: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[4].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[4].int : "..."}**\n└ PRE: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[5].rank : "..."}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[5].int : "..."}**`,
+                                    name: '‎',
+                                    value: `┌ ACC: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[0].rank : '...'}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[0].int : '...'}**\n├ REA: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[1].rank : '...'}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[1].int : '...'}**\n├ ${userOsuDataFull.skillRanks[2].skill === 'Aim' ? 'AIM' : 'CON'}: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[2].rank : '...'}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[2].int : '...'}**\n├ SPD: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[3].rank : '...'}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[3].int : '...'}**\n├ STA: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[4].rank : '...'}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[4].int : '...'}**\n└ PRE: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[5].rank : '...'}** | Score: **${userOsuDataFull.skillRanks ? userOsuDataFull.skillRanks[5].int : '...'}**`,
                                     inline: true
                                 },
                                 {
-                                    name: "‎",
-                                    value: `┌ Top 1 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[0].mod : "..."}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[0].percentage) : "..."}%**\n├ Top 2 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[1].mod : "..."}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[1].percentage) : "..."}%**\n├ Top 3 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[2].mod : "..."}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[2].percentage) : "..."}%**\n├ Top 4 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[3].mod : "..."}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[3].percentage) : "..."}%**\n└ Combination: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.mostCommonModCombination.combination : "..."}**`,
+                                    name: '‎',
+                                    value: `┌ Top 1 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[0].mod : '...'}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[0].percentage) : '...'}%**\n├ Top 2 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[1].mod : '...'}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[1].percentage) : '...'}%**\n├ Top 3 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[2].mod : '...'}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[2].percentage) : '...'}%**\n├ Top 4 Mod: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.top4Mods[3].mod : '...'}** | **${userOsuDataFull.modsData ? Math.round(userOsuDataFull.modsData.top4Mods[3].percentage) : '...'}%**\n└ Combination: **${userOsuDataFull.modsData ? userOsuDataFull.modsData.mostCommonModCombination.combination : '...'}**`,
                                     inline: true
                                 }
-                            )
+                            );
                         } catch {
                             joinEmbed.addFields(
                                 {
-                                    name: "‎",
-                                    value: `**\`\`\`ml\n🧊 Account Analytics\`\`\`**                                                                                    `
+                                    name: '‎',
+                                    value: '**```ml\n🧊 Account Analytics```**                                                                                    '
                                 },
                                 {
-                                    name: "‎",
-                                    value: `There was some error trying to get your analytics... Please try updaging them on your collabs profile command.`,
+                                    name: '‎',
+                                    value: 'There was some error trying to get your analytics... Please try updaging them on your collabs profile command.',
                                     inline: true
-                                },
-                            )
+                                }
+                            );
                         }
                         joinEmbed.addFields(
                             {
-                                name: "‎",
-                                value: `**\`\`\`ml\n📀 Participation Data\`\`\`**                                                                                    `
+                                name: '‎',
+                                value: '**```ml\n📀 Participation Data```**                                                                                    '
                             },
                             {
-                                name: "‎",
+                                name: '‎',
                                 value: `┌ Pick ID: **${fullPick.id}**\n├ Name: **${fullPick.name}**\n└ Series: **${fullPick.series}**`,
                                 inline: true
                             },
                             {
-                                name: "‎",
+                                name: '‎',
                                 value: `┌ Category: **${fullPick.category}**\n├ Premium Tier: **${tier}**\n└ Prestige Level: **${prestigeLevel}**`,
                                 inline: true
-                            },
-                        )
+                            }
+                        );
                         if (referral) {
                             joinEmbed.addFields(
                                 {
-                                    name: "‎",
+                                    name: '‎',
                                     value: `Referred by <@${inviter._id}>`
                                 }
-                            )
+                            );
                         }
                         joinEmbed.addFields(
                             {
-                                name: "‎",
-                                value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                                name: '‎',
+                                value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                             }
-                        )
+                        );
                         const imageEmbed = new EmbedBuilder()
                             .setImage(fullPick.imgURL)
                             .setFooter({ text: 'Endless Mirage | Pick Image', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                             .setColor('#f26e6a')
-                            .setURL('https://endlessmirage.net/')
+                            .setURL('https://endlessmirage.net/');
 
                         logChannel.send({ content: `<@${userId}>`, embeds: [joinEmbed, imageEmbed] });
-                        if (typeof openMegacollab.lockSystem !== "undefined") { /*Prevents ratelimit*/
+                        if (typeof openMegacollab.lockSystem !== 'undefined') { /* Prevents ratelimit*/
                             openMegacollab.lockSystem.current.participations = openMegacollab.lockSystem.current.participations + 1;
                             openMegacollab.lockSystem.current.lastParticipant = Math.floor(new Date().getTime() / 1000);
                             if (openMegacollab.lockSystem.current.participations === openMegacollab.lockSystem.users) {
@@ -1953,7 +1953,7 @@ module.exports = {
                 return;
             }
 
-            if (subcommand === "swap") {
+            if (subcommand === 'swap') {
                 try {
                     const userCollabs = await localFunctions.getUserCollabs(int.user.id, collection);
                     const existingTradeRequest = await localFunctions.getTradeRequest(int.user.id, collectionSpecial);
@@ -1961,37 +1961,37 @@ module.exports = {
                         return await int.editReply({ content: `You cannot swap your pick when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
                     }
                     const allCollabs = await localFunctions.getCollabs(collabCollection);
-                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
-                    if (typeof openMegacollab === "undefined") {
-                        await int.editReply('There is no open megacollabs at the moment...')
+                    const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && c.status === 'open');
+                    if (typeof openMegacollab === 'undefined') {
+                        await int.editReply('There is no open megacollabs at the moment...');
                     } else {
                         try {
-                            if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === "undefined") {
+                            if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === 'undefined') {
                                 return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
                             }
                         } catch {
                             return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
                         }
                         const collab = openMegacollab;
-                        if (collab.type === "pooled") {
+                        if (collab.type === 'pooled') {
                             switch (collab.status) {
-                                case 'full':
-                                    return int.editReply('This collab is full! There is no character to swap with. Try trading!');
-                                case 'closed':
-                                case 'delivered':
-                                case 'early delivery':
-                                case 'completed':
-                                case 'archived':
-                                    return int.editReply('You cannot swap your character at this collab state.');
+                            case 'full':
+                                return int.editReply('This collab is full! There is no character to swap with. Try trading!');
+                            case 'closed':
+                            case 'delivered':
+                            case 'early delivery':
+                            case 'completed':
+                            case 'archived':
+                                return int.editReply('You cannot swap your character at this collab state.');
                             }
 
                             let pool = collab.pool.items;
                             const pickId = int.options.getString('pick');
                             const newPickFull = pool.find(i => i.id === pickId);
-                            if (typeof newPickFull === "undefined") {
+                            if (typeof newPickFull === 'undefined') {
                                 return int.editReply('Invalid character ID!');
                             }
-                            if (newPickFull.status === "picked") {
+                            if (newPickFull.status === 'picked') {
                                 return int.editReply('This character has already been picked!');
                             }
                             const pick = newPickFull.id;
@@ -2003,11 +2003,11 @@ module.exports = {
                             await localFunctions.editCollabParticipantPickOnCollab(collab.name, userId, newPickFull, collabCollection);
                             await localFunctions.editCollabParticipantPickOnUser(userId, collab.name, newPickFull, collection);
 
-                            let contentString = "";
+                            let contentString = '';
                             const snipes = await localFunctions.getCollabSnipes(collab.name, collabCollection, currentPick.id);
-                            if (typeof snipes !== "undefined") {
-                                if (typeof snipes.find(p => p.pick === currentPick.id) !== "undefined") {
-                                    contentString = "Snipers! ";
+                            if (typeof snipes !== 'undefined') {
+                                if (typeof snipes.find(p => p.pick === currentPick.id) !== 'undefined') {
+                                    contentString = 'Snipers! ';
                                 }
                                 for (const snipe of snipes) {
                                     contentString = contentString.concat('', `<@${snipe.userId}>`);
@@ -2022,34 +2022,34 @@ module.exports = {
                                 .setDescription(`**\`\`\`ml\n🎫 New Character Swap!\`\`\`**                                                                                    **${collab.name}**`)
                                 .addFields(
                                     {
-                                        name: "‎",
-                                        value: "**\`\`\`ml\n- Picked\`\`\`**",
+                                        name: '‎',
+                                        value: '**\`\`\`ml\n- Picked\`\`\`**',
                                         inline: true
                                     },
                                     {
-                                        name: "‎",
+                                        name: '‎',
                                         value: `┌ Pick ID: **${newPickFull.id}**\n└ Name: **${newPickFull.name}**`,
                                         inline: true
                                     },
                                     {
-                                        name: "‎",
-                                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                                        name: '‎',
+                                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                                     },
                                     {
-                                        name: "‎",
-                                        value: "**\`\`\`js\n+ Available\`\`\`**",
+                                        name: '‎',
+                                        value: '**\`\`\`js\n+ Available\`\`\`**',
                                         inline: true
                                     },
                                     {
-                                        name: "‎",
+                                        name: '‎',
                                         value: `┌ Pick ID: **${currentPick.id}**\n└ Name: **${currentPick.name}**`,
                                         inline: true
                                     },
                                     {
-                                        name: "‎",
-                                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
-                                    },
-                                )
+                                        name: '‎',
+                                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
+                                    }
+                                );
                             logChannel.send({ content: `${contentString}\n<@${userId}>`, embeds: [swapEmbed] });
                             await int.editReply(`You've swaped your pick! New pick: ${newPickFull.name}`);
                             while (true) {
@@ -2081,7 +2081,7 @@ module.exports = {
                 return;
             }
 
-            if (subcommand === "trade") {
+            if (subcommand === 'trade') {
                 try {
                     const userCollabs = await localFunctions.getUserCollabs(int.user.id, collection);
                     const existingTradeRequest = await localFunctions.getTradeRequest(int.user.id, collectionSpecial);
@@ -2089,34 +2089,34 @@ module.exports = {
                         return await int.editReply({ content: `You cannot request a trade when you have an active trade request. ${existingTradeRequest.messageUrl}`, ephemeral: true });
                     }
                     const allCollabs = await localFunctions.getCollabs(collabCollection);
-                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && c.status === "open");
-                    if (typeof openMegacollab === "undefined") {
-                        await int.editReply('There is no open megacollabs at the moment...')
+                    const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && c.status === 'open');
+                    if (typeof openMegacollab === 'undefined') {
+                        await int.editReply('There is no open megacollabs at the moment...');
                     } else {
                         try {
-                            if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === "undefined") {
+                            if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === 'undefined') {
                                 return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
                             }
                         } catch {
                             return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
                         }
                         const collab = openMegacollab;
-                        if (collab.type === "pooled") {
+                        if (collab.type === 'pooled') {
                             switch (collab.status) {
-                                case 'closed':
-                                case 'delivered':
-                                case 'early delivery':
-                                case 'completed':
-                                case 'archived':
-                                    return int.editReply('You cannot trade your character at this collab state.');
+                            case 'closed':
+                            case 'delivered':
+                            case 'early delivery':
+                            case 'completed':
+                            case 'archived':
+                                return int.editReply('You cannot trade your character at this collab state.');
                             }
                             let pool = collab.pool.items;
                             const pickId = int.options.getString('pick');
                             const newPickFull = pool.find(i => i.id === pickId);
-                            if (typeof newPickFull === "undefined") {
+                            if (typeof newPickFull === 'undefined') {
                                 return int.editReply('Invalid character ID!');
                             }
-                            if (newPickFull.status === "available") {
+                            if (newPickFull.status === 'available') {
                                 return int.editReply('This character is available! You can swap your pick without trading.');
                             }
                             const pickRequested = newPickFull.id;
@@ -2137,34 +2137,34 @@ module.exports = {
                                 .setDescription(`**\`\`\`ml\n🎫 Trade request\`\`\`**                                                                                                        **${collab.name}**`)
                                 .addFields(
                                     {
-                                        name: "‎",
-                                        value: "**\`\`\`ml\n- You give\`\`\`**",
+                                        name: '‎',
+                                        value: '**\`\`\`ml\n- You give\`\`\`**',
                                         inline: true
                                     },
                                     {
-                                        name: "‎",
+                                        name: '‎',
                                         value: `┌ Pick ID: **${fullRequestedParticipation.id}**\n└ Name: **${fullRequestedParticipation.name}**`,
                                         inline: true
                                     },
                                     {
-                                        name: "‎",
-                                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                                        name: '‎',
+                                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                                     },
                                     {
-                                        name: "‎",
-                                        value: "**\`\`\`js\n+ You receive\`\`\`**",
+                                        name: '‎',
+                                        value: '**\`\`\`js\n+ You receive\`\`\`**',
                                         inline: true
                                     },
                                     {
-                                        name: "‎",
+                                        name: '‎',
                                         value: `┌ Pick ID: **${fullTraderParticipation.id}**\n└ Name: **${fullTraderParticipation.name}**`,
                                         inline: true
                                     },
                                     {
-                                        name: "‎",
-                                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                                        name: '‎',
+                                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                                     }
-                                )
+                                );
 
                             const components = new ActionRowBuilder().addComponents(
                                 new ButtonBuilder()
@@ -2174,7 +2174,7 @@ module.exports = {
                                 new ButtonBuilder()
                                     .setCustomId('reject-trade')
                                     .setLabel('Reject')
-                                    .setStyle('Danger'),
+                                    .setStyle('Danger')
                             );
 
                             const message = await logChannel.send({ content: `<@${fullRequestedParticipation.discordId}>`, embeds: [swapEmbed], components: [components] });
@@ -2198,16 +2198,16 @@ module.exports = {
                 return;
             }
 
-            if (subcommand === "bump") {
+            if (subcommand === 'bump') {
                 const allCollabs = await localFunctions.getCollabs(collabCollection);
                 const userCollabs = await localFunctions.getUserCollabs(userId, collection);
-                const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
+                const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && (c.status === 'open' || c.status === 'early access' || c.status === 'on design'));
 
-                if (typeof openMegacollab === "undefined") {
-                    await int.editReply('There is no open megacollabs at the moment...')
+                if (typeof openMegacollab === 'undefined') {
+                    await int.editReply('There is no open megacollabs at the moment...');
                 } else {
                     try {
-                        if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === "undefined") {
+                        if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === 'undefined') {
                             return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
                         }
                     } catch {
@@ -2217,80 +2217,80 @@ module.exports = {
                     const participation = collab.participants.find(u => u.discordId === userId);
                     if (participation.bump_imune) return int.editReply('You\'re immune to bumps! How awesome.');
                     const bumps = collab.bumps;
-                    if (typeof bumps === "undefined") return int.editReply('The bumps for the current megacollab have not started yet!');
+                    if (typeof bumps === 'undefined') return int.editReply('The bumps for the current megacollab have not started yet!');
                     const currentBumpIndex = bumps.length - 1;
                     const currentDate = Math.floor(Date.now() / 1000);
-                    if (typeof bumps[currentBumpIndex].users.find(u => u.discordId === userId) !== "undefined") return int.editReply('You have already bumped!');
+                    if (typeof bumps[currentBumpIndex].users.find(u => u.discordId === userId) !== 'undefined') return int.editReply('You have already bumped!');
                     let userBumps = {};
                     for (const bump of bumps) {
-                        if (typeof bump.users.find(u => u.discordId === userId) !== "undefined") {
+                        if (typeof bump.users.find(u => u.discordId === userId) !== 'undefined') {
                             userBumps.push(bump);
                         }
                     }
                     if (currentDate - bumps[currentBumpIndex].startingDate > bumps[currentBumpIndex].days * 24 * 60 * 60) return int.editReply(`The time window to bump has passed! Please try again on the next one. You have completed ${userBumps.length} of ${currentBumpIndex + 1} bumps.`);
                     const bumpEntry = {
                         discordId: userId,
-                        date: currentDate,
-                    }
+                        date: currentDate
+                    };
                     if (participation.referral) {
                         const referralCode = participation.referral;
                         const inviterUser = await localFunctions.getUserByReferral(referralCode, collection);
                         let currentBalance = inviterUser.balance;
                         currentBalance = currentBalance + 2000;
                         await localFunctions.setBalance(inviterUser._id, currentBalance, collection);
-                        logChannel.send({ content: `<@${inviterUser._id}> The user ${int.user.tag} has bumped their pick and you've received **2000** tokens!`})
+                        logChannel.send({ content: `<@${inviterUser._id}> The user ${int.user.tag} has bumped their pick and you've received **2000** tokens!` });
                     }
                     await localFunctions.addCollabBumpUser(collab.name, collabCollection, bumps[currentBumpIndex], bumpEntry);
                     await int.editReply('You have bumped your participation succesfully');
                 }
             }
 
-            if (subcommand === "pick-check") {
+            if (subcommand === 'pick-check') {
                 try {
                     const allCollabs = await localFunctions.getCollabs(collabCollection);
-                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
-                    if (typeof openMegacollab === "undefined") {
-                        await int.editReply('There is no open megacollabs at the moment...')
+                    const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && (c.status === 'open' || c.status === 'early access' || c.status === 'on design'));
+                    if (typeof openMegacollab === 'undefined') {
+                        await int.editReply('There is no open megacollabs at the moment...');
                     } else {
                         const pickId = int.options.getString('pick');
                         const pool = openMegacollab.pool.items;
                         const pick = pool.find(i => i.id === pickId);
-                        if (typeof pick === "undefined") return int.editReply('Something went wrong...');
-                        if (pick.status === "picked") {
+                        if (typeof pick === 'undefined') return int.editReply('Something went wrong...');
+                        if (pick.status === 'picked') {
                             const pickOwner = openMegacollab.participants.find(u => parseInt(u.id) === parseInt(pickId));
                             const pickEmbed = new EmbedBuilder()
-                                .setFooter({ text: "Endless Mirage | Megacollab Picks", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                                .setFooter({ text: 'Endless Mirage | Megacollab Picks', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                                 .setColor('#f26e6a')
                                 .setURL('https://endlessmirage.net/')
                                 .setDescription(`**\`\`\`\n🏐 ${openMegacollab.name}\`\`\`**\n**Picked by: <@${pickOwner.discordId}>**\n**Joined <t:${pickOwner.joinDate}:R>**`)
                                 .addFields(
                                     {
-                                        name: "‎",
+                                        name: '‎',
                                         value: `┌ Pick: ${pick.name}\n└ ID: ${pick.id}`,
                                         inline: true
                                     },
                                     {
-                                        name: "‎",
+                                        name: '‎',
                                         value: `┌ Series: ${pick.series}\n└ Category: ${pick.category}`,
                                         inline: true
                                     },
                                     {
-                                        name: "‎",
-                                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>",
+                                        name: '‎',
+                                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>'
                                     },
                                     {
-                                        name: "‎",
-                                        value: `┌ Avatar Text: **${pickOwner.av_text}**\n├ Card Text: **${pickOwner.ca_text}**\n└ Card Quote: **${pickOwner.ca_quote ? pickOwner.ca_quote : "None"}**`,
+                                        name: '‎',
+                                        value: `┌ Avatar Text: **${pickOwner.av_text}**\n├ Card Text: **${pickOwner.ca_text}**\n└ Card Quote: **${pickOwner.ca_quote ? pickOwner.ca_quote : 'None'}**`
                                     },
                                     {
-                                        name: "‎",
-                                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>",
-                                    },
-                                )
+                                        name: '‎',
+                                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>'
+                                    }
+                                );
 
                             const embed2 = new EmbedBuilder()
                                 .setImage(pick.imgURL)
-                                .setURL('https://endlessmirage.net/')
+                                .setURL('https://endlessmirage.net/');
 
                             const components = new ActionRowBuilder();
 
@@ -2306,8 +2306,8 @@ module.exports = {
                                 new ButtonBuilder()
                                     .setCustomId('report-user')
                                     .setLabel('📢 Report')
-                                    .setStyle('Danger'),
-                            )
+                                    .setStyle('Danger')
+                            );
 
                             if (guildMember.roles.cache.has('630636502187114496')) {
                                 const adminComponents = new ActionRowBuilder();
@@ -2316,15 +2316,15 @@ module.exports = {
                                     new ButtonBuilder()
                                         .setCustomId('remove-user-collab-admin')
                                         .setLabel('⛔️ Remove')
-                                        .setStyle('Danger'),
-                                )
+                                        .setStyle('Danger')
+                                );
 
                                 adminComponents.addComponents(
                                     new ButtonBuilder()
                                         .setCustomId('blacklist-user-collab-admin')
                                         .setLabel('⛔️ Blacklist')
-                                        .setStyle('Danger'),
-                                )
+                                        .setStyle('Danger')
+                                );
 
                                 adminComponents.addComponents(
                                     new ButtonBuilder()
@@ -2334,8 +2334,8 @@ module.exports = {
                                     new ButtonBuilder()
                                         .setCustomId('edit-pick-collab-admin')
                                         .setLabel('➰ Edit Pick')
-                                        .setStyle('Primary'),
-                                )
+                                        .setStyle('Primary')
+                                );
                                 await int.editReply({
                                     content: '',
                                     embeds: [pickEmbed, embed2],
@@ -2352,33 +2352,33 @@ module.exports = {
                                 collab: openMegacollab,
                                 pick: pick,
                                 participation: pickOwner
-                            })
+                            });
                         } else {
                             const pickEmbed = new EmbedBuilder()
-                                .setFooter({ text: "Endless Mirage | Megacollab Picks", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                                .setFooter({ text: 'Endless Mirage | Megacollab Picks', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                                 .setColor('#f26e6a')
                                 .setURL('https://endlessmirage.net/')
                                 .setDescription(`**\`\`\`\n🏐 ${openMegacollab.name}\`\`\`**\n**This character hasn't been picked yet!**`)
                                 .addFields(
                                     {
-                                        name: "‎",
+                                        name: '‎',
                                         value: `┌ Pick: ${pick.name}\n└ ID: ${pick.id}`,
                                         inline: true
                                     },
                                     {
-                                        name: "‎",
+                                        name: '‎',
                                         value: `┌ Series: ${pick.series}\n└ Category: ${pick.category}`,
                                         inline: true
                                     },
                                     {
-                                        name: "‎",
-                                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>",
-                                    },
-                                )
+                                        name: '‎',
+                                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>'
+                                    }
+                                );
 
                             const embed2 = new EmbedBuilder()
                                 .setImage(pick.imgURL)
-                                .setURL('https://endlessmirage.net/')
+                                .setURL('https://endlessmirage.net/');
 
                             const components = new ActionRowBuilder();
 
@@ -2386,8 +2386,8 @@ module.exports = {
                                 new ButtonBuilder()
                                     .setCustomId('claim-pick')
                                     .setLabel('🔑 Claim')
-                                    .setStyle('Success'),
-                            )
+                                    .setStyle('Success')
+                            );
 
                             if (guildMember.roles.cache.has('630636502187114496')) {
                                 const adminComponents = new ActionRowBuilder();
@@ -2395,8 +2395,8 @@ module.exports = {
                                     new ButtonBuilder()
                                         .setCustomId('edit-pick-collab-admin')
                                         .setLabel('➰ Edit Pick')
-                                        .setStyle('Primary'),
-                                )
+                                        .setStyle('Primary')
+                                );
 
                                 await int.editReply({
                                     content: '',
@@ -2406,8 +2406,8 @@ module.exports = {
 
                                 userCheckCache.set(int.user.id, {
                                     collab: openMegacollab,
-                                    pick: pick,
-                                })
+                                    pick: pick
+                                });
 
                             } else {
                                 await int.editReply({
@@ -2430,51 +2430,51 @@ module.exports = {
                 return;
             }
 
-            if (subcommand === "user-check") {
+            if (subcommand === 'user-check') {
                 try {
                     const allCollabs = await localFunctions.getCollabs(collabCollection);
-                    const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
-                    if (typeof openMegacollab === "undefined") {
-                        await int.editReply('There is no open megacollabs at the moment...')
+                    const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && (c.status === 'open' || c.status === 'early access' || c.status === 'on design'));
+                    if (typeof openMegacollab === 'undefined') {
+                        await int.editReply('There is no open megacollabs at the moment...');
                     } else {
                         const pick = int.options.getString('user');
                         const participants = openMegacollab.participants;
                         const user = participants.find(i => i.discordId === pick);
                         const updatedPick = openMegacollab.pool.items.find(i => i.id === user.id);
-                        if (typeof user === "undefined") return int.editReply('Something went wrong...');
+                        if (typeof user === 'undefined') return int.editReply('Something went wrong...');
                         const pickEmbed = new EmbedBuilder()
-                            .setFooter({ text: "Endless Mirage | Megacollab Picks", iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                            .setFooter({ text: 'Endless Mirage | Megacollab Picks', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                             .setColor('#f26e6a')
                             .setURL('https://endlessmirage.net/')
                             .setDescription(`**\`\`\`\n🏐 ${openMegacollab.name}\`\`\`**\n**Picked by: <@${user.discordId}>**\n**Joined <t:${user.joinDate}:R>**`)
                             .addFields(
                                 {
-                                    name: "‎",
+                                    name: '‎',
                                     value: `┌ Pick: ${user.name}\n└ ID: ${user.id}`,
                                     inline: true
                                 },
                                 {
-                                    name: "‎",
+                                    name: '‎',
                                     value: `┌ Series: ${user.series}\n└ Category: ${user.category}`,
                                     inline: true
                                 },
                                 {
-                                    name: "‎",
-                                    value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>",
+                                    name: '‎',
+                                    value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>'
                                 },
                                 {
-                                    name: "‎",
-                                    value: `┌ Avatar Text: **${user.av_text}**\n├ Card Text: **${user.ca_text}**\n└ Card Quote: **${user.ca_quote ? user.ca_quote : "None"}**`,
+                                    name: '‎',
+                                    value: `┌ Avatar Text: **${user.av_text}**\n├ Card Text: **${user.ca_text}**\n└ Card Quote: **${user.ca_quote ? user.ca_quote : 'None'}**`
                                 },
                                 {
-                                    name: "‎",
-                                    value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>",
-                                },
-                            )
+                                    name: '‎',
+                                    value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>'
+                                }
+                            );
 
                         const embed2 = new EmbedBuilder()
                             .setImage(updatedPick.imgURL)
-                            .setURL('https://endlessmirage.net/')
+                            .setURL('https://endlessmirage.net/');
 
                         const components = new ActionRowBuilder();
 
@@ -2490,8 +2490,8 @@ module.exports = {
                             new ButtonBuilder()
                                 .setCustomId('report-user')
                                 .setLabel('📢 Report')
-                                .setStyle('Danger'),
-                        )
+                                .setStyle('Danger')
+                        );
 
                         if (guildMember.roles.cache.has('630636502187114496')) {
                             const adminComponents = new ActionRowBuilder();
@@ -2500,29 +2500,29 @@ module.exports = {
                                 new ButtonBuilder()
                                     .setCustomId('remove-user-collab-admin')
                                     .setLabel('⛔️ Remove')
-                                    .setStyle('Danger'),
-                            )
+                                    .setStyle('Danger')
+                            );
 
                             adminComponents.addComponents(
                                 new ButtonBuilder()
                                     .setCustomId('blacklist-user-collab-admin')
                                     .setLabel('⛔️ Blacklist')
-                                    .setStyle('Danger'),
-                            )
+                                    .setStyle('Danger')
+                            );
 
                             adminComponents.addComponents(
                                 new ButtonBuilder()
                                     .setCustomId('edit-fields-user-collab-admin')
                                     .setLabel('🔄 Edit Fields')
-                                    .setStyle('Primary'),
-                            )
+                                    .setStyle('Primary')
+                            );
 
                             adminComponents.addComponents(
                                 new ButtonBuilder()
                                     .setCustomId('edit-pick-collab-admin')
                                     .setLabel('➰ Edit Pick')
-                                    .setStyle('Primary'),
-                            )
+                                    .setStyle('Primary')
+                            );
                             await int.editReply({
                                 content: '',
                                 embeds: [pickEmbed, embed2],
@@ -2549,7 +2549,7 @@ module.exports = {
                 return;
             }
 
-            if (subcommand === "snipe") {
+            if (subcommand === 'snipe') {
                 const pick = int.options.getString('pick');
                 const userCollabs = await localFunctions.getUserCollabs(int.user.id, collection);
                 const existingTradeRequest = await localFunctions.getTradeRequest(int.user.id, collectionSpecial);
@@ -2559,13 +2559,13 @@ module.exports = {
                 }
 
                 const allCollabs = await localFunctions.getCollabs(collabCollection);
-                const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
+                const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && (c.status === 'open' || c.status === 'early access' || c.status === 'on design'));
 
-                if (typeof openMegacollab === "undefined") {
-                    await int.editReply('There is no open megacollabs at the moment...')
+                if (typeof openMegacollab === 'undefined') {
+                    await int.editReply('There is no open megacollabs at the moment...');
                 } else {
                     try {
-                        if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === "undefined") {
+                        if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === 'undefined') {
                             return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
                         }
                     } catch {
@@ -2573,13 +2573,13 @@ module.exports = {
                     }
 
                     const newPickFull = openMegacollab.pool.items.find(i => i.id === pick);
-                    if (newPickFull.status === "available") {
+                    if (newPickFull.status === 'available') {
                         return int.editReply('This character is available! You can swap your pick.');
                     }
 
-                    if (typeof openMegacollab.snipes !== "undefined") {
-                        if (typeof openMegacollab.snipes.find(s => s.userId === userId && s.pick === pick) !== "undefined") {
-                            return int.editReply('You already have a snipe for this character.')
+                    if (typeof openMegacollab.snipes !== 'undefined') {
+                        if (typeof openMegacollab.snipes.find(s => s.userId === userId && s.pick === pick) !== 'undefined') {
+                            return int.editReply('You already have a snipe for this character.');
                         }
                     }
 
@@ -2606,4 +2606,4 @@ module.exports = {
     claimCache: claimCache,
     userCheckCache: userCheckCache,
     adminCache: adminCache
-}
+};

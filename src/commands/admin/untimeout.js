@@ -4,13 +4,13 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('untimeout')
         .setDescription('Untimeout a user (Mod Only).')
-        .addUserOption(option => 
+        .addUserOption(option =>
             option
                 .setName('user')
                 .setDescription('User to untimeout.')
                 .setRequired(true)
         )
-        .addStringOption(option => 
+        .addStringOption(option =>
             option
                 .setName('reason')
                 .setDescription('Reason of untimeout.')
@@ -44,18 +44,18 @@ module.exports = {
         const embed = new EmbedBuilder()
             .setImage('https://puu.sh/JPffc/3c792e61c9.png')
             .setColor('#f26e6a')
-            .setDescription(`:white_check_mark: ${timeUser.tag}'s timeout has been removed. | Reason: ${reason}`)
+            .setDescription(`:white_check_mark: ${timeUser.tag}'s timeout has been removed. | Reason: ${reason}`);
 
         const dmEmbed = new EmbedBuilder()
             .setImage('https://puu.sh/JPffc/3c792e61c9.png')
             .setColor('#f26e6a')
-            .setDescription(`:white_check_mark: You have been untimed out in ${int.guild.name}. | Reason: ${reason}`)  
-            
+            .setDescription(`:white_check_mark: You have been untimed out in ${int.guild.name}. | Reason: ${reason}`);
+
         await timeMember.send({ embeds: [dmEmbed] }).catch(err => {
             console.log(err);
             return;
         });
-        
+
         await int.editReply({ embeds: [embed] });
-    }    
-}
+    }
+};

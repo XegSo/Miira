@@ -7,8 +7,8 @@ module.exports = {
     },
     async execute(int, client) {
         const modal = new ModalBuilder()
-            .setCustomId("change-osu-mode")
-            .setTitle(`Change your gamemode.`);
+            .setCustomId('change-osu-mode')
+            .setTitle('Change your gamemode.');
 
         const mode = new TextInputBuilder()
             .setCustomId('mode')
@@ -21,5 +21,5 @@ module.exports = {
 
         await int.showModal(modal);
 
-    },
+    }
 };

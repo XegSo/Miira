@@ -8,27 +8,27 @@ module.exports = {
     async execute(int, client) {
         const userId = int.user.id;
         await int.deferReply({ ephemeral: true });
-        const collection = client.db.collection("OzenCollection");
-        const collabCollection = client.db.collection("Collabs");
+        const collection = client.db.collection('OzenCollection');
+        const collabCollection = client.db.collection('Collabs');
         const currentDate = Math.floor(new Date().getTime() / 1000);
 
         try {
             let userOsu = await localFunctions.getOsuData(userId, collection);
             const userTop100 = await v2.scores.user.category(userOsu.osu_id, 'best', { mode: userOsu.playmode, limit: '100' });
-            if (typeof userTop100 !== "undefined") {
+            if (typeof userTop100 !== 'undefined') {
                 await int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
-            } else if (typeof userTop100 === "undefined" || !userTop100) {
+            } else if (typeof userTop100 === 'undefined' || !userTop100) {
                 return int.editReply('There was an error fetching your top 100 scores...');
             }
             const skills = await localFunctions.calculateSkill(userTop100, userOsu.playmode);
             let modsData = await localFunctions.analyzeMods(userTop100);
             const filler = {
-                mod: "--",
-                percentage: "--"
-            }
+                mod: '--',
+                percentage: '--'
+            };
             let i = 0;
             while (i < 4) {
-                if (typeof modsData.top4Mods[i] === "undefined") {
+                if (typeof modsData.top4Mods[i] === 'undefined') {
                     modsData.top4Mods.push(filler);
                 }
                 i++;
@@ -59,20 +59,20 @@ module.exports = {
                 { skill: 'Aim', value: 0 },
                 { skill: 'Speed', value: 0 },
                 { skill: 'Stamina', value: 0 },
-                { skill: 'Precision', value: 0 },
+                { skill: 'Precision', value: 0 }
             ];
-            const skillDefaultData = finalSkillsPrototipe.map((skill) => {  
+            const skillDefaultData = finalSkillsPrototipe.map((skill) => {
                 return {
                     skill: skill.skill,
                     rank: 'F',
-                    int: Math.round(skill.value),
+                    int: Math.round(skill.value)
                 };
             });
             let i = 0;
             const filler = {
-                mod: "--",
-                percentage: "--"
-            }
+                mod: '--',
+                percentage: '--'
+            };
             let top4Mods = [];
             let mostCommonModCombination;
             while (i < 4) {
@@ -81,9 +81,9 @@ module.exports = {
             }
             let modsData = [
                 top4Mods,
-                mostCommonModCombination,
-            ]
-            modsData.mostCommonModCombination = "--";
+                mostCommonModCombination
+            ];
+            modsData.mostCommonModCombination = '--';
             userOsu.skillRanks = skillDefaultData;
             userOsu.modsData = modsData;
             await localFunctions.verifyUserManual(int.user.id, userOsu, collection);

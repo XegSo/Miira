@@ -9,16 +9,16 @@ const fs = require('node:fs');
 const { ButtonBuilder, EmbedBuilder, AttachmentBuilder, ActionRowBuilder } = require('discord.js');
 
 registerFont('./assets/fonts/Montserrat-Medium.ttf', {
-    family: "Montserrat",
+    family: 'Montserrat',
     weight: 'normal'
 });
 registerFont('./assets/fonts/Montserrat-Italic.ttf', {
-    family: "Montserrat",
-    style: "italic"
+    family: 'Montserrat',
+    style: 'italic'
 });
 registerFont('./assets/fonts/Montserrat-MediumItalic.ttf', {
-    family: "Montserrat",
-    style: "medium italic"
+    family: 'Montserrat',
+    style: 'medium italic'
 });
 const XLSX = require('xlsx');
 
@@ -104,20 +104,20 @@ module.exports = {
                     await collection.updateOne({ _id: document._id }, { $set: { status: 'open' } });
                     const dashboardEmbed = new EmbedBuilder()
                         .setColor(document.color)
-                        .setURL('https://endlessmirage.net/')
-                    if (typeof document.spreadsheetID !== "undefined") {
-                        URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${document.spreadsheetID})`
+                        .setURL('https://endlessmirage.net/');
+                    if (typeof document.spreadsheetID !== 'undefined') {
+                        URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${document.spreadsheetID})`;
                     }
                     let extraString = '';
 
                     if (document.user_cap !== 0) {
-                        extraString = `User Limit: ${document.user_cap}\n`
+                        extraString = `User Limit: ${document.user_cap}\n`;
                     } else {
-                        extraString = "Unlimited\n"
+                        extraString = 'Unlimited\n';
                     }
                     dashboardEmbed.addFields(
                         {
-                            name: "‎",
+                            name: '‎',
                             value: `┌ Type: ${capitalizeFirstLetter(document.type)}\n├ Topic: ${capitalizeFirstLetter(document.topic)}\n└ Status: Open!\n`,
                             inline: true
                         }
@@ -125,14 +125,14 @@ module.exports = {
 
                     dashboardEmbed.addFields(
                         {
-                            name: "‎",
+                            name: '‎',
                             value: `┌ Class: ${capitalizeFirstLetter(document.restriction)}\n├ Closing date: <t:${parseInt(document.closure)}:R>\n└ ${extraString}`,
                             inline: true
                         }
                     );
 
                     dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${document.name} is open!\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.\nTo join, issue the command \`\`/collabs join\`\`!`);
-                    dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' })
+                    dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' });
                     embeds.push(dashboardEmbed);
                     if (document.designs.length !== 0) {
                         for (const design in document.designs) {
@@ -144,7 +144,7 @@ module.exports = {
                         }
                     }
                     const attachment = new AttachmentBuilder(document.thumbnail, {
-                        name: "thumbnail.png"
+                        name: 'thumbnail.png'
                     });
 
                     await logChannel.send({
@@ -155,13 +155,13 @@ module.exports = {
                                 name: 'footer.png'
                             }
                         ],
-                        embeds: embeds,
-                    })
+                        embeds: embeds
+                    });
                     console.log(`${document.name} was opened for the public.`);
                 }, remainingTimePublic * 1000); // Convert seconds to milliseconds
             }
 
-            if (document.restriction === "megacollab") {
+            if (document.restriction === 'megacollab') {
                 const remainingTimeEarly = document.early_access - currentTimestamp;
                 if (remainingTimeEarly > 0) {
                     console.log(`Handling ${document.name} early access in ${remainingTimeEarly / 60 / 60} hours`);
@@ -173,20 +173,20 @@ module.exports = {
                         await collection.updateOne({ _id: document._id }, { $set: { status: 'early access' } });
                         const dashboardEmbed = new EmbedBuilder()
                             .setColor(document.color)
-                            .setURL('https://endlessmirage.net/')
-                        if (typeof document.spreadsheetID !== "undefined") {
-                            URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${document.spreadsheetID})`
+                            .setURL('https://endlessmirage.net/');
+                        if (typeof document.spreadsheetID !== 'undefined') {
+                            URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${document.spreadsheetID})`;
                         }
                         let extraString = '';
 
                         if (document.user_cap !== 0) {
-                            extraString = `User Limit: ${document.user_cap}\n`
+                            extraString = `User Limit: ${document.user_cap}\n`;
                         } else {
-                            extraString = "Unlimited\n"
+                            extraString = 'Unlimited\n';
                         }
                         dashboardEmbed.addFields(
                             {
-                                name: "‎",
+                                name: '‎',
                                 value: `┌ Type: ${capitalizeFirstLetter(document.type)}\n├ Topic: ${capitalizeFirstLetter(document.topic)}\n└ Status: Early Access\n`,
                                 inline: true
                             }
@@ -194,14 +194,14 @@ module.exports = {
 
                         dashboardEmbed.addFields(
                             {
-                                name: "‎",
+                                name: '‎',
                                 value: `┌ Class: ${capitalizeFirstLetter(document.restriction)}\n├ Closing date: <t:${parseInt(document.closure)}:R>\n└ ${extraString}`,
                                 inline: true
                             }
                         );
 
                         dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${document.name} is now in early access phase!\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.\nTo join, issue the command \`\`/collabs join\`\`!`);
-                        dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' })
+                        dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' });
                         embeds.push(dashboardEmbed);
                         if (document.designs.length !== 0) {
                             for (const design in document.designs) {
@@ -213,7 +213,7 @@ module.exports = {
                             }
                         }
                         const attachment = new AttachmentBuilder(document.thumbnail, {
-                            name: "thumbnail.png"
+                            name: 'thumbnail.png'
                         });
 
                         await logChannel.send({
@@ -224,8 +224,8 @@ module.exports = {
                                     name: 'footer.png'
                                 }
                             ],
-                            embeds: embeds,
-                        })
+                            embeds: embeds
+                        });
                         console.log(`${document.name} was opened in early access.`);
                     }, remainingTimeEarly * 1000); // Convert seconds to milliseconds
                 }
@@ -233,7 +233,7 @@ module.exports = {
         });
     },
 
-    handleCollabClosures: async function (collection /*,client*/) {
+    handleCollabClosures: async function (collection /* ,client*/) {
         // Find documents with status "on design"
         const documents = await collection.find({ status: { $in: ['open', 'full'] } }).toArray();
 
@@ -262,11 +262,11 @@ module.exports = {
         let row = parseInt(coordinate.match(/[0-9]+/)[0]);
 
         // Find the next column letter(s)
-        let nextColumn = "";
+        let nextColumn = '';
         if (column.length === 1) {
             // If the column is a single letter
             if (column === 'Z') {
-                nextColumn = "AA";
+                nextColumn = 'AA';
             } else {
                 nextColumn = String.fromCharCode(column.charCodeAt(0) + 1);
             }
@@ -279,7 +279,7 @@ module.exports = {
                 if (secondLastLetter === 'Z') {
                     // If the column is ZZ
                     let firstLetterCode = column.charCodeAt(0);
-                    nextColumn = String.fromCharCode(firstLetterCode + 1) + "A";
+                    nextColumn = String.fromCharCode(firstLetterCode + 1) + 'A';
                 } else {
                     // If the column is something like AZ, BZ, etc.
                     nextColumn = firstLetter + 'AA';
@@ -290,13 +290,13 @@ module.exports = {
         }
 
         // Construct the column range
-        let columnRange = column + ":" + nextColumn;
+        let columnRange = column + ':' + nextColumn;
 
         return columnRange;
     },
 
     setSheetFromZero: async function (collab, pool) {
-        const doc = await connectToSpreadsheet(collab.spreadsheetID); //Spreadsheet update
+        const doc = await connectToSpreadsheet(collab.spreadsheetID); // Spreadsheet update
         let initialization = false;
         let currentIndex = 0;
         let sheet;
@@ -306,10 +306,10 @@ module.exports = {
             if (item.coordinate !== lastColumn && lastColumn !== 0) {
                 initialization = false;
                 await sheet.saveUpdatedCells();
-                console.log("Changes for a series have been pushed");
+                console.log('Changes for a series have been pushed');
             }
             let originCoord = excelSheetCoordinateToRowCol(item.coordinate);
-            let mainRow = originCoord.row + (3 * parseInt(item.localId))
+            let mainRow = originCoord.row + (3 * parseInt(item.localId));
             let mainCol = originCoord.col;
             if (!initialization) {
                 sheet = doc.sheetsByIndex[parseInt(item.sheetIndex)];
@@ -317,20 +317,20 @@ module.exports = {
                 lastSheetIndex = currentIndex;
                 initialization = true;
                 await sheet.loadCells(`${getColumnRange(item.coordinate)}`);
-                console.log(`Sheet ${currentIndex} loaded.`)
+                console.log(`Sheet ${currentIndex} loaded.`);
             }
             let mainCell = sheet.getCell(mainRow, mainCol);
             mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
-            mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10, link: { uri: item.imgURL } };
+            mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: 'Avenir', fontSize: 10, link: { uri: item.imgURL } };
             mainCell.value = item.name;
             let idCell = sheet.getCell(mainRow, mainCol + 1);
             idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
-            idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10 };
+            idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: 'Avenir', fontSize: 10 };
             idCell.value = item.id;
             let availabilityCell = sheet.getCell(mainRow + 1, mainCol);
-            availabilityCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8, green: 0.8, blue: 0.8 } }, fontFamily: "Avenir", fontSize: 7 };
-            availabilityCell.value = "Available";
-            console.log(`Change registered for pick ${item.id}`)
+            availabilityCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8, green: 0.8, blue: 0.8 } }, fontFamily: 'Avenir', fontSize: 7 };
+            availabilityCell.value = 'Available';
+            console.log(`Change registered for pick ${item.id}`);
             lastColumn = item.coordinate;
         }
         await sheet.saveUpdatedCells();
@@ -343,14 +343,14 @@ module.exports = {
             const sheet = doc.sheetsByIndex[parseInt(pick.sheetIndex)];
             await sheet.loadCells(`${getColumnRange(pick.coordinate)}`);
             const originCoord = excelSheetCoordinateToRowCol(pick.coordinate);
-            const mainRow = originCoord.row + (3 * parseInt(pick.localId))
+            const mainRow = originCoord.row + (3 * parseInt(pick.localId));
             const mainCol = originCoord.col;
             const mainCell = sheet.getCell(mainRow, mainCol);
             mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } } } };
-            mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } }, fontFamily: "Avenir", strikethrough: true, link: { uri: pick.imgURL } };
+            mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } }, fontFamily: 'Avenir', strikethrough: true, link: { uri: pick.imgURL } };
             const idCell = sheet.getCell(mainRow, mainCol + 1);
             idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } } } };
-            idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } }, fontFamily: "Avenir", strikethrough: true };
+            idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8549019607843137, green: 0.2823529411764706, blue: 0.2823529411764706 } }, fontFamily: 'Avenir', strikethrough: true };
             const infoCell = sheet.getCell(mainRow + 1, mainCol);
             infoCell.value = `Picked by ${osuname} on ${new Date().toLocaleString('en-GB', { timeZone: 'UTC', hour12: false })}`;
             await sheet.saveUpdatedCells();
@@ -366,19 +366,19 @@ module.exports = {
             const sheet = doc.sheetsByIndex[parseInt(pick.sheetIndex)];
             await sheet.loadCells(`${getColumnRange(pick.coordinate)}`);
             let originCoord = excelSheetCoordinateToRowCol(pick.coordinate);
-            let mainRow = originCoord.row + (3 * parseInt(pick.localId))
+            let mainRow = originCoord.row + (3 * parseInt(pick.localId));
             let mainCol = originCoord.col;
             let mainCell = sheet.getCell(mainRow, mainCol);
             mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
-            mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10, link: { uri: pick.imgURL } };
+            mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: 'Avenir', fontSize: 10, link: { uri: pick.imgURL } };
             mainCell.value = pick.name;
             let idCell = sheet.getCell(mainRow, mainCol + 1);
             idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
-            idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: "Avenir", fontSize: 10 };
+            idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: 'Avenir', fontSize: 10 };
             idCell.value = pick.id;
             let availabilityCell = sheet.getCell(mainRow + 1, mainCol);
-            availabilityCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8, green: 0.8, blue: 0.8 } }, fontFamily: "Avenir", fontSize: 7 };
-            availabilityCell.value = "Available";
+            availabilityCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8, green: 0.8, blue: 0.8 } }, fontFamily: 'Avenir', fontSize: 7 };
+            availabilityCell.value = 'Available';
             await sheet.saveUpdatedCells();
             sheet.resetLocalCache();
         } catch (e) {
@@ -409,7 +409,7 @@ module.exports = {
         const match = coordinate.match(regex);
 
         if (!match) {
-            throw new Error("Invalid Excel sheet coordinate format");
+            throw new Error('Invalid Excel sheet coordinate format');
         }
 
         const [, columnLetters, row] = match;
@@ -440,7 +440,7 @@ module.exports = {
         return ar1.map((el, index) => el + ar2[index] || el);
     },
 
-    analyzeMods: async function (scores) { //Function made by TunnelBlick
+    analyzeMods: async function (scores) { // Function made by TunnelBlick
         const modCount = {};
         const modCombinationCount = {};
 
@@ -451,7 +451,7 @@ module.exports = {
             currentMods = currentMods.filter(e => e.acronym !== 'CL');
 
             await currentMods.forEach(async (mod) => {
-                if (mod.acronym !== "CL") {
+                if (mod.acronym !== 'CL') {
                     modCount[mod.acronym] = (modCount[mod.acronym] || 0) + 1;
                 }
             });
@@ -491,7 +491,7 @@ module.exports = {
             let mods = score.mods;
             let circles = beatmap.count_circles;
             let scaledPP = Math.pow(score.pp, 2) / Math.pow(900, 2) + 1;
-            let mapAttributes = await v2.beatmap.id.attributes(beatmap.id, { mods: mods, ruleset: mode })
+            let mapAttributes = await v2.beatmap.id.attributes(beatmap.id, { mods: mods, ruleset: mode });
             let srMultiplier = mapAttributes.attributes.star_rating;
             let weight = score.weight.percentage / 100;
             let acc = 0;
@@ -510,184 +510,184 @@ module.exports = {
             let mapLength = beatmap.total_length;
             let bpm = beatmap.bpm;
             switch (mode) {
-                case "osu":
-                    if (bonusObjects < 0) {
-                        adjustedAcc = 1.7 * Math.pow(circles, score.accuracy) / 350
-                    } else {
-                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
-                    }
-                    if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
-                        od = Math.max(10, od + od * 0.4);
-                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
-                        od = od - od * 0.5;
-                    }
-                    odMS = -6 * od + 79.5
-                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
-                        odMS /= 1.5;
-                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
-                        odMS /= 0.75;
-                    }
-                    odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
-                    acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
+            case 'osu':
+                if (bonusObjects < 0) {
+                    adjustedAcc = 1.7 * Math.pow(circles, score.accuracy) / 350;
+                } else {
+                    adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
+                }
+                if (typeof mods.find(e => e.acronym === 'HR') !== 'undefined') {
+                    od = Math.max(10, od + od * 0.4);
+                } else if (typeof mods.find(e => e.acronym === 'EZ') !== 'undefined') {
+                    od = od - od * 0.5;
+                }
+                odMS = -6 * od + 79.5;
+                if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== 'undefined') {
+                    odMS /= 1.5;
+                } else if (typeof mods.find(e => e.acronym === 'HT') !== 'undefined') {
+                    odMS /= 0.75;
+                }
+                odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
+                acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
 
-                    if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
-                        cs = cs + cs * 0.3;
-                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
-                        cs = cs - cs * 0.5;
-                    }
-                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
-                        ar = ar + ar * 0.148;
-                    } else if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
-                        ar = ar + ar * 0.4;
-                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
-                        ar = ar - ar * 0.5;
-                    }
-                    cs = Math.min(7, cs);
-                    ar = Math.min(11, ar);
-                    rea = 2 * Math.log(cs + 1) / Math.log(12.3 - ar) * scaledPP * srMultiplier * weight;
-                    pre = 1 / 2 * Math.exp(0.12 * cs * score.accuracy + 1) * scaledPP * srMultiplier * weight;
+                if (typeof mods.find(e => e.acronym === 'HR') !== 'undefined') {
+                    cs = cs + cs * 0.3;
+                } else if (typeof mods.find(e => e.acronym === 'EZ') !== 'undefined') {
+                    cs = cs - cs * 0.5;
+                }
+                if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== 'undefined') {
+                    ar = ar + ar * 0.148;
+                } else if (typeof mods.find(e => e.acronym === 'HR') !== 'undefined') {
+                    ar = ar + ar * 0.4;
+                } else if (typeof mods.find(e => e.acronym === 'EZ') !== 'undefined') {
+                    ar = ar - ar * 0.5;
+                }
+                cs = Math.min(7, cs);
+                ar = Math.min(11, ar);
+                rea = 2 * Math.log(cs + 1) / Math.log(12.3 - ar) * scaledPP * srMultiplier * weight;
+                pre = 1 / 2 * Math.exp(0.12 * cs * score.accuracy + 1) * scaledPP * srMultiplier * weight;
 
 
-                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
-                        mapLength = mapLength - mapLength * 0.5;
-                        bpm = bpm + bpm * 0.5;
-                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
-                        mapLength = mapLength + Number(mapLength) / 3;
-                        bpm = bpm - bpm * 0.25;
-                    }
-                    sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
+                if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== 'undefined') {
+                    mapLength = mapLength - mapLength * 0.5;
+                    bpm = bpm + bpm * 0.5;
+                } else if (typeof mods.find(e => e.acronym === 'HT') !== 'undefined') {
+                    mapLength = mapLength + Number(mapLength) / 3;
+                    bpm = bpm - bpm * 0.25;
+                }
+                sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
 
-                    aim = mapAttributes.attributes.aim_difficulty * scaledPP * srMultiplier * weight;
-                    spe = mapAttributes.attributes.speed_difficulty * scaledPP * srMultiplier * weight;
-                    break;
-                case "mania":
-                    if (bonusObjects < 0) {
-                        adjustedAcc = 1.7 * Math.pow(circles, score.accuracy) / 350
-                    } else {
-                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
-                    }
-                    if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
-                        od = Math.max(10, od + od * 0.4);
-                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
-                        od = od - od * 0.5;
-                    }
-                    odMS = -6 * od + 79.5
-                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
-                        odMS /= 1.5;
-                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
-                        odMS /= 0.75;
-                    }
-                    odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
-                    acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
+                aim = mapAttributes.attributes.aim_difficulty * scaledPP * srMultiplier * weight;
+                spe = mapAttributes.attributes.speed_difficulty * scaledPP * srMultiplier * weight;
+                break;
+            case 'mania':
+                if (bonusObjects < 0) {
+                    adjustedAcc = 1.7 * Math.pow(circles, score.accuracy) / 350;
+                } else {
+                    adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
+                }
+                if (typeof mods.find(e => e.acronym === 'HR') !== 'undefined') {
+                    od = Math.max(10, od + od * 0.4);
+                } else if (typeof mods.find(e => e.acronym === 'EZ') !== 'undefined') {
+                    od = od - od * 0.5;
+                }
+                odMS = -6 * od + 79.5;
+                if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== 'undefined') {
+                    odMS /= 1.5;
+                } else if (typeof mods.find(e => e.acronym === 'HT') !== 'undefined') {
+                    odMS /= 0.75;
+                }
+                odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
+                acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
 
-                    pre = 2 * scaledPP * srMultiplier * odValue * weight;
+                pre = 2 * scaledPP * srMultiplier * odValue * weight;
 
-                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
-                        mapLength = mapLength - mapLength * 0.5;
-                        bpm = bpm + bpm * 0.5;
-                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
-                        mapLength = mapLength + Number(mapLength) / 3;
-                        bpm = bpm - bpm * 0.25;
-                    }
-                    sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
-                    spe = 5 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
-                    rea = 4 / 5 * Math.exp(0.008 * bpm - 0.5) * scaledPP * srMultiplier * weight;
-                    aim = (sta + acc) / 4 + (spe + rea) / 4;
-                    break;
-                case "fruits":
-                    if (bonusObjects < 0) {
-                        adjustedAcc = 1.7 * Math.pow(circles, score.accuracy) / 350
-                    } else {
-                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
-                        adjustedAcc /= 2.5;
-                    }
-                    if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
-                        od = Math.max(10, od + od * 0.4);
-                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
-                        od = od - od * 0.5;
-                    }
-                    odMS = -6 * od + 79.5
-                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
-                        odMS /= 1.5;
-                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
-                        odMS /= 0.75;
-                    }
-                    odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
-                    acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
+                if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== 'undefined') {
+                    mapLength = mapLength - mapLength * 0.5;
+                    bpm = bpm + bpm * 0.5;
+                } else if (typeof mods.find(e => e.acronym === 'HT') !== 'undefined') {
+                    mapLength = mapLength + Number(mapLength) / 3;
+                    bpm = bpm - bpm * 0.25;
+                }
+                sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
+                spe = 5 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
+                rea = 4 / 5 * Math.exp(0.008 * bpm - 0.5) * scaledPP * srMultiplier * weight;
+                aim = (sta + acc) / 4 + (spe + rea) / 4;
+                break;
+            case 'fruits':
+                if (bonusObjects < 0) {
+                    adjustedAcc = 1.7 * Math.pow(circles, score.accuracy) / 350;
+                } else {
+                    adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
+                    adjustedAcc /= 2.5;
+                }
+                if (typeof mods.find(e => e.acronym === 'HR') !== 'undefined') {
+                    od = Math.max(10, od + od * 0.4);
+                } else if (typeof mods.find(e => e.acronym === 'EZ') !== 'undefined') {
+                    od = od - od * 0.5;
+                }
+                odMS = -6 * od + 79.5;
+                if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== 'undefined') {
+                    odMS /= 1.5;
+                } else if (typeof mods.find(e => e.acronym === 'HT') !== 'undefined') {
+                    odMS /= 0.75;
+                }
+                odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
+                acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
 
-                    if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
-                        cs = cs + cs * 0.3;
-                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
-                        cs = cs - cs * 0.5;
-                    }
-                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
-                        ar = ar + ar * 0.148;
-                    } else if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
-                        ar = ar + ar * 0.4;
-                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
-                        ar = ar - ar * 0.5;
-                    }
-                    rea = Math.log(cs + 1) / Math.log(12.5 - ar) * scaledPP * srMultiplier * weight;
-                    pre = 1 / 2 * Math.exp(0.13 * cs * score.accuracy + 1) * scaledPP * srMultiplier * weight;
+                if (typeof mods.find(e => e.acronym === 'HR') !== 'undefined') {
+                    cs = cs + cs * 0.3;
+                } else if (typeof mods.find(e => e.acronym === 'EZ') !== 'undefined') {
+                    cs = cs - cs * 0.5;
+                }
+                if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== 'undefined') {
+                    ar = ar + ar * 0.148;
+                } else if (typeof mods.find(e => e.acronym === 'HR') !== 'undefined') {
+                    ar = ar + ar * 0.4;
+                } else if (typeof mods.find(e => e.acronym === 'EZ') !== 'undefined') {
+                    ar = ar - ar * 0.5;
+                }
+                rea = Math.log(cs + 1) / Math.log(12.5 - ar) * scaledPP * srMultiplier * weight;
+                pre = 1 / 2 * Math.exp(0.13 * cs * score.accuracy + 1) * scaledPP * srMultiplier * weight;
 
-                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
-                        mapLength = mapLength - mapLength * 0.5;
-                        bpm = bpm + bpm * 0.5;
-                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
-                        mapLength = mapLength + Number(mapLength) / 3;
-                        bpm = bpm - bpm * 0.25;
-                    }
-                    sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
-                    spe = 5 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
-                    aim = (sta + acc) / 4 + (spe + rea) / 4;
-                    break;
-                case "taiko":
-                    if (bonusObjects < 0) {
-                        adjustedAcc = 1.7 * Math.pow(circles, score.accuracy) / 350
-                    } else {
-                        adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
-                        adjustedAcc /= 2.5;
-                    }
-                    if (typeof mods.find(e => e.acronym === 'HR') !== "undefined") {
-                        od = Math.max(10, od + od * 0.4);
-                    } else if (typeof mods.find(e => e.acronym === 'EZ') !== "undefined") {
-                        od = od - od * 0.5;
-                    }
-                    odMS = -6 * od + 79.5
-                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
-                        odMS /= 1.5;
-                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
-                        odMS /= 0.75;
-                    }
-                    odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
-                    acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
+                if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== 'undefined') {
+                    mapLength = mapLength - mapLength * 0.5;
+                    bpm = bpm + bpm * 0.5;
+                } else if (typeof mods.find(e => e.acronym === 'HT') !== 'undefined') {
+                    mapLength = mapLength + Number(mapLength) / 3;
+                    bpm = bpm - bpm * 0.25;
+                }
+                sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
+                spe = 5 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
+                aim = (sta + acc) / 4 + (spe + rea) / 4;
+                break;
+            case 'taiko':
+                if (bonusObjects < 0) {
+                    adjustedAcc = 1.7 * Math.pow(circles, score.accuracy) / 350;
+                } else {
+                    adjustedAcc = Math.pow(400, score.accuracy) / 350 + Math.min(2, bonusObjects / 1000);
+                    adjustedAcc /= 2.5;
+                }
+                if (typeof mods.find(e => e.acronym === 'HR') !== 'undefined') {
+                    od = Math.max(10, od + od * 0.4);
+                } else if (typeof mods.find(e => e.acronym === 'EZ') !== 'undefined') {
+                    od = od - od * 0.5;
+                }
+                odMS = -6 * od + 79.5;
+                if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== 'undefined') {
+                    odMS /= 1.5;
+                } else if (typeof mods.find(e => e.acronym === 'HT') !== 'undefined') {
+                    odMS /= 0.75;
+                }
+                odValue = Math.exp(-Math.pow(odMS / 60, 2)) + 1.5;
+                acc = 1.5 * adjustedAcc * odValue * scaledPP * srMultiplier * weight;
 
-                    pre = scaledPP * srMultiplier * odValue * weight;
+                pre = scaledPP * srMultiplier * odValue * weight;
 
-                    if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== "undefined") {
-                        mapLength = mapLength - mapLength * 0.5;
-                        bpm = bpm + bpm * 0.5;
-                    } else if (typeof mods.find(e => e.acronym === 'HT') !== "undefined") {
-                        mapLength = mapLength + Number(mapLength) / 3;
-                        bpm = bpm - bpm * 0.25;
-                    }
-                    sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
-                    spe = 5 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
-                    rea = 4 / 5 * Math.exp(0.008 * bpm - 0.5) * scaledPP * srMultiplier * weight;
-                    aim = (sta + acc) / 4 + (spe + rea) / 4;
-                    break;
+                if (typeof mods.find(e => e.acronym === 'DT' || e.acronym === 'NC') !== 'undefined') {
+                    mapLength = mapLength - mapLength * 0.5;
+                    bpm = bpm + bpm * 0.5;
+                } else if (typeof mods.find(e => e.acronym === 'HT') !== 'undefined') {
+                    mapLength = mapLength + Number(mapLength) / 3;
+                    bpm = bpm - bpm * 0.25;
+                }
+                sta = ((mapLength / 300) * Math.exp(0.01 * bpm) + 1) * score.accuracy * scaledPP * srMultiplier * weight;
+                spe = 5 / 6 * Math.exp(0.011 * bpm - 0.5) * scaledPP * srMultiplier * (score.accuracy / 3) * weight;
+                rea = 4 / 5 * Math.exp(0.008 * bpm - 0.5) * scaledPP * srMultiplier * weight;
+                aim = (sta + acc) / 4 + (spe + rea) / 4;
+                break;
             }
-            skillsSum = arraySum(skillsSum, [acc, rea, aim, spe, sta, pre])
+            skillsSum = arraySum(skillsSum, [acc, rea, aim, spe, sta, pre]);
         }
         let finalSkillsPrototipe = [];
-        if (mode === "osu") {
+        if (mode === 'osu') {
             finalSkillsPrototipe = [
                 { skill: 'Accuracy', value: skillsSum[0] },
                 { skill: 'Reaction', value: skillsSum[1] },
                 { skill: 'Aim', value: skillsSum[2] },
                 { skill: 'Speed', value: skillsSum[3] },
                 { skill: 'Stamina', value: skillsSum[4] },
-                { skill: 'Precision', value: skillsSum[5] },
+                { skill: 'Precision', value: skillsSum[5] }
             ];
         } else {
             finalSkillsPrototipe = [
@@ -696,22 +696,22 @@ module.exports = {
                 { skill: 'Consistency', value: skillsSum[2] },
                 { skill: 'Speed', value: skillsSum[3] },
                 { skill: 'Stamina', value: skillsSum[4] },
-                { skill: 'Precision', value: skillsSum[5] },
+                { skill: 'Precision', value: skillsSum[5] }
             ];
         }
         const result = finalSkillsPrototipe.map((skill) => {
             const rankObj = localConstants.skillRanksByScore.find((rank) => skill.value >= rank.value);
             let rank;
-            if (typeof rankObj.rank !== "undefined") {
+            if (typeof rankObj.rank !== 'undefined') {
                 rank = rankObj.rank;
             } else {
-                rank = "F";
+                rank = 'F';
             }
 
             return {
                 skill: skill.skill,
                 rank: rank,
-                int: Math.round(skill.value),
+                int: Math.round(skill.value)
             };
         });
         return result;
@@ -774,7 +774,7 @@ module.exports = {
         let foundTier = [];
         let tierDetails;
         console.log('Executing insertion of perks');
-        for (const numeral of localConstants.romanNumerals) { //find the fucker and assign it to the database
+        for (const numeral of localConstants.romanNumerals) { // find the fucker and assign it to the database
             const roleToFind = `Mirage ${numeral}`;
             foundRole = guildMember.roles.cache.find(role => role.name === roleToFind);
             if (foundRole) {
@@ -785,10 +785,10 @@ module.exports = {
                     id: foundRole.id
                 };
                 await setUserTier(userId, foundTier, collection);
-                if (tierNumber > 3) { //for non renewable fuck, assign the non renewable fuckers
+                if (tierNumber > 3) { // for non renewable fuck, assign the non renewable fuckers
                     for (const tier of localConstants.premiumTiers) {
                         for (const perk of tier.perks) {
-                            if ((tierNumber === 7 || tierNumber === 10) && (perk.name !== 'Host your own Megacollab' || perk.name !== 'Custom Endless Mirage Hoodie')) { //Peak tiers have all the perks permanent to them
+                            if ((tierNumber === 7 || tierNumber === 10) && (perk.name !== 'Host your own Megacollab' || perk.name !== 'Custom Endless Mirage Hoodie')) { // Peak tiers have all the perks permanent to them
                                 newPerks.push(perk);
                             } else if (!perk.singleUse) {
                                 newPerks.push(perk);
@@ -814,7 +814,7 @@ module.exports = {
     createLeaderboardEmbedTokens: function (data) {
         let MirageFormat = Intl.NumberFormat('en-US', {
             minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
+            maximumFractionDigits: 2
         });
         const embed = new EmbedBuilder()
             .setColor('#f26e6a')
@@ -824,7 +824,7 @@ module.exports = {
             .setTimestamp();
         for (let i = 0; i < data.length; i++) {
             const user = data[i];
-            embed.addFields({ name: "\n", value: `**${i + 1}**. <@${user.userId}> : $${MirageFormat.format(user.credits)} ₥` });
+            embed.addFields({ name: '\n', value: `**${i + 1}**. <@${user.userId}> : $${MirageFormat.format(user.credits)} ₥` });
         }
         return embed;
     },
@@ -838,29 +838,29 @@ module.exports = {
             .setTimestamp();
         for (let i = 0; i < data.length; i++) {
             const user = data[i];
-            embed.addFields({ name: "\n", value: `**${i + 1}**. <@${user.userId}> : ${user.topCombo}` });
+            embed.addFields({ name: '\n', value: `**${i + 1}**. <@${user.userId}> : ${user.topCombo}` });
         }
         return embed;
     },
 
     getRoleIDByPrestige: function (prestige) {
         switch (prestige) {
-            case '1': return '963258467928408134';
-            case '2': return '963258497376583780';
-            case '3': return '963258518767534080';
-            case '4': return '963258542930931732';
-            case '5': return '963258567425658910';
-            case '6': return '963258579165524008';
-            case '7': return '1071824409012219994';
-            case '8': return '1146532857293045790';
-            case '9': return '1200147391765024859';
-            default: return null; // Handle unknown prestige level
+        case '1': return '963258467928408134';
+        case '2': return '963258497376583780';
+        case '3': return '963258518767534080';
+        case '4': return '963258542930931732';
+        case '5': return '963258567425658910';
+        case '6': return '963258579165524008';
+        case '7': return '1071824409012219994';
+        case '8': return '1146532857293045790';
+        case '9': return '1200147391765024859';
+        default: return null; // Handle unknown prestige level
         }
     },
 
     handleReferralCommand: async function (int, client) {
         const userId = int.user.id;
-        const collection = client.db.collection("OzenCollection");
+        const collection = client.db.collection('OzenCollection');
 
         try {
             let referralCode = await getReferralCode(userId, collection);
@@ -953,7 +953,7 @@ module.exports = {
         await collection.updateOne(
             { name: collab },
             {
-                $push: { [`perks.users`]: protoEntry }
+                $push: { ['perks.users']: protoEntry }
             },
             { upsert: true }
         );
@@ -968,12 +968,12 @@ module.exports = {
 
     getUserPerksAllCollabs: async function (collection, userId) {
         const pipeline = [
-            { $unwind: "$perks.users" },
-            { $match: { [`perks.users.userId`]: userId } },
+            { $unwind: '$perks.users' },
+            { $match: { ['perks.users.userId']: userId } },
             {
                 $group: {
                     _id: null,
-                    users: { $push: "$perks.users" }
+                    users: { $push: '$perks.users' }
                 }
             },
             { $project: { _id: 0, users: 1 } }
@@ -1072,7 +1072,7 @@ module.exports = {
 
     getCollabPerksOfUser: async function (name, collection, userId) {
         const collab = await collection.findOne({ name: name });
-        if (typeof collab.perks !== "undefined") {
+        if (typeof collab.perks !== 'undefined') {
             return collab.perks.users.filter(p => p.userId === userId);
         } else {
             return undefined;
@@ -1086,7 +1086,7 @@ module.exports = {
 
     getCollabParticipant: async function (name, userId, collection) {
         const collab = await collection.findOne({ name: name });
-        if (typeof collab.participants !== "undefined") {
+        if (typeof collab.participants !== 'undefined') {
             return collab.participants.find(p => p.discordId === userId);
         } else {
             return undefined;
@@ -1094,7 +1094,7 @@ module.exports = {
     },
 
     setCollabParticipation: async function (collab, collection, id) {
-        await collection.updateOne({ name: collab, 'pool.items.id': id }, { $set: { 'pool.items.$.status': "picked" } }, { upsert: true });
+        await collection.updateOne({ name: collab, 'pool.items.id': id }, { $set: { 'pool.items.$.status': 'picked' } }, { upsert: true });
     },
 
     setSubStatus: async function (userId, collection, status) {
@@ -1106,7 +1106,7 @@ module.exports = {
     },
 
     unsetCollabParticipation: async function (collab, collection, id) {
-        await collection.updateOne({ name: collab, 'pool.items.id': id }, { $set: { 'pool.items.$.status': "available" } }, { upsert: true });
+        await collection.updateOne({ name: collab, 'pool.items.id': id }, { $set: { 'pool.items.$.status': 'available' } }, { upsert: true });
     },
 
     addCollabParticipant: async function (collab, collection, newUser) {
@@ -1131,7 +1131,7 @@ module.exports = {
 
     getCollabSnipes: async function (name, collection, pick) {
         const collab = await collection.findOne({ name: name });
-        if (typeof collab.snipes !== "undefined") {
+        if (typeof collab.snipes !== 'undefined') {
             return collab.snipes.filter(s => s.pick === pick);
         } else {
             return undefined;
@@ -1145,7 +1145,7 @@ module.exports = {
                 'participants.$.imgURL': newPick.imgURL,
                 'participants.$.id': newPick.id,
                 'participants.$.series': newPick.series,
-                'participants.$.category': newPick.category,
+                'participants.$.category': newPick.category
             }
         }, { upsert: true });
     },
@@ -1153,18 +1153,18 @@ module.exports = {
     editPickName: async function (pickId, userId, collabName, collabCollection, userCollection, name) {
         await collabCollection.updateOne({ name: collabName, 'participants.id': pickId }, {
             $set: {
-                'participants.$.name': name,
+                'participants.$.name': name
             }
         }, { upsert: true });
         await collabCollection.updateOne({ name: collabName, 'pool.items.id': pickId }, {
             $set: {
-                'pool.items.$.name': name,
+                'pool.items.$.name': name
             }
         }, { upsert: true });
         if (userId) {
             await userCollection.updateOne({ _id: userId, 'collabs.collabName': collabName }, {
                 $set: {
-                    'collabs.$.collabPick.name': name,
+                    'collabs.$.collabPick.name': name
                 }
             }, { upsert: true });
         }
@@ -1173,17 +1173,17 @@ module.exports = {
     editPickImage: async function (pickId, userId, collabName, collabCollection, userCollection, newURL) {
         await collabCollection.updateOne({ name: collabName, 'participants.id': pickId }, {
             $set: {
-                'participants.$.imgURL': newURL,
+                'participants.$.imgURL': newURL
             }
         }, { upsert: true });
         await collabCollection.updateOne({ name: collabName, 'pool.items.id': pickId }, {
             $set: {
-                'pool.items.$.imgURL': newURL,
+                'pool.items.$.imgURL': newURL
             }
         }, { upsert: true });
         await userCollection.updateOne({ _id: userId, 'collabs.collabName': collabName }, {
             $set: {
-                'collabs.$.collabPick.imgURL': newURL,
+                'collabs.$.collabPick.imgURL': newURL
             }
         }, { upsert: true });
     },
@@ -1218,9 +1218,9 @@ module.exports = {
             update[`participants.$[elem].${key}`] = osuData[key];
         }
         const result = await collection.updateMany(
-            { "participants.discordId": discordId },
+            { 'participants.discordId': discordId },
             { $set: update },
-            { arrayFilters: [{ "elem.discordId": discordId }] }
+            { arrayFilters: [{ 'elem.discordId': discordId }] }
         );
     },
 
@@ -1231,7 +1231,7 @@ module.exports = {
                 'collabs.$.collabPick.imgURL': newPick.imgURL,
                 'collabs.$.collabPick.id': newPick.id,
                 'collabs.$.collabPick.series': newPick.series,
-                'collabs.$.collabPick.category': newPick.category,
+                'collabs.$.collabPick.category': newPick.category
             }
         }, { upsert: true });
     },
@@ -1277,7 +1277,7 @@ module.exports = {
     },
 
     resetPick: async function (name, collection) {
-        const document = await collection.findOne({ "name": name });
+        const document = await collection.findOne({ 'name': name });
 
         if (!document) {
             throw new Error('Document not found');
@@ -1291,11 +1291,11 @@ module.exports = {
                 const newImgURL = `https://storage.googleapis.com/${bucket}/${item.id}.webp`;
                 return {
                     updateOne: {
-                        filter: { "name": name, "pool.items.id": item.id },
+                        filter: { 'name': name, 'pool.items.id': item.id },
                         update: {
                             $set: {
-                                "pool.items.$.status": 'available',
-                                "pool.items.$.imgURL": newImgURL
+                                'pool.items.$.status': 'available',
+                                'pool.items.$.imgURL': newImgURL
                             }
                         }
                     }
@@ -1348,22 +1348,22 @@ module.exports = {
 
     liquidateVerificationCode: async function (userId, collection) {
         try {
-            await collection.updateOne({ _id: userId }, { $unset: { verificationData: "" } });
+            await collection.updateOne({ _id: userId }, { $unset: { verificationData: '' } });
         } catch (e) {
             console.log(e);
         }
     },
 
     setPerkUsage: async function (status, collection) {
-        await collection.updateOne({ _id: "Premium Data" }, { $set: { status } }, { upsert: true });
+        await collection.updateOne({ _id: 'Premium Data' }, { $set: { status } }, { upsert: true });
     },
 
     setPerkStartingDecayDate: async function (date, collection) {
-        await collection.updateOne({ _id: "Premium Data" }, { $set: { date } }, { upsert: true });
+        await collection.updateOne({ _id: 'Premium Data' }, { $set: { date } }, { upsert: true });
     },
 
     getPerkStartingDecayDate: async function (collection) {
-        const premium = await collection.findOne({ _id: "Premium Data" });
+        const premium = await collection.findOne({ _id: 'Premium Data' });
         return premium ? premium.date || 0 : 0;
     },
 
@@ -1374,43 +1374,43 @@ module.exports = {
 
     updateBadges: function (roles) {
         let badges = [];
-        if (roles.includes("Designer")) {
+        if (roles.includes('Designer')) {
             badges.push('Designer');
         }
-        if (roles.includes("Tournament")) {
+        if (roles.includes('Tournament')) {
             badges.push('Tournament');
         }
-        if (roles.includes("Developer")) {
+        if (roles.includes('Developer')) {
             badges.push('Developer');
         }
-        if (roles.includes("Website Host")) {
+        if (roles.includes('Website Host')) {
             badges.push('Website Host');
         }
-        if (roles.includes("Top Supporter")) {
+        if (roles.includes('Top Supporter')) {
             badges.push('Top Supporter');
         }
-        if (roles.includes("Special Donator")) {
+        if (roles.includes('Special Donator')) {
             badges.push('Special Donator');
         }
-        if (roles.includes("Contrubitor")) {
+        if (roles.includes('Contrubitor')) {
             badges.push('Contrubitor');
         }
-        if (roles.includes("Admin")) {
+        if (roles.includes('Admin')) {
             badges.push('Admin');
         }
-        if (roles.includes("AI")) {
+        if (roles.includes('AI')) {
             badges.push('AI');
         }
-        if (roles.includes("Mod")) {
+        if (roles.includes('Mod')) {
             badges.push('Mod');
         }
-        if (roles.includes("Tourney Staff")) {
+        if (roles.includes('Tourney Staff')) {
             badges.push('Tourney Staff');
         }
-        if (roles.includes("Website Staff")) {
+        if (roles.includes('Website Staff')) {
             badges.push('Website Staff');
         }
-        if (roles.includes("Premium")) {
+        if (roles.includes('Premium')) {
             for (const item of roles) {
                 const match = item.match(/Mirage (\w+)/);
                 if (match) {
@@ -1419,21 +1419,21 @@ module.exports = {
                 }
             }
         }
-        if (roles.includes("Former Premium")) {
+        if (roles.includes('Former Premium')) {
             badges.push('Former Premium');
         }
-        if (roles.includes("Active Member")) {
-            if (roles.includes("Novice")) {
+        if (roles.includes('Active Member')) {
+            if (roles.includes('Novice')) {
                 badges.push('Novice');
             }
-            if (roles.includes("Advanced")) {
+            if (roles.includes('Advanced')) {
                 badges.push('Advanced');
             }
-            if (roles.includes("Ultimate")) {
+            if (roles.includes('Ultimate')) {
                 badges.push('Ultimate');
             }
         }
-        if (roles.includes("Participant")) {
+        if (roles.includes('Participant')) {
             for (const item of roles) {
                 const match = item.match(/Prestige (\d+)/);
                 if (match) {
@@ -1442,7 +1442,7 @@ module.exports = {
                 }
             }
         }
-        if (roles.includes("Alumni")) {
+        if (roles.includes('Alumni')) {
             badges.push('Alumni');
         }
         return badges;
@@ -1488,11 +1488,11 @@ module.exports = {
     },
 
     verifyUserBancho: async function (osuname, osuData, collection) {
-        await collection.updateOne({ 'verificationData.user.username': osuname }, { $set: { osuData }, $unset: { verificationData: "" } }, { upsert: true });
+        await collection.updateOne({ 'verificationData.user.username': osuname }, { $set: { osuData }, $unset: { verificationData: '' } }, { upsert: true });
     },
 
     verifyUserManual: async function (userId, osuData, collection) {
-        await collection.updateOne({ _id: userId }, { $set: { osuData }, $unset: { verificationData: "" } }, { upsert: true });
+        await collection.updateOne({ _id: userId }, { $set: { osuData }, $unset: { verificationData: '' } }, { upsert: true });
     },
 
     setUserTier: async function (userId, Tier, collection) {
@@ -1541,7 +1541,7 @@ module.exports = {
     },
 
     getGlobalBoost: async function (collection) {
-        const globalBoost = await collection.findOne({ _id: "Global Boost" });
+        const globalBoost = await collection.findOne({ _id: 'Global Boost' });
         return globalBoost ? globalBoost || [] : [];
     },
 
@@ -1578,7 +1578,7 @@ module.exports = {
 
     delTier: async function (userId, collection) {
         try {
-            await collection.updateOne({ _id: userId }, { $unset: { Tier: "" } });
+            await collection.updateOne({ _id: userId }, { $unset: { Tier: '' } });
         } catch (e) {
             console.log(e);
         }
@@ -1586,7 +1586,7 @@ module.exports = {
 
     delCart: async function (userId, collection) {
         try {
-            await collection.updateOne({ _id: userId }, { $unset: { cart: "" } });
+            await collection.updateOne({ _id: userId }, { $unset: { cart: '' } });
         } catch (e) {
             console.log(e);
         }
@@ -1746,7 +1746,7 @@ module.exports = {
     },
 
     applyText: function (canvas, text, fontFamily, fontSize, fontStyle) {
-        const ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext('2d');
 
         do {
             ctx.font = `${fontStyle} ${fontSize}px ${fontFamily}`;
@@ -1755,12 +1755,12 @@ module.exports = {
     },
 
     applyGlobalBoost: async function (multiplier, durationInHours, client) {
-        const collection = client.db.collection("Special");
+        const collection = client.db.collection('Special');
 
         try {
             const currentTime = Date.now();
             const boostEndTime = currentTime + durationInHours * 3600000; // Convert hours to milliseconds
-            await collection.updateOne({ _id: "Global Boost" }, { $set: { multiplier, boostEndTime } }, { upsert: true });
+            await collection.updateOne({ _id: 'Global Boost' }, { $set: { multiplier, boostEndTime } }, { upsert: true });
         } catch (error) {
             console.error('Error applying global boost:', error);
             return null;
@@ -1814,7 +1814,7 @@ module.exports = {
     },
 
     updateImageRequest: async function (client, messageId, type, user, imgURL, oldImgURL, status, embed, collab, pickId) {
-        const collectionSpecial = client.db.collection("Special");
+        const collectionSpecial = client.db.collection('Special');
 
         try {
             await collectionSpecial.updateOne({ _id: messageId }, { $set: { type, user, imgURL, oldImgURL, status, embed, collab, pickId } }, { upsert: true });
@@ -1825,7 +1825,7 @@ module.exports = {
     },
 
     updateReport: async function (client, messageId, type, reporterUser, reportedUser, status, embed, collab, pickId, reason) {
-        const collectionSpecial = client.db.collection("Special");
+        const collectionSpecial = client.db.collection('Special');
 
         try {
             await collectionSpecial.updateOne({ _id: messageId }, { $set: { type, reporterUser, reportedUser, status, embed, collab, pickId, reason } }, { upsert: true });
@@ -1836,7 +1836,7 @@ module.exports = {
     },
 
     liquidateImageRequest: async function (client, messageId) {
-        const collectionSpecial = client.db.collection("Special");
+        const collectionSpecial = client.db.collection('Special');
 
         try {
             await collectionSpecial.deleteOne({ _id: messageId });
@@ -1847,7 +1847,7 @@ module.exports = {
     },
 
     liquidateReport: async function (client, messageId) {
-        const collectionSpecial = client.db.collection("Special");
+        const collectionSpecial = client.db.collection('Special');
 
         try {
             await collectionSpecial.deleteOne({ _id: messageId });
@@ -1863,7 +1863,7 @@ module.exports = {
             voters = suggestion.voters;
         }
 
-        const collectionSpecial = client.db.collection("Special");
+        const collectionSpecial = client.db.collection('Special');
 
         try {
             await collectionSpecial.updateOne({ _id: messageId }, { $set: { user, status, embed, upvotes, downvotes, voters } }, { upsert: true });
@@ -1889,7 +1889,7 @@ module.exports = {
 
     getSubbedUsers: async function (collection) {
         let subbedUsers = await collection.find({ 'monthlyDonation': { $exists: true } }).toArray();
-        subbedUsers = subbedUsers.filter(e => e.monthlyDonation.status !== "innactive");
+        subbedUsers = subbedUsers.filter(e => e.monthlyDonation.status !== 'innactive');
         return subbedUsers ? subbedUsers || [] : [];
     },
 
@@ -1898,7 +1898,7 @@ module.exports = {
     },
 
     liquidateSuggestion: async function (client, messageId) {
-        const collectionSpecial = client.db.collection("Special");
+        const collectionSpecial = client.db.collection('Special');
 
         try {
             await collectionSpecial.deleteOne({ _id: messageId });
@@ -1927,15 +1927,15 @@ module.exports = {
     },
 
     getSuggestion: async function (client, messageId) {
-        const collectionSpecial = client.db.collection("Special");
+        const collectionSpecial = client.db.collection('Special');
         const messageEmbed = await collectionSpecial.findOne({ _id: messageId });
         return messageEmbed ? messageEmbed || [] : [];
     },
 
     getImageRequestByUser: async function (client, userId) {
-        const collectionSpecial = client.db.collection("Special");
+        const collectionSpecial = client.db.collection('Special');
         let imageRequest = await collectionSpecial.find({ user: userId }).toArray();
-        imageRequest = imageRequest.filter(r => r.type === "image change");
+        imageRequest = imageRequest.filter(r => r.type === 'image change');
 
         if (imageRequest.length > 0) {
             return imageRequest;
@@ -1945,13 +1945,13 @@ module.exports = {
     },
 
     getImageRequestByMessage: async function (client, messageId) {
-        const collectionSpecial = client.db.collection("Special");
+        const collectionSpecial = client.db.collection('Special');
         const imageRequest = await collectionSpecial.findOne({ _id: messageId });
         return imageRequest ? imageRequest || false : false;
     },
 
     getReportByMessage: async function (client, messageId) {
-        const collectionSpecial = client.db.collection("Special");
+        const collectionSpecial = client.db.collection('Special');
         const report = await collectionSpecial.findOne({ _id: messageId });
         return report ? report || false : false;
     },
@@ -1980,7 +1980,7 @@ module.exports = {
         const year = now.getFullYear();
         const numberOfDaysInMonth = new Date(year, currentMonth, 0).getDate();
         const nextRun = new Date(now);
-        const userCollection = client.db.collection("OzenCollection");
+        const userCollection = client.db.collection('OzenCollection');
 
         nextRun.setUTCHours(localConstants.dailyCheckHour, localConstants.dailyCheckMinute, 0, 0);
 
@@ -1989,7 +1989,7 @@ module.exports = {
         }
         const delay = nextRun - now;
         let guild = await client.guilds.fetch('630281137998004224');
-        /*let member = await guild.members.cache.find(member => member.id === "420711641596821504");
+        /* let member = await guild.members.cache.find(member => member.id === "420711641596821504");
         await member.timeout(86400000, "Daily timeout for this user.");*/
 
         if (currentDay >= localConstants.startingSubDay && currentDay <= localConstants.finalSubDay) {
@@ -1997,29 +1997,29 @@ module.exports = {
             let subChannel = guild.channels.cache.get('865330150039093288');
             let users = await getSubbedUsers(userCollection);
             if (currentDay === localConstants.startingSubDay) {
-                let usersCheck = users.filter(e => e.monthlyDonation.status === "paid");
+                let usersCheck = users.filter(e => e.monthlyDonation.status === 'paid');
                 for (let user of usersCheck) {
-                    const parts = user.monthlyDonation.lastDate.split("/");
+                    const parts = user.monthlyDonation.lastDate.split('/');
                     const month = parseInt(parts[1], 10);
                     if (month !== currentMonth) {
                         await setSubStatus(user._id, userCollection, 'unpaid');
                     }
                 }
             }
-            users = users.filter(e => e.monthlyDonation.status === "unpaid");
+            users = users.filter(e => e.monthlyDonation.status === 'unpaid');
             for (let user of users) {
                 let subData = user.monthlyDonation;
-                if (typeof subData.lastMessageSent !== "undefined") {
+                if (typeof subData.lastMessageSent !== 'undefined') {
                     if (subData.lastMessageSent + 86300 >= Math.floor(new Date().getTime() / 1000)) continue;
                 }
                 let reminderEmbed = new EmbedBuilder()
                     .setColor('#f26e6a')
-                    .setAuthor({ name: `Endless Mirage Subscription Reminder!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
-                    .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                    .setAuthor({ name: 'Endless Mirage Subscription Reminder!', iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
+                    .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' });
                 let subMember = await guild.members.cache.find(member => member.id === user._id);
                 subData.lastMessageSent = Math.floor(new Date().getTime() / 1000);
-                let startingDateParts = subData.startingDate.split("/");
-                let lastPaymentParts = subData.lastDate.split("/");
+                let startingDateParts = subData.startingDate.split('/');
+                let lastPaymentParts = subData.lastDate.split('/');
 
                 let startingDate = new Date(startingDateParts[2], startingDateParts[1] - 1, startingDateParts[0]);
                 let lastPayment = new Date(lastPaymentParts[2], lastPaymentParts[1] - 1, lastPaymentParts[0]);
@@ -2027,18 +2027,18 @@ module.exports = {
                 let monthsDiff = (lastPayment.getFullYear() - startingDate.getFullYear()) * 12 + lastPayment.getMonth() - startingDate.getMonth();
                 reminderEmbed.addFields(
                     {
-                        name: " ",
-                        value: `**\`\`\`prolog\n💵 Subscription Info\`\`\`**\n**Current Donated Amount:** ${subData.total}$\n**Starting Date:** ${subData.startingDate}\n**Last Payment:** ${subData.lastDate}\n**Total Months:** ${monthsDiff}\n\nPayment Window: ${localConstants.startingSubDay}/${formattedMonth}/${year} - ${localConstants.finalSubDay}/${formattedMonth}/${year}`,
+                        name: ' ',
+                        value: `**\`\`\`prolog\n💵 Subscription Info\`\`\`**\n**Current Donated Amount:** ${subData.total}$\n**Starting Date:** ${subData.startingDate}\n**Last Payment:** ${subData.lastDate}\n**Total Months:** ${monthsDiff}\n\nPayment Window: ${localConstants.startingSubDay}/${formattedMonth}/${year} - ${localConstants.finalSubDay}/${formattedMonth}/${year}`
                     },
                     {
-                        name: " ",
-                        value: `**\`\`\`prolog\n💵 Amount to Pay: ${subData.currentAmount}$\`\`\`**\n`,
+                        name: ' ',
+                        value: `**\`\`\`prolog\n💵 Amount to Pay: ${subData.currentAmount}$\`\`\`**\n`
                     },
                     {
-                        name: "‎",
-                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                        name: '‎',
+                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                     }
-                )
+                );
                 let renewComponents = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId('sub-renew')
@@ -2051,13 +2051,13 @@ module.exports = {
                     new ButtonBuilder()
                         .setCustomId('sub-change-amount')
                         .setLabel('💵 Change your Monthly Amount')
-                        .setStyle('Primary'),
-                )
+                        .setStyle('Primary')
+                );
                 try {
                     subMember.send({
                         content: '',
                         embeds: [reminderEmbed],
-                        components: [renewComponents],
+                        components: [renewComponents]
                     });
                     console.log(`DM Sent to ${user._id}`);
                 } catch (e) {
@@ -2065,7 +2065,7 @@ module.exports = {
                     subChannel.send({
                         content: '',
                         embeds: [reminderEmbed],
-                        components: [renewComponents],
+                        components: [renewComponents]
                     });
                     console.log(`DM Sent to ${user._id}`);
                 }
@@ -2075,11 +2075,11 @@ module.exports = {
         } else if (currentDay === localConstants.finalSubDay + 1) {
             let users = await getSubbedUsers(userCollection);
             let subChannel = guild.channels.cache.get('865330150039093288');
-            users = users.filter(e => e.monthlyDonation.status === "unpaid");
+            users = users.filter(e => e.monthlyDonation.status === 'unpaid');
             for (let user of users) {
                 let subData = user.monthlyDonation;
-                let startingDateParts = subData.startingDate.split("/");
-                let lastPaymentParts = subData.lastDate.split("/");
+                let startingDateParts = subData.startingDate.split('/');
+                let lastPaymentParts = subData.lastDate.split('/');
 
                 let startingDate = new Date(startingDateParts[2], startingDateParts[1] - 1, startingDateParts[0]);
                 let lastPayment = new Date(lastPaymentParts[2], lastPaymentParts[1] - 1, lastPaymentParts[0]);
@@ -2089,44 +2089,44 @@ module.exports = {
                 await setSubStatus(user._id, userCollection, 'innactive');
                 let reminderEmbed = new EmbedBuilder()
                     .setColor('#f26e6a')
-                    .setAuthor({ name: `Your Endless Mirage subscription has been canceled!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
-                    .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                    .setAuthor({ name: 'Your Endless Mirage subscription has been canceled!', iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
+                    .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' });
                 reminderEmbed.addFields(
                     {
-                        name: " ",
-                        value: `**\`\`\`prolog\n💵 Subscription Info\`\`\`**\n**Current Donated Amount:** ${subData.total}$\n**Starting Date:** ${subData.startingDate}\n**Last Payment:** ${subData.lastDate}\n**Total Months:** ${monthsDiff}\n`,
+                        name: ' ',
+                        value: `**\`\`\`prolog\n💵 Subscription Info\`\`\`**\n**Current Donated Amount:** ${subData.total}$\n**Starting Date:** ${subData.startingDate}\n**Last Payment:** ${subData.lastDate}\n**Total Months:** ${monthsDiff}\n`
                     },
                     {
-                        name: "‎",
-                        value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                        name: '‎',
+                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                     }
-                )
+                );
                 try {
                     subMember.send({
                         content: '',
-                        embeds: [reminderEmbed],
+                        embeds: [reminderEmbed]
                     });
                     console.log(`DM Sent to ${user._id}`);
                 } catch (e) {
                     console.log(e);
                     subChannel.send({
                         content: '',
-                        embeds: [reminderEmbed],
+                        embeds: [reminderEmbed]
                     });
                     console.log(`DM Sent to ${user._id}`);
                 }
                 reminderEmbed = 0;
             }
         } else {
-            console.log(`Sub renewal scheduled in ${numberOfDaysInMonth - currentDay + 1} days.`)
+            console.log(`Sub renewal scheduled in ${numberOfDaysInMonth - currentDay + 1} days.`);
         }
-        /*console.log('user timed out for 24 hours');*/
-        const collection = client.db.collection("Collabs");
+        /* console.log('user timed out for 24 hours');*/
+        const collection = client.db.collection('Collabs');
         await handleCollabClosures(collection, client);
         await handleCollabOpenings(collection, client);
         setTimeout(async () => {
             await handleDailyDecay(client);
-            /*await member.timeout(86400000, "Daily timeout for this user.");*/
+            /* await member.timeout(86400000, "Daily timeout for this user.");*/
             scheduleDailyDecay(client);
         }, delay);
     },
@@ -2139,7 +2139,7 @@ module.exports = {
             L: 50,
             C: 100,
             D: 500,
-            M: 1000,
+            M: 1000
         };
         let result = 0;
         for (let i = 0; i < roman.length; i++) {
@@ -2156,7 +2156,7 @@ module.exports = {
     },
 
     premiumToInteger: function (string) {
-        if (string === "Mirage 0") {
+        if (string === 'Mirage 0') {
             return 0;
         }
         const romanNumerals = {
@@ -2166,9 +2166,9 @@ module.exports = {
             L: 50,
             C: 100,
             D: 500,
-            M: 1000,
+            M: 1000
         };
-        const roman = string.replace("Mirage ", "");
+        const roman = string.replace('Mirage ', '');
         let result = 0;
         for (let i = 0; i < roman.length; i++) {
             const currentNumeral = romanNumerals[roman[i]];
@@ -2182,7 +2182,7 @@ module.exports = {
         }
         return result;
     }
-}
+};
 
 async function getReferralCode(userId, collection) {
     const user = await collection.findOne({ _id: userId });
@@ -2220,7 +2220,7 @@ async function setReferralCode(userId, referralCode, collection) {
 }
 
 async function fetchUserDataFromDatabase(client) {
-    const collection = client.db.collection("OzenCollection");
+    const collection = client.db.collection('OzenCollection');
     const userData = await collection.find({}).toArray();
     const userDataArray = userData.map(user => ({
         userId: user._id,
@@ -2232,8 +2232,8 @@ async function fetchUserDataFromDatabase(client) {
 }
 
 async function handleDailyDecay(client) {
-    console.log("Running daily decay");
-    const collection = client.db.collection("OzenCollection");
+    console.log('Running daily decay');
+    const collection = client.db.collection('OzenCollection');
     const users = await collection.find({}).toArray();
 
     for (const user of users) {
@@ -2262,7 +2262,7 @@ async function scheduleDailyDecay(client) {
     const year = now.getFullYear();
     const numberOfDaysInMonth = new Date(year, currentMonth, 0).getDate();
     const nextRun = new Date(now);
-    const userCollection = client.db.collection("OzenCollection");
+    const userCollection = client.db.collection('OzenCollection');
 
     nextRun.setUTCHours(localConstants.dailyCheckHour, localConstants.dailyCheckMinute, 0, 0);
 
@@ -2271,7 +2271,7 @@ async function scheduleDailyDecay(client) {
     }
     const delay = nextRun - now;
     let guild = await client.guilds.fetch('630281137998004224');
-    /*let member = await guild.members.cache.find(member => member.id === "420711641596821504");
+    /* let member = await guild.members.cache.find(member => member.id === "420711641596821504");
     await member.timeout(86400000, "Daily timeout for this user.");*/
 
     if (currentDay >= localConstants.startingSubDay && currentDay <= localConstants.finalSubDay) {
@@ -2279,29 +2279,29 @@ async function scheduleDailyDecay(client) {
         let subChannel = guild.channels.cache.get('865330150039093288');
         let users = await getSubbedUsers(userCollection);
         if (currentDay === localConstants.startingSubDay) {
-            let usersCheck = users.filter(e => e.monthlyDonation.status === "paid");
+            let usersCheck = users.filter(e => e.monthlyDonation.status === 'paid');
             for (let user of usersCheck) {
-                const parts = user.monthlyDonation.lastDate.split("/");
+                const parts = user.monthlyDonation.lastDate.split('/');
                 const month = parseInt(parts[1], 10);
                 if (month !== currentMonth) {
                     await setSubStatus(user._id, userCollection, 'unpaid');
                 }
             }
         }
-        users = users.filter(e => e.monthlyDonation.status === "unpaid");
+        users = users.filter(e => e.monthlyDonation.status === 'unpaid');
         for (let user of users) {
             let subData = user.monthlyDonation;
-            if (typeof subData.lastMessageSent !== "undefined") {
+            if (typeof subData.lastMessageSent !== 'undefined') {
                 if (subData.lastMessageSent + 86300 >= Math.floor(new Date().getTime() / 1000)) continue;
             }
             let reminderEmbed = new EmbedBuilder()
                 .setColor('#f26e6a')
-                .setAuthor({ name: `Endless Mirage Subscription Reminder!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
-                .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                .setAuthor({ name: 'Endless Mirage Subscription Reminder!', iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
+                .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' });
             let subMember = await guild.members.cache.find(member => member.id === user._id);
             subData.lastMessageSent = Math.floor(new Date().getTime() / 1000);
-            let startingDateParts = subData.startingDate.split("/");
-            let lastPaymentParts = subData.lastDate.split("/");
+            let startingDateParts = subData.startingDate.split('/');
+            let lastPaymentParts = subData.lastDate.split('/');
 
             let startingDate = new Date(startingDateParts[2], startingDateParts[1] - 1, startingDateParts[0]);
             let lastPayment = new Date(lastPaymentParts[2], lastPaymentParts[1] - 1, lastPaymentParts[0]);
@@ -2309,18 +2309,18 @@ async function scheduleDailyDecay(client) {
             let monthsDiff = (lastPayment.getFullYear() - startingDate.getFullYear()) * 12 + lastPayment.getMonth() - startingDate.getMonth();
             reminderEmbed.addFields(
                 {
-                    name: " ",
-                    value: `**\`\`\`prolog\n💵 Subscription Info\`\`\`**\n**Current Donated Amount:** ${subData.total}$\n**Starting Date:** ${subData.startingDate}\n**Last Payment:** ${subData.lastDate}\n**Total Months:** ${monthsDiff}\n\nPayment Window: ${localConstants.startingSubDay}/${formattedMonth}/${year} - ${localConstants.finalSubDay}/${formattedMonth}/${year}`,
+                    name: ' ',
+                    value: `**\`\`\`prolog\n💵 Subscription Info\`\`\`**\n**Current Donated Amount:** ${subData.total}$\n**Starting Date:** ${subData.startingDate}\n**Last Payment:** ${subData.lastDate}\n**Total Months:** ${monthsDiff}\n\nPayment Window: ${localConstants.startingSubDay}/${formattedMonth}/${year} - ${localConstants.finalSubDay}/${formattedMonth}/${year}`
                 },
                 {
-                    name: " ",
-                    value: `**\`\`\`prolog\n💵 Amount to Pay: ${subData.currentAmount}$\`\`\`**\n`,
+                    name: ' ',
+                    value: `**\`\`\`prolog\n💵 Amount to Pay: ${subData.currentAmount}$\`\`\`**\n`
                 },
                 {
-                    name: "‎",
-                    value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                    name: '‎',
+                    value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                 }
-            )
+            );
             let renewComponents = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('sub-renew')
@@ -2333,13 +2333,13 @@ async function scheduleDailyDecay(client) {
                 new ButtonBuilder()
                     .setCustomId('sub-change-amount')
                     .setLabel('💵 Change your Monthly Amount')
-                    .setStyle('Primary'),
-            )
+                    .setStyle('Primary')
+            );
             try {
                 subMember.send({
                     content: '',
                     embeds: [reminderEmbed],
-                    components: [renewComponents],
+                    components: [renewComponents]
                 });
                 console.log(`DM Sent to ${user._id}`);
             } catch (e) {
@@ -2347,7 +2347,7 @@ async function scheduleDailyDecay(client) {
                 subChannel.send({
                     content: '',
                     embeds: [reminderEmbed],
-                    components: [renewComponents],
+                    components: [renewComponents]
                 });
                 console.log(`DM Sent to ${user._id}`);
             }
@@ -2357,11 +2357,11 @@ async function scheduleDailyDecay(client) {
     } else if (currentDay === localConstants.finalSubDay + 1) {
         let users = await getSubbedUsers(userCollection);
         let subChannel = guild.channels.cache.get('865330150039093288');
-        users = users.filter(e => e.monthlyDonation.status === "unpaid");
+        users = users.filter(e => e.monthlyDonation.status === 'unpaid');
         for (let user of users) {
             let subData = user.monthlyDonation;
-            let startingDateParts = subData.startingDate.split("/");
-            let lastPaymentParts = subData.lastDate.split("/");
+            let startingDateParts = subData.startingDate.split('/');
+            let lastPaymentParts = subData.lastDate.split('/');
 
             let startingDate = new Date(startingDateParts[2], startingDateParts[1] - 1, startingDateParts[0]);
             let lastPayment = new Date(lastPaymentParts[2], lastPaymentParts[1] - 1, lastPaymentParts[0]);
@@ -2371,51 +2371,51 @@ async function scheduleDailyDecay(client) {
             await setSubStatus(user._id, userCollection, 'innactive');
             let reminderEmbed = new EmbedBuilder()
                 .setColor('#f26e6a')
-                .setAuthor({ name: `Your Endless Mirage subscription has been canceled!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
-                .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                .setAuthor({ name: 'Your Endless Mirage subscription has been canceled!', iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
+                .setFooter({ text: 'Endless Mirage | Subscription Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' });
             reminderEmbed.addFields(
                 {
-                    name: " ",
-                    value: `**\`\`\`prolog\n💵 Subscription Info\`\`\`**\n**Current Donated Amount:** ${subData.total}$\n**Starting Date:** ${subData.startingDate}\n**Last Payment:** ${subData.lastDate}\n**Total Months:** ${monthsDiff}\n`,
+                    name: ' ',
+                    value: `**\`\`\`prolog\n💵 Subscription Info\`\`\`**\n**Current Donated Amount:** ${subData.total}$\n**Starting Date:** ${subData.startingDate}\n**Last Payment:** ${subData.lastDate}\n**Total Months:** ${monthsDiff}\n`
                 },
                 {
-                    name: "‎",
-                    value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
+                    name: '‎',
+                    value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                 }
-            )
+            );
             try {
                 subMember.send({
                     content: '',
-                    embeds: [reminderEmbed],
+                    embeds: [reminderEmbed]
                 });
                 console.log(`DM Sent to ${user._id}`);
             } catch (e) {
                 console.log(e);
                 subChannel.send({
                     content: '',
-                    embeds: [reminderEmbed],
+                    embeds: [reminderEmbed]
                 });
                 console.log(`DM Sent to ${user._id}`);
             }
             reminderEmbed = 0;
         }
     } else {
-        console.log(`Sub renewal scheduled in ${numberOfDaysInMonth - currentDay + 1} days.`)
+        console.log(`Sub renewal scheduled in ${numberOfDaysInMonth - currentDay + 1} days.`);
     }
-    /*console.log('user timed out for 24 hours');*/
-    const collection = client.db.collection("Collabs");
+    /* console.log('user timed out for 24 hours');*/
+    const collection = client.db.collection('Collabs');
     await handleCollabClosures(collection, client);
     await handleCollabOpenings(collection, client);
 
     setTimeout(async () => {
         await handleDailyDecay(client);
-        /*await member.timeout(86040000, "Daily timeout for this user.");*/
+        /* await member.timeout(86040000, "Daily timeout for this user.");*/
         scheduleDailyDecay(client);
     }, delay);
 }
 
 function applyText(canvas, text, fontFamily, fontSize, fontStyle) {
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     do {
         ctx.font = `${fontStyle} ${fontSize}px ${fontFamily}`;
     } while (ctx.measureText(text).width > canvas.width - 300);
@@ -2438,7 +2438,7 @@ function romanToInteger(roman) {
         L: 50,
         C: 100,
         D: 500,
-        M: 1000,
+        M: 1000
     };
     let result = 0;
     for (let i = 0; i < roman.length; i++) {
@@ -2487,7 +2487,7 @@ function excelSheetCoordinateToRowCol(coordinate) {
     const match = coordinate.match(regex);
 
     if (!match) {
-        throw new Error("Invalid Excel sheet coordinate format");
+        throw new Error('Invalid Excel sheet coordinate format');
     }
 
     const [, columnLetters, row] = match;
@@ -2523,20 +2523,20 @@ async function handleCollabOpenings(collection, client) {
                 await collection.updateOne({ _id: document._id }, { $set: { status: 'open' } });
                 const dashboardEmbed = new EmbedBuilder()
                     .setColor(document.color)
-                    .setURL('https://endlessmirage.net/')
-                if (typeof document.spreadsheetID !== "undefined") {
-                    URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${document.spreadsheetID})`
+                    .setURL('https://endlessmirage.net/');
+                if (typeof document.spreadsheetID !== 'undefined') {
+                    URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${document.spreadsheetID})`;
                 }
                 let extraString = '';
 
                 if (document.user_cap !== 0) {
-                    extraString = `User Limit: ${document.user_cap}\n`
+                    extraString = `User Limit: ${document.user_cap}\n`;
                 } else {
-                    extraString = "Unlimited\n"
+                    extraString = 'Unlimited\n';
                 }
                 dashboardEmbed.addFields(
                     {
-                        name: "‎",
+                        name: '‎',
                         value: `┌ Type: ${capitalizeFirstLetter(document.type)}\n├ Topic: ${capitalizeFirstLetter(document.topic)}\n└ Status: Open!\n`,
                         inline: true
                     }
@@ -2544,14 +2544,14 @@ async function handleCollabOpenings(collection, client) {
 
                 dashboardEmbed.addFields(
                     {
-                        name: "‎",
+                        name: '‎',
                         value: `┌ Class: ${capitalizeFirstLetter(document.restriction)}\n├ Closing date: <t:${parseInt(document.closure)}:R>\n└ ${extraString}`,
                         inline: true
                     }
                 );
 
                 dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${document.name} is open!\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.\nTo join, issue the command \`\`/collabs join\`\`!`);
-                dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' })
+                dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' });
                 embeds.push(dashboardEmbed);
                 if (document.designs.length !== 0) {
                     for (const design in document.designs) {
@@ -2563,7 +2563,7 @@ async function handleCollabOpenings(collection, client) {
                     }
                 }
                 const attachment = new AttachmentBuilder(document.thumbnail, {
-                    name: "thumbnail.png"
+                    name: 'thumbnail.png'
                 });
 
                 await logChannel.send({
@@ -2574,13 +2574,13 @@ async function handleCollabOpenings(collection, client) {
                             name: 'footer.png'
                         }
                     ],
-                    embeds: embeds,
-                })
+                    embeds: embeds
+                });
                 console.log(`${document.name} was opened for the public.`);
             }, remainingTimePublic * 1000); // Convert seconds to milliseconds
         }
 
-        if (document.restriction === "megacollab") {
+        if (document.restriction === 'megacollab') {
             const remainingTimeEarly = document.early_access - currentTimestamp;
             if (remainingTimeEarly > 0) {
                 console.log(`Handling ${document.name} early access in ${remainingTimeEarly / 60 / 60} hours`);
@@ -2592,20 +2592,20 @@ async function handleCollabOpenings(collection, client) {
                     await collection.updateOne({ _id: document._id }, { $set: { status: 'early access' } });
                     const dashboardEmbed = new EmbedBuilder()
                         .setColor(document.color)
-                        .setURL('https://endlessmirage.net/')
-                    if (typeof document.spreadsheetID !== "undefined") {
-                        URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${document.spreadsheetID})`
+                        .setURL('https://endlessmirage.net/');
+                    if (typeof document.spreadsheetID !== 'undefined') {
+                        URLstring = `[Spreadsheet](https://docs.google.com/spreadsheets/d/${document.spreadsheetID})`;
                     }
                     let extraString = '';
 
                     if (document.user_cap !== 0) {
-                        extraString = `User Limit: ${document.user_cap}\n`
+                        extraString = `User Limit: ${document.user_cap}\n`;
                     } else {
-                        extraString = "Unlimited\n"
+                        extraString = 'Unlimited\n';
                     }
                     dashboardEmbed.addFields(
                         {
-                            name: "‎",
+                            name: '‎',
                             value: `┌ Type: ${capitalizeFirstLetter(document.type)}\n├ Topic: ${capitalizeFirstLetter(document.topic)}\n└ Status: Early Access\n`,
                             inline: true
                         }
@@ -2613,14 +2613,14 @@ async function handleCollabOpenings(collection, client) {
 
                     dashboardEmbed.addFields(
                         {
-                            name: "‎",
+                            name: '‎',
                             value: `┌ Class: ${capitalizeFirstLetter(document.restriction)}\n├ Closing date: <t:${parseInt(document.closure)}:R>\n└ ${extraString}`,
                             inline: true
                         }
                     );
 
                     dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${document.name} is now in early access phase!\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.\nTo join, issue the command \`\`/collabs join\`\`!`);
-                    dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' })
+                    dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' });
                     embeds.push(dashboardEmbed);
                     if (document.designs.length !== 0) {
                         for (const design in document.designs) {
@@ -2632,7 +2632,7 @@ async function handleCollabOpenings(collection, client) {
                         }
                     }
                     const attachment = new AttachmentBuilder(document.thumbnail, {
-                        name: "thumbnail.png"
+                        name: 'thumbnail.png'
                     });
 
                     await logChannel.send({
@@ -2643,8 +2643,8 @@ async function handleCollabOpenings(collection, client) {
                                 name: 'footer.png'
                             }
                         ],
-                        embeds: embeds,
-                    })
+                        embeds: embeds
+                    });
                     console.log(`${document.name} was opened in early access.`);
                 }, remainingTimeEarly * 1000); // Convert seconds to milliseconds
             }
@@ -2717,9 +2717,9 @@ function rgbToHsl(r, g, b) {
         const d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
         switch (max) {
-            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-            case g: h = (b - r) / d + 2; break;
-            case b: h = (r - g) / d + 4; break;
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
         }
         h /= 6;
     }
@@ -2742,9 +2742,9 @@ async function calculateAverageColor(imageBuffer) {
     let sumR = 0, sumG = 0, sumB = 0;
 
     for (let i = 0; i < pixelCount; i++) {
-        sumR += data[i * 4];  // Red channel
-        sumG += data[i * 4 + 1];  // Green channel
-        sumB += data[i * 4 + 2];  // Blue channel
+        sumR += data[i * 4]; // Red channel
+        sumG += data[i * 4 + 1]; // Green channel
+        sumB += data[i * 4 + 2]; // Blue channel
     }
 
     const averageColor = {
@@ -2783,7 +2783,7 @@ async function getMeanColor(imageUrl) {
 
 async function getSubbedUsers(collection) {
     let subbedUsers = await collection.find({ 'monthlyDonation': { $exists: true } }).toArray();
-    subbedUsers = subbedUsers.filter(e => e.monthlyDonation.status !== "innactive");
+    subbedUsers = subbedUsers.filter(e => e.monthlyDonation.status !== 'innactive');
     return subbedUsers ? subbedUsers || [] : [];
 }
 
@@ -2812,11 +2812,11 @@ function getColumnRange(coordinate) {
     let row = parseInt(coordinate.match(/[0-9]+/)[0]);
 
     // Find the next column letter(s)
-    let nextColumn = "";
+    let nextColumn = '';
     if (column.length === 1) {
         // If the column is a single letter
         if (column === 'Z') {
-            nextColumn = "AA";
+            nextColumn = 'AA';
         } else {
             nextColumn = String.fromCharCode(column.charCodeAt(0) + 1);
         }
@@ -2829,7 +2829,7 @@ function getColumnRange(coordinate) {
             if (secondLastLetter === 'Z') {
                 // If the column is ZZ
                 let firstLetterCode = column.charCodeAt(0);
-                nextColumn = String.fromCharCode(firstLetterCode + 1) + "A";
+                nextColumn = String.fromCharCode(firstLetterCode + 1) + 'A';
             } else {
                 // If the column is something like AZ, BZ, etc.
                 nextColumn = firstLetter + 'AA';
@@ -2840,7 +2840,7 @@ function getColumnRange(coordinate) {
     }
 
     // Construct the column range
-    let columnRange = column + ":" + nextColumn;
+    let columnRange = column + ':' + nextColumn;
 
     return columnRange;
 }

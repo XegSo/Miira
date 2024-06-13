@@ -7,15 +7,15 @@ module.exports = {
     },
     async execute(int, client) {
         const modal = new ModalBuilder()
-            .setCustomId("trade-pick")
-            .setTitle(`Trade your collab pick.`);
+            .setCustomId('trade-pick')
+            .setTitle('Trade your collab pick.');
 
         const pick = new TextInputBuilder()
             .setCustomId('pick')
-            .setLabel("Type the ID of the character to trade.")
-            .setStyle(TextInputStyle.Short)
+            .setLabel('Type the ID of the character to trade.')
+            .setStyle(TextInputStyle.Short);
 
         modal.addComponents(new ActionRowBuilder().addComponents(pick));
         await int.showModal(modal);
-    },
-}
+    }
+};

@@ -11,19 +11,19 @@ module.exports = {
     async execute(int, client) {
         let initializedMap;
         if (collabCache.size > 0) {
-            if (typeof collabCache.get(int.user.id) !== "undefined") {
+            if (typeof collabCache.get(int.user.id) !== 'undefined') {
                 initializedMap = collabCache;
             }
         }
         if (userCheckCache.size > 0) {
-            if (typeof userCheckCache.get(int.user.id) !== "undefined") {
+            if (typeof userCheckCache.get(int.user.id) !== 'undefined') {
                 initializedMap = userCheckCache;
             }
         }
         const collab = initializedMap.get(int.user.id).collab;
         const participation = initializedMap.get(int.user.id).participation;
         const modal = new ModalBuilder()
-            .setCustomId("edit-fields-user-collab-admin")
+            .setCustomId('edit-fields-user-collab-admin')
             .setTitle('Edit the fields of an user in the collab.');
 
         const av_text = new TextInputBuilder()
@@ -47,7 +47,7 @@ module.exports = {
         const ca_quote = new TextInputBuilder()
             .setCustomId('ca_quote')
             .setLabel('Type a quote for the card.')
-            .setPlaceholder(participation.ca_quote ? participation.ca_quote : "None")
+            .setPlaceholder(participation.ca_quote ? participation.ca_quote : 'None')
             .setMinLength(2)
             .setMaxLength(collab.fieldRestrictions.ca_quote)
             .setStyle(TextInputStyle.Short)
@@ -68,5 +68,5 @@ module.exports = {
         modal.addComponents(new ActionRowBuilder().addComponents(av_text), new ActionRowBuilder().addComponents(ca_text), new ActionRowBuilder().addComponents(ca_quote), new ActionRowBuilder().addComponents(imgURL), new ActionRowBuilder().addComponents(reason));
 
         await int.showModal(modal);
-    },
-}
+    }
+};

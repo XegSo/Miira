@@ -14,16 +14,16 @@ module.exports = {
         const channel_update = await client.channels.cache.get('785727123808583721');
         const channel_warn = await client.channels.cache.get('874227481442398208');
 
-        /*const userNames = [ use if no IDs
+        /* const userNames = [ use if no IDs
             "breadrick",
             "s.osms.smsosmsnsomsos.snmsnmsnms",
             ]*/
 
         let users = [
-            
-        ]
 
-        /*for (const name of userNames) {
+        ];
+
+        /* for (const name of userNames) {
             let nameId = client.users.cache.find(u => u.username === name)
             if (typeof nameId !== "undefined") {
                 users.push(nameId.id);
@@ -32,7 +32,7 @@ module.exports = {
             }
         }*/
 
-        int.editReply("Starting to set new prestige. This might take a while");
+        int.editReply('Starting to set new prestige. This might take a while');
 
         for (const user of users) {
             const memberId = user;
@@ -46,7 +46,7 @@ module.exports = {
 
             let prestigeLevel = 0;
             let prestige = member.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
-            if (typeof prestige !== "undefined") {
+            if (typeof prestige !== 'undefined') {
                 prestige = prestige.name;
                 prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
             } else {
@@ -67,4 +67,4 @@ module.exports = {
             channel_update.send({ content: `<@${memberId}> Your collab prestige level is now **${newPrestige}**.` });
         }
     }
-}
+};
