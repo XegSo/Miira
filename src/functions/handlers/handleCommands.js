@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 const { REST, Routes } = require('discord.js');
 const rest = new REST().setToken(process.env.TOKEN);
 const clientId = '959278677789663302';
@@ -51,12 +51,12 @@ module.exports = (client) => {
                 Routes.applicationCommands(clientId),
                 { body: client.commandArray },
             );
-            
+
             console.log('Succesfully reloaded application (/) commands.');
         } catch (error) {
             console.error(error);
         }
-        
+
     }
 
     // If the fuckers dupe then hardreset them.

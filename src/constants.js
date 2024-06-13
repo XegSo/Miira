@@ -4,7 +4,7 @@ const rolesLevel = [
     '739111062682730507'
 ];
 
-const mirageLogo = "https://puu.sh/JP9Iw/a365159d0e.png";
+const mirageLogo = 'https://puu.sh/JP9Iw/a365159d0e.png';
 
 const staffUserIds = [
     '337197857566228480',
@@ -85,7 +85,7 @@ const skillRanksByScore = [
     { rank: 'C', value: 150 },
     { rank: 'D', value: 75 },
     { rank: 'F', value: 0 },
-]
+];
 
 const necesaryFieldsTop100 = [
     'position',
@@ -150,15 +150,15 @@ const nonPurchaseableBackgrounds = [
     { name: 'Premium Background', value: 'Obtained by purchasing premium.', id: 'premium-bg', desc: 'Special **premium** profile cosmetic.', class: 'Cosmetics', type: 'background', isReturnable: true },
     { name: 'Premium Background Plus', value: 'Obtained by purchasing a high premium tier.', id: 'premium-bg-plus', desc: 'Special **premium plus** profile cosmetic.', class: 'Cosmetics', type: 'background', isReturnable: true },
     { name: 'Staff Background', value: 'Obtained by being staff.', id: 'staff-bg', desc: 'Special profile cosmetic for staff.', class: 'Cosmetics', type: 'background', isReturnable: true }
-]
+];
 
 const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
 
 const premiumTiers = [
     {
-        name: 'Mirage I', 
+        name: 'Mirage I',
         id: 1,
-        description: 'Starter premium role with 2 perks, both tied to the megacollabs.' , 
+        description: 'Starter premium role with 2 perks, both tied to the megacollabs.' ,
         roleId: '963221388892700723',
         cost: 5,
         generalRenewalPrice: 2,
@@ -188,13 +188,13 @@ const premiumTiers = [
                 tier: 1,
             }
         ],
-        decay: true,  
-        extra: 'This tier includes bump inmunity, a special profile cosmetic for the server and a special badge for the osu! me section.'     
+        decay: true,
+        extra: 'This tier includes bump inmunity, a special profile cosmetic for the server and a special badge for the osu! me section.'
     },
     {
-        name: 'Mirage II', 
+        name: 'Mirage II',
         id: 2,
-        description: 'This tier includes more extra materials, tied to the megacollabs.' , 
+        description: 'This tier includes more extra materials, tied to the megacollabs.' ,
         roleId: '767452000777535488',
         cost: 10,
         generalRenewalPrice: 4,
@@ -225,12 +225,12 @@ const premiumTiers = [
             }
         ],
         decay: true,
-        extra: 'This tier includes bump inmunity, a special profile cosmetic for the server and a special badge for the osu! me section.'      
+        extra: 'This tier includes bump inmunity, a special profile cosmetic for the server and a special badge for the osu! me section.'
     },
     {
-        name: 'Mirage III', 
+        name: 'Mirage III',
         id: 3,
-        description: 'This tier includes more extra materials, tied to the megacollabs.' , 
+        description: 'This tier includes more extra materials, tied to the megacollabs.' ,
         roleId: '1146645094699642890',
         cost: 15,
         generalRenewalPrice: 6,
@@ -272,12 +272,12 @@ const premiumTiers = [
             }
         ],
         decay: true,
-        extra: 'This tier includes bump inmunity, a special profile cosmetic for the server and a special badge for the osu! me section.'      
-    }, 
+        extra: 'This tier includes bump inmunity, a special profile cosmetic for the server and a special badge for the osu! me section.'
+    },
     {
-        name: 'Mirage IV', 
+        name: 'Mirage IV',
         id: 4,
-        description: 'This tier includes early delivery for the collabs, along no premium decay after collabs.' , 
+        description: 'This tier includes early delivery for the collabs, along no premium decay after collabs.' ,
         roleId: '787388728795987969',
         cost: 20,
         generalRenewalPrice: 4,
@@ -296,12 +296,12 @@ const premiumTiers = [
             }
         ],
         decay: false,
-        extra: 'This tier includes bump inmunity, no premium role decay, a special profile cosmetic for the server and a special badge for the osu! me section.'      
+        extra: 'This tier includes bump inmunity, no premium role decay, a special profile cosmetic for the server and a special badge for the osu! me section.'
     },
     {
-        name: 'Mirage V', 
+        name: 'Mirage V',
         id: 5,
-        description: 'This tier includes a customized osu! skin and an extra set of collab materials.' , 
+        description: 'This tier includes a customized osu! skin and an extra set of collab materials.' ,
         roleId: '787388721255153694',
         cost: 40,
         generalRenewalPrice: 16,
@@ -332,12 +332,12 @@ const premiumTiers = [
             }
         ],
         decay: false,
-        extra: 'This tier includes bump inmunity, no premium role decay, a special profile cosmetic for the server and a special badge for the osu! me section.'      
+        extra: 'This tier includes bump inmunity, no premium role decay, a special profile cosmetic for the server and a special badge for the osu! me section.'
     },
     {
-        name: 'Mirage VI', 
+        name: 'Mirage VI',
         id: 6,
-        description: 'This tier includes early access to the collabs, access to the PSD templates and access to the staff chat.' , 
+        description: 'This tier includes early access to the collabs, access to the PSD templates and access to the staff chat.' ,
         roleId: '787723186556108840',
         cost: 100,
         generalRenewalPrice: 20,
@@ -377,12 +377,12 @@ const premiumTiers = [
             }
         ],
         decay: false,
-        extra: 'This tier includes bump inmunity, no premium role decay, a special profile cosmetic for the server and a special badge for the osu! me section.'      
+        extra: 'This tier includes bump inmunity, no premium role decay, a special profile cosmetic for the server and a special badge for the osu! me section.'
     },
     {
-        name: 'Mirage VII', 
+        name: 'Mirage VII',
         id: 7,
-        description: 'This tier doesn\'t need to renew perks bellow it, gets a customized Endless Mirage Hoodie, can host their own megacollab with us, has direct megacollab pool influence and has free access to the deluxe collabs.' , 
+        description: 'This tier doesn\'t need to renew perks bellow it, gets a customized Endless Mirage Hoodie, can host their own megacollab with us, has direct megacollab pool influence and has free access to the deluxe collabs.' ,
         roleId: '861679323739717642',
         cost: 250,
         generalRenewalPrice: null,
@@ -433,9 +433,9 @@ const premiumTiers = [
             }
         ],
         decay: false,
-        extra: 'This tier includes bump inmunity, no premium role decay, a special profile cosmetic for the server and a special badge for the osu! me section.'      
+        extra: 'This tier includes bump inmunity, no premium role decay, a special profile cosmetic for the server and a special badge for the osu! me section.'
     }
-]
+];
 
 const premiumPerks = [
     {
@@ -800,7 +800,7 @@ const premiumPerks = [
         collabDependant: false,
         tier: 7,
     }
-]
+];
 
 const MirageFormat = Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2,
@@ -809,12 +809,12 @@ const MirageFormat = Intl.NumberFormat('en-US', {
 
 const suggestionChannelID = '880953549561954314';
 const imageSwapChannelID = '1241221376833228800';
-const auditLogChannelID = "1243646608176840846";
-const userActionsLogChannelID = "1243692051347017848";
-const reportsLogChannelID = "1248040971413880953";
+const auditLogChannelID = '1243646608176840846';
+const userActionsLogChannelID = '1243692051347017848';
+const reportsLogChannelID = '1248040971413880953';
 
 const botId = '959278677789663302';
-const guildId = "630281137998004224"
+const guildId = '630281137998004224';
 
 const timeInterval = 5000; // Define the time interval in milliseconds
 const blacklistedChannels = ['630995793670701065', '746040634548289606', '1118649160858599487', '781152261023596584', '795652942299791370'];
@@ -827,7 +827,7 @@ const logChannelID = '1197205849572126861';
 const dailyCheckHour = 0; // Adjust this as needed
 const dailyCheckMinute = 0;
 
-const startingSubDay = 1; 
+const startingSubDay = 1;
 const finalSubDay = 5;
 
 module.exports = {

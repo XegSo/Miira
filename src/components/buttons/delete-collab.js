@@ -1,7 +1,7 @@
 const { TextInputStyle } = require('discord.js');
 const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 const { collabCache } = require('./admin-collab');
-const { adminCache }= require('../../commands/collabs/collabs');
+const { adminCache } = require('../../commands/collabs/collabs');
 const deleteCache = new Map();
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
             int.reply('You are not allowed to do this.');
             return;
         }
-        
+
         let initializedMap;
         if (collabCache.size > 0) {
             if (typeof collabCache.get(int.user.id) !== "undefined") {
