@@ -1,11 +1,11 @@
 const { TextInputStyle } = require('discord.js');
-const { ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
+const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
 
 module.exports = {
     data: {
         name: 'check-pick'
     },
-    async execute(int, client) {
+    async execute(int) {
         const modal = new ModalBuilder()
             .setCustomId('check-pick')
             .setTitle('Check a Character');

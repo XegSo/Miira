@@ -20,7 +20,7 @@ module.exports = {
 
         let checkoutItems = await localFunctions.getCart(userId, collection);
         if (checkoutItems.length) {
-            checkoutEmbed.setDescription('**\`\`\`prolog\n💎 Your Payment link is ready!\`\`\`**\n*At the moment, we only support PayPal and Ko-fi Payments.*');
+            checkoutEmbed.setDescription('**```prolog\n💎 Your Payment link is ready!```**\n*At the moment, we only support PayPal and Ko-fi Payments.*');
             for (let item of checkoutItems) {
 
                 totalCost = totalCost + item.price;

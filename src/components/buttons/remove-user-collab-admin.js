@@ -6,7 +6,7 @@ module.exports = {
     data: {
         name: 'remove-user-collab-admin'
     },
-    async execute(int, client) {
+    async execute(int) {
         const modal = new ModalBuilder()
             .setCustomId('remove-user-collab-admin')
             .setTitle('Remove an user from the collab');

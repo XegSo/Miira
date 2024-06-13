@@ -6,7 +6,7 @@ module.exports = {
     data: {
         name: 'edit-pick-collab-admin'
     },
-    async execute(int, client) {
+    async execute(int) {
 
         const modal = new ModalBuilder()
             .setCustomId('edit-pick-collab-admin')

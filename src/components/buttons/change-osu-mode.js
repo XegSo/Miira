@@ -5,7 +5,7 @@ module.exports = {
     data: {
         name: 'change-osu-mode'
     },
-    async execute(int, client) {
+    async execute(int) {
         const modal = new ModalBuilder()
             .setCustomId('change-osu-mode')
             .setTitle('Change your gamemode.');

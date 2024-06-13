@@ -8,7 +8,7 @@ module.exports = {
     data: {
         name: 'delete-collab'
     },
-    async execute(int, client) {
+    async execute(int) {
         const collab = collabCache.get(int.user.id).collab;
         if (collab.host !== int.user.id) {
             int.reply('You are not allowed to do this.');

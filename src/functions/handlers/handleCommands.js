@@ -13,9 +13,9 @@ class CommandLoader {
     }
 
     init() {
-        fs.readdirSync(path.join(__dirname, '../../commands')).filter((file) => {
+        fs.readdirSync(path.join(__dirname, '../../commands')).forEach((file) => {
             if (file.endsWith('.js')) {
-                const command = require(path.join(__dirname, (`../../commands/${file}`)));
+                const command = require(path.join(__dirname, `../../commands/${file}`));
                 this.commands.set(command.data.name, command);
                 this.commandArray.push(command.data.toJSON());
                 console.log(`Command: ${command.data.name} has been loaded.`);
@@ -24,9 +24,9 @@ class CommandLoader {
     }
 
     readFolder(folder) {
-        fs.readdirSync(path.join(__dirname, `../../commands/${folder}`)).filter((file) => {
+        fs.readdirSync(path.join(__dirname, `../../commands/${folder}`)).forEach((file) => {
             if (file.endsWith('.js')) {
-                const command = require(path.join(__dirname, (`../../commands/${folder}/${file}`)));
+                const command = require(path.join(__dirname, `../../commands/${folder}/${file}`));
                 this.commands.set(command.data.name, command);
                 this.commandArray.push(command.data.toJSON());
                 console.log(`Command: ${command.data.name} has been loaded.`);

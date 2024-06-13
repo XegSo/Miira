@@ -6,7 +6,7 @@ module.exports = {
         .setName('addmonthlysupporter')
         .setDescription('Add an user to the monthly payment system (Admin only).')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
-    async execute(int, client) {
+    async execute(int) {
         await int.deferReply();
 
         if (int.user.id !== '687004886922952755') {
@@ -22,5 +22,5 @@ module.exports = {
 
         });
     },
-    monthlySupporterCache: monthlySupporterCache
+    monthlySupporterCache
 };

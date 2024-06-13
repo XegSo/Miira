@@ -5,7 +5,7 @@ module.exports = {
     data: {
         name: 'sub-change-amount'
     },
-    async execute(int, client) {
+    async execute(int) {
         const modal = new ModalBuilder()
             .setCustomId('sub-change-amount')
             .setTitle('Change your Monthly Amount');

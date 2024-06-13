@@ -7,7 +7,7 @@ module.exports = {
     data: {
         name: 'premium-tiers'
     },
-    async execute(int, client) {
+    async execute(int) {
         await int.deferReply({ ephemeral: true });
         const tierName = int.values[0]; // Get the selected item from the dropdown
         const selectedTier = localConstants.premiumTiers.find((tier) => tier.name === tierName);
@@ -44,7 +44,7 @@ module.exports = {
         tierEmbed.addFields(
             {
                 name: '‎',
-                value: '**\`\`\`ml\n💵 Pricing\`\`\`**\n'
+                value: '**```ml\n💵 Pricing```**\n'
             },
             {
                 name: '\u200B',
@@ -63,7 +63,7 @@ module.exports = {
             },
             {
                 name: '‎                                      *└DX Stands for Deluxe Collabs*',
-                value: '**\`\`\`ml\n🎫 Perks\`\`\`**\n'
+                value: '**```ml\n🎫 Perks```**\n'
             },
             {
                 name: '*Renewing this tier renews all of the perks (Including previous tiers).*\n*You can renew individual perks or buy perks if you\'re not supporter.*\n',
@@ -147,5 +147,5 @@ module.exports = {
             ephemeral: true
         });
     },
-    selectionTier: selectionTier
+    selectionTier
 };

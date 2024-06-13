@@ -15,7 +15,7 @@ module.exports = {
                 .setName('reason')
                 .setDescription('Reason of untimeout.')
         ),
-    async execute(int, client) {
+    async execute(int) {
         await int.deferReply({ ephemeral: true });
         const timeUser = int.options.getUser('user');
         const timeMember = await int.guild.members.fetch(timeUser.id);

@@ -14,7 +14,7 @@ module.exports = {
                 .setDescription('User to assign the perks')
                 .setRequired(true)
         ),
-    async execute(int, client) {
+    async execute(int) {
         await int.deferReply({ ephemeral: true });
         if (int.user.id !== '687004886922952755') return;
         const user = int.options.getUser('user');

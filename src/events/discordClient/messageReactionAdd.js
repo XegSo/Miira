@@ -12,7 +12,7 @@ module.exports = {
             if (!localConstants.staffUserIds.includes(user.id)) {
                 // Remove the reaction if the user doesn't have the required role
                 reaction.users.remove(user);
-				return;
+                return;
             }
             if (user.id === localConstants.botId) return;
             if (reaction.message.channelId !== '880953549561954314') return;

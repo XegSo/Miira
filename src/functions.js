@@ -953,7 +953,7 @@ module.exports = {
         await collection.updateOne(
             { name: collab },
             {
-                $push: { ['perks.users']: protoEntry }
+                $push: { 'perks.users': protoEntry }
             },
             { upsert: true }
         );
@@ -969,7 +969,7 @@ module.exports = {
     getUserPerksAllCollabs: async function (collection, userId) {
         const pipeline = [
             { $unwind: '$perks.users' },
-            { $match: { ['perks.users.userId']: userId } },
+            { $match: { 'perks.users.userId': userId } },
             {
                 $group: {
                     _id: null,
@@ -2716,11 +2716,19 @@ function rgbToHsl(r, g, b) {
     } else {
         const d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
         switch (max) {
-        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-        case g: h = (b - r) / d + 2; break;
-        case b: h = (r - g) / d + 4; break;
+        case r:
+            h = (g - b) / d + (g < b ? 6 : 0);
+            break;
+        case g:
+            h = (b - r) / d + 2;
+            break;
+        case b:
+            h = (r - g) / d + 4;
+            break;
         }
+
         h /= 6;
     }
 

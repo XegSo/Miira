@@ -6,7 +6,7 @@ module.exports = {
     data: {
         name: 'pool-collab'
     },
-    async execute(int, client) {
+    async execute(int) {
         let initializedMap;
         if (collabCache.size > 0) {
             if (typeof collabCache.get(int.user.id) !== 'undefined') {

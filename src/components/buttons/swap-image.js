@@ -5,7 +5,7 @@ module.exports = {
     data: {
         name: 'swap-image'
     },
-    async execute(int, client) {
+    async execute(int) {
         const modal = new ModalBuilder()
             .setCustomId('swap-image')
             .setTitle('Change your pick image.');

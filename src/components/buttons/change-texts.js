@@ -8,7 +8,7 @@ module.exports = {
     data: {
         name: 'change-texts'
     },
-    async execute(int, client) {
+    async execute(int) {
         let initializedMap;
         if (profileMenuCache.size > 0) {
             if (typeof profileMenuCache.get(int.user.id) !== 'undefined') {

@@ -239,7 +239,7 @@ module.exports = {
                     .addFields(
                         {
                             name: '‎',
-                            value: '**\`\`\`ml\n- Picked\`\`\`**',
+                            value: '**```ml\n- Picked```**',
                             inline: true
                         },
                         {
@@ -253,7 +253,7 @@ module.exports = {
                         },
                         {
                             name: '‎',
-                            value: '**\`\`\`js\n+ Available\`\`\`**',
+                            value: '**```js\n+ Available```**',
                             inline: true
                         },
                         {
