@@ -14,10 +14,21 @@ module.exports = {
                 await command.execute(int, client);
             } catch (error) {
                 console.error(error);
-                int.reply({
-                    content: 'Something went wrong.',
-                    ephemeral: true
-                });
+                try {
+                    int.reply({
+                        content: 'Something went wrong.',
+                        ephemeral: true
+                    }); 
+                } catch {
+                    try {
+                        int.editReply({
+                            content: 'Something went wrong.',
+                            ephemeral: true
+                        }); 
+                    } catch (e) {
+                        console.log(e)
+                    }
+                }
             }
         } else if (int.isButton()) {
             const { buttons } = client;
@@ -29,6 +40,21 @@ module.exports = {
                 await button.execute(int, client);
             } catch (error) {
                 console.error(error);
+                try {
+                    int.reply({
+                        content: 'Something went wrong.',
+                        ephemeral: true
+                    }); 
+                } catch {
+                    try {
+                        int.editReply({
+                            content: 'Something went wrong.',
+                            ephemeral: true
+                        }); 
+                    } catch (e) {
+                        console.log(e)
+                    }
+                }
             }
         } else if (int.isStringSelectMenu()) {
             const { selectMenus } = client;
@@ -40,6 +66,21 @@ module.exports = {
                 await menu.execute(int, client);
             } catch (error) {
                 console.error(error);
+                try {
+                    int.reply({
+                        content: 'Something went wrong.',
+                        ephemeral: true
+                    }); 
+                } catch {
+                    try {
+                        int.editReply({
+                            content: 'Something went wrong.',
+                            ephemeral: true
+                        }); 
+                    } catch (e) {
+                        console.log(e)
+                    }
+                }
             }
         } else if (int.type === InteractionType.ModalSubmit) {
             const { modals } = client;
@@ -51,6 +92,21 @@ module.exports = {
                 await modal.execute(int, client);
             } catch (error) {
                 console.error(error);
+                try {
+                    int.reply({
+                        content: 'Something went wrong.',
+                        ephemeral: true
+                    }); 
+                } catch {
+                    try {
+                        int.editReply({
+                            content: 'Something went wrong.',
+                            ephemeral: true
+                        }); 
+                    } catch (e) {
+                        console.log(e)
+                    }
+                }
             }
         } else if (int.isAutocomplete()) {
             const collection = client.db.collection("Collabs");
