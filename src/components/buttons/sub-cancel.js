@@ -5,7 +5,7 @@ module.exports = {
     data: {
         name: 'sub-cancel'
     },
-    async execute(int, client) {
+    async execute(int) {
         const modal = new ModalBuilder()
             .setCustomId('sub-cancel')
             .setTitle('Cancel your subscription.');

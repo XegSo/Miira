@@ -6,7 +6,7 @@ module.exports = {
     data: {
         name: 'blacklist-user-collab-admin'
     },
-    async execute(int, client) {
+    async execute(int) {
         const modal = new ModalBuilder()
             .setCustomId('blacklist-user-collab-admin')
             .setTitle('Blacklist an user from the collab');

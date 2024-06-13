@@ -5,7 +5,7 @@ module.exports = {
     data: {
         name: 'verify-payment-sub'
     },
-    async execute(int, client) {
+    async execute(int) {
         const modal = new ModalBuilder()
             .setCustomId('verify-payment-sub')
             .setTitle('Verify your Payment.');

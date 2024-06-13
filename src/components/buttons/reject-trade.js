@@ -26,7 +26,7 @@ module.exports = {
                 .addFields(
                     {
                         name: '‎',
-                        value: '**\`\`\`ml\n- Pick 1\`\`\`**',
+                        value: '**```ml\n- Pick 1```**',
                         inline: true
                     },
                     {
@@ -40,7 +40,7 @@ module.exports = {
                     },
                     {
                         name: '‎',
-                        value: '**\`\`\`js\n+ Pick 2\`\`\`**',
+                        value: '**```js\n+ Pick 2```**',
                         inline: true
                     },
                     {

@@ -189,5 +189,5 @@ module.exports = {
             await int.editReply('Something went wrong...');
         }
     },
-    profileMenuCache: profileMenuCache
+    profileMenuCache
 };

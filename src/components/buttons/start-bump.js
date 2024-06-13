@@ -6,7 +6,7 @@ module.exports = {
     data: {
         name: 'start-bump'
     },
-    async execute(int, client) {
+    async execute(int) {
         const modal = new ModalBuilder()
             .setCustomId('start-bump')
             .setTitle('Start a new bump!');

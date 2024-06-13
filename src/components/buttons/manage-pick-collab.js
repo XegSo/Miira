@@ -5,7 +5,7 @@ module.exports = {
     data: {
         name: 'manage-pick-collab'
     },
-    async execute(int, client) {
+    async execute(int) {
         const modal = new ModalBuilder()
             .setCustomId('manage-pick-collab')
             .setTitle('Manage an pick from the collab');

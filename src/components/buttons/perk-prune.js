@@ -5,7 +5,7 @@ module.exports = {
     data: {
         name: 'perk-prune'
     },
-    async execute(int, client) {
+    async execute(int) {
 
         const modal = new ModalBuilder()
             .setCustomId('perk-prune')

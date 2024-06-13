@@ -7,37 +7,31 @@ module.exports = {
     data: {
         name: 'fetch-profile'
     },
-    async execute(int, client) {
+    async execute(int) {
         await int.deferReply({ ephemeral: true });
-        let name = int.fields.getTextInputValue('name');
-        let mode = int.fields.getTextInputValue('mode');
-        mode = mode.toLowerCase();
-        switch (mode) {
-        case 'osu':
-            break;
-        case 'mania':
-            break;
-        case 'fruits':
-            break;
-        case 'taiko':
-            break;
-        default:
+
+        const name = int.fields.getTextInputValue('name');
+        const mode = int.fields.getTextInputValue('mode').toLowerCase();
+
+        if (!['osu', 'mania', 'fruits', 'taiko'].includes(mode)) {
             await int.editReply('Invalid gamemode. Please follow the modal placeholder guide for names.');
             return;
-
         }
+
         const query = await v2.site.search({ mode: 'user', query: name });
         const protoUser = query.user.data[0];
+
         if (typeof protoUser === 'undefined') {
             await int.editReply('User not found! Make sure you didn\'t make a typo.');
             return;
         }
+
         const user = await v2.user.details(protoUser.id, mode);
         const osuEmbed = new EmbedBuilder()
             .setFooter({ text: 'Endless Mirage | Link your osu! Account', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')
             .setThumbnail(user.avatar_url)
-            .setDescription('**\`\`\`ml\n📌 Is this your osu! Account?\`\`\`**                                                                                    ')
+            .setDescription('**```ml\n📌 Is this your osu! Account?```**                                                                                    ')
             .addFields(
                 {
                     name: '‎',
@@ -75,5 +69,5 @@ module.exports = {
             components: [components]
         });
     },
-    fetchCache: fetchCache
+    fetchCache
 };

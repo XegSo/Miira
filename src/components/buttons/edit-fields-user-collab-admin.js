@@ -8,7 +8,7 @@ module.exports = {
     data: {
         name: 'edit-fields-user-collab-admin'
     },
-    async execute(int, client) {
+    async execute(int) {
         let initializedMap;
         if (collabCache.size > 0) {
             if (typeof collabCache.get(int.user.id) !== 'undefined') {

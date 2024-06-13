@@ -5,7 +5,7 @@ module.exports = {
     data: {
         name: 'trade-pick'
     },
-    async execute(int, client) {
+    async execute(int) {
         const modal = new ModalBuilder()
             .setCustomId('trade-pick')
             .setTitle('Trade your collab pick.');

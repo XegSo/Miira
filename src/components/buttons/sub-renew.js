@@ -25,7 +25,7 @@ module.exports = {
                 return int.editReply('You already payed this month!');
             }
             let amountToPay = parseInt(user.monthlyDonation.currentAmount);
-            checkoutEmbed.setDescription('**\`\`\`prolog\n💎 Your Payment link is ready!\`\`\`**\n*At the moment, we only support PayPal and Ko-fi Payments.*');
+            checkoutEmbed.setDescription('**```prolog\n💎 Your Payment link is ready!```**\n*At the moment, we only support PayPal and Ko-fi Payments.*');
             checkoutEmbed.addFields(
                 {
                     name: `**\`\`💳 Amount to pay: ${amountToPay}$\`\`**`,

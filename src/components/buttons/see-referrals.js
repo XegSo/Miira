@@ -1,8 +1,5 @@
 const localFunctions = require('../../functions');
-const localConstants = require('../../constants');
 const { EmbedBuilder } = require('discord.js');
-const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
-const { users } = require('osu-api-extended/dist/api/v2');
 
 module.exports = {
     data: {

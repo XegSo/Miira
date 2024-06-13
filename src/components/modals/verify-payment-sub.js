@@ -46,7 +46,7 @@ module.exports = {
 
                 let userTier = await localFunctions.getUserTier(userId, collection);
                 if (userTier.name === 'Mirage X') {
-                    userTier.name === 'Mirage VII';
+                    userTier.name = 'Mirage VII';
                 }
                 const fullTier = localConstants.premiumTiers[localFunctions.premiumToInteger(userTier.name) - 1];
                 let nextTier;

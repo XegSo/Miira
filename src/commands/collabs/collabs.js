@@ -1,9 +1,8 @@
-const { SlashCommandBuilder, EmbedBuilder, TextInputStyle } = require('discord.js');
-const { ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder, SelectMenuBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, SelectMenuBuilder } = require('@discordjs/builders');
 const { v2, tools } = require('osu-api-extended');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
-const { content } = require('googleapis/build/src/apis/content');
 const createCollabCache = new Map();
 const claimCache = new Map();
 const userCheckCache = new Map();
@@ -708,7 +707,7 @@ module.exports = {
                 const dashboardEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
-                    .setDescription('**\`\`\`\n🏐 Collabs Dashboard\`\`\`**')
+                    .setDescription('**```\n🏐 Collabs Dashboard```**')
                     .addFields(
                         {
                             name: 'In this section, you can check information about all the collabs that have been hosted since 2024.',
@@ -893,17 +892,17 @@ module.exports = {
                         components: [useComponents, buyComponents]
                     });
                 } else {
-                    premiumEmbed.setDescription('**\`\`\`ml\n 🚀 Welcome to the premium section!\`\`\`**                                                                                                           **In this section, you can find information about the current premium tiers and their perks!**\n\n**• The perks are ACCUMULATIVE.** \n**• After one collab, most perks will need to be RENEWED.** \n**• If there is no renewal, there is a DECAY into former supporter.**\n**• You can also purchase SINGLE PERKS for single use in collabs.**\n**• Premium includes bump immunity.**');
+                    premiumEmbed.setDescription('**```ml\n 🚀 Welcome to the premium section!```**                                                                                                           **In this section, you can find information about the current premium tiers and their perks!**\n\n**• The perks are ACCUMULATIVE.** \n**• After one collab, most perks will need to be RENEWED.** \n**• If there is no renewal, there is a DECAY into former supporter.**\n**• You can also purchase SINGLE PERKS for single use in collabs.**\n**• Premium includes bump immunity.**');
                     premiumEmbed.addFields(
-                        { name: ' ', value: '**\`\`\`ml\n⚠️ Only the prominent perks are mentioned for each tier.\`\`\`**' },
-                        { name: ' ', value: '\`\`🎫 Mirage I Premium | Price: 5$\`\`\n └ Exclusive profile picture version.' },
-                        { name: ' ', value: '\`\`🎫 Mirage II Premium | Price: 10$\`\`\n └ Animated Banner.' },
-                        { name: ' ', value: '\`\`🎫 Mirage III Premium | Price: 15$\`\`\n └ Animated Stream Overlay.' },
-                        { name: ' ', value: '\`\`🎫 Mirage IV Premium | Price: 20$\`\`\n └ Early collab delivery.\n' },
-                        { name: ' ', value: '\`\`🎫 Mirage V Premium | Price: 40$\`\`\n └ Customized collab themed osu! skin.' },
-                        { name: ' ', value: '\`\`🎫 Mirage VI Premium | Price: 100$\`\`\n └ Collab early access.' },
-                        { name: ' ', value: '\`\`🎫 Mirage VII Premium | Price: 250$\`\`\n └ Host your own megacollab.' },
-                        { name: ' ', value: '**\`\`\`prolog\n💎 Find the full details about each tier in the list bellow.\`\`\`\n<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>**' }
+                        { name: ' ', value: '**```ml\n⚠️ Only the prominent perks are mentioned for each tier.```**' },
+                        { name: ' ', value: '``🎫 Mirage I Premium | Price: 5$``\n └ Exclusive profile picture version.' },
+                        { name: ' ', value: '``🎫 Mirage II Premium | Price: 10$``\n └ Animated Banner.' },
+                        { name: ' ', value: '``🎫 Mirage III Premium | Price: 15$``\n └ Animated Stream Overlay.' },
+                        { name: ' ', value: '``🎫 Mirage IV Premium | Price: 20$``\n └ Early collab delivery.\n' },
+                        { name: ' ', value: '``🎫 Mirage V Premium | Price: 40$``\n └ Customized collab themed osu! skin.' },
+                        { name: ' ', value: '``🎫 Mirage VI Premium | Price: 100$``\n └ Collab early access.' },
+                        { name: ' ', value: '``🎫 Mirage VII Premium | Price: 250$``\n └ Host your own megacollab.' },
+                        { name: ' ', value: '**```prolog\n💎 Find the full details about each tier in the list bellow.```\n<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>**' }
                     );
 
                     const defaultComponents = new ActionRowBuilder().addComponents(
@@ -1001,7 +1000,7 @@ module.exports = {
                             premiumEmbed.addFields(
                                 {
                                     name: ' ',
-                                    value: '**\`\`\`ml\n✅ Perks available to use!\`\`\`**'
+                                    value: '**```ml\n✅ Perks available to use!```**'
                                 }
                             );
                         }
@@ -1078,7 +1077,7 @@ module.exports = {
                             premiumEmbed.addFields(
                                 {
                                     name: ' ',
-                                    value: '**\`\`\`ml\n✅ Active subscription status!\`\`\`**\n**You\'re currently at the peak tier! Thank you for your incredible support!**\n\n*Your current subscription includes automatic renewal for all perks and free access to deluxe collabs.*\n*For more info about your subscription, use the manage button bellow!*'
+                                    value: '**```ml\n✅ Active subscription status!```**\n**You\'re currently at the peak tier! Thank you for your incredible support!**\n\n*Your current subscription includes automatic renewal for all perks and free access to deluxe collabs.*\n*For more info about your subscription, use the manage button bellow!*'
                                 }
                             );
                         }
@@ -1119,7 +1118,7 @@ module.exports = {
 
                     premiumEmbed.setAuthor({ name: `Welcome to your premium dashboard ${username}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' });
                     premiumEmbed.setDescription(`${tierString}\n                                                                                                        **\`\`\`ml\n⚠️ No perks available to claim!\`\`\`**`);
-                    premiumEmbed.addFields({ name: ' ', value: `\`\`🎫 Notice\`\`\n ├ It\'s recommended to renew any of your perks.${decayString}` });
+                    premiumEmbed.addFields({ name: ' ', value: `\`\`🎫 Notice\`\`\n ├ It's recommended to renew any of your perks.${decayString}` });
                     mainComponents = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('premium-info')
@@ -2023,7 +2022,7 @@ module.exports = {
                                 .addFields(
                                     {
                                         name: '‎',
-                                        value: '**\`\`\`ml\n- Picked\`\`\`**',
+                                        value: '**```ml\n- Picked```**',
                                         inline: true
                                     },
                                     {
@@ -2037,7 +2036,7 @@ module.exports = {
                                     },
                                     {
                                         name: '‎',
-                                        value: '**\`\`\`js\n+ Available\`\`\`**',
+                                        value: '**```js\n+ Available```**',
                                         inline: true
                                     },
                                     {
@@ -2138,7 +2137,7 @@ module.exports = {
                                 .addFields(
                                     {
                                         name: '‎',
-                                        value: '**\`\`\`ml\n- You give\`\`\`**',
+                                        value: '**```ml\n- You give```**',
                                         inline: true
                                     },
                                     {
@@ -2152,7 +2151,7 @@ module.exports = {
                                     },
                                     {
                                         name: '‎',
-                                        value: '**\`\`\`js\n+ You receive\`\`\`**',
+                                        value: '**```js\n+ You receive```**',
                                         inline: true
                                     },
                                     {

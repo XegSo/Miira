@@ -3,8 +3,6 @@ const { ActionRowBuilder, ModalBuilder, TextInputBuilder, SelectMenuBuilder } = 
 const Canvas = require('canvas');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
-const { UserRefreshClient } = require('google-auth-library');
-const { networksecurity_v1 } = require('googleapis');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -50,8 +48,6 @@ module.exports = {
     async execute(int, client) {
         const subcommand = int.options.getSubcommand();
         const userId = int.user.id;
-        const guild = client.guilds.cache.get(localConstants.guildId);
-        const guildMember = guild.members.cache.get(userId);
         const collection = client.db.collection('OzenCollection');
         const collectionSpecial = client.db.collection('Special');
 
@@ -68,7 +64,7 @@ module.exports = {
 
             if (!userInventory || userInventory.length === 0) {
                 const emptyEmbedBottom = new EmbedBuilder()
-                    .setDescription('\`\`\`🔐 Items on storage\`\`\`')
+                    .setDescription('```🔐 Items on storage```')
                     .setImage('https://puu.sh/JPffc/3c792e61c9.png')
                     .setColor('#f26e6a')
                     .addFields({ name: 'Your inventory is empty.', value: 'Use /shop to get some items.' });
@@ -96,14 +92,14 @@ module.exports = {
             const inventoryEmbedBottom = new EmbedBuilder()
                 .setImage('https://puu.sh/JPffc/3c792e61c9.png')
                 .setColor('#f26e6a')
-                .setDescription('\`\`\`🔐 Items on storage\`\`\`');
+                .setDescription('```🔐 Items on storage```');
 
             for (const item of userInventory) {
                 inventoryEmbedBottom.addFields({ name: `· ${item.name}`, value: item.desc });
             }
 
             if (onUse) {
-                inventoryEmbedBottom.addFields({ name: '\u200B', value: '\`\`\`🚀 Items on use\`\`\`' });
+                inventoryEmbedBottom.addFields({ name: '\u200B', value: '```🚀 Items on use```' });
 
                 for (const item of onUse) {
                     inventoryEmbedBottom.addFields({ name: `· ${item.name}`, value: item.desc });
@@ -242,11 +238,7 @@ module.exports = {
                 console.log(`Cosmetics for user ${int.user.tag} have been updated`);
             }
 
-            try {
-                backgroundName = onUse.find((item) => item.type === 'background').name;
-            } catch (error) {
-                backgroundName = 'Profile';
-            }
+            backgroundName = onUse.find((item) => item.type === 'background')?.name ?? 'Profile';
 
             if (backgroundName === 'Staff Background') {
                 textColor = '#FFFFFF';
@@ -377,9 +369,9 @@ module.exports = {
                 await localFunctions.setUserDaily(userId, userArray, collection);
                 await localFunctions.setBalance(userId, newBalance, collection);
                 if (daysSinceLastMessage === 0) {
-                    int.editReply(`Welcome to your first daily claim! You\'ve obtained ${amountToEarn} tokens and you\'ve started a new streak! You will obtain **20** extra tokens by every day you run this command! You will also have a time window of **30 hours** to run this command after 18 hours. If you miss the window your streak will reset!`);
+                    int.editReply(`Welcome to your first daily claim! You've obtained ${amountToEarn} tokens and you've started a new streak! You will obtain **20** extra tokens by every day you run this command! You will also have a time window of **30 hours** to run this command after 18 hours. If you miss the window your streak will reset!`);
                 } else {
-                    int.editReply(`Oh no! You\'ve obtained **${amountToEarn}** tokens and you\'ve restarted your streak! Your old streak was of ${oldStreak}. Good luck on this new run!`);
+                    int.editReply(`Oh no! You've obtained **${amountToEarn}** tokens and you've restarted your streak! Your old streak was of ${oldStreak}. Good luck on this new run!`);
                 }
             } else if (daysSinceLastMessage <= 2 && daysSinceLastMessage >= 0.75) {
                 amountToEarn = 100 + (20 * (userArray.streak + 1));
@@ -388,7 +380,7 @@ module.exports = {
                 newBalance = currentBalance + amountToEarn;
                 await localFunctions.setUserDaily(userId, userArray, collection);
                 await localFunctions.setBalance(userId, newBalance, collection);
-                int.editReply(`Welcome back! You\'ve obtained **${amountToEarn}** tokens! Your current streak is of **${userArray.streak}**!.`);
+                int.editReply(`Welcome back! You've obtained **${amountToEarn}** tokens! Your current streak is of **${userArray.streak}**!.`);
             } else {
                 int.editReply(`You cannot claim your daily bonus yet! Come back <t:${Math.floor(userArray.lastDate / 1000 + 64800)}:R>`);
             }

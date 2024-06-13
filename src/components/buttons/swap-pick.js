@@ -6,7 +6,7 @@ module.exports = {
     data: {
         name: 'swap-pick'
     },
-    async execute(int, client) {
+    async execute(int) {
         const modal = new ModalBuilder()
             .setCustomId('swap-pick')
             .setTitle('Swap your current pick.');

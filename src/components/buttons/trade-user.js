@@ -69,7 +69,7 @@ module.exports = {
                     .addFields(
                         {
                             name: '‎',
-                            value: '**\`\`\`ml\n- You give\`\`\`**',
+                            value: '**```ml\n- You give```**',
                             inline: true
                         },
                         {
@@ -83,7 +83,7 @@ module.exports = {
                         },
                         {
                             name: '‎',
-                            value: '**\`\`\`js\n+ You receive\`\`\`**',
+                            value: '**```js\n+ You receive```**',
                             inline: true
                         },
                         {

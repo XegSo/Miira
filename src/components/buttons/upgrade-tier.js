@@ -33,7 +33,7 @@ module.exports = {
         const tiersEmbed = new EmbedBuilder()
             .setColor('#f26e6a')
             .setFooter({ text: 'Endless Mirage | Premium Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
-            .setDescription('**\`\`\`ml\n🚀 Upgrade your tier\`\`\`**                                                                                                        **\n • Bellow you can find the tiers your can upgrade to with their prices adapted to your current tier.\n • By upgrading, you will get all of the perks of the tier and the ones bellow renewed.**');
+            .setDescription('**```ml\n🚀 Upgrade your tier```**                                                                                                        **\n • Bellow you can find the tiers your can upgrade to with their prices adapted to your current tier.\n • By upgrading, you will get all of the perks of the tier and the ones bellow renewed.**');
 
         if (upgradeablePerks.length !== 0) {
             let buyMenu = new SelectMenuBuilder()
@@ -67,7 +67,7 @@ module.exports = {
             tiersEmbed.addFields(
                 {
                     name: '‎',
-                    value: '\`\`✒️ You have the peak tier!\`\`'
+                    value: '``✒️ You have the peak tier!``'
                 }
             );
             tiersEmbed.addFields(
@@ -86,5 +86,5 @@ module.exports = {
             choices: arrayOfObjects
         });
     },
-    upgradeCache: upgradeCache
+    upgradeCache
 };

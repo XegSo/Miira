@@ -12,7 +12,7 @@ module.exports = {
                 .setDescription('Insert the channel ID for the embed')
                 .setRequired(true)
         ),
-    async execute(int, client) {
+    async execute(int) {
         if (int.user.id !== '687004886922952755') return;
         await int.deferReply({ ephemeral: true });
         const channel = int.guild.channels.cache.get(int.options.getString('channelid'));

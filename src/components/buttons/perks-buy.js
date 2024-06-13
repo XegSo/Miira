@@ -57,11 +57,11 @@ module.exports = {
             renewalString = 'Renewal of all perks is not possible with the current premium status.';
         }
         if (dbTier.name !== 'None!' && (userTier !== 7 && userTier !== 10) && !localFunctions.compareArrays(allPossiblePerks, userPerksNR)) {
-            renewalString = renewalString.concat('*\n                                                                                                        **\`\`\`prolog\n💵 Renewable perks\`\`\`**\n');
+            renewalString = renewalString.concat('*\n                                                                                                        **```prolog\n💵 Renewable perks```**\n');
             buyEmbed.setDescription(`**Current Tier: ${dbTier.name}**\n${renewalString}`);
             i = true;
         } else if ((userTier === 7 || userTier === 10) && localFunctions.compareArrays(userPerksNR, allPossiblePerks)) {
-            renewalString = renewalString.concat('*\n                                                                                                        **\`\`\`ml\n🥂 Nice to see you here! If you\'re interested on another hoodie or hosting another megacollab, DM xegc!\`\`\`**');
+            renewalString = renewalString.concat('*\n                                                                                                        **```ml\n🥂 Nice to see you here! If you\'re interested on another hoodie or hosting another megacollab, DM xegc!```**');
             buyEmbed.setDescription(`**Current Tier: ${dbTier.name}**\n${renewalString}`);
             buyMenu.addOptions({ label: 'The love from the server owner', value: 'secret', description: 'uwu (I had to add something lol discord gets angry if I don\'t)' });
             i = true;
@@ -91,11 +91,11 @@ module.exports = {
                 buyEmbed.addFields(
                     {
                         name: ' ',
-                        value: '**\`\`\`prolog\n💵 Purchaseable perks\`\`\`**\n'
+                        value: '**```prolog\n💵 Purchaseable perks```**\n'
                     }
                 );
             } else {
-                renewalString = renewalString.concat('*\n                                                                                                        **\`\`\`prolog\n💵 Purchaseable perks\`\`\`**\n');
+                renewalString = renewalString.concat('*\n                                                                                                        **```prolog\n💵 Purchaseable perks```**\n');
                 buyEmbed.setDescription(`**Current Tier: ${dbTier.name}**\n${renewalString}`);
             }
             for (let perk of purchaseablePerks) {
@@ -127,5 +127,5 @@ module.exports = {
             components: [buyComponents]
         });
     },
-    perkCache: perkCache
+    perkCache
 };

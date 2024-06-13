@@ -6,7 +6,7 @@ module.exports = {
     data: {
         name: 'report-user'
     },
-    async execute(int, client) {
+    async execute(int) {
         const modal = new ModalBuilder()
             .setCustomId('report-user')
             .setTitle('Report an user');

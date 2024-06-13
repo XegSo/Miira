@@ -7,7 +7,7 @@ module.exports = {
     data: {
         name: 'join-collab-random'
     },
-    async execute(int, client) {
+    async execute(int) {
         try {
             const collabName = buttonCache.get(int.user.id).collab;
             const collabData = buttonCache.get(int.user.id).fullCollabData;

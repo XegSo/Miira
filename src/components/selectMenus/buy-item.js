@@ -54,5 +54,5 @@ module.exports = {
             await int.reply({ content: 'You do not have enough tokens to make this purchase.', ephemeral: true });
         }
     },
-    userConfirmationCache: userConfirmationCache
+    userConfirmationCache
 };

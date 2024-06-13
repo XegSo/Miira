@@ -229,7 +229,7 @@ module.exports = {
                             break;
                         case 'early access':
                             infoValue = '**Peak premium users, peak prestige users and admins are now picking!**';
-                            if (typeof userPerks.find(e => e.name === 'Megacollab Early Access') !== 'undefined' || prestigeLevel >= 8 || guildMember.roles.cache.has('630636502187114496')/* admin*/ || guildMember.roles.cache.has('834962043735638016')/* special donator*/|| guildMember.roles.cache.has('962251481669574666')/* contributor*/) {
+                            if (typeof userPerks.find(e => e.name === 'Megacollab Early Access') !== 'undefined' || prestigeLevel >= 8 || guildMember.roles.cache.has('630636502187114496')/* admin*/ || guildMember.roles.cache.has('834962043735638016')/* special donator*/ || guildMember.roles.cache.has('962251481669574666')/* contributor*/) {
                                 infoValue = '**You have early access!**';
                                 components.addComponents(
                                     new ButtonBuilder()
@@ -369,10 +369,10 @@ module.exports = {
             embeds.push(dashboardEmbed);
 
             if (collab.designs.length !== 0) {
-                for (const design in collab.designs) {
+                for (const design of collab.designs) {
                     let embed = new EmbedBuilder()
                         .setURL('https://endlessmirage.net/')
-                        .setImage(collab.designs[design]);
+                        .setImage(design);
 
                     embeds.push(embed);
                 }
@@ -398,7 +398,7 @@ module.exports = {
                         name: 'footer.png'
                     }
                 ],
-                embeds: embeds,
+                embeds,
                 components: [components]
             });
 
@@ -407,5 +407,5 @@ module.exports = {
             await int.editReply('Something went wrong...');
         }
     },
-    buttonCache: buttonCache
+    buttonCache
 };
