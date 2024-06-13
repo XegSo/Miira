@@ -3,7 +3,6 @@ const { ActionRowBuilder, ButtonBuilder, ModalBuilder, TextInputBuilder, SelectM
 const { v2, tools } = require('osu-api-extended');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
-const { parse } = require('dotenv');
 const { content } = require('googleapis/build/src/apis/content');
 const createCollabCache = new Map();
 const claimCache = new Map();
@@ -262,7 +261,7 @@ module.exports = {
             const userOsu = await localFunctions.getOsuData(userId, collection);
             const lastUpdate = await localFunctions.getUserLastUpdate(userId, collection);
             const currentDate = Math.floor(Date.now() / 1000);
-            
+
             if (!userOsu) {
                 const components = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
@@ -270,15 +269,15 @@ module.exports = {
                         .setLabel('🔗 Link your osu! Account')
                         .setStyle('Success'),
                 )
-                    
+
                 await int.editReply({
                     content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
                     components: [components]
                 });
-                
+
                 return;
             }
-            
+
             const collabData = await localFunctions.getUserCollabs(userId, collection);
             const collabs = await localFunctions.getCollabs(collabCollection);
             let buttons;
@@ -286,12 +285,12 @@ module.exports = {
             let tier = 0;
             let prestigeLevel = 0;
             let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
-            
+
             if (typeof prestige !== "undefined") {
                 prestige = prestige.name
                 prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
             }
-            
+
             const userTier = await localFunctions.getUserTier(userId, collection);
             if (userTier) {
                 tier = localFunctions.premiumToInteger(userTier.name);
@@ -320,7 +319,7 @@ module.exports = {
                         value: "<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:06:1195440954895765647><:08:1195440957735325707><:09:1195440958850998302><:11:1195441090677968936><:12:1195440961275306025><:14:1195441092947103847><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>",
                     },
                 )
-                
+
             if (typeof userOsu.skillRanks !== 'undefined') {
                 osuEmbed.addFields(
                     {
@@ -335,7 +334,7 @@ module.exports = {
                     }
                 )
             }
-            
+
             if (!lastUpdate || (currentDate - lastUpdate) > 604800) {
                 buttons = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
@@ -347,7 +346,7 @@ module.exports = {
                         .setCustomId('change-osu-mode')
                         .setStyle('Primary')
                 )
-                
+
                 osuEmbed.addFields(
                     {
                         name: "*You are able to update your analytics.*",
@@ -367,7 +366,7 @@ module.exports = {
                         .setStyle('Primary')
                         .setDisabled(true)
                 )
-                
+
                 osuEmbed.addFields(
                     {
                         name: `*You can update your analytics <t:${Math.floor(lastUpdate + 604800)}:R>.*`,
@@ -381,7 +380,7 @@ module.exports = {
             const joinMenu = new SelectMenuBuilder()
                 .setCustomId('select-collab')
                 .setPlaceholder('Select a collab to join.');
-            
+
             const deluxeEntry = await localFunctions.getDeluxeEntry(userId, collection);
             for (const collab of collabs) {
                 if (((collab.status !== "closed" && collab.status !== "on design")) && typeof collabData.find(e => e.collabName === collab.name) === "undefined") {
@@ -427,7 +426,7 @@ module.exports = {
             const joinMenuRow = new ActionRowBuilder().addComponents(joinMenu);
             if (collabData.length === 0) {
                 if (collabsToJoinCount === 0) {
-                    osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you haven't joined any collab yet...*\n*Unfortunately, there isn't any collabs you can join at the moment.*`);   
+                    osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *Seems like you haven't joined any collab yet...*\n*Unfortunately, there isn't any collabs you can join at the moment.*`);
                     await int.editReply({
                         content: '',
                         embeds: [osuEmbed],
@@ -445,11 +444,11 @@ module.exports = {
                 const manageMenu = new SelectMenuBuilder()
                     .setCustomId('manage-collab')
                     .setPlaceholder('Select a collab to manage.');
-                
+
                 for (let currentCollab of collabData) {
                     manageMenu.addOptions({ label: currentCollab.collabName, value: currentCollab.collabName });
                 }
-                
+
                 const manageMenuRow = new ActionRowBuilder().addComponents(manageMenu);
                 if (collabsToJoinCount === 0) {
                     osuEmbed.setDescription(`**\`\`\`ml\n🏐 Welcome ${int.user.globalName}!\`\`\`**                                                                                     *You are participating in a collab!*`);
@@ -473,7 +472,7 @@ module.exports = {
 
         if (subcommand === "manage" && subcommandGroup !== "admin") {
             const userOsu = await localFunctions.getOsuData(userId, collection);
-            
+
             if (!userOsu) {
                 const components = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
@@ -481,15 +480,15 @@ module.exports = {
                         .setLabel('🔗 Link your osu! Account')
                         .setStyle('Success'),
                 )
-                
+
                 await int.editReply({
                     content: 'It seems like you haven\'t linked your osu! account with Miira. To proceed please link it using the button bellow.',
                     components: [components]
                 });
-                
+
                 return;
             }
-            
+
             const collabData = await localFunctions.getUserCollabs(userId, collection);
             const osuEmbed = new EmbedBuilder()
                 .setFooter({ text: 'Endless Mirage | Manage Collabs', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
@@ -541,7 +540,7 @@ module.exports = {
 
         if (subcommand === "join" && subcommandGroup !== "quick") {
             const userOsu = await localFunctions.getOsuData(userId, collection);
-            
+
             if (!userOsu) {
                 const components = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
@@ -742,7 +741,7 @@ module.exports = {
                 .setFooter({ text: 'Endless Mirage | Perks Dashboard\n', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                 .setColor('#f26e6a')
                 .setAuthor({ name: `Welcome to your perks dashboard ${int.user.tag}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' });
-            
+
 
             let userPerks = await localFunctions.getPerks(userId, collection);
             let submittedPerks = await localFunctions.getUserPerksAllCollabs(collabCollection, userId);
@@ -1171,7 +1170,7 @@ module.exports = {
                 const currentDate = Math.floor(Date.now() / 1000);
                 const allCollabs = await localFunctions.getCollabs(collabCollection);
                 const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
-                
+
                 if (typeof openMegacollab === "undefined") {
                     await int.editReply('There is no open megacollabs at the moment...')
                 } else {
@@ -1258,7 +1257,7 @@ module.exports = {
                 }
 
                 const user = await v2.user.details(int.options.getString('osuid'), int.options.getString('gamemode'));
-                
+
                 if (typeof user === "undefined") {
                     await int.editReply('User not found...');
                     return;
@@ -1289,7 +1288,7 @@ module.exports = {
                 userFiltered.modsData = modsData;
                 await localFunctions.verifyUserManual(int.options.getString('discordid'), userFiltered, collection);
                 await int.editReply(`<@${int.user.id}> User linked succesfully.`);
-                
+
                 return;
             }
             if (subcommand === "manage") {
@@ -2124,7 +2123,7 @@ module.exports = {
 
                             let participants = collab.participants;
                             const fullTraderParticipation = participants.find((e) => e.discordId === userId);
-                            
+
                             if (fullTraderParticipation.id === pickRequested) {
                                 return int.editReply('You cannot trade to yourself silly!');
                             }
@@ -2561,7 +2560,7 @@ module.exports = {
 
                 const allCollabs = await localFunctions.getCollabs(collabCollection);
                 const openMegacollab = allCollabs.find(c => c.restriction === "megacollab" && (c.status === "open" || c.status === "early access" || c.status === "on design"));
-                
+
                 if (typeof openMegacollab === "undefined") {
                     await int.editReply('There is no open megacollabs at the moment...')
                 } else {

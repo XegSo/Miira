@@ -340,7 +340,7 @@ module.exports = {
             .setCustomId('blacklist-appeal')
             .setLabel('⚫️ Appeal your Blacklist')
             .setStyle('Secondary'),
-        )
+        );
       }
 
 
@@ -352,7 +352,7 @@ module.exports = {
             name: "‎",
             value: `${infoValue}`
           }
-        )
+        );
       }
 
 
@@ -384,7 +384,7 @@ module.exports = {
         osuData: userOsuData,
         userCollabData: userCollabs,
         fullCollabData: fullCollab
-      })
+      });
 
       const attachment = new AttachmentBuilder(collab.thumbnail, {
         name: "thumbnail.png"
@@ -400,11 +400,11 @@ module.exports = {
         ],
         embeds: embeds,
         components: [components],
-      })
+      });
 
     } catch (e) {
       console.log(e)
-      await int.editReply('Something went wrong...')
+      await int.editReply('Something went wrong...');
     }
   },
   buttonCache: buttonCache

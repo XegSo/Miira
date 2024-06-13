@@ -1,9 +1,9 @@
-const fs = require('fs');
+const fs = require('node:fs');
 
 module.exports = (client) => {
-    client.handleEvents = async(discordClient) => {
-        const eventFolders = fs.readdirSync("./src/events");
-        for(const folder of eventFolders) {
+    client.handleEvents = async (discordClient) => {
+        const eventFolders = fs.readdirSync('./src/events');
+        for (const folder of eventFolders) {
             const eventFiles = fs
                 .readdirSync(`./src/events/${folder}`)
                 .filter((file) => file.endsWith('.js'));
@@ -23,8 +23,8 @@ module.exports = (client) => {
                     }
                     break;
                 default:
-                    break;    
-            }    
+                    break;
+            }
         }
     };
 };

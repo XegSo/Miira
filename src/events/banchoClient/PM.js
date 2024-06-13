@@ -1,4 +1,3 @@
-require('dotenv').config();
 const banchoUsername = process.env.OSU_USERNAME_V1;
 const { v2 } = require('osu-api-extended');
 const localFunctions = require('../../functions');
@@ -46,7 +45,7 @@ module.exports = {
                             modsData.top4Mods.push(filler);
                         }
                         i++;
-                    }   
+                    }
                     currentData.skillRanks = skills;
                     currentData.modsData = modsData;
                     await localFunctions.verifyUserManual(userDB._id, currentData, collection);
@@ -55,7 +54,7 @@ module.exports = {
                 }
             } catch (e) {
                 console.log(e);
-            }   
+            }
         }
     }
 }

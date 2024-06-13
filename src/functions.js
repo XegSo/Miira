@@ -1,4 +1,3 @@
-require('dotenv').config();
 const { connectToSpreadsheet } = require('./googleSheets');
 const localConstants = require('./constants');
 const { v2 } = require('osu-api-extended');
@@ -6,9 +5,9 @@ const { registerFont } = require('canvas');
 const Vibrant = require('node-vibrant');
 const axios = require('axios');
 const sharp = require('sharp');
-const fs = require('fs');
+const fs = require('node:fs');
 const { ButtonBuilder, EmbedBuilder, AttachmentBuilder, ActionRowBuilder } = require('discord.js');
-const { Console } = require('console');
+
 registerFont('./assets/fonts/Montserrat-Medium.ttf', {
     family: "Montserrat",
     weight: 'normal'
@@ -28,13 +27,13 @@ module.exports = {
 
     createExcelBuffer: function (toExport) {
         const workbook = XLSX.utils.book_new();
-    
+
         Object.keys(toExport).forEach(sheetName => {
             const data = toExport[sheetName];
             const worksheet = XLSX.utils.json_to_sheet(data);
             XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
         });
-    
+
         // Convert the workbook to a buffer
         const excelBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
         return excelBuffer;
@@ -1849,7 +1848,7 @@ module.exports = {
 
     liquidateReport: async function (client, messageId) {
         const collectionSpecial = client.db.collection("Special");
-        
+
         try {
             await collectionSpecial.deleteOne({ _id: messageId });
         } catch (error) {
@@ -1900,7 +1899,7 @@ module.exports = {
 
     liquidateSuggestion: async function (client, messageId) {
         const collectionSpecial = client.db.collection("Special");
-        
+
         try {
             await collectionSpecial.deleteOne({ _id: messageId });
         } catch (error) {

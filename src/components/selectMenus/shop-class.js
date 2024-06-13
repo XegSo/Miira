@@ -16,7 +16,7 @@ module.exports = {
         for (const item of localConstants.shopItems) {
             if (item.class === shopType) {
                 shopEmbed.addFields({ name: `🏷 ${item.name}`, value: `${item.desc}\n **Cost: **${item.value}` });
-            }    
+            }
         }
         const BuyEmbed = new EmbedBuilder()
             .setImage('https://puu.sh/JPaDZ/a52c04b267.png')
@@ -27,12 +27,12 @@ module.exports = {
         for (const item of localConstants.shopItems) {
             if (item.class === shopType) {
                 options.addOptions({ label: item.name, value: item.name, description: item.value });
-            }    
+            }
         }
         const shopClass = new SelectMenuBuilder()
             .setCustomId('shop-class')
             .setPlaceholder('Switch to another section')
-            .addOptions([ 
+            .addOptions([
                 { label: 'Augments', value: 'Augments', description: 'Activity augments.' },
                 { label: 'Roles', value: 'Roles', description: 'Special Roles.' },
                 { label: 'Commissions', value: 'Commissions', description: 'GFX Commissions.' },
@@ -41,11 +41,13 @@ module.exports = {
             ]);
         const actionRowOptions = new ActionRowBuilder().addComponents(options);
         const actionRowShopClass = new ActionRowBuilder().addComponents(shopClass);
+
         int.message.edit({
-        content: '',
-        embeds: [BuyEmbed, shopEmbed],
-        components: [actionRowOptions,actionRowShopClass],
+            content: '',
+            embeds: [BuyEmbed, shopEmbed],
+            components: [actionRowOptions, actionRowShopClass],
         });
-        int.reply({content: `You're now on the ${shopType} section`, ephemeral: true});
-    }    
+
+        int.reply({ content: `You're now on the ${shopType} section`, ephemeral: true });
+    }
 }
