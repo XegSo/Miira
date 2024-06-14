@@ -259,10 +259,10 @@ module.exports = {
                         });
 
                         const usersEarlyAccess = userCollection.find({ perks: { $elemMatch: { name: 'Megacollab Early Access' } } }).toArray();
-                        const idString = usersEarlyAccess.map(doc => `<@${doc._id}>`).join(', ');
+                        const idString = usersEarlyAccess.map(doc => `<@${doc._id}>`).join(' ');
 
                         await logChannel.send({
-                            content: `${Array.from(localConstants.earlyAccessRoles).map(item => `<@&${item}>`).join(', ')} | ${idString}`,
+                            content: `${Array.from(localConstants.earlyAccessRoles).map(item => `<@&${item}>`).join(' ')} | ${idString}`,
                             files: [attachment,
                                 {
                                     attachment: `./assets/coloredLogos/logo-${document.color}.png`,
