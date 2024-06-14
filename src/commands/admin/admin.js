@@ -1162,7 +1162,7 @@ module.exports = {
                     let contentString = '';
                     const snipes = collab.snipes;
                     if (typeof snipes !== 'undefined') {
-                        if (typeof snipes.find(p => p.pick === id) !== 'undefined') {
+                        if (typeof snipes.find(p => p.pick === userCollab.collabPick.id) !== 'undefined') {
                             contentString = 'Snipers! ';
                         }
                         for (const snipe of snipes) {
