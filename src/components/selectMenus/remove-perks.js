@@ -1,5 +1,5 @@
 const localFunctions = require('../../functions');
-const { removePerksCache } = require('../../commands/collabs/removeperks');
+const { removePerksCache } = require('../../commands/admin/admin');
 
 module.exports = {
     data: {

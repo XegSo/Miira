@@ -1,5 +1,5 @@
 const { collabCache } = require('../buttons/admin-collab');
-const { adminCache } = require('../../commands/collabs/collabs');
+const { adminCache } = require('../../commands/admin/admin');
 const poolCache = new Map();
 
 module.exports = {

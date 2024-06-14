@@ -1,12 +1,11 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder, SelectMenuBuilder } = require('@discordjs/builders');
-const { v2, tools } = require('osu-api-extended');
+const { tools } = require('osu-api-extended');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
 const createCollabCache = new Map();
 const claimCache = new Map();
 const userCheckCache = new Map();
-const adminCache = new Map();
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -132,50 +131,6 @@ module.exports = {
                                 .setAutocomplete(true)
                         )
                 )
-        )
-        .addSubcommandGroup((subcommandGroup) =>
-            subcommandGroup
-                .setName('admin')
-                .setDescription('Admin commands.')
-                .addSubcommand((subcommand) =>
-                    subcommand.setName('manage')
-                        .setDescription('Open the collabs Admin Collabs Dashboard. (Admin only)')
-                        .addStringOption(option =>
-                            option.setName('collab')
-                                .setDescription('Collab name')
-                                .setRequired(true)
-                                .setAutocomplete(true)
-                        )
-                )
-                .addSubcommand((subcommand) =>
-                    subcommand.setName('set-bumps')
-                        .setDescription('Setup bumps for megacollabs. (Admin only)')
-                )
-                .addSubcommand((subcommand) =>
-                    subcommand.setName('link')
-                        .setDescription('Links an account instantly. (Admin only)')
-                        .addStringOption(option =>
-                            option.setName('discordid')
-                                .setDescription('User discord id')
-                                .setRequired(true)
-                        )
-                        .addStringOption(option =>
-                            option.setName('osuid')
-                                .setDescription('User osu id')
-                                .setRequired(true)
-                        )
-                        .addStringOption(option =>
-                            option.setName('gamemode')
-                                .setDescription('osu! main gamemode')
-                                .setRequired(true)
-                                .addChoices(
-                                    { name: 'osu', value: 'osu' },
-                                    { name: 'mania', value: 'mania' },
-                                    { name: 'fruits', value: 'fruits' },
-                                    { name: 'taiko', value: 'taiko' }
-                                )
-                        )
-                )
         ),
     async execute(int, client) {
         const subcommand = int.options.getSubcommand();
@@ -214,7 +169,7 @@ module.exports = {
             return;
         }
 
-        if (subcommand === 'link' && subcommandGroup !== 'admin') {
+        if (subcommand === 'link') {
             const components = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('link-osu')
@@ -469,7 +424,7 @@ module.exports = {
             return;
         }
 
-        if (subcommand === 'manage' && subcommandGroup !== 'admin') {
+        if (subcommand === 'manage') {
             const userOsu = await localFunctions.getOsuData(userId, collection);
 
             if (!userOsu) {
@@ -1159,285 +1114,6 @@ module.exports = {
             return;
         }
 
-        if (subcommandGroup === 'admin') {
-            if (subcommand === 'set-bumps') {
-                if (!guildMember.roles.cache.has('630636502187114496')) {
-                    await int.editReply('You are not allowed to do this.');
-                    return;
-                }
-
-                const currentDate = Math.floor(Date.now() / 1000);
-                const allCollabs = await localFunctions.getCollabs(collabCollection);
-                const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && (c.status === 'open' || c.status === 'early access' || c.status === 'on design'));
-
-                if (typeof openMegacollab === 'undefined') {
-                    await int.editReply('There is no open megacollabs at the moment...');
-                } else {
-                    const collab = openMegacollab;
-                    let bumps = collab.bumps;
-                    const dashboardEmbed = new EmbedBuilder()
-                        .setFooter({ text: 'Endless Mirage | Bumps Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
-                        .setColor('#f26e6a')
-                        .setDescription(`**\`\`\`ml\n🧱 Endless Mirage | Admin Bump Dashboard\`\`\`**\n**${collab.name}**`);
-                    if (typeof bumps === 'undefined') {
-                        dashboardEmbed.addFields(
-                            {
-                                name: '‎',
-                                value: 'There are no bumps for this collab yet...'
-                            },
-                            {
-                                name: '‎',
-                                value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
-                            }
-                        );
-                        const components = new ActionRowBuilder().addComponents(
-                            new ButtonBuilder()
-                                .setCustomId('start-bump')
-                                .setLabel('New Bump')
-                                .setStyle('Success')
-                        );
-
-                        int.editReply({ embeds: [dashboardEmbed], components: [components] });
-
-                    } else {
-                        let i = 1;
-                        for (const bump of bumps) {
-                            dashboardEmbed.addFields(
-                                {
-                                    name: '‎',
-                                    value: `Bump #${i}\n- **Starting Date:** ${bump.startingDate}\n- **Duration:** ${bump.days} days`
-                                }
-                            );
-                        }
-                        dashboardEmbed.addFields(
-                            {
-                                name: '‎',
-                                value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
-                            }
-                        );
-                        const latestBumpIndex = bumps.length - 1;
-                        if (currentDate - bumps[latestBumpIndex].startingDate > bumps[latestBumpIndex].days * 24 * 60 * 60 && bumps.length !== 4) {
-                            const components = new ActionRowBuilder().addComponents(
-                                new ButtonBuilder()
-                                    .setCustomId('start-bump')
-                                    .setLabel('New Bump')
-                                    .setStyle('Success')
-                            );
-
-                            int.editReply({ embeds: [dashboardEmbed], components: [components] });
-                        } else if (bumps.length !== 4) {
-                            const components = new ActionRowBuilder().addComponents(
-                                new ButtonBuilder()
-                                    .setCustomId('stop-bump')
-                                    .setLabel('Stop Bump')
-                                    .setStyle('Danger')
-                            );
-
-                            int.editReply({ embeds: [dashboardEmbed], components: [components] });
-                        } else {
-                            const components = new ActionRowBuilder().addComponents(
-                                new ButtonBuilder()
-                                    .setCustomId('filter-bump')
-                                    .setLabel('Filter Users')
-                                    .setStyle('Primary')
-                            );
-
-                            int.editReply({ embeds: [dashboardEmbed], components: [components] });
-                        }
-
-                    }
-                }
-            }
-
-            if (subcommand === 'link') {
-                if (!guildMember.roles.cache.has('630636502187114496')) {
-                    await int.editReply('You are not allowed to do this.');
-                    return;
-                }
-
-                const user = await v2.user.details(int.options.getString('osuid'), int.options.getString('gamemode'));
-
-                if (typeof user === 'undefined') {
-                    await int.editReply('User not found...');
-                    return;
-                }
-
-                const userFiltered = localFunctions.removeFields(user, localConstants.unnecesaryFieldsOsu);
-                userFiltered.osu_id = userFiltered.id;
-                delete userFiltered.id;
-                const userTop100 = await v2.scores.user.category(user.id, 'best', { mode: int.options.getString('gamemode'), limit: '100' });
-                await int.editReply('Performing Skill Calculations and getting data analytics... This might take a minute or two.');
-                const skills = await localFunctions.calculateSkill(userTop100, int.options.getString('gamemode'));
-                let modsData = await localFunctions.analyzeMods(userTop100);
-
-                const filler = {
-                    mod: '--',
-                    percentage: '--'
-                };
-
-                let i = 0;
-                while (i < 4) {
-                    if (typeof modsData.top4Mods[i] === 'undefined') {
-                        modsData.top4Mods.push(filler);
-                    }
-                    i++;
-                }
-
-                userFiltered.skillRanks = skills;
-                userFiltered.modsData = modsData;
-                await localFunctions.verifyUserManual(int.options.getString('discordid'), userFiltered, collection);
-                await int.editReply(`<@${int.user.id}> User linked succesfully.`);
-
-                return;
-            }
-            if (subcommand === 'manage') {
-                if (!guildMember.roles.cache.has('630636502187114496')) {
-                    await int.editReply('You are not allowed to do this.');
-                    return;
-                }
-
-                try {
-                    let collab = await localFunctions.getCollab(int.options.getString('collab'), collabCollection);
-                    let components = [];
-                    let extraComponents = [];
-                    let URLstring = '';
-                    if (typeof collab.spreadsheetID !== 'undefined') {
-                        URLstring = `  [Spreadsheet URL](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})\n`;
-                    }
-                    const dashboardEmbed = new EmbedBuilder()
-                        .setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
-                        .setColor('#f26e6a')
-                        .setDescription(`**\`\`\`ml\n🧱 Endless Mirage | Admin Collabs Dashboard\`\`\`**\n**${collab.name}**\n${URLstring}`);
-
-                    let extraString = '';
-
-                    if (collab.user_cap !== 0) {
-                        extraString = `User Limit: ${collab.user_cap}\n`;
-                    } else {
-                        extraString = 'Unlimited\n';
-                    }
-
-                    dashboardEmbed.addFields(
-                        {
-                            name: '‎',
-                            value: `┌ Type: ${localFunctions.capitalizeFirstLetter(collab.type)}\n├ Topic: ${localFunctions.capitalizeFirstLetter(collab.topic)}\n└ Status: ${localFunctions.capitalizeFirstLetter(collab.status)}\n`,
-                            inline: true
-                        }
-                    );
-
-                    dashboardEmbed.addFields(
-                        {
-                            name: '‎',
-                            value: `┌ Class: ${localFunctions.capitalizeFirstLetter(collab.restriction)}\n├ Opening date: <t:${parseInt(collab.opening)}:R>\n└ ${extraString}`,
-                            inline: true
-                        }
-                    );
-
-                    dashboardEmbed.addFields(
-                        {
-                            name: '‎',
-                            value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
-                        }
-                    );
-
-                    if (int.user.id === collab.host) {
-                        components = new ActionRowBuilder().addComponents(
-                            new ButtonBuilder()
-                                .setCustomId('edit-collab')
-                                .setLabel('✏️ Edit')
-                                .setStyle('Primary')
-                        );
-                        if (collab.type === 'pooled') {
-                            components.addComponents(
-                                new ButtonBuilder()
-                                    .setCustomId('pool-collab')
-                                    .setLabel('📁 Pool')
-                                    .setStyle('Primary')
-                            );
-                            components.addComponents(
-                                new ButtonBuilder()
-                                    .setCustomId('manage-pick-collab')
-                                    .setLabel('🔩 Picks')
-                                    .setStyle('Primary')
-                            );
-                        }
-
-                        components.addComponents(
-                            new ButtonBuilder()
-                                .setCustomId('reset-collab')
-                                .setLabel('🔁 Reset')
-                                .setStyle('Danger')
-                        );
-
-                        components.addComponents(
-                            new ButtonBuilder()
-                                .setCustomId('delete-collab')
-                                .setLabel('🚮 Delete')
-                                .setStyle('Danger')
-                        );
-
-                        if (collab.status !== 'on design' || int.user.id === '687004886922952755') {
-                            extraComponents = new ActionRowBuilder().addComponents(
-                                new ButtonBuilder()
-                                    .setCustomId('export-collab')
-                                    .setLabel('⬇️ Export')
-                                    .setStyle('Success')
-                            );
-                            if (typeof collab.perks !== 'undefined') {
-                                extraComponents.addComponents(
-                                    new ButtonBuilder()
-                                        .setCustomId('export-collab-perks')
-                                        .setLabel('⬇️ Perks')
-                                        .setStyle('Success')
-                                );
-                            }
-                            extraComponents.addComponents(
-                                new ButtonBuilder()
-                                    .setCustomId('deliver-collab')
-                                    .setLabel('⬆️ Deliver')
-                                    .setStyle('Success')
-                            );
-                            await int.editReply({
-                                content: '',
-                                embeds: [dashboardEmbed],
-                                components: [components, extraComponents]
-                            });
-                        } else {
-                            await int.editReply({
-                                content: '',
-                                embeds: [dashboardEmbed],
-                                components: [components]
-                            });
-                        }
-
-                    } else {
-                        components.addComponents(
-                            new ButtonBuilder()
-                                .setCustomId('manage-pick-collab')
-                                .setLabel('🔩 Picks')
-                                .setStyle('Primary')
-                        );
-                        if (collab.status !== 'on design') {
-                            extraComponents = new ActionRowBuilder().addComponents(
-                                new ButtonBuilder()
-                                    .setCustomId('export-collab')
-                                    .setLabel('⬇️ Export')
-                                    .setStyle('Success')
-                            );
-                        }
-                    }
-
-                    adminCache.set(int.user.id, {
-                        collab: collab
-                    });
-
-                } catch (e) {
-                    console.log(e);
-                    await int.editReply('Something went wrong...');
-                }
-            }
-        }
-
         if (subcommandGroup === 'quick') {
             if (subcommand === 'join') {
                 try {
@@ -1578,7 +1254,6 @@ module.exports = {
                         userCollabs.push(profileData);
                         await localFunctions.setUserCollabs(userId, userCollabs, collection);
                         await int.editReply(`You've joined the collab succesfully! Pick: ${fullPick.name}\nYour participation should appear on the spreadsheet shortly. Use the command \`\`/collabs manage\`\` to manage your participation!`);
-                        const logChannel = guild.channels.cache.get(localConstants.logChannelID);
                         const joinEmbed = new EmbedBuilder()
                             .setFooter({ text: 'Endless Mirage | New Collab Participant', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                             .setColor('#f26e6a')
@@ -1833,7 +1508,6 @@ module.exports = {
                         userCollabs.push(profileData);
                         await localFunctions.setUserCollabs(userId, userCollabs, collection);
                         await int.editReply(`You've joined the collab succesfully! Pick: ${fullPick.name}\nYour participation should appear on the spreadsheet shortly. Use the command \`\`/collabs manage\`\` to manage your participation!`);
-                        const logChannel = guild.channels.cache.get(localConstants.logChannelID);
                         const joinEmbed = new EmbedBuilder()
                             .setFooter({ text: 'Endless Mirage | New Collab Participant', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                             .setColor('#f26e6a')
@@ -2603,6 +2277,5 @@ module.exports = {
     },
     createCollabCache: createCollabCache,
     claimCache: claimCache,
-    userCheckCache: userCheckCache,
-    adminCache: adminCache
+    userCheckCache: userCheckCache
 };

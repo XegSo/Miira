@@ -7,6 +7,7 @@ module.exports = {
         name: 'shop-class'
     },
     async execute(int) {
+        await int.deferReply({ ephemeral: true });
         const shopType = int.values[0];
         const shopEmbed = new EmbedBuilder()
             .setImage('https://puu.sh/JPffc/3c792e61c9.png')
@@ -52,6 +53,6 @@ module.exports = {
             components: [actionRowOptions, actionRowShopClass]
         });
 
-        int.reply({ content: `You're now on the ${shopType} section`, ephemeral: true });
+        int.editReply(`You're now on the ${shopType} section`);
     }
 };

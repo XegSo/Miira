@@ -18,6 +18,17 @@ module.exports = {
         await localFunctions.setBlacklist(userId, 'Banned', user.osuData.osu_id, blacklistCollection);
         for (let userCollab of userCollabs) {
             let collab = await localFunctions.getCollab(userCollab.collabName, collection);
+            let contentString = '';
+            const snipes = collab.snipes;
+            if (typeof snipes !== 'undefined') {
+                if (typeof snipes.find(p => p.pick === id) !== 'undefined') {
+                    contentString = 'Snipers! ';
+                }
+                for (const snipe of snipes) {
+                    contentString = contentString.concat('', `<@${snipe.userId}>`);
+                    await localFunctions.removeCollabSnipe(collab.name, collection, snipe.userId);
+                }
+            }
             if (collab.status !== 'closed' && collab.status !== 'delivered' && collab.status !== 'archived' && collab.status !== 'completed') {
                 userCollabs = userCollabs.filter(e => e.collabName !== collab.name);
                 await localFunctions.setUserCollabs(userId, userCollabs, userCollection);
@@ -30,7 +41,7 @@ module.exports = {
                     .setColor('#f26e6a')
                     .setDescription(`**\`\`\`ml\n🎫 New Character Available!\`\`\`**                                                                                                        **${collab.name}**\nName:${userCollab.collabPick.name}\nID: ${userCollab.collabPick.id}`)
                     .setImage(userCollab.collabPick.imgURL);
-                collabLogChannel.send({ content: `User <@${userId}> has been banned.`, embeds: [leaveEmbed] });
+                collabLogChannel.send({ content: `${contentString}\nUser <@${userId}> has been banned.`, embeds: [leaveEmbed] });
             }
             console.log(`Participation removed from ${userCollab.collabName}`);
         }

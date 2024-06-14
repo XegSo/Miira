@@ -1,5 +1,5 @@
 const { collabCache } = require('./admin-collab');
-const { adminCache } = require('../../commands/collabs/collabs');
+const { adminCache } = require('../../commands/admin/admin');
 const editCache = new Map();
 
 module.exports = {

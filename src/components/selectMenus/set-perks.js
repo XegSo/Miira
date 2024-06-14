@@ -1,6 +1,6 @@
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
-const { givePerksCache } = require('../../commands/collabs/giveperks');
+const { givePerksCache } = require('../../commands/admin/admin');
 
 module.exports = {
     data: {

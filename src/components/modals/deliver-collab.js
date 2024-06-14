@@ -1,7 +1,7 @@
 const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const localFunctions = require('../../functions');
 const { collabCache } = require('../buttons/admin-collab');
-const { adminCache } = require('../../commands/collabs/collabs');
+const { adminCache } = require('../../commands/admin/admin');
 
 module.exports = {
     data: {

@@ -1,7 +1,6 @@
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
-const { giveTierCache } = require('../../commands/collabs/givetier');
-
+const { giveTierCache } = require('../../commands/admin/admin');
 module.exports = {
     data: {
         name: 'set-tier'

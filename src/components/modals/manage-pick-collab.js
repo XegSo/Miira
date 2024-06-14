@@ -3,7 +3,7 @@ const localFunctions = require('../../functions');
 const { EmbedBuilder } = require('discord.js');
 const { ActionRowBuilder, ButtonBuilder } = require('@discordjs/builders');
 const { collabCache } = require('../buttons/admin-collab');
-const { adminCache } = require('../../commands/collabs/collabs');
+const { adminCache } = require('../../commands/admin/admin');
 const manageCache = new Map();
 
 module.exports = {

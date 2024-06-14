@@ -53,7 +53,6 @@ module.exports = {
 
         if (subcommand === 'inventory') {
             await int.deferReply({ ephemeral: true });
-            const userId = int.user.id;
 
             // Retrieve the user's inventory items from the database
             const userInventory = await localFunctions.getInventory(userId, collection);
@@ -140,7 +139,6 @@ module.exports = {
         if (subcommand === 'profile') {
             await int.deferReply();
             const date = Date.now();
-            const userId = int.user.id;
             const guild = client.guilds.cache.get(localConstants.guildId);
             const guildMember = guild.members.cache.get(userId);
 
