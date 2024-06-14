@@ -111,6 +111,23 @@ module.exports = {
         } else if (int.isAutocomplete()) {
             const collection = client.db.collection('Collabs');
 
+            if (int.commandName === 'admin' && int.options.getSubcommand() === 'manage') {
+                const focusedValue = int.options.getFocused();
+                const allCollabs = await localFunctions.getCollabs(collection);
+                const filteredChoices = allCollabs.filter((collab) =>
+                    collab.name.toLowerCase().startsWith(focusedValue.toLowerCase())
+                );
+                const results = filteredChoices.map((choice) => {
+                    return {
+                        name: `${choice.name}`,
+                        value: choice.name
+                    };
+                });
+
+                await int.respond(results.slice(0, 25)).catch(() => {});
+                return;
+            }
+
             if (int.commandName === 'collabs') {
                 if (int.options.getSubcommand() === 'join') {
                     const focusedValue = int.options.getFocused();
@@ -133,22 +150,6 @@ module.exports = {
 
                         int.respond(results.slice(0, 25)).catch(() => {});
                     }
-
-                }
-                if (int.options.getSubcommand() === 'manage') {
-                    const focusedValue = int.options.getFocused();
-                    const allCollabs = await localFunctions.getCollabs(collection);
-                    const filteredChoices = allCollabs.filter((collab) =>
-                        collab.name.toLowerCase().startsWith(focusedValue.toLowerCase())
-                    );
-                    const results = filteredChoices.map((choice) => {
-                        return {
-                            name: `${choice.name}`,
-                            value: choice.name
-                        };
-                    });
-
-                    int.respond(results.slice(0, 25)).catch(() => {});
 
                 }
 
