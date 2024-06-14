@@ -124,7 +124,7 @@ module.exports = {
         }
     },
 
-    handleCollabOpenings: async function (collection, client) {
+    handleCollabOpenings: async function (collection, client, userCollection) {
         // Find documents with status "on design"
         const documents = await collection.find({ status: { $in: ['on design', 'early access'] } }).toArray();
         const guild = client.guilds.cache.get(localConstants.guildId);
@@ -258,8 +258,11 @@ module.exports = {
                             name: 'thumbnail.png'
                         });
 
+                        const usersEarlyAccess = userCollection.find({ perks: { $elemMatch: { name: 'Megacollab Early Access' } } }).toArray();
+                        const idString = usersEarlyAccess.map(doc => `<@${doc._id}>`).join(', ');
+
                         await logChannel.send({
-                            content: '',
+                            content: `${Array.from(localConstants.earlyAccessRoles).map(item => `<@&${item}>`).join(', ')} | ${idString}`,
                             files: [attachment,
                                 {
                                     attachment: `./assets/coloredLogos/logo-${document.color}.png`,
@@ -2166,7 +2169,7 @@ module.exports = {
         const collection = client.db.collection('Collabs');
         const collectionSpecial = client.db.collection('Special');
         await handleCollabClosures(collection, client);
-        await handleCollabOpenings(collection, client);
+        await handleCollabOpenings(collection, client, userCollection);
         await handlePremiumDecay(collectionSpecial, userCollection, guild);
         setTimeout(async () => {
             await handleDailyDecay(client);
@@ -2450,7 +2453,7 @@ async function scheduleDailyDecay(client) {
     const collection = client.db.collection('Collabs');
     const collectionSpecial = client.db.collection('Special');
     await handleCollabClosures(collection, client);
-    await handleCollabOpenings(collection, client);
+    await handleCollabOpenings(collection, client, userCollection);
     await handlePremiumDecay(collectionSpecial, userCollection, guild);
 
     setTimeout(async () => {
