@@ -134,15 +134,15 @@ module.exports = {
                     dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${document.name} is open!\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.\nTo join, issue the command \`\`/collabs join\`\`!`);
                     dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' });
                     embeds.push(dashboardEmbed);
-                    if (document.designs.length !== 0) {
-                        for (const design in document.designs) {
-                            let embed = new EmbedBuilder()
-                                .setURL('https://endlessmirage.net/')
-                                .setImage(document.designs[design]);
 
-                            embeds.push(embed);
-                        }
+                    for (const design in document.designs) {
+                        let embed = new EmbedBuilder()
+                            .setURL('https://endlessmirage.net/')
+                            .setImage(document.designs[design]);
+
+                        embeds.push(embed);
                     }
+
                     const attachment = new AttachmentBuilder(document.thumbnail, {
                         name: 'thumbnail.png'
                     });
@@ -203,15 +203,15 @@ module.exports = {
                         dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${document.name} is now in early access phase!\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.\nTo join, issue the command \`\`/collabs join\`\`!`);
                         dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' });
                         embeds.push(dashboardEmbed);
-                        if (document.designs.length !== 0) {
-                            for (const design in document.designs) {
-                                let embed = new EmbedBuilder()
-                                    .setURL('https://endlessmirage.net/')
-                                    .setImage(document.designs[design]);
 
-                                embeds.push(embed);
-                            }
+                        for (const design in document.designs) {
+                            let embed = new EmbedBuilder()
+                                .setURL('https://endlessmirage.net/')
+                                .setImage(document.designs[design]);
+
+                            embeds.push(embed);
                         }
+
                         const attachment = new AttachmentBuilder(document.thumbnail, {
                             name: 'thumbnail.png'
                         });
@@ -2553,15 +2553,15 @@ async function handleCollabOpenings(collection, client) {
                 dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${document.name} is open!\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.\nTo join, issue the command \`\`/collabs join\`\`!`);
                 dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' });
                 embeds.push(dashboardEmbed);
-                if (document.designs.length !== 0) {
-                    for (const design in document.designs) {
-                        let embed = new EmbedBuilder()
-                            .setURL('https://endlessmirage.net/')
-                            .setImage(document.designs[design]);
 
-                        embeds.push(embed);
-                    }
+                for (const design in document.designs) {
+                    let embed = new EmbedBuilder()
+                        .setURL('https://endlessmirage.net/')
+                        .setImage(document.designs[design]);
+
+                    embeds.push(embed);
                 }
+
                 const attachment = new AttachmentBuilder(document.thumbnail, {
                     name: 'thumbnail.png'
                 });
@@ -2622,15 +2622,16 @@ async function handleCollabOpenings(collection, client) {
                     dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${document.name} is now in early access phase!\`\`\`**                                                                                                        Please check the __**${URLstring}**__ for character availability and participants.\nTo join, issue the command \`\`/collabs join\`\`!`);
                     dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' });
                     embeds.push(dashboardEmbed);
-                    if (document.designs.length !== 0) {
-                        for (const design in document.designs) {
-                            let embed = new EmbedBuilder()
-                                .setURL('https://endlessmirage.net/')
-                                .setImage(document.designs[design]);
 
-                            embeds.push(embed);
-                        }
+                    for (const design in document.designs) {
+                        let embed = new EmbedBuilder()
+                            .setURL('https://endlessmirage.net/')
+                            .setImage(document.designs[design]);
+
+                        embeds.push(embed);
                     }
+
+
                     const attachment = new AttachmentBuilder(document.thumbnail, {
                         name: 'thumbnail.png'
                     });
