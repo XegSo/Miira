@@ -82,6 +82,48 @@ module.exports = {
         }
     },
 
+    handlePremiumDecay: async function (collection, userCollection, guild) {
+        let premium = await collection.findOne({ _id: 'Premium Data' });
+        premium = premium.date;
+        const currentTime = Math.floor(Date.now() / 1000);
+        if (currentTime >= premium) {
+            let pendingMembers = [];
+            let decayMembers = [];
+            let noDecayMembers = [];
+            await guild.members.fetch();
+            guild.members.cache.forEach(member => {
+                if (member.roles.cache.some(role => localConstants.decayPremiumRoles.has(role.id))) {
+                    pendingMembers.push(member);
+                }
+            });
+            for (const member of pendingMembers) {
+                const memberdb = await userCollection.findOne({ _id: member.id });
+                if (!memberdb) {
+                    decayMembers.push(member);
+                } else if (!memberdb.perks) {
+                    decayMembers.push(member);
+                } else if (memberdb.perks.length === 0) {
+                    decayMembers.push(member);
+                } else {
+                    noDecayMembers.push(member);
+                }
+            }
+            for (const member of decayMembers) {
+                await member.roles.add('1150484454071091280');
+                await member.roles.remove('743505566617436301');
+                if (member.roles.has('963221388892700723')) {
+                    await member.roles.remove('963221388892700723');
+                } else if (member.roles.has('767452000777535488')) {
+                    await member.roles.remove('767452000777535488');
+                } else if (member.roles.has('1146645094699642890')) {
+                    await member.roles.remove('1146645094699642890');
+                }
+                console.log(`${member.tag} has decayed into former premium.`);
+            }
+            await setPerkStartingDecayDate(currentTime + 15638400, collection);
+        }
+    },
+
     handleCollabOpenings: async function (collection, client) {
         // Find documents with status "on design"
         const documents = await collection.find({ status: { $in: ['on design', 'early access'] } }).toArray();
@@ -1417,6 +1459,9 @@ module.exports = {
         if (roles.includes('Former Premium')) {
             badges.push('Former Premium');
         }
+        if (roles.includes('Beta Tester')) {
+            badges.push('Beta Tester');
+        }
         if (roles.includes('Active Member')) {
             if (roles.includes('Novice')) {
                 badges.push('Novice');
@@ -2119,8 +2164,10 @@ module.exports = {
         }
         /* console.log('user timed out for 24 hours');*/
         const collection = client.db.collection('Collabs');
+        const collectionSpecial = client.db.collection('Special');
         await handleCollabClosures(collection, client);
         await handleCollabOpenings(collection, client);
+        await handlePremiumDecay(collectionSpecial, userCollection, guild);
         setTimeout(async () => {
             await handleDailyDecay(client);
             /* await member.timeout(86400000, "Daily timeout for this user.");*/
@@ -2401,8 +2448,10 @@ async function scheduleDailyDecay(client) {
     }
     /* console.log('user timed out for 24 hours');*/
     const collection = client.db.collection('Collabs');
+    const collectionSpecial = client.db.collection('Special');
     await handleCollabClosures(collection, client);
     await handleCollabOpenings(collection, client);
+    await handlePremiumDecay(collectionSpecial, userCollection, guild);
 
     setTimeout(async () => {
         await handleDailyDecay(client);
@@ -2496,6 +2545,48 @@ function excelSheetCoordinateToRowCol(coordinate) {
     }
 
     return { row: parseInt(row, 10) - 1, col: col - 1 };
+}
+
+async function handlePremiumDecay(collection, userCollection, guild) {
+    let premium = await collection.findOne({ _id: 'Premium Data' });
+    premium = premium.date;
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (currentTime >= premium) {
+        let pendingMembers = [];
+        let decayMembers = [];
+        let noDecayMembers = [];
+        await guild.members.fetch();
+        guild.members.cache.forEach(member => {
+            if (member.roles.cache.some(role => localConstants.decayPremiumRoles.has(role.id))) {
+                pendingMembers.push(member);
+            }
+        });
+        for (const member of pendingMembers) {
+            const memberdb = await userCollection.findOne({ _id: member.id });
+            if (!memberdb) {
+                decayMembers.push(member);
+            } else if (!memberdb.perks) {
+                decayMembers.push(member);
+            } else if (memberdb.perks.length === 0) {
+                decayMembers.push(member);
+            } else {
+                noDecayMembers.push(member);
+            }
+        }
+        for (const member of decayMembers) {
+            await member.roles.add('1150484454071091280');
+            await member.roles.remove('743505566617436301');
+            if (member.roles.has('963221388892700723')) {
+                await member.roles.remove('963221388892700723');
+            } else if (member.roles.has('767452000777535488')) {
+                await member.roles.remove('767452000777535488');
+            } else if (member.roles.has('1146645094699642890')) {
+                await member.roles.remove('1146645094699642890');
+            }
+            console.log(`${member.tag} has decayed into former premium.`);
+        }
+        await setPerkStartingDecayDate(currentTime + 15638400, collection);
+    }
 }
 
 async function handleCollabOpenings(collection, client, userCollection) {
@@ -2844,4 +2935,8 @@ function getColumnRange(coordinate) {
 
 async function setFullSubStatus(userId, monthlyDonation, collection) {
     await collection.updateOne({ _id: userId }, { $set: { monthlyDonation } }, { upsert: true });
+}
+
+async function setPerkStartingDecayDate(date, collection) {
+    await collection.updateOne({ _id: 'Premium Data' }, { $set: { date } }, { upsert: true });
 }

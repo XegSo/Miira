@@ -33,7 +33,17 @@ module.exports = {
                                 .setName('timer')
                                 .setDescription('Time in hours')
                                 .setRequired(true)
-                        ),
+                        )
+                )
+                .addSubcommand((subcommand) =>
+                    subcommand.setName('give-role')
+                        .setDescription('Assign a role to specified users')
+                        .addRoleOption(option =>
+                            option
+                                .setName('role')
+                                .setDescription('The role to give to the users.')
+                                .setRequired(true)
+                        )
                 )
                 .addSubcommand((subcommand) =>
                     subcommand.setName('give-tokens')
@@ -49,7 +59,7 @@ module.exports = {
                                 .setName('amount')
                                 .setDescription('Amount of credits to assign')
                                 .setRequired(true)
-                        ),
+                        )
                 )
                 .addSubcommand((subcommand) =>
                     subcommand.setName('ticket-create')
@@ -59,7 +69,7 @@ module.exports = {
                                 .setName('channelid')
                                 .setDescription('Insert the channel ID for the embed')
                                 .setRequired(true)
-                        ),
+                        )
                 )
         )
         .addSubcommandGroup((subcommandGroup) =>
@@ -96,7 +106,7 @@ module.exports = {
                                 .setName('reason')
                                 .setDescription('Reason')
                                 .setRequired(true)
-                        ),
+                        )
                 )
                 .addSubcommand((subcommand) =>
                     subcommand.setName('set-bumps')
@@ -110,7 +120,7 @@ module.exports = {
                                 .setName('user')
                                 .setDescription('User to assign the perks.')
                                 .setRequired(true)
-                        ),
+                        )
                 )
                 .addSubcommand((subcommand) =>
                     subcommand.setName('give-tier')
@@ -120,7 +130,7 @@ module.exports = {
                                 .setName('user')
                                 .setDescription('User to assign the tier.')
                                 .setRequired(true)
-                        ),
+                        )
                 )
                 .addSubcommand((subcommand) =>
                     subcommand.setName('remove-perks')
@@ -130,7 +140,7 @@ module.exports = {
                                 .setName('user')
                                 .setDescription('User to remove the perks.')
                                 .setRequired(true)
-                        ),
+                        )
                 )
                 .addSubcommand((subcommand) =>
                     subcommand.setName('remove-tier')
@@ -140,7 +150,7 @@ module.exports = {
                                 .setName('user')
                                 .setDescription('User to remove the tier.')
                                 .setRequired(true)
-                        ),
+                        )
                 )
                 .addSubcommand((subcommand) =>
                     subcommand.setName('premium-embed')
@@ -154,7 +164,7 @@ module.exports = {
                                 .setName('user')
                                 .setDescription('User to check')
                                 .setRequired(true)
-                        ),
+                        )
                 )
                 .addSubcommand((subcommand) =>
                     subcommand.setName('set-decay')
@@ -164,7 +174,7 @@ module.exports = {
                                 .setName('decaydate')
                                 .setDescription('Decay date in UNIX epoch.')
                                 .setRequired(true)
-                        ),
+                        )
                 )
                 .addSubcommand((subcommand) =>
                     subcommand.setName('set-prestige')
@@ -236,6 +246,28 @@ module.exports = {
                 const newBalance = currentBalance + amount;
                 await localFunctions.setBalance(userId.id, newBalance, collection);
                 await int.editReply(`Assigned ${amount} credits to user <@${userId.id}>.`);
+                return;
+            }
+            if (subcommand === 'give-role') {
+                if (int.user.id !== '687004886922952755') return int.editReply('You cannot do this.');
+                const channel_update = await client.channels.cache.get('785727123808583721');
+                const userIds = [];
+                // Check if the command has the required arguments/options
+                const role = int.options.getRole('role');
+
+                for (const user of userIds) {
+                    try {
+                        const member = await int.guild.members.fetch(user);
+                        if (member.roles.cache.has(role)) continue;
+                        await member.roles.add(role);
+                        channel_update.send({ content: `<@${user}> You've Obtained the Beta Tester Role!` });
+                    } catch {
+                        console.log('Unknown Member');
+                    }
+                }
+
+                int.editReply('Done!');
+
                 return;
             }
             if (subcommand === 'ticket-create') {
@@ -978,7 +1010,7 @@ module.exports = {
                                     components: [useComponents, mainComponents]
                                 });
                             }
-                        } catch (error) {
+                        } catch {
                             premiumEmbed.addFields(
                                 {
                                     name: '‎',

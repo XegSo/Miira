@@ -22,6 +22,8 @@ const staffUserIds = [
 
 const earlyAccessRoles = new Set(['630636502187114496', '834962043735638016', '962251481669574666', '1146532857293045790', '1200147391765024859']);
 
+const decayPremiumRoles = new Set(['963221388892700723', '767452000777535488', '1146645094699642890']);
+
 const collabAdminsRoleID = '630636502187114496';
 
 const unnecesaryFieldsOsu = [
@@ -119,7 +121,8 @@ const prestigeRolesIDs = [
     '963258567425658910',
     '963258579165524008',
     '1071824409012219994',
-    '1146532857293045790'
+    '1146532857293045790',
+    '1200147391765024859'
 ];
 
 const paypal = 'https://www.paypal.me/xegEM/';
@@ -833,6 +836,7 @@ const startingSubDay = 1;
 const finalSubDay = 5;
 
 module.exports = {
+    decayPremiumRoles,
     reportsLogChannelID,
     userActionsLogChannelID,
     auditLogChannelID,
