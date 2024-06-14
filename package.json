@@ -38,6 +38,10 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "glob": "^10.3.10"
+    "@eslint/js": "^9.5.0",
+    "@stylistic/eslint-plugin-js": "^2.1.0",
+    "eslint": "^9.5.0",
+    "glob": "^10.3.10",
+    "globals": "^15.4.0"
   }
 }

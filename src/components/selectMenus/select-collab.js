@@ -229,7 +229,7 @@ module.exports = {
                             break;
                         case 'early access':
                             infoValue = '**Peak premium users, peak prestige users and admins are now picking!**';
-                            if (typeof userPerks.find(e => e.name === 'Megacollab Early Access') !== 'undefined' || prestigeLevel >= 8 || guildMember.roles.cache.has('630636502187114496')/* admin*/ || guildMember.roles.cache.has('834962043735638016')/* special donator*/ || guildMember.roles.cache.has('962251481669574666')/* contributor*/) {
+                            if (typeof userPerks.find(e => e.name === 'Megacollab Early Access') !== 'undefined' || localFunctions.haveCommonElement(guildMember.roles.cache, localConstants.earlyAccessRoles)) {
                                 infoValue = '**You have early access!**';
                                 components.addComponents(
                                     new ButtonBuilder()

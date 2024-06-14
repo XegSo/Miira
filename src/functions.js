@@ -258,9 +258,6 @@ module.exports = {
     getColumnRange: function (coordinate) {
         // Extract the column letter(s) from the coordinate
         let column = coordinate.match(/[A-Z]+/)[0];
-        // Extract the row number from the coordinate
-        let row = parseInt(coordinate.match(/[0-9]+/)[0]);
-
         // Find the next column letter(s)
         let nextColumn = '';
         if (column.length === 1) {
@@ -301,7 +298,6 @@ module.exports = {
         let currentIndex = 0;
         let sheet;
         let lastColumn = 0;
-        let lastSheetIndex = null;
         for (let item of pool) {
             if (item.coordinate !== lastColumn && lastColumn !== 0) {
                 initialization = false;
@@ -314,7 +310,6 @@ module.exports = {
             if (!initialization) {
                 sheet = doc.sheetsByIndex[parseInt(item.sheetIndex)];
                 currentIndex = parseInt(item.sheetIndex);
-                lastSheetIndex = currentIndex;
                 initialization = true;
                 await sheet.loadCells(`${getColumnRange(item.coordinate)}`);
                 console.log(`Sheet ${currentIndex} loaded.`);
@@ -1217,7 +1212,7 @@ module.exports = {
         for (const key in osuData) {
             update[`participants.$[elem].${key}`] = osuData[key];
         }
-        const result = await collection.updateMany(
+        await collection.updateMany(
             { 'participants.discordId': discordId },
             { $set: update },
             { arrayFilters: [{ 'elem.discordId': discordId }] }
@@ -1754,6 +1749,10 @@ module.exports = {
         return ctx.font;
     },
 
+    haveCommonElement: function (set1, set2) {
+        return [...set1].some(item => set2.has(item));
+    },
+
     applyGlobalBoost: async function (multiplier, durationInHours, client) {
         const collection = client.db.collection('Special');
 
@@ -1957,16 +1956,14 @@ module.exports = {
     },
 
     updateLeaderboardData: async function (client, type) {
-        let leaderboardDataCombo = [];
-        let leaderboardDataTokens = [];
         try {
             const userData = await fetchUserDataFromDatabase(client);
             if (type === 'tokens') {
                 const sortedTokens = userData.sort((a, b) => b.credits - a.credits);
-                return leaderboardDataTokens = sortedTokens.slice(0, 10); // Top 10 users by tokens
+                return sortedTokens.slice(0, 10); // Top 10 users by tokens
             } else {
                 const sortedCombo = userData.sort((a, b) => b.topCombo - a.topCombo);
-                return leaderboardDataCombo = sortedCombo.slice(0, 10); // Top 10 users by combo
+                return sortedCombo.slice(0, 10); // Top 10 users by combo
             }
         } catch (error) {
             console.error('Error updating leaderboard data:', error);
@@ -2501,7 +2498,7 @@ function excelSheetCoordinateToRowCol(coordinate) {
     return { row: parseInt(row, 10) - 1, col: col - 1 };
 }
 
-async function handleCollabOpenings(collection, client) {
+async function handleCollabOpenings(collection, client, userCollection) {
     // Find documents with status "on design"
     const documents = await collection.find({ status: { $in: ['on design', 'early access'] } }).toArray();
     const guild = client.guilds.cache.get(localConstants.guildId);
@@ -2636,8 +2633,11 @@ async function handleCollabOpenings(collection, client) {
                         name: 'thumbnail.png'
                     });
 
+                    const usersEarlyAccess = userCollection.find({ perks: { $elemMatch: { name: 'Megacollab Early Access' } } }).toArray();
+                    const idString = usersEarlyAccess.map(doc => `<@${doc._id}>`).join(', ');
+
                     await logChannel.send({
-                        content: '',
+                        content: `${Array.from(localConstants.earlyAccessRoles).map(item => `<@&${item}>`).join(', ')} | ${idString}`,
                         files: [attachment,
                             {
                                 attachment: `./assets/coloredLogos/logo-${document.color}.png`,
@@ -2742,7 +2742,7 @@ function fileExists(path) {
     try {
         fs.accessSync(path);
         return true;
-    } catch (error) {
+    } catch {
         return false;
     }
 }
@@ -2781,17 +2781,6 @@ function capitalizeFirstLetter(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-async function getMeanColor(imageUrl) {
-    try {
-        const palette = await Vibrant.from(imageUrl).getPalette();
-        const meanColor = palette.Vibrant.getHex();
-        return meanColor;
-    } catch (error) {
-        console.error('Error:', error.message);
-        return null;
-    }
-}
-
 async function getSubbedUsers(collection) {
     let subbedUsers = await collection.find({ 'monthlyDonation': { $exists: true } }).toArray();
     subbedUsers = subbedUsers.filter(e => e.monthlyDonation.status !== 'innactive');
@@ -2819,9 +2808,6 @@ function isEqual(obj1, obj2) {
 function getColumnRange(coordinate) {
     // Extract the column letter(s) from the coordinate
     let column = coordinate.match(/[A-Z]+/)[0];
-    // Extract the row number from the coordinate
-    let row = parseInt(coordinate.match(/[0-9]+/)[0]);
-
     // Find the next column letter(s)
     let nextColumn = '';
     if (column.length === 1) {

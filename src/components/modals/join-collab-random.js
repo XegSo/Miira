@@ -51,7 +51,9 @@ module.exports = {
                 if (typeof userCollabData.find(e => verificationCollabs.find(c => c.name === e.name)) !== 'undefined') {
                     return int.editReply('You are already participating in an active collab!');
                 }
-            } catch { }
+            } catch {
+                console.log('User isn\'t in any collab');
+            }
 
 
             let collab = await localFunctions.getCollab(joinCache.get(int.user.id).collab, collection);
