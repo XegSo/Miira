@@ -368,14 +368,12 @@ module.exports = {
             dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' });
             embeds.push(dashboardEmbed);
 
-            if (collab.designs.length !== 0) {
-                for (const design of collab.designs) {
-                    let embed = new EmbedBuilder()
-                        .setURL('https://endlessmirage.net/')
-                        .setImage(design);
+            for (const design in collab.designs) {
+                let embed = new EmbedBuilder()
+                    .setURL('https://endlessmirage.net/')
+                    .setImage(collab.designs[design]);
 
-                    embeds.push(embed);
-                }
+                embeds.push(embed);
             }
 
             const fullCollab = await localFunctions.getCollab(collab.name, collection);

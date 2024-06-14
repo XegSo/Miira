@@ -48,15 +48,15 @@ module.exports = {
         dashboardEmbed.setDescription(`**\`\`\`\n🏐 ${fullCollab.name} has been delivered open!\`\`\`**`);
         dashboardEmbed.setFooter({ text: 'Endless Mirage | Collabs Dashboard', iconURL: 'attachment://footer.png' });
         embeds.push(dashboardEmbed);
-        if (fullCollab.designs.length !== 0) {
-            for (const design in fullCollab.designs) {
-                let embed = new EmbedBuilder()
-                    .setURL('https://endlessmirage.net/')
-                    .setImage(fullCollab.designs[design]);
 
-                embeds.push(embed);
-            }
+        for (const design in fullCollab.designs) {
+            let embed = new EmbedBuilder()
+                .setURL('https://endlessmirage.net/')
+                .setImage(fullCollab.designs[design]);
+
+            embeds.push(embed);
         }
+
         const attachment = new AttachmentBuilder(fullCollab.thumbnail, {
             name: 'thumbnail.png'
         });
