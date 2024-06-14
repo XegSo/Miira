@@ -53,7 +53,6 @@ module.exports = {
 
                 if (!int.member.roles.cache.has('1150870875650928771')) {
                     await int.member.roles.add('1150870875650928771');
-                    await int.member.roles.add('1150871272822161408');
                 }
 
                 await int.editReply({ content: 'You have obtained the Novice Active Member Role!', ephemeral: true });
@@ -114,7 +113,6 @@ module.exports = {
 
                 if (!int.member.roles.cache.has('1150870875650928771')) {
                     await int.member.roles.add('1150870875650928771');
-                    await int.member.roles.add('1150871272822161408');
                 }
 
                 await int.editReply({ content: 'You have obtained the Advanced Active Member Role!', ephemeral: true });
@@ -130,7 +128,6 @@ module.exports = {
 
                 if (!int.member.roles.cache.has('1150870875650928771')) {
                     await int.member.roles.add('1150870875650928771');
-                    await int.member.roles.add('1150871272822161408');
                 }
 
                 await int.editReply({ content: 'You have obtained the **Ultimate** Active Member Role!', ephemeral: true });
