@@ -41,7 +41,7 @@ module.exports = {
                     .setColor('#f26e6a')
                     .setDescription(`**\`\`\`ml\n🎫 New Character Available!\`\`\`**                                                                                                        **${collab.name}**\nName:${userCollab.collabPick.name}\nID: ${userCollab.collabPick.id}`)
                     .setImage(userCollab.collabPick.imgURL);
-                collabLogChannel.send({ content: `${contentString}\nUser <@${userId}> has been banned.`, embeds: [leaveEmbed] });
+                collabLogChannel.send({ content: `${contentString}\nUser ${member.user.tag} has been banned.`, embeds: [leaveEmbed] });
             }
             console.log(`Participation removed from ${userCollab.collabName}`);
         }
