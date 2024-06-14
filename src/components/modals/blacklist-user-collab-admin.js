@@ -50,7 +50,7 @@ module.exports = {
         await pendingMember.roles.remove(collab.roleId);
 
         let contentString = '';
-        const snipes = collab.snipes;
+        const snipes = await localFunctions.getCollabSnipes(collab.name, collection, id);
         if (typeof snipes !== 'undefined') {
             if (typeof snipes.find(p => p.pick === id) !== 'undefined') {
                 contentString = 'Snipers! ';

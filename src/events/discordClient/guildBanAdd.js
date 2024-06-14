@@ -19,7 +19,7 @@ module.exports = {
         for (let userCollab of userCollabs) {
             let collab = await localFunctions.getCollab(userCollab.collabName, collection);
             let contentString = '';
-            const snipes = collab.snipes;
+            const snipes = await localFunctions.getCollabSnipes(userCollab.collabName, collection, userCollab.collabPick.id);
             if (typeof snipes !== 'undefined') {
                 if (typeof snipes.find(p => p.pick === userCollab.collabPick.id) !== 'undefined') {
                     contentString = 'Snipers! ';
