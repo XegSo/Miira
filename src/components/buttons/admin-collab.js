@@ -13,7 +13,7 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(int.user.id);
-        if (!guildMember.roles.cache.has(localConstants.collabAdminsRoleID)) return;
+        if (!guildMember.roles.cache.has(localConstants.collabManagerRole)) return;
         const collection = client.db.collection('Collabs');
 
         try {

@@ -356,7 +356,7 @@ module.exports = {
             }
 
 
-            if (userId === collab.host || guildMember.roles.cache.has(localConstants.collabAdminsRoleID)) {
+            if (userId === collab.host || guildMember.roles.cache.has(localConstants.collabManagerRole)) {
                 components.addComponents(
                     new ButtonBuilder()
                         .setCustomId('admin-collab')

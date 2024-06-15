@@ -12,7 +12,7 @@ module.exports = {
 
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(int.user.id);
-        if (!guildMember.roles.cache.has(localConstants.collabAdminsRoleID)) return int.editReply('You have no permission to do this!');
+        if (!guildMember.roles.cache.has(localConstants.collabManagerRole)) return int.editReply('You have no permission to do this!');
         if (typeof report === 'undefined') return int.editReply('Something went wrong...');
 
         let reportEmbed = new EmbedBuilder()
