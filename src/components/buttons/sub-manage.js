@@ -62,7 +62,7 @@ module.exports = {
         buyEmbed.addFields(
             {
                 name: ' ',
-                value: `**\`\`\`prolog\n💵 Subscription Info\`\`\`**\n**Current Donated Amount:** ${subStatus.total}$\n**Current Monthly Amount:** ${subStatus.currentAmount}$\n**Starting Date:** ${subStatus.startingDate}\n**Last Payment:** ${subStatus.lastDate}\n**Total Months:** ${monthsDiff}\n${renewalString}\nNext Payment Window: ${localConstants.startingSubDay}/${formattedMonth}/${year} - ${localConstants.finalSubDay}/${formattedMonth}/${year}`
+                value: `**\`\`\`prolog\n💵 Subscription Info\`\`\`**\n**Current Donated Amount:** ${subStatus.total}$\n**Current Monthly Amount:** ${subStatus.currentAmount}$\n**Starting Date:** ${subStatus.startingDate}\n**Last Payment:** ${subStatus.lastDate}\n**Total Months:** ${subStatus.months ? subStatus.months : monthsDiff}\n${renewalString}\nNext Payment Window: ${localConstants.startingSubDay}/${formattedMonth}/${year} - ${localConstants.finalSubDay}/${formattedMonth}/${year}`
             }
         );
 
