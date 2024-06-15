@@ -1417,6 +1417,9 @@ module.exports = {
         if (roles.includes('Designer')) {
             badges.push('Designer');
         }
+        if (roles.includes('Collab Curator')) {
+            badges.push('Collab Curator');
+        }
         if (roles.includes('Tournament')) {
             badges.push('Tournament');
         }
