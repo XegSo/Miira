@@ -1986,7 +1986,7 @@ module.exports = {
                                     .setStyle('Danger')
                             );
 
-                            if (guildMember.roles.cache.has('630636502187114496')) {
+                            if (guildMember.roles.cache.has(localConstants.collabAdminsRoleID)) {
                                 const adminComponents = new ActionRowBuilder();
 
                                 adminComponents.addComponents(
@@ -2066,7 +2066,7 @@ module.exports = {
                                     .setStyle('Success')
                             );
 
-                            if (guildMember.roles.cache.has('630636502187114496')) {
+                            if (guildMember.roles.cache.has(localConstants.collabAdminsRoleID)) {
                                 const adminComponents = new ActionRowBuilder();
                                 adminComponents.addComponents(
                                     new ButtonBuilder()
@@ -2170,7 +2170,7 @@ module.exports = {
                                 .setStyle('Danger')
                         );
 
-                        if (guildMember.roles.cache.has('630636502187114496')) {
+                        if (guildMember.roles.cache.has(localConstants.collabAdminsRoleID)) {
                             const adminComponents = new ActionRowBuilder();
 
                             adminComponents.addComponents(

@@ -11,7 +11,7 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(int.user.id);
-        if (!guildMember.roles.cache.has('630636502187114496')) return int.editReply('You have no permission to do this!');
+        if (!guildMember.roles.cache.has(localConstants.collabAdminsRoleID)) return int.editReply('You have no permission to do this!');
         const request = ImageRequestCache.get(int.user.id).request;
         const message = ImageRequestCache.get(int.user.id).message;
         if (typeof request === 'undefined') return int.editReply('Something went wrong...');

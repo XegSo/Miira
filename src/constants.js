@@ -20,6 +20,8 @@ const staffUserIds = [
     '969663617828020224'
 ];
 
+const collabManagerRole = '1251338108084031599';
+
 const earlyAccessRoles = new Set(['630636502187114496', '834962043735638016', '962251481669574666', '1146532857293045790', '1200147391765024859', '861679323739717642']);
 
 const decayPremiumRoles = new Set(['963221388892700723', '767452000777535488', '1146645094699642890']);
@@ -872,5 +874,6 @@ module.exports = {
     mirageLogo,
     imageSwapChannelID,
     collabAdminsRoleID,
-    earlyAccessRoles
+    earlyAccessRoles,
+    collabManagerRole
 };

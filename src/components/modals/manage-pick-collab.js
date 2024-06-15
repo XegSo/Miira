@@ -28,7 +28,7 @@ module.exports = {
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(userId);
         let collab = initializedMap.get(int.user.id).collab;
-        if (!guildMember.roles.cache.has(localConstants.collabAdminsRoleID) && collab.host !== userId) return int.editReply('You\'re not allowed to do this!');
+        if (!guildMember.roles.cache.has(localConstants.collabManagerRole) && collab.host !== userId) return int.editReply('You\'re not allowed to do this!');
         let digits = collab.pool.items[0].id.length;
         const typedPick = localFunctions.padNumberWithZeros(parseInt(int.fields.getTextInputValue('pick')), digits);
         const pick = await collab.pool.items.find((e) => e.id === typedPick);
