@@ -434,6 +434,11 @@ module.exports = {
                                     .setStyle('Success')
                             );
                         }
+                        await int.editReply({
+                            content: '',
+                            embeds: [dashboardEmbed],
+                            components: [components]
+                        });
                     }
 
                     adminCache.set(int.user.id, {

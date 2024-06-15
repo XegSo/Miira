@@ -145,6 +145,11 @@ module.exports = {
                             .setStyle('Success')
                     );
                 }
+                await int.editReply({
+                    content: '',
+                    embeds: [dashboardEmbed],
+                    components: [components]
+                });
             }
 
             collabCache.set(int.user.id, {
