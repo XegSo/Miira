@@ -35,7 +35,7 @@ module.exports = {
             .addFields(
                 {
                     name: '‎',
-                    value: `┌ Username: **${user.username}**\n├ Country: **${user.country_code}**\n├ Rank: **${user.statistics.global_rank}**\n├ Peak Rank: **${user.rank_highest.rank}**\n└ Level: **${user.statistics.level.current}**`,
+                    value: `┌ Username: **${user.username}**\n├ Country: **${user.country_code}**\n├ Rank: **${user.statistics.global_rank}**\n├ Peak Rank: **${user.rank_highest ? user.rank_highest.rank : 'None'}**\n└ Level: **${user.statistics.level.current}**`,
                     inline: true
                 },
                 {

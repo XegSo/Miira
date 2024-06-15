@@ -21,6 +21,11 @@ module.exports = {
                 osu_user_full = fetchCache.get(userId).osu_user;
             }
             const osu_user = localFunctions.removeFields(osu_user_full, localConstants.unnecesaryFieldsOsu);
+            if (typeof osu_user.rank_highest === 'undefined') {
+                osu_user.rank_highest = {
+                    rank: 0
+                };
+            }
             const blacklistCheck = await localFunctions.getBlacklistOsuId(osu_user.id, blacklistCollection);
             if (blacklistCheck) return int.editReply('You cannot link this account because you\'re blacklisted from the collabs.');
             const currentData = await localFunctions.getVerificationData(userId, collection);
