@@ -4,7 +4,7 @@ const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
     name: 'guildBanAdd',
-    async execute(guild, user) {
+    async execute({ guild, user }) {
         const userId = user.id;
         const collabLogChannel = guild.channels.cache.get(localConstants.logChannelID);
         const client = guild.client;
