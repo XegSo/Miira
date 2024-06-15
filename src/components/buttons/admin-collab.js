@@ -96,7 +96,7 @@ module.exports = {
                         .setStyle('Danger')
                 );
 
-                if (collab.status !== 'on design' || int.user.id === '687004886922952755') {
+                if (collab.status !== 'on design' || int.user.id === '687004886922952755' || int.user.id === collab.host) {
                     extraComponents = new ActionRowBuilder().addComponents(
                         new ButtonBuilder()
                             .setCustomId('export-collab')
