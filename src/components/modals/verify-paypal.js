@@ -103,7 +103,7 @@ module.exports = {
                 await localFunctions.setPerks(userId, perksToAssign, collection);
                 await localFunctions.liquidatePaymentData(email, collectionPayments);
                 await int.editReply({
-                    content: 'Your payment has been verified! Thank you for your purchase, check your new status using /premium.'
+                    content: 'Your payment has been verified! Thank you for your purchase, check your new status using /collabs premium.'
                 });
                 const premiumLogChannel = guild.channels.cache.get('1195256632318365746');
                 premiumLogChannel.send({ content: '', embeds: [premiumLogEmbed] });

@@ -143,7 +143,7 @@ module.exports = {
                     await int.editReply({ content: 'You already have one of the perks of the Mirage I Premium Tier!', ephemeral: true });
                     return;
                 }
-                await int.editReply({ content: 'You have obtained the Mirage I Perk! Check /premium', ephemeral: true });
+                await int.editReply({ content: 'You have obtained the Mirage I Perk! Check /collabs premium', ephemeral: true });
 
             } else if (selectedItem === 'Endless Mirage Skin') {
                 let perk = localConstants.premiumTiers[4].perks[0];
@@ -155,7 +155,7 @@ module.exports = {
                     await int.editReply({ content: 'You already have this perk!', ephemeral: true });
                     return;
                 }
-                await int.editReply({ content: 'You have obtained the Endless Mirage Skin Perk! Check /premium', ephemeral: true });
+                await int.editReply({ content: 'You have obtained the Endless Mirage Skin Perk! Check /collabs premium', ephemeral: true });
 
             } else if (selectedItem === 'Collab Early Access') {
                 let perk = localConstants.premiumTiers[6].perks[0];
@@ -167,7 +167,7 @@ module.exports = {
                     await int.editReply({ content: 'You already have this perk!', ephemeral: true });
                     return;
                 }
-                await int.editReply({ content: 'You have obtained the Collab Early Access Perk! Check /premium', ephemeral: true });
+                await int.editReply({ content: 'You have obtained the Collab Early Access Perk! Check /collabs premium', ephemeral: true });
 
             } else if (selectedItem === 'Global Boost') {
                 const announcementsChannel = int.guild.channels.cache.get('764561474000912434');

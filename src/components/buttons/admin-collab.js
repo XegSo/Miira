@@ -131,7 +131,7 @@ module.exports = {
                 }
 
             } else {
-                components.addComponents(
+                components = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setCustomId('manage-pick-collab')
                         .setLabel('🔩 Picks')

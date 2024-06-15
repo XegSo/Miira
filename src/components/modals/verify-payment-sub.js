@@ -29,6 +29,19 @@ module.exports = {
                 const formattedDate = `${formattedDay}/${formattedMonth}/${year}`;
                 console.log('A new sub payment has been verified.');
                 let userSubData = user.monthlyDonation;
+                const startingDateParts = userSubData.startingDate.split('/');
+                const lastPaymentParts = userSubData.lastDate.split('/');
+
+                const startingDate = new Date(startingDateParts[2], startingDateParts[1] - 1, startingDateParts[0]);
+                const lastPayment = new Date(lastPaymentParts[2], lastPaymentParts[1] - 1, lastPaymentParts[0]);
+
+                const monthsDiff = (lastPayment.getFullYear() - startingDate.getFullYear()) * 12 + lastPayment.getMonth() - startingDate.getMonth();
+                if (typeof userSubData.months !== 'undefined') {
+                    userSubData.months = userSubData.months + 1;
+                } else {
+                    userSubData.months = monthsDiff + 1;
+                }
+
                 userSubData.lastDate = formattedDate;
                 userSubData.status = 'paid';
                 let newTotal = parseInt(userSubData.total) + userSubAmount;
@@ -39,7 +52,7 @@ module.exports = {
                     .setThumbnail(int.user.displayAvatarURL())
                     .setFooter({ text: 'Endless Mirage', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
-                    .setDescription(`**Amount payed: ${userSubAmount}$**\n**Payment made by <@${userId}>**\n**Payment method: ${paymentData.type}**`)
+                    .setDescription(`**Amount payed: ${userSubAmount}$**\n**Payment made by <@${userId}>**\n**Payment method: ${paymentData.type}**\n**Months: ${userSubData.months} months**`)
                     .setTimestamp();
 
                 await localFunctions.setFullSubStatus(userId, userSubData, collection);
@@ -70,7 +83,7 @@ module.exports = {
                     await localFunctions.setPerks(userId, perksToAssign, collection);
                     console.log(`Tier upgrade has been executed due to monthly support renewal for ${int.user.tag}.`);
                     await int.editReply({
-                        content: 'Your payment has been verified and your tier has been upgraded! Thank you for your renewal <3, check your new status using /premium.'
+                        content: 'Your payment has been verified and your tier has been upgraded! Thank you for your renewal <3, check your new status using /collabs premium.'
                     });
                 } else {
                     if (fullTier.generalRenewalPrice === null || userSubData.total >= fullTier.generalRenewalPrice) {
@@ -83,7 +96,7 @@ module.exports = {
                         console.log(`Full renewal of perks has been executed due to monthly support renewal for ${int.user.tag}.`);
                     }
                     await int.editReply({
-                        content: 'Your payment has been verified! Thank you for your renewal <3, check your new status using /premium.'
+                        content: 'Your payment has been verified! Thank you for your renewal <3, check your new status using /collabs premium.'
                     });
                 }
                 const premiumLogChannel = guild.channels.cache.get('1195256632318365746');

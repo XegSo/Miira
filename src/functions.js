@@ -258,7 +258,7 @@ module.exports = {
                             name: 'thumbnail.png'
                         });
 
-                        const usersEarlyAccess = userCollection.find({ perks: { $elemMatch: { name: 'Megacollab Early Access' } } }).toArray();
+                        const usersEarlyAccess = await userCollection.find({ perks: { $elemMatch: { name: 'Megacollab Early Access' } } }).toArray();
                         const idString = usersEarlyAccess.map(doc => `<@${doc._id}>`).join(' ');
 
                         await logChannel.send({
@@ -2579,11 +2579,11 @@ async function handlePremiumDecay(collection, userCollection, guild) {
         for (const member of decayMembers) {
             await member.roles.add('1150484454071091280');
             await member.roles.remove('743505566617436301');
-            if (member.roles.has('963221388892700723')) {
+            if (member.roles.cache.has('963221388892700723')) {
                 await member.roles.remove('963221388892700723');
-            } else if (member.roles.has('767452000777535488')) {
+            } else if (member.roles.cache.has('767452000777535488')) {
                 await member.roles.remove('767452000777535488');
-            } else if (member.roles.has('1146645094699642890')) {
+            } else if (member.roles.cache.has('1146645094699642890')) {
                 await member.roles.remove('1146645094699642890');
             }
             console.log(`${member.tag} has decayed into former premium.`);
@@ -2727,7 +2727,7 @@ async function handleCollabOpenings(collection, client, userCollection) {
                         name: 'thumbnail.png'
                     });
 
-                    const usersEarlyAccess = userCollection.find({ perks: { $elemMatch: { name: 'Megacollab Early Access' } } }).toArray();
+                    const usersEarlyAccess = await userCollection.find({ perks: { $elemMatch: { name: 'Megacollab Early Access' } } }).toArray();
                     const idString = usersEarlyAccess.map(doc => `<@${doc._id}>`).join(', ');
 
                     await logChannel.send({

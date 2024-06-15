@@ -16,6 +16,6 @@ module.exports = {
         }
 
         await localFunctions.setSubAmount(int.user.id, collection, newAmmount);
-        return int.editReply('Your monthly subscription amount has been edited! Run /premium to check it.');
+        return int.editReply('Your monthly subscription amount has been edited! Run /collabs premium to check it.');
     }
 };

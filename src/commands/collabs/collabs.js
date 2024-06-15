@@ -153,7 +153,7 @@ module.exports = {
 
         if (subcommand === 'create') {
             if (userId !== '687004886922952755') {
-                await int.reply('You are not allowed to do this!');
+                await int.editReply('You are not allowed to do this!');
                 return;
             }
             int.editReply('Please reply to this message with a JSON attatchment.');
@@ -165,7 +165,7 @@ module.exports = {
         }
 
         if (subcommand === 'feedback') {
-            await int.reply({ content: 'This command is WIP!' });
+            await int.editReply({ content: 'This command is WIP!' });
             return;
         }
 
@@ -1054,7 +1054,7 @@ module.exports = {
                                 components: [useComponents, mainComponents, subComponent]
                             });
                         }
-                    } catch (error) {
+                    } catch {
                         premiumEmbed.addFields(
                             {
                                 name: '‎',
@@ -1130,7 +1130,9 @@ module.exports = {
                             if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) !== 'undefined') {
                                 return int.editReply('You\'re already participating on this collab! To edit your pick use the ``/collabs manage`` command.');
                             }
-                        } catch { }
+                        } catch (e) {
+                            console.log(e);
+                        }
                         let pick = int.options.getString('pick');
                         const userOsuDataFull = await localFunctions.getOsuData(int.user.id, collection);
                         if (!userOsuDataFull) {
@@ -1386,7 +1388,9 @@ module.exports = {
                             if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) !== 'undefined') {
                                 return int.editReply('You\'re already participating on this collab! To edit your pick use the ``/collabs manage`` command.');
                             }
-                        } catch { }
+                        } catch (e) {
+                            console.log(e);
+                        }
 
                         const userOsuDataFull = await localFunctions.getOsuData(int.user.id, collection);
                         if (!userOsuDataFull) {

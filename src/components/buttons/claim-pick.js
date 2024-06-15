@@ -75,7 +75,9 @@ module.exports = {
                     if (typeof userCollabData.find(e => verificationCollabs.find(c => c.name === e.name)) !== 'undefined') {
                         return int.editReply('You are already participating in an active collab!');
                     }
-                } catch { }
+                } catch (e) {
+                    console.log(e);
+                }
 
                 collab = await localFunctions.getCollab(initializedMap.get(int.user.id).collab.name, collection);
                 const itemInPool = await collab.pool.items.find((e) => e.id === pick);

@@ -277,7 +277,7 @@ module.exports = {
                             components: [useComponents, mainComponents, subComponent]
                         });
                     }
-                } catch (error) {
+                } catch {
                     premiumEmbed.addFields(
                         {
                             name: '‎',
