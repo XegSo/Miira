@@ -115,6 +115,10 @@ const rolesToRemove = [
 
 ];
 
+const badgeNames = [
+
+];
+
 const prestigeRolesIDs = [
     '963258467928408134',
     '963258497376583780',
@@ -164,6 +168,24 @@ const nonPurchaseableBackgrounds = [
 ];
 
 const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+
+const colorRoles = [
+    '1252031663861534780',
+    '631269379782213632',
+    '659647201336623125',
+    '693846687092834314',
+    '659647199512100864',
+    '1252032203521654804',
+    '693829790402084954',
+    '659646724045799435',
+    '659649757769236490',
+    '659647200535773184',
+    '971224263732396132',
+    '1252031985325707395',
+    '1252032716229050424',
+    '971224715077238886',
+    '1252032900577103973'
+];
 
 const premiumTiers = [
     {
@@ -843,6 +865,7 @@ const finalSubDay = 5;
 
 module.exports = {
     decayPremiumRoles,
+    badgeNames,
     reportsLogChannelID,
     userActionsLogChannelID,
     auditLogChannelID,
@@ -859,6 +882,7 @@ module.exports = {
     botId,
     premiumTiers,
     guildId,
+    colorRoles,
     timeInterval,
     blacklistedChannels,
     comboInterval,

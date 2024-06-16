@@ -3,7 +3,22 @@ const localFunctions = require('../../functions');
 module.exports = {
     name: 'guildMemberUpdate',
     async execute(oldMember, member) {
-        const roles = member.roles.cache.map(role => role.name);
+        let roles = member.roles.cache;
+        const oldRoles = oldMember.roles.cache;
+
+        let addedRoles = await roles.filter(role => !oldRoles.has(role.id));
+        let removedRoles = await oldRoles.filter(role => !roles.has(role.id));
+
+        roles = await member.roles.cache.map(role => role.name);
+        addedRoles = await addedRoles.map(role => role.name);
+        removedRoles = await removedRoles.map(role => role.name);
+
+        if (addedRoles.size === 0 && removedRoles.size === 0) return;
+        const addedBadges = localFunctions.updateBadges(addedRoles);
+        const removedBadges = localFunctions.updateBadges(removedRoles);
+        if (addedBadges.length === 0 && removedBadges.length === 0) return;
+
+
         let badges = localFunctions.updateBadges(roles);
         const collection = member.client.db.collection('OzenCollection');
         let userInventory = await localFunctions.getInventory(member.user.id, collection) || [];

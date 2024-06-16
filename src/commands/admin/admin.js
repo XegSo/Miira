@@ -71,6 +71,10 @@ module.exports = {
                         )
                 )
                 .addSubcommand((subcommand) =>
+                    subcommand.setName('reset-colors')
+                        .setDescription('Resets the colors of everyone.')
+                )
+                .addSubcommand((subcommand) =>
                     subcommand.setName('react-role')
                         .setDescription('Add a reaction role system to a given message in given channel')
                         .addChannelOption(option =>
@@ -362,6 +366,23 @@ module.exports = {
                 await localFunctions.setReactMessage(message.id, reactionCollection, reactions);
                 int.editReply('Reaction succesfully set.');
                 return;
+            }
+
+            if (subcommand === 'reset-colors') {
+                if (int.user.id !== '687004886922952755') return int.editReply('You cannot do this.');
+                await int.editReply('Resetting colors. This might take a while...');
+
+                const members = await guild.members.fetch();
+                await members.forEach(async member => {
+                    for (const role of localConstants.colorRoles) {
+                        if (member.roles.cache.has(role)) {
+                            await member.roles.remove(role);
+                            break;
+                        }
+                    }
+                });
+
+                await int.editReply('Done!');
             }
         }
 
@@ -1152,8 +1173,8 @@ module.exports = {
                 if (int.user.id !== '687004886922952755') return int.editReply('You cannot do this.');
                 await int.editReply('Resetting prestige. This might take a while...');
 
-                const members = await int.guild.members.fetch();
-                members.forEach(async member => {
+                const members = await guild.members.fetch();
+                await members.forEach(async member => {
                     for (const role of localConstants.rolesToRemove) {
                         if (member.roles.cache.has(role)) {
                             await member.roles.remove(role);
