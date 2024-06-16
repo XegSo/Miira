@@ -3,7 +3,6 @@ const { ActionRowBuilder, ButtonBuilder, SelectMenuBuilder } = require('@discord
 const { tools } = require('osu-api-extended');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
-const createCollabCache = new Map();
 const claimCache = new Map();
 const userCheckCache = new Map();
 
@@ -156,11 +155,33 @@ module.exports = {
                 await int.editReply('You are not allowed to do this!');
                 return;
             }
-            int.editReply('Please reply to this message with a JSON attatchment.');
-            const replyMessage = await int.fetchReply();
-            createCollabCache.set(int.user.id, {
-                userId: int.user.id,
-                messageId: replyMessage.id
+
+            await int.editReply('Please reply to this message with a JSON attachment.');
+            const reply = await int.fetchReply();
+            const filter = (m) => m.author.id === int.user.id && m.reference.messageId === reply.id && m.attachments.size > 0;
+            const collector = int.channel.createMessageCollector({ filter, time: 15_000, max: 1 });
+
+            collector.on('collect', async (message) => {
+                const attachment = message.attachments.first();
+
+                if (!attachment.name.endsWith('.json')) {
+                    await message.reply('Not a json file.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(attachment.url);
+                    const jsonData = await response.json();
+
+                    jsonData.host = userId;
+                    jsonData.status = 'on design';
+
+                    await localFunctions.setCollab(jsonData, collabCollection);
+                    await message.reply('New collab created succesfully in the database.');
+                } catch (err) {
+                    console.error(err);
+                    await message.reply(`Error: \`${err}\``);
+                }
             });
         }
 
@@ -2279,7 +2300,6 @@ module.exports = {
             }
         }
     },
-    createCollabCache: createCollabCache,
     claimCache: claimCache,
     userCheckCache: userCheckCache
 };
