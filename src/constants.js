@@ -136,7 +136,11 @@ const shopItems = [
     { name: 'Novice Active Member Role', value: '5,000 ₥', value_int: 5000, id: 'active-novice-role', desc: 'Obtain a role in the server that displays you\'re an active user along with a badge for all of your future collab materials.', class: 'Roles', isReturnable: false }, // Coded
     { name: 'Avatar GFX Commission', value: '10,000 ₥', value_int: 10000, id: 'avatar-com', desc: 'Request a custom Avatar GFX Commission.', class: 'Commissions', isReturnable: false }, // Coded
     { name: 'Advanced Active Member Role', value: '20,000 ₥', value_int: 20000, id: 'active-advanced-role', desc: 'Obtain a role in the server that displays you\'re an active user along with a badge for all of your future collab materials.', class: 'Roles', isReturnable: false }, // Coded
-    { name: 'Mirage I Perk', value: '50,000 ₥', value_int: 50000, id: 'mirage-one', desc: 'Be able to claim the Mirage I Paid perk for one collab.', class: 'Collab Perks', isReturnable: false }, // Coded
+    { name: 'Premium Avatar', value: '50,000 ₥', value_int: 50000, id: 'mirage-one', desc: 'Be able to claim the Premium Avatar perk for one collab.', class: 'Collab Perks', isReturnable: false }, // Coded
+    { name: 'Premium Cover', value: '80,000 ₥', value_int: 80000, id: 'premium-cover', desc: 'Be able to claim the Premium Cover perk for one collab.', class: 'Collab Perks', isReturnable: false }, // Coded
+    { name: 'Premium Signature', value: '80,000 ₥', value_int: 80000, id: 'premium-signature', desc: 'Be able to claim the Premium Signature perk for one collab.', class: 'Collab Perks', isReturnable: false }, // Coded
+    { name: 'Premium Desktop Wallpaper', value: '100,000 ₥', value_int: 100000, id: 'premium-wallpaper', desc: 'Be able to claim the Premium Wallpaper perk for one collab.', class: 'Collab Perks', isReturnable: false }, // Coded
+    { name: 'Extra Collab Materials', value: '200,000 ₥', value_int: 200000, id: 'premium-extra', desc: 'Be able to claim the Extra Materials perk for one collab.', class: 'Collab Perks', isReturnable: false }, // Coded
     { name: 'Previous Megacollab Avatar', value: '50,000 ₥', value_int: 50000, id: 'avatar-collab-pre', desc: 'Obtain a customized Megacollab avatar with any of the previous designs.', class: 'Commissions', isReturnable: false }, // Coded
     { name: 'Banner GFX Commission', value: '70,000 ₥', value_int: 70000, id: 'banner-com', desc: 'Request a custom Banner GFX Commission.', class: 'Commissions', isReturnable: false }, // Coded
     { name: 'Previous Megacollab Banner', value: '70,000 ₥', value_int: 70000, id: 'banner-collab-pre', desc: 'Obtain a customized Megacollab banner with any of the previous designs.', class: 'Commissions', isReturnable: false }, // Coded
@@ -146,8 +150,8 @@ const shopItems = [
     { name: 'Collab Early Access', value: '800,000 ₥', value_int: 800000, id: 'early-access', desc: 'Obtain Early Access for the next megacollab.', class: 'Collab Perks', isReturnable: false },
     { name: 'Permanent X2 Boost', value: '300,000 ₥', value_int: 300000, id: 'perma-boost', desc: 'Obtain a permanent X2 Token Boost per message sent.', class: 'Augments', isReturnable: false }, // Coded
     { name: 'Global Boost', value: '300,000 ₥', value_int: 300000, id: 'global-boost', desc: 'Set a global boost of X4 tokens for 24 Hours.', class: 'Augments', isReturnable: false }, // Coded
-    { name: 'Prestige Boost', value: '800,000 ₥', value_int: 800000, id: 'prestige-boost', desc: 'Get +1 Prestige Level.', class: 'Collab Perks', isReturnable: false },
-    { name: 'Owner\'s maid suit pics', value: '10,000,000 ₥', value_int: 10000000000, id: 'feet', desc: 'owo', class: 'Extra', isReturnable: false }
+    { name: 'Prestige Boost', value: '800,000 ₥', value_int: 800000, id: 'prestige-boost', desc: 'Get +1 Prestige Level.', class: 'Collab Perks', isReturnable: false }, // Coded
+    { name: 'Owner\'s maid suit pics', value: '10,000,000 ₥', value_int: 10000000000, id: 'feet', desc: 'owo', class: 'Extra', isReturnable: false } // Coded
     // Add more items as needed, ensuring each item is an object with 'name' and 'value'
 ];
 

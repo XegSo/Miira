@@ -70,6 +70,34 @@ module.exports = {
                                 .setRequired(true)
                         )
                 )
+                .addSubcommand((subcommand) =>
+                    subcommand.setName('react-role')
+                        .setDescription('Add a reaction role system to a given message in given channel')
+                        .addChannelOption(option =>
+                            option
+                                .setName('channel')
+                                .setDescription('Specify the channel')
+                                .setRequired(true)
+                        )
+                        .addStringOption(option =>
+                            option
+                                .setName('messageid')
+                                .setDescription('Insert the message ID')
+                                .setRequired(true)
+                        )
+                        .addRoleOption(option =>
+                            option
+                                .setName('role')
+                                .setDescription('Specify the role to give')
+                                .setRequired(true)
+                        )
+                        .addStringOption(option =>
+                            option
+                                .setName('emojiid')
+                                .setDescription('Insert the emoji in the format of emojiname:emojiid')
+                                .setRequired(true)
+                        )
+                )
         )
         .addSubcommandGroup((subcommandGroup) =>
             subcommandGroup
@@ -206,7 +234,7 @@ module.exports = {
                 )
         ),
     async execute(int, client) {
-        await int.deferReply();
+        await int.deferReply({ ephemeral: true });
         const subcommand = int.options.getSubcommand();
         const subcommandGroup = int.options.getSubcommandGroup();
         const userId = int.user.id;
@@ -217,6 +245,7 @@ module.exports = {
         const collabCollection = client.db.collection('Collabs');
         const collectionSpecial = client.db.collection('Special');
         const blacklistCollection = client.db.collection('Blacklist');
+        const reactionCollection = client.db.collection('ReactionRoles');
 
         if (subcommandGroup === 'server') {
             if (subcommand === 'global-boost') {
@@ -298,6 +327,40 @@ module.exports = {
                     ]
                 });
                 await int.editReply('Embed created succesfully');
+                return;
+            }
+
+            if (subcommand === 'react-role') {
+                const channel = int.options.getChannel('channel');
+                const message = await channel.messages.fetch(int.options.getString('messageid'));
+                if (!message) {
+                    await int.editReply('Please provide a valid message Id.');
+                    return;
+                }
+
+                const role = int.options.getRole('role');
+                const emojiId = int.options.getString('emojiid');
+
+                try {
+                    message.react(emojiId);
+                } catch {
+                    return int.editReply('Provide a valid emoji format, like ``blobreach:123456789012345678 | name:id``');
+                }
+
+                const dbReact = await localFunctions.getReactMessage(message.id, reactionCollection);
+                let reactions = [];
+                if (dbReact) {
+                    reactions = dbReact.reactions;
+                }
+
+                reactions.push({
+                    roleId: role.id,
+                    emojiId: emojiId,
+                    roleName: role.name
+                });
+
+                await localFunctions.setReactMessage(message.id, reactionCollection, reactions);
+                int.editReply('Reaction succesfully set.');
                 return;
             }
         }
@@ -1229,5 +1292,6 @@ module.exports = {
     },
     adminCache,
     givePerksCache,
-    giveTierCache
+    giveTierCache,
+    removePerksCache
 };

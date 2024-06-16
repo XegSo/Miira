@@ -10,6 +10,7 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
         const guild = int.guild;
+        const guildMember = await guild.members.cache.get(userId);
         const selectedItem = int.values[0];
         const collection = client.db.collection('OzenCollection');
         const userInventory = await localFunctions.getInventory(userId, collection);
@@ -132,18 +133,65 @@ module.exports = {
 
                 await int.editReply({ content: 'You have obtained the **Ultimate** Active Member Role!', ephemeral: true });
 
-
-            } else if (selectedItem === 'Mirage I Perk') {
-                let perk = localConstants.premiumTiers[0].perks;
+            } else if (selectedItem === 'Premium Avatar') {
+                let perk = localConstants.premiumTiers[0].perks[0];
                 let userPerks = await localFunctions.getPerks(userId, collection);
-                if (typeof userPerks.find(e => e.name === perk[0].name) === 'undefined' || typeof userPerks.find(e => e.name === perk[1].name) === 'undefined') {
+                if (typeof userPerks.find(e => e.name === perk.name) === 'undefined') {
                     userPerks.push(perk);
                     await localFunctions.setPerks(userId, userPerks, collection);
                 } else {
-                    await int.editReply({ content: 'You already have one of the perks of the Mirage I Premium Tier!', ephemeral: true });
+                    await int.editReply({ content: 'You already have this perk!', ephemeral: true });
                     return;
                 }
-                await int.editReply({ content: 'You have obtained the Mirage I Perk! Check /collabs premium', ephemeral: true });
+                await int.editReply({ content: 'You have obtained the Premium Avatar Perk! Check /collabs premium', ephemeral: true });
+
+            } else if (selectedItem === 'Premium Cover') {
+                let perk = localConstants.premiumTiers[0].perks[1];
+                let userPerks = await localFunctions.getPerks(userId, collection);
+                if (typeof userPerks.find(e => e.name === perk.name) === 'undefined') {
+                    userPerks.push(perk);
+                    await localFunctions.setPerks(userId, userPerks, collection);
+                } else {
+                    await int.editReply({ content: 'You already have this perk!', ephemeral: true });
+                    return;
+                }
+                await int.editReply({ content: 'You have obtained the Premium Cover Perk! Check /collabs premium', ephemeral: true });
+
+            } else if (selectedItem === 'Premium Signature') {
+                let perk = localConstants.premiumTiers[1].perks[1];
+                let userPerks = await localFunctions.getPerks(userId, collection);
+                if (typeof userPerks.find(e => e.name === perk.name) === 'undefined') {
+                    userPerks.push(perk);
+                    await localFunctions.setPerks(userId, userPerks, collection);
+                } else {
+                    await int.editReply({ content: 'You already have this perk!', ephemeral: true });
+                    return;
+                }
+                await int.editReply({ content: 'You have obtained the Premium Signature Perk! Check /collabs premium', ephemeral: true });
+
+            } else if (selectedItem === 'Premium Desktop Wallpaper') {
+                let perk = localConstants.premiumTiers[2].perks[1];
+                let userPerks = await localFunctions.getPerks(userId, collection);
+                if (typeof userPerks.find(e => e.name === perk.name) === 'undefined') {
+                    userPerks.push(perk);
+                    await localFunctions.setPerks(userId, userPerks, collection);
+                } else {
+                    await int.editReply({ content: 'You already have this perk!', ephemeral: true });
+                    return;
+                }
+                await int.editReply({ content: 'You have obtained the Premium Signature Perk! Check /collabs premium', ephemeral: true });
+
+            } else if (selectedItem === 'Extra Collab Materials') {
+                let perk = localConstants.premiumTiers[4].perks[1];
+                let userPerks = await localFunctions.getPerks(userId, collection);
+                if (typeof userPerks.find(e => e.name === perk.name) === 'undefined') {
+                    userPerks.push(perk);
+                    await localFunctions.setPerks(userId, userPerks, collection);
+                } else {
+                    await int.editReply({ content: 'You already have this perk!', ephemeral: true });
+                    return;
+                }
+                await int.editReply({ content: 'You have obtained the Premium Signature Perk! Check /collabs premium', ephemeral: true });
 
             } else if (selectedItem === 'Endless Mirage Skin') {
                 let perk = localConstants.premiumTiers[4].perks[0];
@@ -189,6 +237,31 @@ module.exports = {
                 onUseItems.push(itemObject);
                 await localFunctions.setOnUse(userId, onUseItems, collection);
                 await int.editReply({ content: 'Cosmetic succesfully enabled!', ephemeral: true });
+            } else if (selectedItem === 'Prestige Boost') {
+                let prestigeLevel = 0;
+                let prestige = guildMember.roles.cache.find(role => localConstants.prestigeRolesIDs.includes(role.id));
+                if (typeof prestige !== 'undefined') {
+                    prestige = prestige.name;
+                    prestigeLevel = parseInt(prestige.replace('Prestige ', ''));
+                }
+                if (prestigeLevel === '9') {
+                    return int.editReply({ content: 'You already are at the peak prestige level!', ephemeral: true });
+                }
+
+                const channel_update = await client.channels.cache.get('785727123808583721');
+                if (!guildMember.roles.cache.has('963295216910077962')) {
+                    await guildMember.roles.add('963295216910077962');
+                }
+
+                let oldPrestigeRole = localFunctions.getRoleIDByPrestige(prestigeLevel.toString());
+                let newPrestige = prestigeLevel + 1;
+                let newPrestigeRole = localFunctions.getRoleIDByPrestige(newPrestige.toString());
+                if (oldPrestigeRole) {
+                    await guildMember.roles.remove(oldPrestigeRole);
+                }
+                await guildMember.roles.add(newPrestigeRole);
+                channel_update.send({ content: `<@${userId}> Your collab prestige level is now **${newPrestige}**.` });
+                int.editReply({ content: `You have upgraded to Prestige **${newPrestige}**`, ephemeral: true });
             } else {
                 await int.editReply({ content: 'Something went wrong...', ephemeral: true });
                 return;

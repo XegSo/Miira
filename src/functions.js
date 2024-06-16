@@ -1101,6 +1101,15 @@ module.exports = {
         return user ? user || null : null;
     },
 
+    getReactMessage: async function (messageId, collection) {
+        const message = await collection.findOne({ _id: messageId });
+        return message ? message || null : null;
+    },
+
+    setReactMessage: async function (messageId, collection, reactions) {
+        await collection.updateOne({ _id: messageId }, { $set: { reactions } }, { upsert: true });
+    },
+
     getInviter: async function (referralCode, collection) {
         const user = await collection.findOne({ referralCode: referralCode });
         return user ? user || null : null;

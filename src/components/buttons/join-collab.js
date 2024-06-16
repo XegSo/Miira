@@ -63,7 +63,7 @@ module.exports = {
                 userCollabData: buttonCache.get(int.user.id).userCollabData
             });
 
-        } catch (e) {
+        } catch {
             int.reply({
                 content: 'Collab is not cached, try to run the command to show it again.',
                 ephemeral: true

@@ -2,7 +2,7 @@ const { Events } = require('discord.js');
 const localFunctions = require('../../functions');
 
 module.exports = {
-    name: Events.MessageReactionAdd,
+    name: Events.MessageReactionRemove,
     async execute(reaction, user, client) {
         const collection = client.db.collection('ReactionRoles');
         if (user.bot) return;
@@ -19,11 +19,12 @@ module.exports = {
             if (!findSystem) return;
             const emoji = reaction.emoji;
             const member = await reaction.message.guild.members.cache.get(user.id);
-            if (typeof findSystem.reactions.find(r => member.roles.cache.has(r.roleId)) !== 'undefined') return;
+            if (typeof findSystem.reactions.find(r => member.roles.cache.has(r.roleId)) === 'undefined') return;
             for (const dbreaction of findSystem.reactions) {
                 if (dbreaction.emojiId === `${emoji.name}:${emoji.id}`) {
-                    await member.roles.add(dbreaction.roleId);
-                    await member.send(`You've obtained the ${dbreaction.roleName} role.`);
+                    if (!member.roles.cache.has(dbreaction.roleId)) return;
+                    await member.roles.remove(dbreaction.roleId);
+                    await member.send(`You've removed the ${dbreaction.roleName} role.`);
                 }
             }
         } catch (e) {
