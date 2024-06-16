@@ -160,18 +160,16 @@ module.exports = {
                 console.log(e);
             }
 
-            const messageLength = localFunctions.removeURLsAndColons(message.content).length; // Clean and calculate the message length
+            const messageLength = localFunctions.removeURLsAndColons(message.content).length;
             if (messageLength === 0) {
                 break messageCheck;
             }
             let tokensEarned;
             let tokensEarnedNB = (0.1 * messageLength) / (0.5 + (0.00004 * (messageLength ** 2))) * (1.5 - (1.5 * (Math.E ** (-0.2))));
 
-            // Check if the user has an active combo
             if (userCombos.has(userId)) {
                 const comboData = userCombos.get(userId);
 
-                // Check if the user's combo is still active
                 if (currentTime - comboData.lastMessageTime < localConstants.comboInterval) {
                     let comboBonus = comboData.messages;
                     comboData.lastMessageTime = currentTime;
@@ -180,7 +178,7 @@ module.exports = {
                         tokensEarned = tokensEarnedNB;
                     }
                     if (messageLength > 20) {
-                        comboData.messages++; // Increment the number of messages in the combo
+                        comboData.messages++;
                         switch (comboData.messages) {
                         case 30:
                             message.react('💰');
@@ -208,18 +206,16 @@ module.exports = {
                             break;
                         }
                     }
-                    const topCombo = await localFunctions.getTopCombo(userId, collection); // Fetch top combo from the database
+                    const topCombo = await localFunctions.getTopCombo(userId, collection);
                     if (topCombo < comboData.messages) {
-                        await localFunctions.setTopCombo(userId, comboData.messages, collection); // Store top combo in the database
+                        await localFunctions.setTopCombo(userId, comboData.messages, collection);
                     }
                 } else {
-                    // Combo has expired, reset combo data
-                    comboData.messages = 1; // Reset the message count
+                    comboData.messages = 1;
                     comboData.lastMessageTime = currentTime;
                     tokensEarned = tokensEarnedNB;
                 }
             } else {
-                // User doesn't have an active combo, start a new one
                 userCombos.set(userId, {
                     messages: 1,
                     lastMessageTime: currentTime
@@ -227,66 +223,26 @@ module.exports = {
                 tokensEarned = tokensEarnedNB;
             }
 
-            const currentBalance = await localFunctions.getBalance(userId, collection); // Fetch user's balance from the database
+            const currentBalance = await localFunctions.getBalance(userId, collection);
             const currentXp = await localFunctions.getXp(userId, collection);
             const currentLevel = await localFunctions.getLevel(userId, collection);
             const newXp = currentXp + tokensEarned;
-            /* const hasLevel = localConstants.rolesLevel.filter(roleId => message.member.roles.cache.find(role => role.id === roleId));
 
-            if (hasLevel.length !== 0) {
-                switch (hasLevel[hasLevel.length - 1]) {
-                case '630980373374828544':
-                    if (currentBalance > 200) {
-                        message.member.roles.remove(localConstants.rolesLevel[0]);
-                        message.member.roles.add(localConstants.rolesLevel[1]);
-                    }
-                    break;
-                case '739111130034733108':
-                    if (currentBalance > 300) {
-                        message.member.roles.remove(localConstants.rolesLevel[0]);
-                        message.member.roles.remove(localConstants.rolesLevel[1]);
-                        message.member.roles.add(localConstants.rolesLevel[2]);
-                    }
-                    break;
-                case '739111062682730507':
-                    if (hasLevel.length !== 1) {
-                        message.member.roles.remove(localConstants.rolesLevel[0]);
-                        message.member.roles.remove(localConstants.rolesLevel[1]);
-                    }
-                }
-            } else if (currentBalance > 120) {
-                message.member.roles.add(localConstants.rolesLevel[0]);
-            } */
-
-            // Check if the user has an active boost
-
-            const boostEndTime = await localFunctions.getBoostEndTime(userId, collection); // Fetch boost end time from the database
+            const boostEndTime = await localFunctions.getBoostEndTime(userId, collection);
             if (boostEndTime && currentTime < boostEndTime) {
                 // Apply a 2x boost to tokens earned
                 tokensEarned *= 2;
             }
 
-            const PermaBoost = await localFunctions.getPermaBoost(userId, collection); // Fetch perma boost status from the database
+            const PermaBoost = await localFunctions.getPermaBoost(userId, collection);
             if (PermaBoost) {
                 tokensEarned *= 2;
-            }
-
-            const lastMessageDate = await localFunctions.getLastMessageDate(userId, collection); // Fetch the last message date for the user from the database
-
-            if (typeof lastMessageDate === 'undefined') {
-                tokensEarned += 100;
-                message.react('868437778004836372');
             }
 
             if (globalBoostEndTime) {
                 if (globalBoostEndTime >= currentTime) {
                     tokensEarned *= globalBoostValue;
                 }
-            }
-
-            if (!lastMessageDate || lastMessageDate < startOfDay.getTime()) {
-                tokensEarned += 80;
-                message.react('💸');
             }
 
             const xpFunction = function (x) {
