@@ -159,7 +159,7 @@ module.exports = {
             await int.editReply('Please reply to this message with a JSON attachment.');
             const reply = await int.fetchReply();
             const filter = (m) => m.author.id === int.user.id && m.reference.messageId === reply.id && m.attachments.size > 0;
-            const collector = int.channel.createMessageCollector({ filter, time: 15_000, max: 1 });
+            const collector = int.channel.createMessageCollector({ filter, time: 120_000, max: 1 });
 
             collector.on('collect', async (message) => {
                 const attachment = message.attachments.first();
