@@ -20,7 +20,8 @@ module.exports = {
                         .setRequired(true)
                         .addChoices(
                             { name: 'tokens', value: 'tokens' },
-                            { name: 'combo', value: 'combo' }
+                            { name: 'combo', value: 'combo' },
+                            { name: 'experience', value: 'experience' }
                         )
                 )
         )
@@ -118,22 +119,17 @@ module.exports = {
             await int.deferReply();
             const leaderboardType = int.options.getString('choice');
             if (leaderboardType === 'tokens' || leaderboardType === null) {
-                // Prepare the leaderboard data for the embed
                 let leaderboardDataTokens = await localFunctions.updateLeaderboardData(client, 'tokens');
-                const TopEmbed = new EmbedBuilder()
-                    .setImage('https://puu.sh/JPdfL/9b2860ac7a.png')
-                    .setColor('#f26e6a');
                 const TokensEmbed = localFunctions.createLeaderboardEmbedTokens(leaderboardDataTokens);
-                // Send the embed as a response
-
-                await int.editReply({ content: '', embeds: [TopEmbed, TokensEmbed] });
-            } else {
+                await int.editReply({ content: '', embeds: [TokensEmbed] });
+            } else if (leaderboardType === 'combo') {
                 let leaderboardDataCombo = await localFunctions.updateLeaderboardData(client, 'combo');
-                const TopEmbed = new EmbedBuilder()
-                    .setImage('https://puu.sh/JPdfL/9b2860ac7a.png')
-                    .setColor('#f26e6a');
                 const ComboEmbed = localFunctions.createLeaderboardEmbedCombo(leaderboardDataCombo);
-                await int.editReply({ content: '', embeds: [TopEmbed, ComboEmbed] });
+                await int.editReply({ content: '', embeds: [ComboEmbed] });
+            } else if (leaderboardType === 'experience') {
+                let leaderboardDataExperience = await localFunctions.updateLeaderboardData(client, 'experience');
+                const ComboEmbed = localFunctions.createLeaderboardEmbedExperience(leaderboardDataExperience);
+                await int.editReply({ content: '', embeds: [ComboEmbed] });
             }
         }
         if (subcommand === 'profile') {
@@ -167,7 +163,8 @@ module.exports = {
 
             let boosts = [];
             let badges = [];
-            let userLevel = 'LEVEL 0';
+            const level = await localFunctions.getLevel(userId, collection);
+            const userLevel = `LEVEL ${level}`;
             let textColor = '#f9e1e1';
             const comboFullText = `TOP COMBO: ${topCombo}`;
             let backgroundName = '';
@@ -180,14 +177,6 @@ module.exports = {
             } else {
                 badges = localFunctions.updateBadges(roles);
                 await localFunctions.setBadges(userId, badges, collection);
-            }
-
-            if (roles.includes('Level 3')) {
-                userLevel = 'LEVEL 3';
-            } else if (roles.includes('Level 2')) {
-                userLevel = 'LEVEL 2';
-            } else if (roles.includes('Level 1')) {
-                userLevel = 'LEVEL 1';
             }
 
             if (remainingTimeNormalBoost) {
@@ -265,6 +254,16 @@ module.exports = {
                 ctx.drawImage(badgeImage, posxBadges, 207, 92, 92);
                 posxBadges = posxBadges + 160;
             }
+
+            const xpFunction = function (x) {
+                return 450 + (50 * (x - 10)) / (1 + 0.01 * Math.abs(x - 10));
+            };
+            const xpForNextLevel = await localFunctions.trapezoidalRule(0, level, 1000, xpFunction);
+            const currentXp = await localFunctions.getXp(userId, collection);
+
+            const barWidth = (currentXp / xpForNextLevel) * canvas.width;
+            ctx.fillStyle = `rgb(${123}, ${224}, ${130})`;
+            ctx.fillRect(0, canvas.height - 5, barWidth, 5);
 
             const attachment = new AttachmentBuilder(canvas.toBuffer('image/png'), {
                 name: 'profile.png'

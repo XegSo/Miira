@@ -228,7 +228,10 @@ module.exports = {
             }
 
             const currentBalance = await localFunctions.getBalance(userId, collection); // Fetch user's balance from the database
-            const hasLevel = localConstants.rolesLevel.filter(roleId => message.member.roles.cache.find(role => role.id === roleId));
+            const currentXp = await localFunctions.getXp(userId, collection);
+            const currentLevel = await localFunctions.getLevel(userId, collection);
+            const newXp = currentXp + tokensEarned;
+            /* const hasLevel = localConstants.rolesLevel.filter(roleId => message.member.roles.cache.find(role => role.id === roleId));
 
             if (hasLevel.length !== 0) {
                 switch (hasLevel[hasLevel.length - 1]) {
@@ -253,9 +256,10 @@ module.exports = {
                 }
             } else if (currentBalance > 120) {
                 message.member.roles.add(localConstants.rolesLevel[0]);
-            }
+            } */
 
             // Check if the user has an active boost
+
             const boostEndTime = await localFunctions.getBoostEndTime(userId, collection); // Fetch boost end time from the database
             if (boostEndTime && currentTime < boostEndTime) {
                 // Apply a 2x boost to tokens earned
@@ -285,6 +289,30 @@ module.exports = {
                 message.react('💸');
             }
 
+            const xpFunction = function (x) {
+                return 450 + (50 * (x - 10)) / (1 + 0.01 * Math.abs(x - 10));
+            };
+            const xpForNextLevel = await localFunctions.trapezoidalRule(0, currentLevel, 1000, xpFunction);
+            if (newXp > xpForNextLevel) {
+                await localFunctions.setLevel(userId, currentLevel + 1, collection);
+                if (currentLevel !== 0) {
+                    message.reply(`Congratulations! You've achieved level ${currentLevel + 1}`);
+                }
+                switch (currentLevel + 1) {
+                case 1:
+                    message.member.roles.add(localConstants.rolesLevel[0]);
+                    break;
+                case 5:
+                    message.member.roles.add(localConstants.rolesLevel[1]);
+                    message.member.roles.remove(localConstants.rolesLevel[0]);
+                    break;
+                case 10:
+                    message.member.roles.add(localConstants.rolesLevel[2]);
+                    message.member.roles.remove(localConstants.rolesLevel[1]);
+                    break;
+                }
+            }
+            await localFunctions.setXp(userId, newXp, collection);
             const newBalance = currentBalance + tokensEarned;
             await localFunctions.setBalance(userId, newBalance, collection);
 
@@ -296,3 +324,4 @@ module.exports = {
         }
     }
 };
+

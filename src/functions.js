@@ -858,28 +858,61 @@ module.exports = {
         });
         const embed = new EmbedBuilder()
             .setColor('#f26e6a')
-            .setTitle('Mirage Tokens Leaderboard.')
-            .setThumbnail('https://puu.sh/JP9Iw/a365159d0e.png')
-            .setImage('https://puu.sh/JPffc/3c792e61c9.png')
+            .setDescription('**```ml\nTokens Leaderboard```**')
+            .setFooter({ text: 'Endless Mirage | The moolah leaderboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setTimestamp();
         for (let i = 0; i < data.length; i++) {
             const user = data[i];
             embed.addFields({ name: '\n', value: `**${i + 1}**. <@${user.userId}> : $${MirageFormat.format(user.credits)} ₥` });
         }
+        embed.addFields(
+            {
+                name: '‎',
+                value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>'
+            }
+        );
         return embed;
     },
 
     createLeaderboardEmbedCombo: function (data) {
         const embed = new EmbedBuilder()
-            .setTitle('Combo Leaderboard.')
+            .setDescription('**```ml\nCombo Leaderboard```**')
             .setColor('#f26e6a')
-            .setThumbnail('https://puu.sh/JP9Iw/a365159d0e.png')
-            .setImage('https://puu.sh/JPffc/3c792e61c9.png')
+            .setFooter({ text: 'Endless Mirage | Highest Combo leaderboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setTimestamp();
         for (let i = 0; i < data.length; i++) {
             const user = data[i];
             embed.addFields({ name: '\n', value: `**${i + 1}**. <@${user.userId}> : ${user.topCombo}` });
         }
+        embed.addFields(
+            {
+                name: '‎',
+                value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>'
+            }
+        );
+        return embed;
+    },
+
+    createLeaderboardEmbedExperience: function (data) {
+        let MirageFormat = Intl.NumberFormat('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        const embed = new EmbedBuilder()
+            .setDescription('**```ml\nExperience Leaderboard```**')
+            .setColor('#f26e6a')
+            .setFooter({ text: 'Endless Mirage | XP leaderboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+            .setTimestamp();
+        for (let i = 0; i < data.length; i++) {
+            const user = data[i];
+            embed.addFields({ name: '\n', value: `**${i + 1}**. <@${user.userId}> with Level **${user.level}** and **${MirageFormat.format(user.xp)}** XP.` });
+        }
+        embed.addFields(
+            {
+                name: '‎',
+                value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:19:1195441100350034063><:21:1195441102585606144><:23:1195440971886903356><:25:1195441155664527410><:27:1195440974978093147>'
+            }
+        );
         return embed;
     },
 
@@ -1364,8 +1397,26 @@ module.exports = {
         return user ? user.balance || 0 : 0;
     },
 
+    getXp: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.xp || 0 : 0;
+    },
+
+    getLevel: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.level || 0 : 0;
+    },
+
     setBalance: async function (userId, balance, collection) {
         await collection.updateOne({ _id: userId }, { $set: { balance } }, { upsert: true });
+    },
+
+    setXp: async function (userId, xp, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { xp } }, { upsert: true });
+    },
+
+    setLevel: async function (userId, level, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { level } }, { upsert: true });
     },
 
     getDeluxeEntry: async function (userId, collection) {
@@ -1616,6 +1667,16 @@ module.exports = {
 
     setCart: async function (userId, cart, collection) {
         await collection.updateOne({ _id: userId }, { $set: { cart } }, { upsert: true });
+    },
+
+    trapezoidalRule: async function (a, b, n, f) {
+        const h = (b - a) / n; // Width of each trapezoid
+        let sum = 0.5 * (f(a) + f(b)); // Sum of the first and last terms
+        for (let i = 1; i < n; i++) {
+            const x = a + i * h;
+            sum += f(x);
+        }
+        return sum * h;
     },
 
     setFullSubStatus: async function (userId, monthlyDonation, collection) {
@@ -2012,9 +2073,12 @@ module.exports = {
             if (type === 'tokens') {
                 const sortedTokens = userData.sort((a, b) => b.credits - a.credits);
                 return sortedTokens.slice(0, 10); // Top 10 users by tokens
-            } else {
+            } else if (type === 'combo') {
                 const sortedCombo = userData.sort((a, b) => b.topCombo - a.topCombo);
                 return sortedCombo.slice(0, 10); // Top 10 users by combo
+            } else if (type === 'experience') {
+                const sortedCombo = userData.sort((a, b) => b.xp - a.xp);
+                return sortedCombo.slice(0, 10); // Top 10 users by xp
             }
         } catch (error) {
             console.error('Error updating leaderboard data:', error);
@@ -2275,7 +2339,9 @@ async function fetchUserDataFromDatabase(client) {
     const userDataArray = userData.map(user => ({
         userId: user._id,
         credits: user.balance || 0,
-        topCombo: user.topCombo || 0
+        topCombo: user.topCombo || 0,
+        xp: user.xp || 0,
+        level: user.level || 0
     }));
 
     return userDataArray;
