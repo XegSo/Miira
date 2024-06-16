@@ -43,11 +43,9 @@ module.exports = {
         const globalBoostEndTime = globalBoost.boostEndTime;
         const globalBoostValue = globalBoost.multiplier;
 
-        messageCheck: try {
+        try {
             const messageLength = localFunctions.removeURLsAndColons(message.content).length;
-            if (messageLength === 0) {
-                break messageCheck;
-            }
+            if (messageLength === 0) return;
             let tokensEarned;
             let tokensEarnedNB = (0.1 * messageLength) / (0.5 + (0.00004 * (messageLength ** 2))) * (1.5 - (1.5 * (Math.E ** (-0.2))));
 
