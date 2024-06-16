@@ -1464,7 +1464,7 @@ module.exports = {
     },
 
     updateBadges: function (roles) {
-        let badges = [];
+        const badges = [];
         if (roles.includes('Designer')) {
             badges.push('Designer');
         }
@@ -1486,8 +1486,8 @@ module.exports = {
         if (roles.includes('Special Donator')) {
             badges.push('Special Donator');
         }
-        if (roles.includes('Contrubitor')) {
-            badges.push('Contrubitor');
+        if (roles.includes('Contributor')) {
+            badges.push('Contributor');
         }
         if (roles.includes('Admin')) {
             badges.push('Admin');
