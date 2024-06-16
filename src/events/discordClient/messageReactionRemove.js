@@ -19,7 +19,7 @@ module.exports = {
             if (!findSystem) return;
             const emoji = reaction.emoji;
             const member = await reaction.message.guild.members.cache.get(user.id);
-            if (typeof findSystem.reactions.find(r => member.roles.cache.has(r.roleId)) === 'undefined') return;
+            if (typeof findSystem.reactions.find(r => member.roles.cache.has(r.roleId)) === 'undefined' && !findSystem.many) return;
             for (const dbreaction of findSystem.reactions) {
                 if (dbreaction.emojiId === `${emoji.name}:${emoji.id}`) {
                     if (!member.roles.cache.has(dbreaction.roleId)) return;
