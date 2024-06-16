@@ -289,7 +289,7 @@ module.exports = {
                 );
             }
 
-            if (!lastUpdate || (currentDate - lastUpdate) > 604800) {
+            if (!lastUpdate || (currentDate - lastUpdate) > 604800 || userId === '687004886922952755') {
                 buttons = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()
                         .setLabel('🔄 Update your data')
