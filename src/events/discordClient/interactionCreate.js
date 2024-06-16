@@ -124,7 +124,7 @@ module.exports = {
                     };
                 });
 
-                await int.respond(results.slice(0, 25)).catch(() => {});
+                await int.respond(results.slice(0, 25)).catch(() => null);
                 return;
             }
 
@@ -148,7 +148,7 @@ module.exports = {
                             };
                         });
 
-                        await int.respond(results.slice(0, 25)).catch(() => {});
+                        await int.respond(results.slice(0, 25)).catch(() => null);
                     }
 
                 }
@@ -172,7 +172,7 @@ module.exports = {
                             };
                         });
 
-                        await int.respond(results.slice(0, 25)).catch(() => {});
+                        await int.respond(results.slice(0, 25)).catch(() => null);
                     }
                 }
 
@@ -195,7 +195,7 @@ module.exports = {
                             };
                         });
 
-                        await int.respond(results.slice(0, 25)).catch(() => {});
+                        await int.respond(results.slice(0, 25)).catch(() => null);
                     }
                 }
 
@@ -218,7 +218,7 @@ module.exports = {
                             };
                         });
 
-                        await int.respond(results.slice(0, 25)).catch(() => {});
+                        await int.respond(results.slice(0, 25)).catch(() => null);
                     }
                 }
 
@@ -242,7 +242,7 @@ module.exports = {
                             };
                         });
 
-                        await int.respond(results.slice(0, 25)).catch(() => {});
+                        await int.respond(results.slice(0, 25)).catch(() => null);
                     }
                 }
 
@@ -265,7 +265,7 @@ module.exports = {
                             };
                         });
 
-                        await int.respond(results.slice(0, 25)).catch(() => {});
+                        await int.respond(results.slice(0, 25)).catch(() => null);
                     }
                 }
             }

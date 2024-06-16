@@ -3,7 +3,6 @@ const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const { ActionRowBuilder, ButtonBuilder, SelectMenuBuilder } = require('@discordjs/builders');
 const { v2 } = require('osu-api-extended');
-const monthlySupporterCache = new Map();
 const adminCache = new Map();
 const givePerksCache = new Map();
 const giveTierCache = new Map();
@@ -1228,7 +1227,6 @@ module.exports = {
             }
         }
     },
-    monthlySupporterCache,
     adminCache,
     givePerksCache,
     giveTierCache

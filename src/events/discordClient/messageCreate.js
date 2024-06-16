@@ -1,10 +1,5 @@
-const { connectToSpreadsheet } = require('../../googleSheets');
 const localFunctions = require('../../functions');
 const localConstants = require('../../constants');
-const { poolCache } = require('../../components/buttons/pool-collab');
-const { editCache } = require('../../components/buttons/edit-collab');
-const { createCollabCache } = require('../../commands/collabs/collabs');
-const { monthlySupporterCache } = require('../../commands/admin/addmonthlysupporter');
 const userCooldowns = new Map();
 const userCombos = new Map();
 
@@ -43,127 +38,14 @@ module.exports = {
         // Grab the MongoDB collections.
         const collection = client.db.collection('OzenCollection');
         const collectionSpecial = client.db.collection('Special');
-        const collabCollection = client.db.collection('Collabs');
 
         const globalBoost = await localFunctions.getGlobalBoost(collectionSpecial);
         const globalBoostEndTime = globalBoost.boostEndTime;
         const globalBoostValue = globalBoost.multiplier;
 
-        messageCheck: try {
-            try {
-                if (poolCache.size !== 0) { // Pool upload for collabs
-                    if (poolCache.get(userId).userId === userId && message.reference.messageId === poolCache.get(userId).messageId && message.attachments.size > 0) {
-                        const attachment = message.attachments.first();
-                        if (attachment.name.endsWith('.json')) {
-                            if (message.author.id !== '687004886922952755') return;
-                            const response = await fetch(attachment.url);
-                            const buffer = Buffer.from(await response.arrayBuffer());
-                            const jsonData = JSON.parse(buffer.toString());
-                            const fullCollab = poolCache.get(userId).collab;
-                            await localFunctions.setCollabPool(fullCollab.name, jsonData, collabCollection);
-
-                            const doc = await connectToSpreadsheet(fullCollab.spreadsheetID); // Spreadsheet update
-                            let initialization = false;
-                            let currentIndex = parseInt(jsonData.items[0].sheetIndex);
-                            let lastColumn = 0;
-                            let sheet;
-                            for (let item of jsonData.items) {
-                                if (item.coordinate !== lastColumn && lastColumn !== 0) {
-                                    initialization = false;
-                                    await sheet.saveUpdatedCells();
-                                    console.log('Changes for a series have been pushed');
-                                }
-                                let originCoord = localFunctions.excelSheetCoordinateToRowCol(item.coordinate);
-                                let mainRow = originCoord.row + (3 * parseInt(item.localId));
-                                let mainCol = originCoord.col;
-                                if (!initialization) {
-                                    sheet = doc.sheetsByIndex[parseInt(item.sheetIndex)];
-                                    currentIndex = parseInt(item.sheetIndex);
-                                    initialization = true;
-                                    await sheet.loadCells(`${localFunctions.getColumnRange(item.coordinate)}`);
-                                    console.log(`Sheet ${currentIndex} loaded.`);
-                                }
-                                let mainCell = sheet.getCell(mainRow, mainCol);
-                                mainCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
-                                mainCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: 'Avenir', fontSize: 10, link: { uri: item.imgURL } };
-                                mainCell.value = item.name;
-                                let idCell = sheet.getCell(mainRow, mainCol + 1);
-                                idCell.borders = { bottom: { style: 'SOLID_MEDIUM', colorStyle: { rgbColor: { red: 0.68, green: 0.89, blue: 0.61 } } } };
-                                idCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 1, green: 1, blue: 1 } }, fontFamily: 'Avenir', fontSize: 10 };
-                                idCell.value = item.id;
-                                let availabilityCell = sheet.getCell(mainRow + 1, mainCol);
-                                availabilityCell.textFormat = { foregroundColorStyle: { rgbColor: { red: 0.8, green: 0.8, blue: 0.8 } }, fontFamily: 'Avenir', fontSize: 7 };
-                                availabilityCell.value = 'Available';
-                                console.log(`Change registered for pick ${item.id}`);
-                                lastColumn = item.coordinate;
-                            }
-                            await sheet.saveUpdatedCells();
-                            message.reply('Pool uploaded to the database and spreadsheet succesfully!');
-                            sheet.resetLocalCache();
-                            poolCache.delete(userId);
-                            break messageCheck;
-                        }
-                    }
-                }
-
-                if (createCollabCache.size !== 0) { // Collab Creation
-                    if (createCollabCache.get(userId).userId === userId && message.reference.messageId === createCollabCache.get(userId).messageId && message.attachments.size > 0) {
-                        const attachment = message.attachments.first();
-                        if (attachment.name.endsWith('.json')) {
-                            const response = await fetch(attachment.url);
-                            const buffer = Buffer.from(await response.arrayBuffer());
-                            let jsonData = JSON.parse(buffer.toString());
-                            jsonData.host = userId;
-                            jsonData.status = 'on design';
-                            await localFunctions.setCollab(jsonData, collabCollection);
-                            message.reply('New collab created succesfully in the database.');
-                            createCollabCache.delete(userId);
-                            break messageCheck;
-                        }
-                    }
-                }
-
-                if (editCache.size !== 0) { // Collab Editing
-                    if (editCache.get(userId).userId === userId && message.reference.messageId === editCache.get(userId).messageId && message.attachments.size > 0) {
-                        const attachment = message.attachments.first();
-                        if (attachment.name.endsWith('.json')) {
-                            const response = await fetch(attachment.url);
-                            const buffer = Buffer.from(await response.arrayBuffer());
-                            let jsonData = JSON.parse(buffer.toString());
-                            await localFunctions.editCollab(editCache.get(userId).collab.name, jsonData, collabCollection);
-                            message.reply('Collab edited succesfully.');
-                            editCache.delete(userId);
-                            break messageCheck;
-                        }
-                    }
-                }
-
-                if (monthlySupporterCache.size !== 0) {
-                    if (monthlySupporterCache.get(userId).userId === userId && message.reference.messageId === monthlySupporterCache.get(userId).messageId && message.attachments.size > 0) {
-                        const attachment = message.attachments.first();
-                        if (attachment.name.endsWith('.json')) {
-                            const response = await fetch(attachment.url);
-                            const buffer = Buffer.from(await response.arrayBuffer());
-                            let jsonData = JSON.parse(buffer.toString());
-                            for (let item of jsonData) {
-                                const premiumDiscordId = item.discordId;
-                                delete item.name;
-                                delete item.discordId;
-                                await localFunctions.setUserMontlyPremium(premiumDiscordId, item, collection);
-                            }
-                            message.reply('User data pushed succesfully.');
-                            monthlySupporterCache.delete(userId);
-                        }
-                    }
-                }
-            } catch (e) {
-                console.log(e);
-            }
-
+        try {
             const messageLength = localFunctions.removeURLsAndColons(message.content).length;
-            if (messageLength === 0) {
-                break messageCheck;
-            }
+            if (messageLength === 0) return;
             let tokensEarned;
             let tokensEarnedNB = (0.1 * messageLength) / (0.5 + (0.00004 * (messageLength ** 2))) * (1.5 - (1.5 * (Math.E ** (-0.2))));
 
