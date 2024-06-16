@@ -31,7 +31,7 @@ module.exports = {
         });
 
         if (welcomeChannel) {
-            welcomeChannel.send({ content: `Welcome to the server <@${member.user.id}>! Make sure to read the <#991755017851781262> and check all the channels on the Endless Mirage server section!`, files: [attachment] });
+            await welcomeChannel.send({ content: `Welcome to the server <@${member.user.id}>! Make sure to read the <#991755017851781262> and check all the channels on the Endless Mirage server section!`, files: [attachment] });
         }
     }
 };

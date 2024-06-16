@@ -15,13 +15,13 @@ module.exports = {
             } catch (error) {
                 console.error(error);
                 try {
-                    int.reply({
+                    await int.reply({
                         content: 'Something went wrong.',
                         ephemeral: true
                     });
                 } catch {
                     try {
-                        int.editReply({
+                        await int.editReply({
                             content: 'Something went wrong.',
                             ephemeral: true
                         });
@@ -34,20 +34,20 @@ module.exports = {
             const { buttons } = client;
             const { customId } = int;
             const button = buttons.get(customId);
-            if (!button) return new Error('No code for this button');
+            if (!button) throw new Error('No code for this button');
 
             try {
                 await button.execute(int, client);
             } catch (error) {
                 console.error(error);
                 try {
-                    int.reply({
+                    await int.reply({
                         content: 'Something went wrong.',
                         ephemeral: true
                     });
                 } catch {
                     try {
-                        int.editReply({
+                        await int.editReply({
                             content: 'Something went wrong.',
                             ephemeral: true
                         });
@@ -60,20 +60,20 @@ module.exports = {
             const { selectMenus } = client;
             const { customId } = int;
             const menu = selectMenus.get(customId);
-            if (!menu) return new Error('No code for this menu');
+            if (!menu) throw new Error('No code for this menu');
 
             try {
                 await menu.execute(int, client);
             } catch (error) {
                 console.error(error);
                 try {
-                    int.reply({
+                    await int.reply({
                         content: 'Something went wrong.',
                         ephemeral: true
                     });
                 } catch {
                     try {
-                        int.editReply({
+                        await int.editReply({
                             content: 'Something went wrong.',
                             ephemeral: true
                         });
@@ -86,20 +86,20 @@ module.exports = {
             const { modals } = client;
             const { customId } = int;
             const modal = modals.get(customId);
-            if (!modal) return new Error('No code for this modal');
+            if (!modal) throw new Error('No code for this modal');
 
             try {
                 await modal.execute(int, client);
             } catch (error) {
                 console.error(error);
                 try {
-                    int.reply({
+                    await int.reply({
                         content: 'Something went wrong.',
                         ephemeral: true
                     });
                 } catch {
                     try {
-                        int.editReply({
+                        await int.editReply({
                             content: 'Something went wrong.',
                             ephemeral: true
                         });
@@ -148,7 +148,7 @@ module.exports = {
                             };
                         });
 
-                        int.respond(results.slice(0, 25)).catch(() => {});
+                        await int.respond(results.slice(0, 25)).catch(() => {});
                     }
 
                 }
@@ -172,7 +172,7 @@ module.exports = {
                             };
                         });
 
-                        int.respond(results.slice(0, 25)).catch(() => {});
+                        await int.respond(results.slice(0, 25)).catch(() => {});
                     }
                 }
 
@@ -195,7 +195,7 @@ module.exports = {
                             };
                         });
 
-                        int.respond(results.slice(0, 25)).catch(() => {});
+                        await int.respond(results.slice(0, 25)).catch(() => {});
                     }
                 }
 
@@ -218,7 +218,7 @@ module.exports = {
                             };
                         });
 
-                        int.respond(results.slice(0, 25)).catch(() => {});
+                        await int.respond(results.slice(0, 25)).catch(() => {});
                     }
                 }
 
@@ -242,7 +242,7 @@ module.exports = {
                             };
                         });
 
-                        int.respond(results.slice(0, 25)).catch(() => {});
+                        await int.respond(results.slice(0, 25)).catch(() => {});
                     }
                 }
 
@@ -265,7 +265,7 @@ module.exports = {
                             };
                         });
 
-                        int.respond(results.slice(0, 25)).catch(() => {});
+                        await int.respond(results.slice(0, 25)).catch(() => {});
                     }
                 }
             }
