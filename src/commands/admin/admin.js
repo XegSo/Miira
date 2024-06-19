@@ -258,7 +258,7 @@ module.exports = {
                 const boostDuration = parseFloat(int.options.getString('timer'));
 
                 if (isNaN(multiplier) || isNaN(boostDuration)) {
-                    int.editReply('Please provide valid numerical values for multiplier and timer.');
+                    await int.editReply('Please provide valid numerical values for multiplier and timer.');
                     return;
                 }
 
@@ -292,14 +292,13 @@ module.exports = {
                         const member = await int.guild.members.fetch(user);
                         if (member.roles.cache.has(role)) continue;
                         await member.roles.add(role);
-                        channel_update.send({ content: `<@${user}> You've Obtained the Beta Tester Role!` });
+                        await channel_update.send({ content: `<@${user}> You've Obtained the Beta Tester Role!` });
                     } catch {
                         console.log('Unknown Member');
                     }
                 }
 
-                int.editReply('Done!');
-
+                await int.editReply('Done!');
                 return;
             }
             if (subcommand === 'ticket-create') {
@@ -310,6 +309,7 @@ module.exports = {
                     await int.editReply('Please provide a channel Id.');
                     return;
                 }
+
                 const TicketTopEmbed = new EmbedBuilder()
                     .setColor('#f26e6a')
                     .setImage('https://puu.sh/JPEsp/c792ff3de7.png');
@@ -346,7 +346,7 @@ module.exports = {
                 const emojiId = int.options.getString('emojiid');
 
                 try {
-                    message.react(emojiId);
+                    await message.react(emojiId);
                 } catch {
                     return int.editReply('Provide a valid emoji format, like ``blobreach:123456789012345678 | name:id``');
                 }
@@ -364,7 +364,7 @@ module.exports = {
                 });
 
                 await localFunctions.setReactMessage(message.id, reactionCollection, reactions);
-                int.editReply('Reaction succesfully set.');
+                await int.editReply('Reaction succesfully set.');
                 return;
             }
 
@@ -373,15 +373,15 @@ module.exports = {
                 await int.editReply('Resetting colors. This might take a while...');
 
                 const members = await guild.members.fetch();
-                await members.forEach(async member => {
+                const promises = members.map(async member => {
                     for (const role of localConstants.colorRoles) {
                         if (member.roles.cache.has(role)) {
-                            await member.roles.remove(role);
-                            break;
+                            return member.roles.remove(role);
                         }
                     }
                 });
 
+                await Promise.all(promises);
                 await int.editReply('Done!');
             }
         }
@@ -567,8 +567,7 @@ module.exports = {
                                 .setStyle('Success')
                         );
 
-                        int.editReply({ embeds: [dashboardEmbed], components: [components] });
-
+                        await int.editReply({ embeds: [dashboardEmbed], components: [components] });
                     } else {
                         let i = 1;
                         for (const bump of bumps) {
@@ -594,7 +593,7 @@ module.exports = {
                                     .setStyle('Success')
                             );
 
-                            int.editReply({ embeds: [dashboardEmbed], components: [components] });
+                            await int.editReply({ embeds: [dashboardEmbed], components: [components] });
                         } else if (bumps.length !== 4) {
                             const components = new ActionRowBuilder().addComponents(
                                 new ButtonBuilder()
@@ -603,7 +602,7 @@ module.exports = {
                                     .setStyle('Danger')
                             );
 
-                            int.editReply({ embeds: [dashboardEmbed], components: [components] });
+                            await int.editReply({ embeds: [dashboardEmbed], components: [components] });
                         } else {
                             const components = new ActionRowBuilder().addComponents(
                                 new ButtonBuilder()
@@ -612,7 +611,7 @@ module.exports = {
                                     .setStyle('Primary')
                             );
 
-                            int.editReply({ embeds: [dashboardEmbed], components: [components] });
+                            await int.editReply({ embeds: [dashboardEmbed], components: [components] });
                         }
 
                     }
@@ -1174,23 +1173,21 @@ module.exports = {
                 await int.editReply('Resetting prestige. This might take a while...');
 
                 const members = await guild.members.fetch();
-                await members.forEach(async member => {
+                const promises = members.map(async member => {
                     for (const role of localConstants.rolesToRemove) {
                         if (member.roles.cache.has(role)) {
-                            await member.roles.remove(role);
-                            break;
+                            return member.roles.remove(role);
                         }
                     }
                 });
 
-                const channel_update = await client.channels.cache.get('785727123808583721');
-                const channel_warn = await client.channels.cache.get('874227481442398208');
+                await Promise.all(promises);
 
-                let users = [
+                const channel_update = client.channels.cache.get('785727123808583721');
+                const channel_warn = client.channels.cache.get('874227481442398208');
+                const users = [];
 
-                ];
-
-                int.editReply('Starting to set new prestige. This might take a while...');
+                await int.editReply('Starting to set new prestige. This might take a while...');
 
                 for (const user of users) {
                     const memberId = user;
@@ -1198,7 +1195,7 @@ module.exports = {
 
                     if (!member) {
                         console.log(`${memberId} is not in the server`);
-                        channel_warn.send({ content: `User with ID ${memberId} is no longer in the server. Prestige has been set to 0.` });
+                        await channel_warn.send({ content: `User with ID ${memberId} is no longer in the server. Prestige has been set to 0.` });
                         continue;
                     }
 
@@ -1218,14 +1215,16 @@ module.exports = {
                     let oldPrestigeRole = localFunctions.getRoleIDByPrestige(prestigeLevel.toString());
                     let newPrestige = prestigeLevel + 1;
                     let newPrestigeRole = localFunctions.getRoleIDByPrestige(newPrestige.toString());
+
                     if (oldPrestigeRole) {
                         await member.roles.remove(oldPrestigeRole);
                     }
+
                     await member.roles.add(newPrestigeRole);
-                    channel_update.send({ content: `<@${memberId}> Your collab prestige level is now **${newPrestige}**.` });
+                    await channel_update.send({ content: `<@${memberId}> Your collab prestige level is now **${newPrestige}**.` });
                 }
 
-                int.editReply('Done!');
+                await int.editReply('Done!');
                 return;
             }
 
@@ -1278,18 +1277,21 @@ module.exports = {
                 if (typeof userCollabs === 'undefined' || userCollabs.length === 0) return int.editReply('User added to the blacklist.');
 
                 for (let userCollab of userCollabs) {
-                    let collab = await localFunctions.getCollab(userCollab.collabName, collabCollection);
+                    const collab = await localFunctions.getCollab(userCollab.collabName, collabCollection);
                     let contentString = '';
                     const snipes = collab.snipes;
+
                     if (typeof snipes !== 'undefined') {
                         if (typeof snipes.find(p => p.pick === userCollab.collabPick.id) !== 'undefined') {
                             contentString = 'Snipers! ';
                         }
+
                         for (const snipe of snipes) {
                             contentString = contentString.concat('', `<@${snipe.userId}>`);
                             await localFunctions.removeCollabSnipe(collab.name, collection, snipe.userId);
                         }
                     }
+
                     if (collab.status !== 'closed' && collab.status !== 'delivered' && collab.status !== 'archived' && collab.status !== 'completed') {
                         userCollabs = userCollabs.filter(e => e.collabName !== collab.name);
                         await localFunctions.setUserCollabs(userId, userCollabs, collection);
@@ -1302,7 +1304,7 @@ module.exports = {
                             .setColor('#f26e6a')
                             .setDescription(`**\`\`\`ml\n🎫 New Character Available!\`\`\`**                                                                                                        **${collab.name}**\nName:${userCollab.collabPick.name}\nID: ${userCollab.collabPick.id}`)
                             .setImage(userCollab.collabPick.imgURL);
-                        logChannel.send({ content: `${contentString}\nUser <@${userId}> has been banned.`, embeds: [leaveEmbed] });
+                        await logChannel.send({ content: `${contentString}\nUser <@${userId}> has been banned.`, embeds: [leaveEmbed] });
                     }
                     console.log(`Participation removed from ${userCollab.collabName}`);
                 }
