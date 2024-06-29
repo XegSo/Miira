@@ -56,7 +56,7 @@ module.exports = {
                             if (tier.name === item.name) {
                                 await pendingMember.roles.add(tier.roleId);
                                 await pendingMember.roles.add('743505566617436301');
-                                await localFunctions.assignPremium(userId, pendingMember, collection);
+                                await localFunctions.assignPremium(userId, collection, pendingMember);
                                 break;
                             }
                         }
