@@ -135,9 +135,9 @@ module.exports = {
                 await localFunctions.setLevel(userId, currentLevel + 1, collection);
                 if (currentLevel !== 0) {
                     try {
-                        message.member.send(`Congratulations! You've achieved the level ${currentLevel + 1} on Endless Mirage.`);
-                    } catch {
                         message.reply(`Congratulations! You've achieved level ${currentLevel + 1}`);
+                    } catch (e) {
+                        console.log(e);
                     }
                 }
                 switch (currentLevel + 1) {

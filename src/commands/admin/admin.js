@@ -164,6 +164,16 @@ module.exports = {
                         )
                 )
                 .addSubcommand((subcommand) =>
+                    subcommand.setName('switch-pick')
+                        .setDescription('Switches the status of a pick for a collab.')
+                        .addStringOption(option =>
+                            option
+                                .setName('pick')
+                                .setDescription('Pick ID')
+                                .setRequired(true)
+                        )
+                )
+                .addSubcommand((subcommand) =>
                     subcommand.setName('remove-perks')
                         .setDescription('Remove perks from a user.')
                         .addUserOption(option =>
@@ -1264,6 +1274,25 @@ module.exports = {
                 await int.editReply(`<@${int.user.id}> User linked succesfully.`);
 
                 return;
+            }
+
+            if (subcommand === 'switch-pick') {
+                const pickId = int.options.getString('pick');
+                const allCollabs = await localFunctions.getCollabs(collabCollection);
+                const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && (c.status === 'open' || c.status === 'early access' || c.status === 'on design'));
+                if (typeof openMegacollab === 'undefined') {
+                    await int.editReply('There is no open megacollabs at the moment...');
+                } else {
+                    const fullPick = await openMegacollab.pool.items.find(i => i.id === pickId);
+                    let status;
+                    if (fullPick.status === 'picked') {
+                        status = 'available';
+                    } else {
+                        status = 'picked';
+                    }
+                    await localFunctions.switchPick(openMegacollab.name, pickId, collabCollection, status);
+                    int.editReply('Done!');
+                }
             }
 
             if (subcommand === 'blacklist') {

@@ -293,7 +293,7 @@ module.exports = {
                 console.log(`Handling ${document.name} closure in ${remainingTime / 60 / 60} hours`);
                 // Set interval to update status when time has passed
                 setTimeout(async () => {
-                    await collection.updateOne({ _id: document._id }, { $set: { status: 'closed' } });
+                    /* await collection.updateOne({ _id: document._id }, { $set: { status: 'closed' } }) */
                     console.log(`${document.name} was closed.`);
                 }, remainingTime * 1000); // Convert seconds to milliseconds
             }
@@ -1177,6 +1177,10 @@ module.exports = {
 
     setCollabParticipation: async function (collab, collection, id) {
         await collection.updateOne({ name: collab, 'pool.items.id': id }, { $set: { 'pool.items.$.status': 'picked' } }, { upsert: true });
+    },
+
+    switchPick: async function (collab, id, collection, status) {
+        await collection.updateOne({ name: collab, 'pool.items.id': id }, { $set: { 'pool.items.$.status': status } }, { upsert: true });
     },
 
     setSubStatus: async function (userId, collection, status) {
@@ -2840,7 +2844,7 @@ async function handleCollabClosures(collection) {
             console.log(`Handling ${document.name} closure in ${remainingTime / 60 / 60} hours`);
             // Set interval to update status when time has passed
             setTimeout(async () => {
-                await collection.updateOne({ _id: document._id }, { $set: { status: 'closed' } });
+                /* await collection.updateOne({ _id: document._id }, { $set: { status: 'closed' } }); */
                 console.log(`${document.name} was closed.`);
             }, remainingTime * 1000); // Convert seconds to milliseconds
         }
