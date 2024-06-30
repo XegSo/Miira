@@ -51,9 +51,9 @@ client.handleComponents();
 
 async function main() {
     // Connect to MongoDB.
-    const mongoClient = new MongoClient(process.env.MONGO);
-    await mongoClient.connect();
-    client.db = mongoClient.db('Ozen');
+    client.mongoClient = new MongoClient(process.env.MONGO);
+    await client.mongoClient.connect();
+    client.db = client.mongoClient.db('Ozen');
     console.log('Connected to MongoDB.');
 
     // Connect to Bancho.
