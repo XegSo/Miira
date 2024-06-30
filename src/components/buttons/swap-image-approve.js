@@ -21,6 +21,7 @@ module.exports = {
         await localFunctions.editPickImage(request.pickId, request.user, request.collab, collabCollection, userCollection, newImgURL);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
         let imageSwapEmbed = new EmbedBuilder()
+            .setAuthor({ name: int.user.tag, iconURL: int.user.displayAvatarURL({ size: 64 }) })
             .setFooter({ text: 'Endless Mirage | Accepted Request', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')
             .setTimestamp()

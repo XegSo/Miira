@@ -18,6 +18,7 @@ module.exports = {
         const reason = int.fields.getTextInputValue('reason');
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
         let imageSwapEmbed = new EmbedBuilder()
+            .setAuthor({ name: int.user.tag, iconURL: int.user.displayAvatarURL({ size: 64 }) })
             .setFooter({ text: 'Endless Mirage | Rejected Request', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')
             .setTimestamp()
