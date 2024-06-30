@@ -133,7 +133,7 @@ module.exports = {
             const xpForNextLevel = await localFunctions.trapezoidalRule(0, currentLevel, 1000, xpFunction);
             if (newXp > xpForNextLevel) {
                 await localFunctions.setLevel(userId, currentLevel + 1, collection);
-                if (currentLevel !== 0) {
+                if (currentLevel !== 0 && (currentLevel + 1) % 5 === 0) {
                     try {
                         message.reply(`Congratulations! You've achieved level ${currentLevel + 1}`);
                     } catch (e) {

@@ -1,5 +1,5 @@
 const { TextInputStyle } = require('discord.js');
-const { ActionRowBuilder, ModalBuilder, TextInputBuilder } = require('@discordjs/builders');
+const { ActionRowBuilder, ModalBuilder, TextInputBuilder, ButtonBuilder } = require('@discordjs/builders');
 const localConstants = require('../../constants');
 const localFunctions = require('../../functions');
 const perkCache = new Map();
@@ -9,6 +9,7 @@ module.exports = {
         name: 'use-perks'
     },
     async execute(int, client) {
+        await int.deferReply({ ephemeral: true });
         const collabCollection = client.db.collection('Collabs');
         const selectedPerk = int.values[0];
         const fullPerk = localConstants.premiumPerks.find(p => p.name === selectedPerk);
@@ -57,15 +58,24 @@ module.exports = {
                 modalField = '';
             }
 
-            await int.showModal(modal);
+            const components = new ActionRowBuilder();
+            components.addComponents(
+                new ButtonBuilder()
+                    .setCustomId('use-perk')
+                    .setLabel('Use your perk')
+                    .setStyle('Success')
+            );
+
+            await int.editReply({ content: 'Please click this button to proceed with filling the fields for your perk.', components: [components] });
 
             perkCache.set(int.user.id, {
                 perk: fullPerk,
-                collab: openMegacollab
+                collab: openMegacollab,
+                modal: modal
             });
 
         } catch {
-            await int.reply({ content: 'Try this interaction again... this took more than 3 seconds for some reason', ephemeral: true });
+            await int.editReply({ content: 'Try this interaction again... this took more than 3 seconds for some reason', ephemeral: true });
         }
     },
     perkCache: perkCache
