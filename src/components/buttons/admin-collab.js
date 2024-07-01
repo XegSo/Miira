@@ -117,6 +117,12 @@ module.exports = {
                             .setLabel('⬆️ Deliver')
                             .setStyle('Success')
                     );
+                    extraComponents.addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('update-sheet-collab')
+                            .setLabel('📚 Update Sheets')
+                            .setStyle('Success')
+                    );
                     await int.editReply({
                         content: '',
                         embeds: [dashboardEmbed],

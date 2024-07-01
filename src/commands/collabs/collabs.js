@@ -1956,6 +1956,9 @@ module.exports = {
                         if (typeof pick === 'undefined') return int.editReply('Something went wrong...');
                         if (pick.status === 'picked') {
                             const pickOwner = openMegacollab.participants.find(u => parseInt(u.id) === parseInt(pickId));
+                            if (typeof pickOwner === 'undefined') {
+                                return int.editReply('This pick is available but locked! Please ping the owner or some staff to get it unlocked and claim it.');
+                            }
                             const pickEmbed = new EmbedBuilder()
                                 .setFooter({ text: 'Endless Mirage | Megacollab Picks', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                                 .setColor('#f26e6a')
