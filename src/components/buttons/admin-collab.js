@@ -123,6 +123,12 @@ module.exports = {
                             .setLabel('📚 Update Sheets')
                             .setStyle('Success')
                     );
+                    extraComponents.addComponents(
+                        new ButtonBuilder()
+                            .setCustomId('get-locked-picks')
+                            .setLabel('🔒 Get Locked Picks')
+                            .setStyle('Success')
+                    );
                     await int.editReply({
                         content: '',
                         embeds: [dashboardEmbed],

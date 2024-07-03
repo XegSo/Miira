@@ -50,7 +50,8 @@ module.exports = {
                 perk: fullPerk,
                 collab: fullCollab
             });
-        } catch {
+        } catch (e) {
+            console.log(e);
             await int.reply({ content: 'Try this interaction again... this took more than 3 seconds for some reason', ephemeral: true });
         }
     },
