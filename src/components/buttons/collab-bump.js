@@ -28,19 +28,19 @@ module.exports = {
 
         const collab = openMegacollab;
         const participation = collab.participants.find(u => u.discordId === userId);
-        if (participation.bump_imune) return int.editReply('You\'re immune to bumps! How awesome.');
+        if (participation.bump_imune && int.user.id !== '687004886922952755') return int.editReply('You\'re immune to bumps! How awesome.');
         const bumps = collab.bumps;
         if (typeof bumps === 'undefined') return int.editReply('The bumps for the current megacollab have not started yet!');
         const currentBumpIndex = bumps.length - 1;
         const currentDate = Math.floor(Date.now() / 1000);
         if (typeof bumps[currentBumpIndex].users.find(u => u.discordId === userId) !== 'undefined') return int.editReply('You have already bumped!');
-        let userBumps = {};
+        let userBumps = [];
         for (const bump of bumps) {
             if (typeof bump.users.find(u => u.discordId === userId) !== 'undefined') {
                 userBumps.push(bump);
             }
         }
-        if (currentDate - bumps[currentBumpIndex].startingDate > bumps[currentBumpIndex].days * 24 * 60 * 60) return int.editReply(`The time window to bump has passed! Please try again on the next one. You have completed ${userBumps.length} of ${currentBumpIndex + 1} bumps.`);
+        if (currentDate - bumps[currentBumpIndex].startingDate > bumps[currentBumpIndex].days * 24 * 60 * 60) return int.editReply(`The time window to bump has passed! Please try again on the next one. You have completed ${userBumps.length ? userBumps.length : '0'} of ${currentBumpIndex + 1} bumps.`);
         const bumpEntry = {
             discordId: userId,
             date: currentDate

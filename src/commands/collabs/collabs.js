@@ -1919,13 +1919,13 @@ module.exports = {
                     const currentBumpIndex = bumps.length - 1;
                     const currentDate = Math.floor(Date.now() / 1000);
                     if (typeof bumps[currentBumpIndex].users.find(u => u.discordId === userId) !== 'undefined') return int.editReply('You have already bumped!');
-                    let userBumps = {};
+                    let userBumps = [];
                     for (const bump of bumps) {
                         if (typeof bump.users.find(u => u.discordId === userId) !== 'undefined') {
                             userBumps.push(bump);
                         }
                     }
-                    if (currentDate - bumps[currentBumpIndex].startingDate > bumps[currentBumpIndex].days * 24 * 60 * 60) return int.editReply(`The time window to bump has passed! Please try again on the next one. You have completed ${userBumps.length} of ${currentBumpIndex + 1} bumps.`);
+                    if (currentDate - bumps[currentBumpIndex].startingDate > bumps[currentBumpIndex].days * 24 * 60 * 60) return int.editReply(`The time window to bump has passed! Please try again on the next one. You have completed ${userBumps.length ? userBumps.length : '0'} of ${currentBumpIndex + 1} bumps.`);
                     const bumpEntry = {
                         discordId: userId,
                         date: currentDate
