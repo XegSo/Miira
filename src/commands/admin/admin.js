@@ -144,6 +144,16 @@ module.exports = {
                         .setDescription('Setup bumps for megacollabs.')
                 )
                 .addSubcommand((subcommand) =>
+                    subcommand.setName('assign-role')
+                        .setDescription('Assign missing role for users in a megacollabs.')
+                        .addStringOption(option =>
+                            option.setName('collab')
+                                .setDescription('Collab name')
+                                .setRequired(true)
+                                .setAutocomplete(true)
+                        )
+                )
+                .addSubcommand((subcommand) =>
                     subcommand.setName('give-perks')
                         .setDescription('Give perks to a user.')
                         .addUserOption(option =>
@@ -397,6 +407,68 @@ module.exports = {
         }
 
         if (subcommandGroup === 'collabs') {
+            if (subcommand === 'assign-role') {
+                try {
+                    let collab = await localFunctions.getCollab(int.options.getString('collab'), collabCollection);
+                    const participants = collab.participants;
+                    await int.editReply('Setting role to pending users...');
+                    for (const participant of participants) {
+                        const memberId = participant.discordId;
+                        try {
+                            const member = await int.guild.members.fetch(memberId);
+
+                            if (!member) {
+                                console.log(`${memberId} is not in the server`);
+                                continue;
+                            }
+
+                            if (!member.roles.cache.has(collab.roleId)) {
+                                await member.roles.add(collab.roleId);
+                                console.log(`Role given to ${participant.username}`);
+                            }
+                        } catch {
+                            console.log(`${memberId} is not in the server!`);
+                            const collabLogChannel = int.guild.channels.cache.get(localConstants.logChannelID);
+                            let userCollabs = await localFunctions.getUserCollabs(memberId, collection);
+                            if (typeof userCollabs === 'undefined' || userCollabs.length === 0) return;
+                            for (let userCollab of userCollabs) {
+                                let collab = await localFunctions.getCollab(userCollab.collabName, collabCollection);
+                                let contentString = '';
+                                const snipes = await localFunctions.getCollabSnipes(userCollab.collabName, collabCollection, userCollab.collabPick.id);
+                                if (typeof snipes !== 'undefined') {
+                                    if (typeof snipes.find(p => p.pick === userCollab.collabPick.id) !== 'undefined') {
+                                        contentString = 'Snipers! ';
+                                    }
+                                    for (const snipe of snipes) {
+                                        contentString = contentString.concat('', `<@${snipe.userId}>`);
+                                        await localFunctions.removeCollabSnipe(collab.name, collabCollection, snipe.userId);
+                                    }
+                                }
+                                if (collab.status !== 'closed' && collab.status !== 'delivered' && collab.status !== 'archived' && collab.status !== 'completed') {
+                                    userCollabs = userCollabs.filter(e => e.collabName !== collab.name);
+                                    await localFunctions.setUserCollabs(userId, userCollabs, collection);
+                                    await localFunctions.unsetCollabParticipation(collab.name, collabCollection, userCollab.collabPick.id);
+                                    await localFunctions.removeCollabParticipant(collab.name, collabCollection, userId);
+                                    await localFunctions.unsetParticipationOnSheet(collab, userCollab.collabPick);
+                                    const leaveEmbed = new EmbedBuilder()
+                                        .setFooter({ text: 'Endless Mirage | New Character Available', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
+                                        .setColor('#f26e6a')
+                                        .setDescription(`**\`\`\`ml\n🎫 New Character Available!\`\`\`**                                                                                                        **${collab.name}**\nName:${userCollab.collabPick.name}\nID: ${userCollab.collabPick.id}`)
+                                        .setImage(userCollab.collabPick.imgURL);
+                                    await collabLogChannel.send({ content: `${contentString}\nUser ${participant.username} has not been found on the server.`, embeds: [leaveEmbed] });
+                                }
+                                console.log(`Participation removed from ${userCollab.collabName}`);
+                                continue;
+                            }
+                        }
+                    }
+                    await int.editReply('Done!');
+                } catch (e) {
+                    console.log(e);
+                    await int.editReply('Something went wrong...');
+                }
+                return;
+            }
             if (subcommand === 'manage') {
                 try {
                     let collab = await localFunctions.getCollab(int.options.getString('collab'), collabCollection);
@@ -599,6 +671,7 @@ module.exports = {
                                     value: `Bump #${i}\n- **Starting Date:** ${bump.startingDate}\n- **Duration:** ${bump.days} days`
                                 }
                             );
+                            i++;
                         }
                         dashboardEmbed.addFields(
                             {

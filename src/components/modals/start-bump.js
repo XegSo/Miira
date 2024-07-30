@@ -37,7 +37,7 @@ module.exports = {
                 const dashboardEmbed = new EmbedBuilder()
                     .setFooter({ text: 'Endless Mirage | Bumps Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                     .setColor('#f26e6a')
-                    .setDescription(`**\`\`\`ml\n🥊 A new bump has started!\`\`\`**\n*Bump #${collab.bumps ? collab.bumps.length : '1'} of the ${collab.name}*\n\n**Press the button bellow** or use the command **\`\`/collabs quick bump\`\`** to bump your participation!\n\n**The bump will end on __<t:${currentDate + 6 * 24 * 60 * 60}:f>__.**\n\nThere will be a total of **4 bumps**, and missing **2 of them** will lead to a removal of your entry!`);
+                    .setDescription(`**\`\`\`ml\n🥊 A new bump has started!\`\`\`**\n*Bump #${collab.bumps ? collab.bumps.length + 1 : '1'} of the ${collab.name}*\n\n**Press the button bellow** or use the command **\`\`/collabs quick bump\`\`** to bump your participation!\n\n**The bump will end on __<t:${currentDate + 6 * 24 * 60 * 60}:f>__.**\n\nThere will be a total of **4 bumps**, and missing **1 of them** will lead to a removal of your entry!`);
 
                 const components = new ActionRowBuilder().addComponents(
                     new ButtonBuilder()

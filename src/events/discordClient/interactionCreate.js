@@ -112,7 +112,7 @@ module.exports = {
         } else if (int.isAutocomplete()) {
             const { collection, client: mongoClient } = await connectToMongoDB('Collabs');
             try {
-                if (int.commandName === 'admin' && int.options.getSubcommand() === 'manage') {
+                if (int.commandName === 'admin' && (int.options.getSubcommand() === 'manage' || int.options.getSubcommand() === 'assign-role')) {
                     const focusedValue = int.options.getFocused();
                     const allCollabs = await localFunctions.getCollabs(collection);
                     const filteredChoices = allCollabs.filter((collab) =>
