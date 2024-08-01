@@ -2111,8 +2111,8 @@ module.exports = {
                         const pick = int.options.getString('user');
                         const participants = openMegacollab.participants;
                         const user = participants.find(i => i.discordId === pick);
+                        if (typeof user === 'undefined') return int.editReply('Something went wrong... This user might not be in the collab.');
                         const updatedPick = openMegacollab.pool.items.find(i => i.id === user.id);
-                        if (typeof user === 'undefined') return int.editReply('Something went wrong...');
                         const pickEmbed = new EmbedBuilder()
                             .setFooter({ text: 'Endless Mirage | Megacollab Picks', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                             .setColor('#f26e6a')

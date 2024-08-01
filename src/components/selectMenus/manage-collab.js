@@ -19,6 +19,8 @@ module.exports = {
             const userCollabs = await localFunctions.getUserCollabs(userId, userCollection);
             const userCollab = userCollabs.find(e => e.collabName === int.values[0]);
             let fullCollab = await localFunctions.getCollab(int.values[0], collection);
+            const bumps = fullCollab.bumps;
+            let userEntry = fullCollab.participants.find(i => i.discordId === userId);
             let pick = userCollab.collabPick;
             let components = [];
             let extraComponents = [];
@@ -49,12 +51,38 @@ module.exports = {
                     {
                         name: '‎',
                         value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
-                    },
+                    }
+                );
+            if (userEntry.bump_imune) {
+                dashboardEmbed.addFields(
                     {
-                        name: '‎',
+                        name: 'You are bump immune! How awesome.',
                         value: `Check the __**[Spreadsheet](https://docs.google.com/spreadsheets/d/${fullCollab.spreadsheetID})**__ for full collab information.`
                     }
                 );
+            } else if (typeof bumps !== 'undefined') {
+                let completedBumps = 0;
+                for (const bump of bumps) {
+                    if (typeof bump.users.find(u => u.discordId === userId) !== 'undefined') {
+                        completedBumps++;
+                    }
+                }
+                if (completedBumps === 0) {
+                    dashboardEmbed.addFields(
+                        {
+                            name: 'You have not completed any bumps! If you joined before the last bump started, you will lose your entry! Please go to the collabs announcement channel and click on the bump button ASAP!',
+                            value: `Check the __**[Spreadsheet](https://docs.google.com/spreadsheets/d/${fullCollab.spreadsheetID})**__ for full collab information.`
+                        }
+                    );
+                } else {
+                    dashboardEmbed.addFields(
+                        {
+                            name: `You have completed ${completedBumps} bump(s) succesfully.`,
+                            value: `Check the __**[Spreadsheet](https://docs.google.com/spreadsheets/d/${fullCollab.spreadsheetID})**__ for full collab information.`
+                        }
+                    );
+                }
+            }
 
             const embed2 = new EmbedBuilder()
                 .setImage(pick.imgURL)
