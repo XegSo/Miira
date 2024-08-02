@@ -720,6 +720,7 @@ module.exports = {
 
             let userPerks = await localFunctions.getPerks(userId, collection);
             let submittedPerks = await localFunctions.getUserPerksAllCollabs(collabCollection, userId);
+            const unclaimedPerks = userPerks.filter(p => !submittedPerks.some(s => p.name === s.perk));
             const component = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('perks-buy')
@@ -727,12 +728,12 @@ module.exports = {
                     .setStyle('Primary')
             );
 
-            if (submittedPerks.length === 0 && userPerks.length !== 0) {
+            if (submittedPerks.length === 0 && unclaimedPerks.length !== 0) {
                 let useMenu = new SelectMenuBuilder()
                     .setCustomId('use-perks')
                     .setPlaceholder('Use your perks.');
 
-                for (const perk of userPerks) {
+                for (const perk of unclaimedPerks) {
                     useMenu.addOptions({ label: perk.name, value: perk.name, description: perk.description });
                 }
                 perksEmbed.setDescription('*Seems like you can use some perks!*\n                                                                                                        **```ml\n✅ To use one of your perks, use the menu bellow!```**');
@@ -748,7 +749,7 @@ module.exports = {
                     embeds: [perksEmbed],
                     components: [useComponent, component]
                 });
-            } else if (submittedPerks.length === 0 && userPerks.length === 0) {
+            } else if (submittedPerks.length === 0 && unclaimedPerks.length === 0) {
                 perksEmbed.setDescription('*Seems like you don\'t have any perk to use...*\n                                                                                                        **```ml\n❔ Interested on buying some perk for the megacollabs? Use the button bellow!```**');
                 perksEmbed.addFields(
                     {
@@ -781,12 +782,11 @@ module.exports = {
                         value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
                     }
                 );
-                if (userPerks.length !== 0) {
+                if (unclaimedPerks.length !== 0) {
                     perksEmbed.setDescription('*Seems like you have some perks submitted!*\n                                                                                                        **```ml\n✅ To edit and use your perk(s) use the menus bellow!```**');
                     let useMenu = new SelectMenuBuilder()
                         .setCustomId('use-perks')
                         .setPlaceholder('Use your perks.');
-                    const unclaimedPerks = userPerks.filter(p => !submittedPerks.some(s => p.name === s.perk));
                     for (const perk of unclaimedPerks) {
                         if (perk.renewalPrice) {
                             useMenu.addOptions({ label: perk.name, value: perk.name, description: perk.description });
