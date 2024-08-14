@@ -32,6 +32,7 @@ module.exports = {
         if (alreadySuggested) return int.editReply('You already have a request under review!');
         let status = 'Pending';
         let collab = initializedMap.get(int.user.id).collab;
+        if (collab.status === 'closed' || collab.status === 'delivered' || collab.status === 'early delivery' || collab.status === 'completed' || collab.status === 'archived') return int.editReply('You cannot submit a request at this collab status...');
         let pick = await collab.participants.find(p => p.discordId === int.user.id.toString());
         let imageSwapEmbed = new EmbedBuilder()
             .setFooter({ text: 'Endless Mirage | Image Request', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })

@@ -19,6 +19,9 @@ module.exports = {
         const openMegacollab = allCollabs.find(c => c.restriction === 'megacollab' && (c.status === 'open' || c.status === 'early access' || c.status === 'on design'));
 
         try {
+            if (typeof openMegacollab === 'undefined') {
+                return int.editReply('This collab is closed!');
+            }
             if (typeof userCollabs.find(uc => uc.collabName === openMegacollab.name) === 'undefined') {
                 return int.editReply('You\'re not participating on this collab! To join use the ``/collabs quick join`` command.');
             }

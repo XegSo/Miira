@@ -23,6 +23,7 @@ module.exports = {
             }
             const collab = leaveCache.get(int.user.id).collab;
             const fullCollab = await localFunctions.getCollab(collab.collabName, collection);
+            if (fullCollab.status === 'closed' || fullCollab.status === 'delivered' || fullCollab.status === 'completed' || collab.status === 'early delivery' || fullCollab.status === 'archived') return int.editReply('You cannot leave at this collab status...');
             if (collab.collabPick.name !== int.fields.getTextInputValue('pick')) {
                 return int.editReply('Wrong name, make sure you didn\'t make a typo!');
             }

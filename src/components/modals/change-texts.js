@@ -13,6 +13,8 @@ module.exports = {
         const collection = client.db.collection('OzenCollection');
         const collabCollection = client.db.collection('Collabs');
         const collabName = editCache.get(int.user.id).collab;
+        const collab = await localFunctions.getCollab(collabName, collabCollection);
+        if (collab.status === 'closed' || collab.status === 'delivered' || collab.status === 'completed' || collab.status === 'early delivery' || collab.status === 'archived') return int.editReply('You cannot submit a request at this collab status...');
         const guild = client.guilds.cache.get(localConstants.guildId);
         const userLogChannel = guild.channels.cache.get(localConstants.userActionsLogChannelID);
 
