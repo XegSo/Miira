@@ -119,17 +119,31 @@ module.exports = {
             case 'delivered':
             case 'completed':
             case 'archived':
-                components.addComponents(
-                    new ButtonBuilder()
-                        .setLabel('⬇️ Download')
-                        .setURL(`${fullCollab.bucket}${userCollab.collabPick.id}.zip`)
-                        .setStyle('Link')
-                );
-                await int.editReply({
-                    content: '',
-                    embeds: [dashboardEmbed, embed2],
-                    components: [components]
-                });
+                if (typeof fullCollab.invalidUsers.find(u => u === userId) === 'undefined') {
+                    let downloadlInfo = fullCollab.downloadId.find(u => u.discordId === userId);
+                    components.addComponents(
+                        new ButtonBuilder()
+                            .setLabel('⬇️ Download')
+                            .setURL(`https://storage.googleapis.com/${fullCollab.bucket}/${downloadlInfo.id}.zip`)
+                            .setStyle('Link')
+                    );
+                    await int.editReply({
+                        content: '',
+                        embeds: [dashboardEmbed, embed2],
+                        components: [components]
+                    });
+                } else {
+                    dashboardEmbed.addFields(
+                        {
+                            name: '‎',
+                            value: '**Important:** You did not complete any bumps during the collab and your entry is locked. If you want to download your materials please open a ticket before the collab finishes.'
+                        }
+                    );
+                    await int.editReply({
+                        content: '',
+                        embeds: [dashboardEmbed, embed2]
+                    });
+                }
                 break;
             default:
                 if (fullCollab.type === 'pooled') {

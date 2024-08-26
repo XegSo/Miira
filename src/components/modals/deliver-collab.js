@@ -29,9 +29,6 @@ module.exports = {
         switch (fullCollab.restriction) {
         case 'none':
             break;
-        case 'megacollab':
-            ping = '<@&854444817316577340>';
-            break;
         default:
             if (typeof fullCollab.role !== 'undefined') {
                 ping = `<@&${fullCollab.role}>`;

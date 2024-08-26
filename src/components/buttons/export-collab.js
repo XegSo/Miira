@@ -2,7 +2,6 @@ const localFunctions = require('../../functions');
 const { AttachmentBuilder } = require('discord.js');
 const { collabCache } = require('./admin-collab');
 const { adminCache } = require('../../commands/admin/admin');
-const { createObjectCsvStringifier } = require('csv-writer');
 
 module.exports = {
     data: {
@@ -30,14 +29,28 @@ module.exports = {
             return;
         }
 
-        const collabParticipants = await localFunctions.getCollabParticipants(initializedMap.get(int.user.id).collab.name, collection);
-        const headers = Object.keys(collabParticipants[0]);
-        const csvStringifier = createObjectCsvStringifier({
-            header: headers.map(header => ({ id: header, title: header }))
-        });
-        const csvData = csvStringifier.getHeaderString() + '\n' + csvStringifier.stringifyRecords(collabParticipants);
-        const attachment = new AttachmentBuilder(Buffer.from(csvData), {
-            name: `${collab.name} Data.csv`
+        const collabParticipants = collab.participants;
+        const bumps = collab.bumps;
+        for (const participant of collabParticipants) {
+            let completedBumps = 0;
+            for (const bump of bumps) {
+                if (typeof bump.users.find(u => u.discordId === participant.discordId) !== 'undefined') {
+                    completedBumps++;
+                }
+            }
+            if (participant.bump_imune) {
+                completedBumps = 4;
+            }
+            participant.completedBumps = completedBumps;
+        }
+        const toExport = {
+            'Participants': collabParticipants
+        };
+
+        const excelBuffer = localFunctions.createExcelBuffer(toExport);
+
+        const attachment = new AttachmentBuilder(excelBuffer, {
+            name: `${collab.name} Data.xlsx`
         });
 
         await int.editReply({ files: [attachment] });
