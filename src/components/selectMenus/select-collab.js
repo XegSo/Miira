@@ -105,7 +105,6 @@ module.exports = {
 
             if (!userInBlacklist) {
                 if (userInCollab) {
-                    const fullParticipation = userCollabs.find(e => e.collabName === collab.name);
                     if (collab.restriction === 'deluxe' && typeof deluxeEntry.extra !== 'undefined') {
                         components.addComponents(
                             new ButtonBuilder()
@@ -124,19 +123,39 @@ module.exports = {
                     case 'delivered':
                     case 'archived':
                     case 'completed':
-                        components.addComponents(
-                            new ButtonBuilder()
-                                .setLabel('⬇️ Download')
-                                .setURL(`${collab.bucket}${fullParticipation.collabPick.id}.zip`)
-                                .setStyle('Link')
-                        );
-                        break;
-                    case 'early delivery':
-                        if (tier >= 4) {
+                        if (typeof collab.invalidUsers.find(u => u === userId) === 'undefined') {
+                            let downloadlInfo = collab.downloadId.find(u => u.discordId === userId);
                             components.addComponents(
                                 new ButtonBuilder()
                                     .setLabel('⬇️ Download')
-                                    .setURL(`${collab.bucket}${fullParticipation.collabPick.id}.zip`)
+                                    .setURL(`https://storage.googleapis.com/${collab.bucket}/${downloadlInfo.id}.zip`)
+                                    .setStyle('Link')
+                            );
+                            await int.editReply({
+                                content: '',
+                                embeds: [dashboardEmbed],
+                                components: [components]
+                            });
+                        } else {
+                            dashboardEmbed.addFields(
+                                {
+                                    name: '‎',
+                                    value: '**Important:** You did not complete any bumps during the collab and your entry is locked. If you want to download your materials please open a ticket before the collab finishes.'
+                                }
+                            );
+                            await int.editReply({
+                                content: '',
+                                embeds: [dashboardEmbed]
+                            });
+                        }
+                        break;
+                    case 'early delivery':
+                        if (tier >= 4) {
+                            let downloadlInfo = collab.downloadId.find(u => u.discordId === userId);
+                            components.addComponents(
+                                new ButtonBuilder()
+                                    .setLabel('⬇️ Download')
+                                    .setURL(`https://storage.googleapis.com/${collab.bucket}/${downloadlInfo.id}.zip`)
                                     .setStyle('Link')
                             );
                         }

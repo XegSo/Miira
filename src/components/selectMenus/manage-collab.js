@@ -103,10 +103,11 @@ module.exports = {
                     tier = localFunctions.premiumToInteger(premiumDetails[0].name);
                 }
                 if (tier >= 4) {
+                    let downloadlInfo = fullCollab.downloadId.find(u => u.discordId === userId);
                     components.addComponents(
                         new ButtonBuilder()
                             .setLabel('⬇️ Download')
-                            .setURL(`${fullCollab.bucket}${userCollab.collabPick.id}.zip`)
+                            .setURL(`https://storage.googleapis.com/${fullCollab.bucket}/${downloadlInfo.id}.zip`)
                             .setStyle('Link')
                     );
                     await int.editReply({
