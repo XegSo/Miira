@@ -9,7 +9,7 @@ module.exports = {
     },
     async execute(int, client) {
         const userId = int.user.id;
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         let userOsuData = await localFunctions.getOsuData(userId, collection);
 
         if (userOsuData) {

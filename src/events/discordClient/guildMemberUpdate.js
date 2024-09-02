@@ -20,7 +20,7 @@ module.exports = {
 
 
         let badges = localFunctions.updateBadges(roles);
-        const collection = member.client.db.collection('OzenCollection');
+        const collection = member.client.db.collection('Users');
         let userInventory = await localFunctions.getInventory(member.user.id, collection) || [];
         let onUse = await localFunctions.getOnUse(member.user.id, collection);
 

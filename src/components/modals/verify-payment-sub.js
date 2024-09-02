@@ -10,7 +10,7 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
         const collectionPayments = client.db.collection('PD');
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const email = int.fields.getTextInputValue('email');
         const guild = client.guilds.cache.get(localConstants.guildId);
         let pendingMember = await guild.members.cache.get(userId);

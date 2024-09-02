@@ -8,7 +8,7 @@ module.exports = {
     async execute(message, user, discordClient) {
         if (user.ircUsername === banchoUsername) return;
         if (/^\d+$/.test(message.message) && message.message.length === 5) {
-            const collection = discordClient.db.collection('OzenCollection');
+            const collection = discordClient.db.collection('Users');
             const guild = discordClient.guilds.cache.get(localConstants.guildId);
             const logChannel = guild.channels.cache.get(localConstants.logChannelID);
             try {

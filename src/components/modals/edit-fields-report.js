@@ -11,7 +11,7 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         let editString = '';
         let textEdits = false;
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const collabCollection = client.db.collection('Collabs');
         const report = reportCache.get(int.user.id).report;
         const message = reportCache.get(int.user.id).message;

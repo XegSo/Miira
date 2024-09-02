@@ -13,7 +13,7 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
-        const userCollection = client.db.collection('OzenCollection');
+        const userCollection = client.db.collection('Users');
         const collectionSpecial = client.db.collection('Special');
         const guild = client.guilds.cache.get(localConstants.guildId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);

@@ -15,7 +15,7 @@ module.exports = {
         if (typeof request === 'undefined') return int.editReply('Something went wrong...');
 
         const newImgURL = request.imgURL;
-        const userCollection = client.db.collection('OzenCollection');
+        const userCollection = client.db.collection('Users');
         const collabCollection = client.db.collection('Collabs');
 
         await localFunctions.editPickImage(request.pickId, request.user, request.collab, collabCollection, userCollection, newImgURL);

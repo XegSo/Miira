@@ -16,7 +16,7 @@ module.exports = {
 
         // MongoDB collections.
         const collection = client.db.collection('Collabs');
-        const userCollection = client.db.collection('OzenCollection');
+        const userCollection = client.db.collection('Users');
         const collectionSpecial = client.db.collection('Special');
 
         const guild = client.guilds.cache.get(localConstants.guildId);

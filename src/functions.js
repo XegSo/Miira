@@ -933,7 +933,7 @@ module.exports = {
 
     handleReferralCommand: async function (int, client) {
         const userId = int.user.id;
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
 
         try {
             let referralCode = await getReferralCode(userId, collection);
@@ -2105,7 +2105,7 @@ module.exports = {
         const year = now.getFullYear();
         const numberOfDaysInMonth = new Date(year, currentMonth, 0).getDate();
         const nextRun = new Date(now);
-        const userCollection = client.db.collection('OzenCollection');
+        const userCollection = client.db.collection('Users');
 
         nextRun.setUTCHours(localConstants.dailyCheckHour, localConstants.dailyCheckMinute, 0, 0);
 
@@ -2347,7 +2347,7 @@ async function setReferralCode(userId, referralCode, collection) {
 }
 
 async function fetchUserDataFromDatabase(client) {
-    const collection = client.db.collection('OzenCollection');
+    const collection = client.db.collection('Users');
     const userData = await collection.find({}).toArray();
     const userDataArray = userData.map(user => ({
         userId: user._id,
@@ -2362,7 +2362,7 @@ async function fetchUserDataFromDatabase(client) {
 
 async function handleDailyDecay(client) {
     console.log('Running daily decay');
-    const collection = client.db.collection('OzenCollection');
+    const collection = client.db.collection('Users');
     const users = await collection.find({}).toArray();
 
     for (const user of users) {
@@ -2391,7 +2391,7 @@ async function scheduleDailyDecay(client) {
     const year = now.getFullYear();
     const numberOfDaysInMonth = new Date(year, currentMonth, 0).getDate();
     const nextRun = new Date(now);
-    const userCollection = client.db.collection('OzenCollection');
+    const userCollection = client.db.collection('Users');
 
     nextRun.setUTCHours(localConstants.dailyCheckHour, localConstants.dailyCheckMinute, 0, 0);
 

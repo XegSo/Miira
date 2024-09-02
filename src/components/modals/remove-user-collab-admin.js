@@ -22,7 +22,7 @@ module.exports = {
         }
         await int.deferReply({ ephemeral: true });
         const collection = client.db.collection('Collabs');
-        const userCollection = client.db.collection('OzenCollection');
+        const userCollection = client.db.collection('Users');
         const guild = client.guilds.cache.get(localConstants.guildId);
         const logChannel = guild.channels.cache.get(localConstants.logChannelID);
         const auditChannel = guild.channels.cache.get(localConstants.auditLogChannelID);

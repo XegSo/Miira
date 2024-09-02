@@ -36,7 +36,7 @@ module.exports = {
         startOfDay.setHours(0, 0, 0, 0);
 
         // Grab the MongoDB collections.
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const collectionSpecial = client.db.collection('Special');
 
         const globalBoost = await localFunctions.getGlobalBoost(collectionSpecial);

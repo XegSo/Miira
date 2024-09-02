@@ -8,7 +8,7 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply();
         const collection = client.db.collection('Collabs');
-        const userCollection = client.db.collection('OzenCollection');
+        const userCollection = client.db.collection('Users');
 
         let name = int.fields.getTextInputValue('name');
         if (deleteCache.get(int.user.id).collab.host === int.user.id && deleteCache.get(int.user.id).collab.name === name) {

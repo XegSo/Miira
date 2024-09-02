@@ -7,7 +7,7 @@ module.exports = {
     async execute(member) {
         const userId = member.user.id;
         const collabLogChannel = member.guild.channels.cache.get(localConstants.logChannelID);
-        const userCollection = member.client.db.collection('OzenCollection');
+        const userCollection = member.client.db.collection('Users');
         const collection = member.client.db.collection('Collabs');
 
         let userCollabs = await localFunctions.getUserCollabs(userId, userCollection);

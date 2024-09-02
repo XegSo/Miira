@@ -23,7 +23,7 @@ module.exports = {
         }
         let editString = '';
         let textEdits = false;
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const collabCollection = client.db.collection('Collabs');
         const collab = initializedMap.get(int.user.id).collab;
         const collabName = collab.name;

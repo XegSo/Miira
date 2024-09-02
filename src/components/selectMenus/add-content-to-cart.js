@@ -12,7 +12,7 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const allMaps = [premiumBuyCache, perkCache, upgradeCache];
         const userId = int.user.id;
         const pendingItems = int.values;

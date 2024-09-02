@@ -15,7 +15,7 @@ module.exports = {
         const purchasedItemValue = parseInt(purchasedItem.value.replace(/[^\d]/g, ''));
 
         // Grab the MongoDB collection.
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
 
         // Check if the user has enough tokens
         const currentBalance = await localFunctions.getBalance(userId, collection);

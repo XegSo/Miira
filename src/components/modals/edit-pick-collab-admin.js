@@ -31,7 +31,7 @@ module.exports = {
         }
         const collab = initializedMap.get(int.user.id).collab.name;
 
-        const userCollection = client.db.collection('OzenCollection');
+        const userCollection = client.db.collection('Users');
         const collabCollection = client.db.collection('Collabs');
 
         await localFunctions.editPickName(pick.id, user, collab, collabCollection, userCollection, int.fields.getTextInputValue('ch_name'));

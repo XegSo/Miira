@@ -12,7 +12,7 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
         let arrayOfObjects = [];
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
 
         const staticTier = await localFunctions.getUserTier(userId, collection) || [];
         let userTier = staticTier;

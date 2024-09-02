@@ -10,7 +10,7 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
         let totalCost = 0;
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const cartEmbed = new EmbedBuilder()
             .setFooter({ text: 'Endless Mirage | Premium Dashboard', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a');

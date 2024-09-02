@@ -31,7 +31,7 @@ module.exports = {
             try {
                 const response = await fetch(attachment.url);
                 const jsonData = await response.json();
-                const collection = client.db.collection('OzenCollection');
+                const collection = client.db.collection('Users');
 
                 for (const item of jsonData) {
                     const premiumDiscordId = item.discordId;

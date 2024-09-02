@@ -8,7 +8,7 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
 
         const itemsToDelete = int.values;
         let userItemsInCart = await localFunctions.getCart(userId, collection);

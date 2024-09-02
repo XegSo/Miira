@@ -15,7 +15,7 @@ module.exports = {
             return;
         }
 
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const logChannel = int.guild.channels.cache.get('1152347792539402250');
 
         const suggestionMessage = SuggestionCache.get(int.user.id).message;

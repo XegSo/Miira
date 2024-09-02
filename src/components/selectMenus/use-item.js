@@ -12,7 +12,7 @@ module.exports = {
         const guild = int.guild;
         const guildMember = await guild.members.cache.get(userId);
         const selectedItem = int.values[0];
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const userInventory = await localFunctions.getInventory(userId, collection);
 
         if (selectedItem && userInventory.some((item) => item.name === selectedItem)) {

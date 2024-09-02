@@ -8,7 +8,7 @@ module.exports = {
     async execute(int, client) {
         const userId = int.user.id;
         await int.deferReply({ ephemeral: true });
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const collabCollection = client.db.collection('Collabs');
         const currentDate = Math.floor(new Date().getTime() / 1000);
 

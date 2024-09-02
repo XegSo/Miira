@@ -10,7 +10,7 @@ module.exports = {
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const checkoutEmbed = new EmbedBuilder()
             .setFooter({ text: 'Endless Mirage', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
             .setColor('#f26e6a')

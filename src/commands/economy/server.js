@@ -49,7 +49,7 @@ module.exports = {
     async execute(int, client) {
         const subcommand = int.options.getSubcommand();
         const userId = int.user.id;
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const collectionSpecial = client.db.collection('Special');
 
         if (subcommand === 'inventory') {

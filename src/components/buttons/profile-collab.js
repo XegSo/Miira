@@ -14,7 +14,7 @@ module.exports = {
         const guildMember = guild.members.cache.get(userId);
         await int.deferReply({ ephemeral: true });
 
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const collabCollection = client.db.collection('Collabs');
         const userOsu = await localFunctions.getOsuData(userId, collection);
         const lastUpdate = await localFunctions.getUserLastUpdate(userId, collection);

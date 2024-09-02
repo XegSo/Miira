@@ -5,7 +5,7 @@ require('dotenv').config();
 const dbName = 'Ozen'; // Your MongoDB database name
 const collectionName = 'Special'; // Your collection name
 const dbName = 'Ozen'; // Your MongoDB database name
-const collectionName = 'OzenCollection'; // Your collection name
+const collectionName = 'Users'; // Your collection name
 */
 
 async function connectToMongoDB(setCollection) {
@@ -15,8 +15,8 @@ async function connectToMongoDB(setCollection) {
     try {
 
         await client.connect();
-        console.log(`Connected to MongoDB: Ozen | ${setCollection}`);
-        const db = client.db('Ozen');
+        console.log(`Connected to MongoDB: Miira | ${setCollection}`);
+        const db = client.db('Miira');
         const collection = db.collection(setCollection);
         return { client, db, collection };
     } catch (error) {

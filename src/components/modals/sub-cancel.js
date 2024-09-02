@@ -6,7 +6,7 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         let cancel = int.fields.getTextInputValue('cancel');
 
         if (cancel === 'yes') {

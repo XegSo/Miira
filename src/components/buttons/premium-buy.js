@@ -17,7 +17,7 @@ module.exports = {
         if (int.message.channelId === '767374005782052864') {
             messageId = int.message.id;
         }
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const userId = int.user.id;
         const guildMember = await guild.members.fetch(userId);
         var arrayOfObjects = [];

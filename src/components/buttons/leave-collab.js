@@ -24,7 +24,7 @@ module.exports = {
         }
 
         const collab = initializedMap.get(userId).collab;
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const userCollabData = await localFunctions.getUserCollabs(userId, collection);
         const currentCollab = userCollabData.find(e => e.collabName === collab.name);
         const currentPick = currentCollab.collabPick.name;

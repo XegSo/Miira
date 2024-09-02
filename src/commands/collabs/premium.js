@@ -19,7 +19,7 @@ module.exports = {
         const guildMember = guild.members.cache.get(userId);
         const username = int.user.tag;
 
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const collectionSpecial = client.db.collection('Special');
 
         const premiumEmbed = new EmbedBuilder()

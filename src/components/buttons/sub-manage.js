@@ -9,7 +9,7 @@ module.exports = {
     },
     async execute(int, client) {
         await int.deferReply({ ephemeral: true });
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
         const userId = int.user.id;
         let renewalString = '';
         const currentDate = new Date();

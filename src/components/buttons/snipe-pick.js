@@ -11,7 +11,7 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
         const collection = client.db.collection('Collabs');
-        const userCollection = client.db.collection('OzenCollection');
+        const userCollection = client.db.collection('Users');
         const collectionSpecial = client.db.collection('Special');
         let initializedMap;
         if (userCheckCache.size > 0) {

@@ -8,7 +8,7 @@ module.exports = {
         const userId = user.id;
         const collabLogChannel = guild.channels.cache.get(localConstants.logChannelID);
         const client = guild.client;
-        const userCollection = client.db.collection('OzenCollection');
+        const userCollection = client.db.collection('Users');
         const collection = client.db.collection('Collabs');
         const blacklistCollection = client.db.collection('Blacklist');
 

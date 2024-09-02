@@ -12,7 +12,7 @@ module.exports = {
         const pendingMember = await guild.members.fetch(pendingUser.user.id);
 
         if (!pendingUser) return;
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
 
         let newPerks = [];
         let newRoleId = '';

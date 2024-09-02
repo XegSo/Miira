@@ -10,7 +10,7 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const pendingUser = givePerksCache.get(int.user.id);
         if (!pendingUser) return;
-        const collection = client.db.collection('OzenCollection');
+        const collection = client.db.collection('Users');
 
         const pendingPerks = int.values;
         let userPerks = await localFunctions.getPerks(pendingUser.user.id, collection) || [];

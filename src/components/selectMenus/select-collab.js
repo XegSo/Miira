@@ -12,7 +12,7 @@ module.exports = {
         await int.deferReply({ ephemeral: true });
         const userId = int.user.id;
         const collection = client.db.collection('Collabs');
-        const userCollection = client.db.collection('OzenCollection');
+        const userCollection = client.db.collection('Users');
         const blacklistCollection = client.db.collection('Blacklist');
         const guild = client.guilds.cache.get(localConstants.guildId);
         const guildMember = guild.members.cache.get(userId);
