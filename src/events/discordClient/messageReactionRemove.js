@@ -1,10 +1,11 @@
 const { Events } = require('discord.js');
 const localFunctions = require('../../functions');
+const { connectToMongoDB } = require('../../mongo');
 
 module.exports = {
     name: Events.MessageReactionRemove,
-    async execute(reaction, user, client) {
-        const collection = client.db.collection('ReactionRoles');
+    async execute(reaction, user) {
+        const { collection, client: mongoClient } = await connectToMongoDB('ReactionRoles');
         if (user.bot) return;
         if (reaction.partial) {
             try {
@@ -29,6 +30,7 @@ module.exports = {
             }
         } catch (e) {
             console.error(e);
+            mongoClient.close();
         }
     }
 };
