@@ -61,6 +61,22 @@ module.exports = {
                         )
                 )
                 .addSubcommand((subcommand) =>
+                    subcommand.setName('give-streak')
+                        .setDescription('Assign streak to a user.')
+                        .addUserOption(option =>
+                            option
+                                .setName('user')
+                                .setDescription('User to assign credis to')
+                                .setRequired(true)
+                        )
+                        .addIntegerOption(option =>
+                            option
+                                .setName('amount')
+                                .setDescription('Amount of streak to give')
+                                .setRequired(true)
+                        )
+                )
+                .addSubcommand((subcommand) =>
                     subcommand.setName('ticket-create')
                         .setDescription('Create a ticket system.')
                         .addStringOption(option =>
