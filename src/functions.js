@@ -1410,6 +1410,11 @@ module.exports = {
         return user ? user.balance || 0 : 0;
     },
 
+    getStreak: async function (userId, collection) {
+        const user = await collection.findOne({ _id: userId });
+        return user ? user.daily || [] : [];
+    },
+
     getXp: async function (userId, collection) {
         const user = await collection.findOne({ _id: userId });
         return user ? user.xp || 0 : 0;
@@ -1422,6 +1427,10 @@ module.exports = {
 
     setBalance: async function (userId, balance, collection) {
         await collection.updateOne({ _id: userId }, { $set: { balance } }, { upsert: true });
+    },
+
+    setStreak: async function (userId, daily, collection) {
+        await collection.updateOne({ _id: userId }, { $set: { daily } }, { upsert: true });
     },
 
     setXp: async function (userId, xp, collection) {

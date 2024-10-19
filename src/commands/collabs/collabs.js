@@ -360,40 +360,40 @@ module.exports = {
             for (const collab of collabs) {
                 if (((collab.status !== 'closed' && collab.status !== 'on design')) && typeof collabData.find(e => e.collabName === collab.name) === 'undefined') {
                     switch (collab.restriction) {
-                    case 'staff':
-                        if (guildMember.roles.cache.has('961891383365500938') || userId === '687004886922952755') {
+                        case 'staff':
+                            if (guildMember.roles.cache.has('961891383365500938') || userId === '687004886922952755') {
+                                joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                collabsToJoinCount++;
+                            }
+                            break;
+                        case 'deluxe':
+                            if (deluxeEntry || userId === '687004886922952755') {
+                                joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                collabsToJoinCount++;
+                            }
+                            break;
+                        case 'megacollab':
+                            if ((collab.status === 'early access' && typeof userPerks.find(e => e.name === 'Megacollab Early Access')) || userId === '687004886922952755') {
+                                joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                collabsToJoinCount++;
+                            }
+                            break;
+                        case 'prestige':
+                            if (typeof prestige !== 'undefined' || userId === '687004886922952755') {
+                                joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                collabsToJoinCount++;
+                            }
+                            break;
+                        case 'experimental':
+                            if (tier > 0 || prestigeLevel >= 4 || userId === '687004886922952755') {
+                                joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                collabsToJoinCount++;
+                            }
+                            break;
+                        case 'none':
                             joinMenu.addOptions({ label: collab.name, value: collab.name });
                             collabsToJoinCount++;
-                        }
-                        break;
-                    case 'deluxe':
-                        if (deluxeEntry || userId === '687004886922952755') {
-                            joinMenu.addOptions({ label: collab.name, value: collab.name });
-                            collabsToJoinCount++;
-                        }
-                        break;
-                    case 'megacollab':
-                        if ((collab.status === 'early access' && typeof userPerks.find(e => e.name === 'Megacollab Early Access')) || userId === '687004886922952755') {
-                            joinMenu.addOptions({ label: collab.name, value: collab.name });
-                            collabsToJoinCount++;
-                        }
-                        break;
-                    case 'prestige':
-                        if (typeof prestige !== 'undefined' || userId === '687004886922952755') {
-                            joinMenu.addOptions({ label: collab.name, value: collab.name });
-                            collabsToJoinCount++;
-                        }
-                        break;
-                    case 'experimental':
-                        if (tier > 0 || prestigeLevel >= 4 || userId === '687004886922952755') {
-                            joinMenu.addOptions({ label: collab.name, value: collab.name });
-                            collabsToJoinCount++;
-                        }
-                        break;
-                    case 'none':
-                        joinMenu.addOptions({ label: collab.name, value: collab.name });
-                        collabsToJoinCount++;
-                        break;
+                            break;
                     }
                 }
             }
@@ -572,85 +572,85 @@ module.exports = {
                 let slots = user_cap - participants;
                 if ((((collab.status !== 'closed' && collab.status !== 'on design' && collab.status !== 'full')) && typeof collabData.find(e => e.collabName === collab.name) === 'undefined') || userId === '687004886922952755') {
                     switch (collab.restriction) {
-                    case 'staff':
-                        if (guildMember.roles.cache.has('961891383365500938') || userId === '687004886922952755') {
-                            joinMenu.addOptions({ label: collab.name, value: collab.name });
-                            osuEmbed.addFields(
-                                {
-                                    name: `${collab.name}`,
-                                    value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
-                                }
-                            );
-                            collabsToJoinCount++;
-                        }
-                        break;
-                    case 'deluxe':
-                        if (deluxeEntry || userId === '687004886922952755') {
-                            joinMenu.addOptions({ label: collab.name, value: collab.name });
-                            osuEmbed.addFields(
-                                {
-                                    name: `${collab.name}`,
-                                    value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
-                                }
-                            );
-                            collabsToJoinCount++;
-                        }
-                        break;
-                    case 'megacollab':
-                        if ((collab.status === 'early access' && typeof userPerks.find(e => e.name === 'Megacollab Early Access')) || guildMember.roles.cache.has('630636502187114496')/* admin*/ || guildMember.roles.cache.has('834962043735638016')/* special donator*/ || guildMember.roles.cache.has('962251481669574666')/* contributor*/) {
-                            joinMenu.addOptions({ label: collab.name, value: collab.name });
-                            osuEmbed.addFields(
-                                {
-                                    name: `${collab.name}`,
-                                    value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
-                                }
-                            );
-                            collabsToJoinCount++;
-                        } else if (collab.status === 'open') {
-                            joinMenu.addOptions({ label: collab.name, value: collab.name });
-                            osuEmbed.addFields(
-                                {
-                                    name: `${collab.name}`,
-                                    value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
-                                }
-                            );
-                            collabsToJoinCount++;
-                        }
-                        break;
-                    case 'prestige':
-                        if (typeof prestige !== 'undefined' || userId === '687004886922952755') {
-                            joinMenu.addOptions({ label: collab.name, value: collab.name });
-                            osuEmbed.addFields(
-                                {
-                                    name: `${collab.name}`,
-                                    value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
-                                }
-                            );
-                            collabsToJoinCount++;
-                        }
-                        break;
-                    case 'experimental':
-                        if (tier > 0 || prestigeLevel >= 4 || userId === '687004886922952755') {
-                            joinMenu.addOptions({ label: collab.name, value: collab.name });
-                            osuEmbed.addFields(
-                                {
-                                    name: `${collab.name}`,
-                                    value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
-                                }
-                            );
-                            collabsToJoinCount++;
-                        }
-                        break;
-                    case 'none':
-                        joinMenu.addOptions({ label: collab.name, value: collab.name });
-                        osuEmbed.addFields(
-                            {
-                                name: `${collab.name}`,
-                                value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                        case 'staff':
+                            if (guildMember.roles.cache.has('961891383365500938') || userId === '687004886922952755') {
+                                joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                osuEmbed.addFields(
+                                    {
+                                        name: `${collab.name}`,
+                                        value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                    }
+                                );
+                                collabsToJoinCount++;
                             }
-                        );
-                        collabsToJoinCount++;
-                        break;
+                            break;
+                        case 'deluxe':
+                            if (deluxeEntry || userId === '687004886922952755') {
+                                joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                osuEmbed.addFields(
+                                    {
+                                        name: `${collab.name}`,
+                                        value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                    }
+                                );
+                                collabsToJoinCount++;
+                            }
+                            break;
+                        case 'megacollab':
+                            if ((collab.status === 'early access' && typeof userPerks.find(e => e.name === 'Megacollab Early Access')) || guildMember.roles.cache.has('630636502187114496')/* admin*/ || guildMember.roles.cache.has('834962043735638016')/* special donator*/ || guildMember.roles.cache.has('962251481669574666')/* contributor*/) {
+                                joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                osuEmbed.addFields(
+                                    {
+                                        name: `${collab.name}`,
+                                        value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                    }
+                                );
+                                collabsToJoinCount++;
+                            } else if (collab.status === 'open') {
+                                joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                osuEmbed.addFields(
+                                    {
+                                        name: `${collab.name}`,
+                                        value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                    }
+                                );
+                                collabsToJoinCount++;
+                            }
+                            break;
+                        case 'prestige':
+                            if (typeof prestige !== 'undefined' || userId === '687004886922952755') {
+                                joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                osuEmbed.addFields(
+                                    {
+                                        name: `${collab.name}`,
+                                        value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                    }
+                                );
+                                collabsToJoinCount++;
+                            }
+                            break;
+                        case 'experimental':
+                            if (tier > 0 || prestigeLevel >= 4 || userId === '687004886922952755') {
+                                joinMenu.addOptions({ label: collab.name, value: collab.name });
+                                osuEmbed.addFields(
+                                    {
+                                        name: `${collab.name}`,
+                                        value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                    }
+                                );
+                                collabsToJoinCount++;
+                            }
+                            break;
+                        case 'none':
+                            joinMenu.addOptions({ label: collab.name, value: collab.name });
+                            osuEmbed.addFields(
+                                {
+                                    name: `${collab.name}`,
+                                    value: `┌ Slots available: ${slots}\n├ Closing date: <t:${parseInt(collab.closure)}:R>\n└ __**[Check the spreadsheet](https://docs.google.com/spreadsheets/d/${collab.spreadsheetID})**__`
+                                }
+                            );
+                            collabsToJoinCount++;
+                            break;
                     }
                 }
             }
@@ -715,101 +715,13 @@ module.exports = {
             const perksEmbed = new EmbedBuilder()
                 .setFooter({ text: 'Endless Mirage | Perks Dashboard\n', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                 .setColor('#f26e6a')
-                .setAuthor({ name: `Welcome to your perks dashboard ${int.user.tag}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' });
-
-
-            let userPerks = await localFunctions.getPerks(userId, collection);
-            let submittedPerks = await localFunctions.getUserPerksAllCollabs(collabCollection, userId);
-            const unclaimedPerks = userPerks.filter(p => !submittedPerks.some(s => p.name === s.perk));
-            const component = new ActionRowBuilder().addComponents(
-                new ButtonBuilder()
-                    .setCustomId('perks-buy')
-                    .setLabel('🔀 Shop')
-                    .setStyle('Primary')
-            );
-
-            if (submittedPerks.length === 0 && unclaimedPerks.length !== 0) {
-                let useMenu = new SelectMenuBuilder()
-                    .setCustomId('use-perks')
-                    .setPlaceholder('Use your perks.');
-
-                for (const perk of unclaimedPerks) {
-                    useMenu.addOptions({ label: perk.name, value: perk.name, description: perk.description });
-                }
-                perksEmbed.setDescription('*Seems like you can use some perks!*\n                                                                                                        **```ml\n✅ To use one of your perks, use the menu bellow!```**');
-                perksEmbed.addFields(
-                    {
-                        name: '‎',
-                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
-                    }
-                );
-                const useComponent = new ActionRowBuilder().addComponents(useMenu);
-                await int.editReply({
-                    content: '',
-                    embeds: [perksEmbed],
-                    components: [useComponent, component]
-                });
-            } else if (submittedPerks.length === 0 && unclaimedPerks.length === 0) {
-                perksEmbed.setDescription('*Seems like you don\'t have any perk to use...*\n                                                                                                        **```ml\n❔ Interested on buying some perk for the megacollabs? Use the button bellow!```**');
-                perksEmbed.addFields(
-                    {
-                        name: '‎',
-                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
-                    }
-                );
-                await int.editReply({
-                    content: '',
-                    embeds: [perksEmbed],
-                    components: [component]
-                });
-            } else {
-                let perkMenu = new SelectMenuBuilder()
-                    .setCustomId('manage-perks')
-                    .setPlaceholder('Manage your perks.');
-
-                for (const perk of submittedPerks) {
-                    perkMenu.addOptions({ label: perk.perk, value: `${perk.perk}-${perk.collabName}`, description: perk.collabName });
-                    perksEmbed.addFields(
-                        {
-                            name: '‎',
-                            value: `\`\`✒️ ${perk.perk}\`\`\n **└** *Used on the ${perk.collabName}*`
-                        }
-                    );
-                }
-                perksEmbed.addFields(
-                    {
-                        name: '‎',
-                        value: '<:01:1195440946989502614><:02:1195440949157970090><:03:1195440950311387286><:04:1195440951498391732><:05:1195440953616502814><:06:1195440954895765647><:07:1195440956057604176><:08:1195440957735325707><:09:1195440958850998302><:10:1195441088501133472><:11:1195441090677968936><:12:1195440961275306025><:13:1195441092036919296><:14:1195441092947103847><:15:1195441095811797123><:16:1195440964907573328><:17:1195441098768789586><:18:1195440968007176333><:19:1195441100350034063><:20:1195441101201494037><:21:1195441102585606144><:22:1195441104498212916><:23:1195440971886903356><:24:1195441154674675712><:25:1195441155664527410><:26:1195441158155931768><:27:1195440974978093147>'
-                    }
-                );
-                if (unclaimedPerks.length !== 0) {
-                    perksEmbed.setDescription('*Seems like you have some perks submitted!*\n                                                                                                        **```ml\n✅ To edit and use your perk(s) use the menus bellow!```**');
-                    let useMenu = new SelectMenuBuilder()
-                        .setCustomId('use-perks')
-                        .setPlaceholder('Use your perks.');
-                    for (const perk of unclaimedPerks) {
-                        if (perk.renewalPrice) {
-                            useMenu.addOptions({ label: perk.name, value: perk.name, description: perk.description });
-                        }
-                    }
-                    const perkComponent = new ActionRowBuilder().addComponents(perkMenu);
-                    const useComponent = new ActionRowBuilder().addComponents(useMenu);
-                    await int.editReply({
-                        content: '',
-                        embeds: [perksEmbed],
-                        components: [perkComponent, useComponent, component]
-                    });
-                } else {
-                    perksEmbed.setDescription('*Seems like you have some perks submitted!*\n                                                                                                        **```ml\n✅ To edit your perk(s) use the menu bellow!```**');
-                    const perkComponent = new ActionRowBuilder().addComponents(perkMenu);
-                    await int.editReply({
-                        content: '',
-                        embeds: [perksEmbed],
-                        components: [perkComponent, component]
-                    });
-                }
-            }
-
+                .setAuthor({ name: `Welcome to your perks dashboard ${int.user.tag}!`, iconURL: 'https://puu.sh/JYyyk/5bad2f94ad.png' })
+                .setDescription('*This section is no longer on service. If you have unclaimed perks please read #💖・announcements*');
+            await int.editReply({
+                content: '',
+                embeds: [perksEmbed],
+            });
+            
             return;
         }
 
@@ -819,10 +731,35 @@ module.exports = {
             let decayString = '';
             let tierString = '**No premium status found!**';
             let tierDetails = '';
+            let monthlySupportData = await localFunctions.getUserMontlyPremium(userId, collection);
             const username = int.user.tag;
             const premiumEmbed = new EmbedBuilder()
                 .setFooter({ text: 'Endless Mirage | Premium Dashboard\n', iconURL: 'https://puu.sh/JP9Iw/a365159d0e.png' })
                 .setColor('#f26e6a');
+
+            let activeMonthlySupport = false;
+            if (monthlySupportData) {
+                if (monthlySupportData.status !== 'innactive') {
+                    activeMonthlySupport = true;
+                }
+            }
+
+            let subComponent;
+            if (activeMonthlySupport) {
+                subComponent = new ActionRowBuilder().addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('sub-manage')
+                        .setLabel('💵 Manage Monthly Payment')
+                        .setStyle('Primary')
+                );
+            } else {
+                subComponent = new ActionRowBuilder().addComponents(
+                    new ButtonBuilder()
+                        .setCustomId('subscribe')
+                        .setLabel('💵 Subscribe')
+                        .setStyle('Primary')
+                );
+            }
 
             if (!guildMember.roles.cache.has('743505566617436301')) {
                 let userPerks = await localFunctions.getPerks(userId, collection);
@@ -842,14 +779,6 @@ module.exports = {
                             .setCustomId('premium-info')
                             .setLabel('✒️ About')
                             .setStyle('Primary'),
-                        new ButtonBuilder()
-                            .setCustomId('shopping-cart')
-                            .setLabel('🛒 Cart')
-                            .setStyle('Primary'),
-                        new ButtonBuilder()
-                            .setCustomId('perks-buy')
-                            .setLabel('🔀 Perk Shop')
-                            .setStyle('Primary')
                     );
                     premiumEmbed.addFields(
                         {
@@ -860,7 +789,7 @@ module.exports = {
                     await int.editReply({
                         content: '',
                         embeds: [premiumEmbed],
-                        components: [buyComponents]
+                        components: [buyComponents, subComponent]
                     });
                 } else {
                     premiumEmbed.setDescription('**```ml\n 🚀 Welcome to the premium section!```**                                                                                                           **In this section, you can find information about the current premium tiers and their perks!**\n\n**• The perks are ACCUMULATIVE.** \n**• After one collab, most perks will need to be RENEWED.** \n**• If there is no renewal, there is a DECAY into former supporter.**\n**• You can also purchase SINGLE PERKS for single use in collabs.**\n**• Premium includes bump immunity.**');
@@ -901,7 +830,6 @@ module.exports = {
                 let premiumData = await localFunctions.getPremiumData(collectionSpecial);
                 let mainComponents = [];
                 let userTier = await localFunctions.getUserTier(userId, collection);
-                let monthlySupportData = await localFunctions.getUserMontlyPremium(userId, collection);
 
                 if (!userTier && guildMember.roles.cache.has('743505566617436301') && !guildMember.roles.cache.has('1150484454071091280')) {
                     let premiumDetails = await localFunctions.assignPremium(userId, collection, guildMember);
@@ -916,30 +844,6 @@ module.exports = {
 
                 if (tierDetails.generalRenewalPrice) {
                     tierString = `${tierString}\n*Renewal price for all perks: ${tierDetails.generalRenewalPrice}$*`;
-                }
-
-                let activeMonthlySupport = false;
-                if (monthlySupportData) {
-                    if (monthlySupportData.status !== 'innactive') {
-                        activeMonthlySupport = true;
-                    }
-                }
-
-                let subComponent;
-                if (activeMonthlySupport) {
-                    subComponent = new ActionRowBuilder().addComponents(
-                        new ButtonBuilder()
-                            .setCustomId('sub-manage')
-                            .setLabel('💵 Manage Monthly Subscription')
-                            .setStyle('Primary')
-                    );
-                } else {
-                    subComponent = new ActionRowBuilder().addComponents(
-                        new ButtonBuilder()
-                            .setCustomId('subscribe')
-                            .setLabel('💵 Subscribe')
-                            .setStyle('Primary')
-                    );
                 }
 
                 if (userPerks?.length || activeMonthlySupport) {
@@ -995,28 +899,8 @@ module.exports = {
                             .setCustomId('premium-info')
                             .setLabel('✒️ About')
                             .setStyle('Primary'),
-                        new ButtonBuilder()
-                            .setCustomId('shopping-cart')
-                            .setLabel('🛒 Cart')
-                            .setStyle('Primary'),
-                        new ButtonBuilder()
-                            .setCustomId('perks-buy')
-                            .setLabel('🔀 Shop')
-                            .setStyle('Primary')
                     );
 
-                    if (userTier.name !== 'Mirage VII' || userTier.name !== 'Mirage X') {
-                        mainComponents.addComponents(
-                            new ButtonBuilder()
-                                .setCustomId('upgrade-tier')
-                                .setLabel('⏏️ Upgrade')
-                                .setStyle('Primary'),
-                            new ButtonBuilder()
-                                .setCustomId('premium-renew')
-                                .setLabel('🔁 Renew')
-                                .setStyle('Primary')
-                        );
-                    }
 
                     if (activeMonthlySupport) {
                         const currentTier = localFunctions.premiumToInteger(userTier.name);
@@ -1070,22 +954,6 @@ module.exports = {
                             .setCustomId('premium-info')
                             .setLabel('✒️ About')
                             .setStyle('Primary'),
-                        new ButtonBuilder()
-                            .setCustomId('shopping-cart')
-                            .setLabel('🛒 Cart')
-                            .setStyle('Primary'),
-                        new ButtonBuilder()
-                            .setCustomId('perks-buy')
-                            .setLabel('🔀 Shop')
-                            .setStyle('Primary'),
-                        new ButtonBuilder()
-                            .setCustomId('premium-renew')
-                            .setLabel('🔁 Renew')
-                            .setStyle('Primary'),
-                        new ButtonBuilder()
-                            .setCustomId('upgrade-tier')
-                            .setLabel('⏏️ Upgrade')
-                            .setStyle('Primary')
                     );
 
                     premiumEmbed.addFields(
@@ -1643,14 +1511,14 @@ module.exports = {
                         const collab = openMegacollab;
                         if (collab.type === 'pooled') {
                             switch (collab.status) {
-                            case 'full':
-                                return int.editReply('This collab is full! There is no character to swap with. Try trading!');
-                            case 'closed':
-                            case 'delivered':
-                            case 'early delivery':
-                            case 'completed':
-                            case 'archived':
-                                return int.editReply('You cannot swap your character at this collab state.');
+                                case 'full':
+                                    return int.editReply('This collab is full! There is no character to swap with. Try trading!');
+                                case 'closed':
+                                case 'delivered':
+                                case 'early delivery':
+                                case 'completed':
+                                case 'archived':
+                                    return int.editReply('You cannot swap your character at this collab state.');
                             }
 
                             let pool = collab.pool.items;
@@ -1771,12 +1639,12 @@ module.exports = {
                         const collab = openMegacollab;
                         if (collab.type === 'pooled') {
                             switch (collab.status) {
-                            case 'closed':
-                            case 'delivered':
-                            case 'early delivery':
-                            case 'completed':
-                            case 'archived':
-                                return int.editReply('You cannot trade your character at this collab state.');
+                                case 'closed':
+                                case 'delivered':
+                                case 'early delivery':
+                                case 'completed':
+                                case 'archived':
+                                    return int.editReply('You cannot trade your character at this collab state.');
                             }
                             let pool = collab.pool.items;
                             const pickId = int.options.getString('pick');

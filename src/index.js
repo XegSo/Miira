@@ -61,8 +61,8 @@ async function main() {
     console.log('Connected to bancho.');
 
     // Connect to osu! API.
-    await auth.login(clientIDv2, clientSv2, ['public']);
-    console.log('Connected to osu api.');
+    /*await auth.login(clientIDv2, clientSv2, ['public']);
+    console.log('Connected to osu api.');*/
 
     // Connect to Discord.
     await client.login(discordToken);

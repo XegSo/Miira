@@ -321,6 +321,21 @@ module.exports = {
                 await int.editReply('Done!');
                 return;
             }
+            if (subcommand === 'give-streak') {
+                if (int.user.id !== '687004886922952755') return int.editReply('You cannot do this.');
+                const currentDate = Date.now();
+                // Check if the command has the required arguments/options
+                const userId = int.options.getUser('user');
+                const amount = int.options.getInteger('amount');
+
+                // Fetch user's balance from the database
+                let currentStreak = await localFunctions.getStreak(userId.id, collection);
+                currentStreak.streak = currentStreak.streak + amount;
+                currentStreak.lastDate = currentDate;
+                await localFunctions.setStreak(userId.id, currentStreak, collection);
+                await int.editReply(`Assigned ${amount} bonus streak to user <@${userId.id}>.`);
+                return;
+            }
             if (subcommand === 'ticket-create') {
                 if (int.user.id !== '687004886922952755') return int.editReply('You cannot do this.');
                 const channel = int.guild.channels.cache.get(int.options.getString('channelid'));
