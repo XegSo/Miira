@@ -379,7 +379,7 @@ module.exports = {
                 await localFunctions.setBalance(userId, newBalance, collection);
                 int.editReply(`Welcome back! You've obtained **${amountToEarn}** tokens! Your current streak is of **${userArray.streak}**!.`);
             } else {
-                int.editReply(`You cannot claim your daily bonus yet! Come back <t:${Math.floor(userArray.lastDate / 1000 + 64800)}:R>`);
+                int.editReply(`You cannot claim your daily bonus yet! Come back <t:${Math.floor(userArray.lastDate / 1000 + 64800)}:R>. Current streak: **${userArray.streak}**`);
             }
         }
     }
